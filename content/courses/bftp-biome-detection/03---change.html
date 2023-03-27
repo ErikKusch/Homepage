@@ -1,0 +1,227 @@
+---
+title: "Change Analysis"
+subtitle: 'Identifying Biomes And Their Shifts Using Remote Sensing'
+author: "Erik Kusch"
+date: "2020-06-10"
+slug: Change Analysis
+categories: [BFTP Projects]
+tags: [R, Statistics, Remote Sensing]
+summary: ''
+authors: [Erik Kusch]
+lastmod: '2020-06-10'
+featured: no
+projects:
+output:
+  blogdown::html_page:
+    toc: true
+    toc_depth: 2
+    number_sections: false
+    fig_width: 6
+linktitle: 3 - Change Analysis
+menu:
+  BFTP:
+    parent: Exercises
+    weight: 3
+# toc: true
+type: docs
+weight: 3
+---
+
+
+<div id="TOC">
+<ul>
+<li><a href="#preparing-the-work">Preparing The Work</a><ul>
+<li><a href="#head">Head</a></li>
+<li><a href="#preamble">Preamble</a></li>
+<li><a href="#coding">Coding</a></li>
+</ul></li>
+<li><a href="#change-analysis">Change Analysis</a><ul>
+<li><a href="#loading-data">Loading Data</a></li>
+<li><a href="#predictions">Predictions</a></li>
+<li><a href="#initial-assesment">Initial Assesment</a></li>
+<li><a href="#in-depth-assesment">In-Depth Assesment</a></li>
+</ul></li>
+</ul>
+</div>
+
+<div id="preparing-the-work" class="section level1">
+<h1>Preparing The Work</h1>
+<p>Let’s create our basic structure for this document:</p>
+<div id="head" class="section level2">
+<h2>Head</h2>
+<p>Not much has changed in the <strong>head</strong> when compared to our last exercise. We merely change the <em>contents</em> and and the <em>edit</em> tag, since the rest stays the same for the entire project.</p>
+<pre class="r"><code># ####################################################################### #
+# PROJECT: [BFTP] Identifying Biomes And Their Shifts Using Remote Sensing
+# CONTENTS: Functionality to identify and analyse changes in spatial cluster distributions
+# AUTHOR: Erik Kusch
+# EDIT: 19/03/20
+# ####################################################################### #</code></pre>
+</div>
+<div id="preamble" class="section level2">
+<h2>Preamble</h2>
+<p>I am keeping the same <strong>preamble</strong> as last time because we will need to index the data and the plot directory in this exercise. Our preamble then looks like this:</p>
+<pre class="r"><code>rm(list=ls()) # clearing the entire environment
+Dir.Base &lt;- getwd() # identifying the current directory
+Dir.Data &lt;- paste(Dir.Base, &quot;Data&quot;, sep=&quot;/&quot;) # generating the folder path for data folder
+Dir.Plots &lt;- paste(Dir.Base, &quot;Plots&quot;, sep=&quot;/&quot;) # generating the folder path for figures folder</code></pre>
+<p>Notice, that we do not call the function <code>dir.create()</code> this time. We don’t need to do so, because we already created the two directories established above in our last exercise. Usually, we would create this entire analysis of your BFTP project in one <code>R</code> code script. In this case, we would only have one preamble which defines and creates directories instead of doing this step for every single sub-part of the analysis. Alas, we want to break this down for you. Therefore, you see this preamble here and will again in the next exercise.</p>
+<p>This time, we actually do load packages here as we really only need the <code>raster</code> package. By now, I am assuming you know what we use it for:</p>
+<pre class="r"><code>library(raster) # the raster package for rasters</code></pre>
+<p>Additionally, we reload our <code>.RData</code> workspace from the last exercise to gain back our <code>mclust</code> model objects in particular.</p>
+<pre class="r"><code>load(file = &quot;Workspace.RData&quot;) # load workspace</code></pre>
+</div>
+<div id="coding" class="section level2">
+<h2>Coding</h2>
+<p>Again, all of the important <strong>Coding</strong> happens after the head and the preamble are written and run in <code>R</code>. Basically, this is the rest of this document once more.</p>
+</div>
+</div>
+<div id="change-analysis" class="section level1">
+<h1>Change Analysis</h1>
+<div id="loading-data" class="section level2">
+<h2>Loading Data</h2>
+<p>Firstly, we need the raw NDVI mean and seasonality data for the time frames we want to compare. Let’s deal with that right quick.</p>
+<div id="section" class="section level3">
+<h3>1982</h3>
+<p>Let’s load our 1982 NDVI mean and seasonality data:</p>
+<pre class="r"><code>Mean1982_ras &lt;- raster(paste(Dir.Data, &quot;1982Mean.nc&quot;, sep=&quot;/&quot;)) # loading means
+Season1982_ras &lt;- raster(paste(Dir.Data, &quot;1982Season.nc&quot;, sep=&quot;/&quot;)) # loading seasonalities
+All1982_ras &lt;- stack(Mean1982_ras, Season1982_ras) # creating a stack
+names(All1982_ras) &lt;- c(&quot;Mean&quot;, &quot;Seasonality&quot;) # assign names to stack layers
+Vals1982_mat &lt;- values(All1982_ras) # extract data
+rownames(Vals1982_mat) &lt;- 1:dim(Vals1982_mat)[1] # rownames to index raster cell number
+Vals1982_mat &lt;- na.omit(Vals1982_mat) # omit all rows which contain at least one NA record
+summary(Vals1982_mat) # a summary of the data</code></pre>
+<pre><code>##       Mean       Seasonality  
+##  Min.   :0.00   Min.   :0.00  
+##  1st Qu.:0.22   1st Qu.:0.55  
+##  Median :0.33   Median :0.67  
+##  Mean   :0.32   Mean   :0.64  
+##  3rd Qu.:0.41   3rd Qu.:0.76  
+##  Max.   :0.84   Max.   :1.00</code></pre>
+</div>
+<div id="section-1" class="section level3">
+<h3>2015</h3>
+<p>In order to assess how biome distributions have changed, we need another time frame to compare our 1982 data to. For this, I have re-run the code from our first BFTP exercise for the year 2015. We now load that data into <code>R</code>:</p>
+<pre class="r"><code>Mean2015_ras &lt;- raster(paste(Dir.Data, &quot;2015Mean.nc&quot;, sep=&quot;/&quot;)) # loading means
+Season2015_ras &lt;- raster(paste(Dir.Data, &quot;2015Season.nc&quot;, sep=&quot;/&quot;)) # loading seasonalities
+All2015_ras &lt;- stack(Mean2015_ras, Season2015_ras) # creating a stack
+names(All2015_ras) &lt;- c(&quot;Mean&quot;, &quot;Seasonality&quot;) # assign names to stack layers
+Vals2015_mat &lt;- values(All2015_ras) # extract data
+rownames(Vals2015_mat) &lt;- 1:dim(Vals2015_mat)[1] # rownames to index raster cell number
+Vals2015_mat &lt;- na.omit(Vals2015_mat) # omit all rows which contain at least one NA record
+summary(Vals2015_mat) # a summary of the data</code></pre>
+<pre><code>##       Mean       Seasonality  
+##  Min.   :0.00   Min.   :0.00  
+##  1st Qu.:0.25   1st Qu.:0.56  
+##  Median :0.33   Median :0.67  
+##  Mean   :0.34   Mean   :0.64  
+##  3rd Qu.:0.43   3rd Qu.:0.77  
+##  Max.   :0.83   Max.   :1.00</code></pre>
+<p>Notice, that the output of the <code>summary()</code> function is different for both matrices built from raster data values. This is important to ensure that our analysis actually references different time frames.</p>
+<div style="page-break-after: always;"></div>
+</div>
+</div>
+<div id="predictions" class="section level2">
+<h2>Predictions</h2>
+<p>Secondly, we want to compare cluster assignments. To do so, we need to use our <code>mclust</code> models to predict cluster assignments for each cell in our target region raster using the NDVI mean and seasonality data that we loaded previously.</p>
+<div id="section-2" class="section level3">
+<h3>1982</h3>
+<p>Let’s deal with the 1982 data first. <code>mod2</code> is the <code>mclust</code> model object for 4 clusters from our last exercise. Here, we predict clusters and place them on a raster:</p>
+<pre class="r"><code>ModPred1982 &lt;- predict.Mclust(mod2, Vals1982_mat) # prediction
+Pred1982_ras &lt;- Mean1982_ras # establishing a rediction raster
+values(Pred1982_ras) &lt;- NA # set everything to NA
+# set values of prediction raster to corresponding classification according to rowname
+values(Pred1982_ras)[as.numeric(rownames(Vals1982_mat))] &lt;- as.vector(ModPred1982$classification)
+colours &lt;- rainbow(mod2$G) # define 4 colours
+plot(Pred1982_ras, # what to plot
+     col = colours, # colours for groups
+     colNA = &quot;black&quot;, # which colour to assign to NA values
+     legend.shrink=1, # vertical size of legend
+     legend.width=2 # horizontal size of legend
+     )</code></pre>
+<p><img src="/courses/BFTP - Biome Detection/03---Change_files/figure-html/Pred1-1.png" width="1152" /></p>
+<div style="page-break-after: always;"></div>
+</div>
+<div id="section-3" class="section level3">
+<h3>2015</h3>
+<p>Now, we deal with the 2015 time frame. Notice, that we are using the <code>mod2</code> <code>mclust</code> model which was established for 1982 in our last exercise. It is important that we use the same model when predicting our classes between time frames to ensure comparability. After all, we want to make sure that cluster 1 is the same in 1982 as 2015. It is debatable whether we should use a cluster model built from just one year of data or even from the same time frame as one of the the time frames which are to be compared. In fact, I would argue that we should establish a <code>mclust</code> model for the mean annual NDVI and mean annual seasonality of NDVI across the entire time for which data is available. For now, we simply use the 1982-reliant model:</p>
+<pre class="r"><code>ModPred2015 &lt;- predict.Mclust(mod2, Vals2015_mat) # prediction
+Pred2015_ras &lt;- Mean2015_ras # establishing a rediction raster
+values(Pred2015_ras) &lt;- NA # set everything to NA
+# set values of prediction raster to corresponding classification according to rowname
+values(Pred2015_ras)[as.numeric(rownames(Vals2015_mat))] &lt;- as.vector(ModPred2015$classification)
+colours &lt;- rainbow(mod2$G) # define 4 colours
+plot(Pred2015_ras, # what to plot
+     col = colours, # colours for groups
+     colNA = &quot;black&quot;, # which colour to assign to NA values
+     legend.shrink=1, # vertical size of legend
+     legend.width=2 # horizontal size of legend
+     )</code></pre>
+<p><img src="/courses/BFTP - Biome Detection/03---Change_files/figure-html/Pred2-1.png" width="1152" /></p>
+<p>You can already see some cluster assignment changes on Nunivak island.</p>
+<div style="page-break-after: always;"></div>
+</div>
+</div>
+<div id="initial-assesment" class="section level2">
+<h2>Initial Assesment</h2>
+<p>Let’s first assess how many raster cells have changed cluster assignment between our two time frames:</p>
+<pre class="r"><code># identify how many cell assignments don&#39;t match between rasters
+Change &lt;- sum(ModPred1982$classification != ModPred2015$classification)
+# divide number of mismatches by number of all cells
+Change/length(ModPred2015$classification)</code></pre>
+<pre><code>## [1] 0.22</code></pre>
+<p>As you can see, there is a proportion of 0.22 raster cells which have changed cluster assignment between the two time frames. Now, let’s put this on a map:</p>
+<pre class="r"><code>PredChange_ras &lt;- Mean2015_ras # establishing a rediction raster
+values(PredChange_ras) &lt;- NA # set everything to NA
+# set values of prediction raster to corresponding classification according to rowname
+values(PredChange_ras)[as.numeric(rownames(Vals2015_mat))] &lt;- 
+  ModPred1982$classification != ModPred2015$classification
+colours &lt;- c(&quot;green&quot;, &quot;red&quot;) # define 2 colours
+plot(PredChange_ras, col = colours, colNA = &quot;black&quot;,
+     legend.shrink=1, legend.width=2)</code></pre>
+<p><img src="/courses/BFTP - Biome Detection/03---Change_files/figure-html/qualb-1.png" width="1152" /></p>
+<p>I leave it to you to interpret these patterns (there actually is an interpretation to be had here).</p>
+<div style="page-break-after: always;"></div>
+</div>
+<div id="in-depth-assesment" class="section level2">
+<h2>In-Depth Assesment</h2>
+<p>I’d argue that a simple understanding whether things have changed won’t be what we want to report. What we want, is to know which cluster took over the cells of which raster. I.e., I’d like to answer the question: “Which clusters take over the regions of other clusters and which ones?”. I hope you’re interested in this, too. Here’s how we can analyse this: For each cluster assignment we:<br />
+- Identify the cells corresponding to it in 1982/the past<br />
+- Count how many of these cells are classified as the same cluster in 2015/the present<br />
+- Repeat the above for all combinations of cluster assignments imaginable</p>
+<pre class="r"><code>NClusters &lt;- mod2$G # identify the number of clusters
+present &lt;- as.vector(Pred2015_ras) # assignments in 2015
+past &lt;- as.vector(Pred1982_ras) # assignments in 1982
+# this matrix will hold the data, rows will show past state, columns will show present state
+changematrix &lt;- matrix(rep(NA, NClusters^2), nrow=NClusters, ncol=NClusters)
+changevec &lt;- rep(NA, NClusters) # this vector will fill rows in our matrix
+for(k in 1:NClusters){ # loop over clusters in past
+  changerun &lt;- changevec 
+  changeperc &lt;- changevec
+  for(m in 1:NClusters){ # loop over clusters in present
+    presentcells &lt;- which(present==m) # figure out which cells hold value m
+    pastcells &lt;- which(past==k) # figure out which cells hold value k
+    # figure out how many of the cell denominators are shared by the two vectors
+    rate &lt;- length(Reduce(intersect, list(pastcells,presentcells))) 
+    changerun[m] &lt;- rate # save rate to changerun in place m
+  } # end of present-loop
+  changematrix[k,] &lt;- changerun # save changerun to k row in matrix
+  for(n in 1:NClusters){ # turn rates into portions
+    # divide number of in a cell by total number of cells in its row
+    changeperc[n] &lt;- changematrix[k,n] / sum(changematrix[k,])
+  } # end of percentages
+  changematrix[k,] &lt;- changeperc # save changeperc to row k
+} # end of past-loop
+changematrix &lt;- changematrix*100 # turn everything into percentages
+rownames(changematrix) &lt;- paste0(&quot;Past&quot;, 1:NClusters)
+colnames(changematrix) &lt;- paste0(&quot;Present&quot;, 1:NClusters)
+changematrix # show the matrix</code></pre>
+<pre><code>##       Present1 Present2 Present3 Present4
+## Past1   76.268     23.7        0     0.00
+## Past2    4.437     82.1       13     0.84
+## Past3    0.029     16.8       80     3.03
+## Past4    0.073      3.6       36    60.30</code></pre>
+<p>As you can see, there’s quite a bit going on here. Let me explain how to read this. From past (1982) to present (2015), 76.27% of raster cells assigned to cluster 1 in 1982 are assigned to cluster 1 in 2015 as well. 23.73% of raster cells previously assigned to cluster 1 are classified as cluster 2 in 2015. Notice, how all rows sum up to 100% each. Representing the total of assigned raster cells in the 1982 record.</p>
+<p>Given the biological counterparts of the clusters, how would you interpret these shifts?</p>
+</div>
+</div>

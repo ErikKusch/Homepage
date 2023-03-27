@@ -1,0 +1,306 @@
+---
+title: "Quick Guide"
+author: Erik Kusch
+date: '2022-05-26'
+slug: quickstart
+categories:
+  - KrigR
+  - Climate Data
+tags:
+  - Climate Data
+  - Statistical Downscaling
+  - KrigR
+subtitle: ""
+summary: ''
+authors: []
+lastmod: '2021-05-26T20:00:00+01:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: 
+output:
+  blogdown::html_page:
+    keep_md: true
+    # toc: true
+    # toc_depth: 1
+    # number_sections: false
+# header-includes:
+#   <script src = "https://polyfill.io/v3/polyfill.min.js?features = es6"></script>
+#   <script id = "MathJax-script" async src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+math: true
+type: docs
+toc: true 
+menu:
+  krigr:
+    parent: Quick Start
+    weight: 3
+weight: 3
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, tidy='styler', tidy.opts=list(strict=TRUE), fig.width = 15, fig.height = 8)
+options(width = 90)
+rm(list=ls())
+if("KrigR" %in% rownames(installed.packages()) == FALSE){ # KrigR check
+  Sys.setenv(R_REMOTES_NO_ERRORS_FROM_WARNINGS="true")
+  devtools::install_github("https://github.com/ErikKusch/KrigR")
+}
+source("PersonalSettings.R") # I do this here to specify number of cores and API credentials and am thus not sharing this file
+```
+
+<!-- # ```{r, sourcing-previous, echo = FALSE} -->
+<!-- # source_rmd <- function(file, local = FALSE, ...){ -->
+<!-- #   options(knitr.duplicate.label = 'allow') -->
+<!-- #  -->
+<!-- #   tempR <- tempfile(tmpdir = ".", fileext = ".R") -->
+<!-- #   on.exit(unlink(tempR)) -->
+<!-- #   knitr::purl(file, output=tempR, quiet = TRUE) -->
+<!-- #  -->
+<!-- #   envir <- globalenv() -->
+<!-- #   source(tempR, local = envir, ...) -->
+<!-- # } -->
+<!-- # source_rmd("krigr-locations.Rmd") -->
+<!-- # ``` -->
+
+
+{{% hint danger %}}
+This part of the workshop is meant to give a **very brief** introduction to `KrigR` and I highly recommend you peruse the rest of the content, too.
+{{% /hint %}}
+
+
+<!-- {{% hint danger %}} -->
+<!-- This part of the workshop is dependant on set-up and preparation done previously [here](/courses/krigr/prep/). -->
+<!-- {{% /hint %}} -->
+
+## Pre-`KrigR` Housekeeping
+Before we can commence the quick start guide, I want to set up a directory structure and prepare some plotting functions to make the rest of the guide run more smoothly.
+
+### Setting up Directories
+For this guide to run in a structured way, we create a folder/directory structure. We create the following directories:  
+
+- A **Data** directory for all of our data downloads  
+- A **Covariate** directory for all of our covariate data  
+- An **Exports** directory for all of our Kriging outputs  
+
+```{r Directories}
+Dir.Base <- getwd() # identifying the current directory
+Dir.Data <- file.path(Dir.Base, "Data") # folder path for data
+Dir.Covariates <- file.path(Dir.Base, "Covariates") # folder path for covariates
+Dir.Exports <- file.path(Dir.Base, "Exports") # folder path for exports
+## create directories, if they don't exist yet
+Dirs <- sapply(c(Dir.Data, Dir.Covariates, Dir.Exports), 
+               function(x) if(!dir.exists(x)) dir.create(x))
+```
+
+### Visualiation Functions 
+
+In order to easily visualise our Kriging procedure including (1) inputs, (2) covariates, and (3) outputs without repeating too much of the same code, I have prepared some plotting functions which you can download as [FUN_Plotting.R](/courses/krigr/FUN_Plotting.R).
+
+With the `FUN_Plotting.R` file placed in the project directory of your workshop material (i.e., the directory returned by `Dir.Base`), running the following will register the three plotting functions in your `R` environment.
+
+```{r}
+source("FUN_Plotting.R")
+```
+
+The plotting functions you have just loaded are called:  
+
+- `Plot_Raw()` - we will use this function to visualise data downloaded with `KrigR`  
+- `Plot_Covs()` - this function will help us visualise the covariates we use for statistical interpolation  
+- `Plot_Krigs()` - kriged products and their associated uncertainty will be visualised using this function  
+
+Don’t worry about understanding how these functions work off the bat here. Kriging and the package `KrigR` are what we want to demonstrate here - not visualisation strategies. 
+
+## Using `KrigR`
+
+Before we start these exercises, we need to load `KrigR`:
+
+```{r}
+library(KrigR)
+```
+
+`KrigR` can be used in one of two ways. 
+
+{{% hint %}}
+I strongly recommend you use **The Three Steps** as **The Pipeline** is only applicable for a fringe of use-cases.
+{{% /hint %}}
+
+
+### The Three Steps
+Using `KrigR` in this way, you use the three core functions `download_ERA()`, `download_DEM()`, and `krigR()`. 
+
+{{% hint info %}}
+Running these functions individually gives you the most control and oversight of the `KrigR` workflow.
+{{% /hint %}}
+
+The most simple way in which you can run the functions of the `KrigR` package is by specifying a rectangular bounding box (i.e., an `extent`) to specify your study region(s). 
+
+Here, we will run a small downscaling exercise for the region I was born and grew up in. For a more detailed discussion of this region, please refer to this [section](/courses/krigr/prep/#our-workshop-target-region): 
+
+Here's the full area for which we will be obtaining and downscaling data for:
+```{r StateExt, warning = FALSE, message = FALSE}
+Extent_ext <- extent(c(9.87, 15.03, 49.89, 53.06))
+Extent_ext
+```
+
+#### Climate Data
+
+For this part of the tutorial, we download air temperature for a three-day interval around my birthday (03-01-1995) using the extent highlighted above.
+
+{{% hint %}}
+Notice that the downloading of ERA-family reanalysis data may take a short while to start as the download request gets queued with the CDS of the ECMWF before it is executed.
+{{% /hint %}}
+
+<details>
+  <summary>Click here for file if download takes too long:</summary>
+    Download 
+<a href="/courses/krigr/Data/QS_Raw.nc">QS_Raw.nc</a> and place it into your data directory.
+</details> 
+
+```{r ClimExt, results = 'hide', fig.keep = 'all', fig.height = 6, message = FALSE, warning = FALSE}
+QS_Raw <- download_ERA(
+  Variable = '2m_temperature',
+  DataSet = 'era5-land',
+  DateStart = '1995-01-02',
+  DateStop = '1995-01-04',
+  TResolution = 'day',
+  TStep = 1,
+  Extent = Extent_ext,
+  Dir = Dir.Data,
+  FileName = "QS_Raw",
+  API_User = API_User,
+  API_Key = API_Key)
+Plot_Raw(QS_Raw, Dates = c("02-01-1995", "03-01-1995", "04-01-1995"))
+```
+
+<!-- As you can see the `download_ERA()` function updates you on what it is currently working on at each major step. I implemented this to make sure people don't get too anxious staring at an empty console in `R`. If this feature is not appealing to you, you can turn this progress tracking off by setting `verbose = FALSE` in the function call to `download_ERA()`. -->
+
+Now, let's look at the raster that was produced:
+```{r ClimExtOutput}
+QS_Raw
+```
+
+As you can see, we obtained a `r class(QS_Raw)` object with `r nlayers(QS_Raw)` layers of data (one for each day we are interested in). Notice that extent of our downloaded data set does not fit the extent we set earlier manually. This is a precaution we have taken within `KrigR` to make sure that all data cells you are interested in are covered.
+
+{{% hint info %}}
+`KrigR` widens the spatial extent that is specified to ensure full coverage of the respective ERA5(-Land) raster cells. Global downloads are not affected by this and work just as you'd expect.
+{{% /hint %}}
+
+{{% hint %}}
+More detailed instructions on how to make the most effective use of the `download_ERA()` function and ensure you receive the data you require can be found [here](/courses/krigr/download/).
+{{% /hint %}}
+
+Keep in mind that every function within the `KrigR` package produces NetCDF (.nc) files in the specified directory (`Dir` argument in the function call) to allow for further manipulation outside of `R` if necessary (for example, using Panoply).
+
+#### Covariates  
+Next, we use the `download_DEM()` function which comes with `KrigR` to obtain elevation data as our covariate of choice. This produces two rasters:  
+
+1. A raster of **training** resolution which matches the input data in all attributes except for the data in each cell.  
+2. A raster of **target** resolution which matches the input data as closely as possible in all attributes except for the resolution (which is specified by the user).  
+
+Both of these products are bundled into a `list` where the first element corresponds to the *training* resolution and the second element contains the *target* resolution covariate data. Here, we specify a target resolution of `.02`.
+
+```{r CovExt, results = 'hide', fig.keep = 'all', fig.height = 6}
+Covs_ls <- download_DEM(Train_ras = QS_Raw,
+                        Target_res = .02,
+                        Dir = Dir.Covariates,
+                        Keep_Temporary = TRUE)
+Plot_Covs(Covs_ls)
+```
+
+{{% hint %}}
+Alternatively to specifying a target resolution, you can specify a different raster which should be matched in all attributes by the raster at target resolution. This is explained more in-depth in [this part of the workshop](/courses/krigr/third-party).  
+{{% /hint %}}
+
+For now, let's simply inspect our list of covariate rasters:
+```{r CovExtOutput}
+Covs_ls
+```
+
+<!-- This set of covariates has `r sum(!is.na(values(Covs_ls[[1]])))` and `r sum(!is.na(values(Covs_ls[[2]])))` cells containing values at training and target resolution, respectively. -->
+
+#### Kriging  
+Now let's statistically downscale these data:
+
+```{r, echo = FALSE}
+TStart <- Sys.time()
+```
+
+```{r KrigExt, results = 'hide', fig.keep = 'all'}
+QS_Krig <- krigR(Data = QS_Raw, # data we want to krig as a raster object
+      Covariates_coarse = Covs_ls[[1]], # training covariate as a raster object
+      Covariates_fine = Covs_ls[[2]], # target covariate as a raster object
+      Keep_Temporary = FALSE, # we don't want to retain the individually kriged layers on our hard-drive
+      nmax = 40, # degree of localisation
+      Cores = 3, # we want to krig using three cores to speed this process up
+      FileName = "QS_Krig.nc", # the file name for our full kriging output
+      Dir = Dir.Exports # which directory to save our final input in
+      )
+Plot_Krigs(QS_Krig, Dates = c("02-01-1995", "03-01-1995", "04-01-1995"))
+```
+
+```{r, echo = FALSE}
+TEnd <- Sys.time()
+```
+
+This operation took `r as.numeric(round(TEnd-TStart))` seconds on my machine (this may vary drastically on other devices).
+
+There we go. All the data has been downscaled and we do have uncertainties recorded for all of our outputs. As you can see, the elevation patterns show up clearly in our kriged air temperature output. Furthermore, you can see that our certainty of Kriging predictions drops on the 04/01/1995 in comparison to the two preceding days. However, do keep in mind that a maximum standard error of `r round(maxValue(QS_Krig[[2]]), 3)` (for each layer of our output respectively) on a total range of data of `r round(maxValue(QS_Krig[[1]])-minValue(QS_Krig[[1]]), 3)` (again, for each layer in the output respectively) is evident of a downscaling result we can be confident in.  
+
+Now, what does the output actually look like?
+```{r KrigExtOutput}
+QS_Krig[-3] # we will talk later about why we leave out the third list element produced by krigR here
+```
+
+As output of the `krigR()` function, we obtain a list of downscaled data as the first element and downscaling standard errors as the second list element.
+
+{{% hint %}}
+More detailed instructions on how to make the most effective use of the `krigR()` function can be found [here](/courses/krigr/kriging/).
+{{% /hint %}}
+
+### The Pipeline
+Now that we've seen how you can execute the `KrigR` workflow using three separate functions, it is time that we show you the most simplified function call to obtain some downscaled products: the **pipeline**.
+
+{{% hint danger %}}
+Using `KrigR` through the pipeline approach limits you to the default covariate data and takes away control from you. Use this only if you know exactly what you are doing.
+{{% /hint %}}
+
+We have coded the `krigR()` function in such a way that it can either be addressed at already present spatial products within your `R` environment, or handle all the downloading and resampling of input data and covariates for you from scratch. To run the exact same Kriging approach as within our extent-example, we can specify the `krigR()` function as such:
+
+```{r PipeExec, results = 'hide', fig.keep = 'all', cache.lazy=TRUE}
+Pipe_Krig <- krigR(Variable = '2m_temperature',
+                   DataSet = 'era5-land',
+                   DateStart = '1995-01-02',
+                   DateStop = '1995-01-04',
+                   TResolution = 'day',
+                   TStep = 1,
+                   Extent = Extent_ext,
+                   API_User = API_User,
+                   API_Key = API_Key,
+                   Target_res = .02,
+                   Source = "Drive",
+                   nmax = 40,
+                   Cores = 3,
+                   FileName = "QS_Pipe.nc",
+                   Dir = Dir.Exports)
+Plot_Krigs(Pipe_Krig, Dates = c("02-01-1995", "03-01-1995", "04-01-1995"))
+```
+
+Let's just check how this compares to non-pipeline product:
+```{r}
+all.equal(QS_Krig[[1]], Pipe_Krig[[1]])
+```
+
+Surprise! There is no difference.
+
+{{% hint warning %}}
+This concludes the quick start tutorial for `KrigR`. For more effective use of the `KrigR` toolbox, I suggest you peruse the rest of the workshop material or use the search function if you have specific queries.
+{{% /hint %}}
+
+For a use-case of the pipeline see [this part](/courses/krigr/third-party/#krigr-workflow) of our workshop.
+
+## Session Info
+```{r}
+sessionInfo()
+```

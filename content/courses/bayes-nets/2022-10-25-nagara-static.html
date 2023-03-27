@@ -1,0 +1,568 @@
+---
+title: "Additional Static Exercises"
+author: Erik Kusch
+date: '2022-10-25'
+slug: static
+categories:
+  - Bayesian Networks
+tags:
+  - Bayes
+  - Networks
+  - Bayesian Statistics
+  - Statistics
+subtitle: "Additional Static Exercises"
+summary: 'Answers and solutions to the exercises belonging to chapter 2 in [Bayesian Networks in R with Applications in Systems Biology](https://link.springer.com/book/10.1007/978-1-4614-6446-4) by by Radhakrishnan Nagarajan, Marco Scutari \& Sophie Lèbre.'
+authors: []
+lastmod: '2022-10-25T20:00:00+01:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: 
+output:
+  blogdown::html_page:
+    keep_md: true
+    # toc: true
+    # toc_depth: 1
+    # number_sections: false
+# header-includes:
+#   <script src = "https://polyfill.io/v3/polyfill.min.js?features = es6"></script>
+#   <script id = "MathJax-script" async src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+math: true
+type: docs
+toc: true 
+menu:
+  bayesnets:
+    parent: 2 - Static Networks
+    weight: 4
+weight: 4
+---
+
+
+<div id="TOC">
+
+</div>
+
+<style>
+
+blockquote{
+color:#ffffff;
+}
+
+</style>
+<div id="material" class="section level2">
+<h2>Material</h2>
+<ul>
+<li><a href="/courses/bayes-nets/Static-Bayesian-Networks.html">Static Bayesian Networks</a> by <a href="https://www.linkedin.com/in/felipe-sanchez-22b335135/">Felipe Sanchez</a> (one of our study group members)</li>
+</ul>
+<p>For detailed summary slides, please consult the separate sections on <a href="/courses/bayes-nets/part-1/">Multinomial</a>, <a href="/courses/bayes-nets/part-2/">Gaussian</a>, and <a href="/courses/bayes-nets/part-3/">Hybrid</a> Bayesian Networks.</p>
+</div>
+<div id="exercises" class="section level2">
+<h2>Exercises</h2>
+<p>These are answers and solutions to the exercises at the end of chapter 2 in <a href="https://link.springer.com/book/10.1007/978-1-4614-6446-4">Bayesian Networks in R with Applications in Systems Biology</a> by by Radhakrishnan Nagarajan, Marco Scutari &amp; Sophie Lèbre. Much of my inspiration for these solutions, where necessary, by consulting the solutions provided by the authors themselves as in the appendix.</p>
+<div id="r-environment" class="section level3">
+<h3><code>R</code> Environment</h3>
+<p>For today’s exercise, I load the following packages:</p>
+<pre class="r"><code>library(bnlearn)
+library(igraph)</code></pre>
+</div>
+<div id="nagarajan-2.1" class="section level3">
+<h3>Nagarajan 2.1</h3>
+<blockquote>
+<p>Consider the <code>asia</code> synthetic data set from Lauritzen and Spiegelhalter (1988), which describes the diagnosis of a patient at a chest clinic who has just come back from a trip to Asia and is showing dyspnea.</p>
+</blockquote>
+<div id="part-a" class="section level4">
+<h4>Part A</h4>
+<blockquote>
+<p>Load the data set from the <code>bnlearn</code> package and investigate its characteristics using the exploratory analysis techniques covered in Chap. 1.</p>
+</blockquote>
+<pre class="r"><code>data(asia)
+str(asia)</code></pre>
+<pre><code>## &#39;data.frame&#39;:    5000 obs. of  8 variables:
+##  $ A: Factor w/ 2 levels &quot;no&quot;,&quot;yes&quot;: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ S: Factor w/ 2 levels &quot;no&quot;,&quot;yes&quot;: 2 2 1 1 1 2 1 2 2 2 ...
+##  $ T: Factor w/ 2 levels &quot;no&quot;,&quot;yes&quot;: 1 1 2 1 1 1 1 1 1 1 ...
+##  $ L: Factor w/ 2 levels &quot;no&quot;,&quot;yes&quot;: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ B: Factor w/ 2 levels &quot;no&quot;,&quot;yes&quot;: 2 1 1 2 1 1 1 2 2 2 ...
+##  $ E: Factor w/ 2 levels &quot;no&quot;,&quot;yes&quot;: 1 1 2 1 1 1 1 1 1 1 ...
+##  $ X: Factor w/ 2 levels &quot;no&quot;,&quot;yes&quot;: 1 1 2 1 1 1 1 1 1 1 ...
+##  $ D: Factor w/ 2 levels &quot;no&quot;,&quot;yes&quot;: 2 1 2 2 2 2 1 2 2 2 ...</code></pre>
+<pre class="r"><code>summary(asia)</code></pre>
+<pre><code>##    A          S          T          L          B          E          X          D       
+##  no :4958   no :2485   no :4956   no :4670   no :2451   no :4630   no :4431   no :2650  
+##  yes:  42   yes:2515   yes:  44   yes: 330   yes:2549   yes: 370   yes: 569   yes:2350</code></pre>
+</div>
+<div id="part-b" class="section level4">
+<h4>Part B</h4>
+<blockquote>
+<p>Create a <code>bn</code> object with the network structure described in the manual page of <code>asia</code>.</p>
+</blockquote>
+<pre class="r"><code>dag_2.1 &lt;- model2network(&quot;[A][S][T|A][L|S][B|S][D|B:E][E|T:L][X|E]&quot;)</code></pre>
+</div>
+<div id="part-c" class="section level4">
+<h4>Part C</h4>
+<blockquote>
+<p>Derive the skeleton, the moral graph, and the CPDAG representing the equivalence class of the network. Plot them using <code>graphviz.plot</code>.</p>
+</blockquote>
+<pre class="r"><code># object creation
+skel_2.1 &lt;- skeleton(dag_2.1)
+moral_2.1 &lt;- moral(dag_2.1)
+equclass_2.1 &lt;- cpdag(dag_2.1)
+# plotting
+par(mfrow = c(1, 3))
+graphviz.plot(skel_2.1, main = &quot;Skeleton&quot;)
+graphviz.plot(moral_2.1, main = &quot;Moral&quot;)
+graphviz.plot(equclass_2.1, main = &quot;Equivalence Class&quot;)</code></pre>
+<p><img src="/courses/bayes-nets/2022-10-25-nagara-static_files/figure-html/unnamed-chunk-4-1.png" width="1440" /></p>
+</div>
+<div id="part-d" class="section level4">
+<h4>Part D</h4>
+<blockquote>
+<p>Identify the parents, the children, the neighbors, and the Markov blanket of each node.</p>
+</blockquote>
+<pre class="r"><code># parents
+sapply(nodes(dag_2.1), bnlearn::parents, x = dag_2.1)</code></pre>
+<pre><code>## $A
+## character(0)
+## 
+## $B
+## [1] &quot;S&quot;
+## 
+## $D
+## [1] &quot;B&quot; &quot;E&quot;
+## 
+## $E
+## [1] &quot;L&quot; &quot;T&quot;
+## 
+## $L
+## [1] &quot;S&quot;
+## 
+## $S
+## character(0)
+## 
+## $T
+## [1] &quot;A&quot;
+## 
+## $X
+## [1] &quot;E&quot;</code></pre>
+<pre class="r"><code># children
+sapply(nodes(dag_2.1), bnlearn::children, x = dag_2.1)</code></pre>
+<pre><code>## $A
+## [1] &quot;T&quot;
+## 
+## $B
+## [1] &quot;D&quot;
+## 
+## $D
+## character(0)
+## 
+## $E
+## [1] &quot;D&quot; &quot;X&quot;
+## 
+## $L
+## [1] &quot;E&quot;
+## 
+## $S
+## [1] &quot;B&quot; &quot;L&quot;
+## 
+## $T
+## [1] &quot;E&quot;
+## 
+## $X
+## character(0)</code></pre>
+<pre class="r"><code># neighbors
+sapply(nodes(dag_2.1), bnlearn::nbr, x = dag_2.1)</code></pre>
+<pre><code>## $A
+## [1] &quot;T&quot;
+## 
+## $B
+## [1] &quot;D&quot; &quot;S&quot;
+## 
+## $D
+## [1] &quot;B&quot; &quot;E&quot;
+## 
+## $E
+## [1] &quot;D&quot; &quot;L&quot; &quot;T&quot; &quot;X&quot;
+## 
+## $L
+## [1] &quot;E&quot; &quot;S&quot;
+## 
+## $S
+## [1] &quot;B&quot; &quot;L&quot;
+## 
+## $T
+## [1] &quot;A&quot; &quot;E&quot;
+## 
+## $X
+## [1] &quot;E&quot;</code></pre>
+<pre class="r"><code># markov blanket
+sapply(nodes(dag_2.1), bnlearn::mb, x = dag_2.1)</code></pre>
+<pre><code>## $A
+## [1] &quot;T&quot;
+## 
+## $B
+## [1] &quot;D&quot; &quot;E&quot; &quot;S&quot;
+## 
+## $D
+## [1] &quot;B&quot; &quot;E&quot;
+## 
+## $E
+## [1] &quot;B&quot; &quot;D&quot; &quot;L&quot; &quot;T&quot; &quot;X&quot;
+## 
+## $L
+## [1] &quot;E&quot; &quot;S&quot; &quot;T&quot;
+## 
+## $S
+## [1] &quot;B&quot; &quot;L&quot;
+## 
+## $T
+## [1] &quot;A&quot; &quot;E&quot; &quot;L&quot;
+## 
+## $X
+## [1] &quot;E&quot;</code></pre>
+</div>
+</div>
+<div id="nagarajan-2.2" class="section level3">
+<h3>Nagarajan 2.2</h3>
+<blockquote>
+<p>Using the network structures created in Exercise 2.1 for the asia data set, produce the following plots with <code>graphviz.plot</code>:</p>
+</blockquote>
+<div id="part-a-1" class="section level4">
+<h4>Part A</h4>
+<blockquote>
+<p>A plot of the CPDAG of the equivalence class in which the arcs belonging to a v-structure are highlighted (either with a different color or using a thicker line width).</p>
+</blockquote>
+<pre class="r"><code>graphviz.plot(equclass_2.1,
+  highlight = list(arcs = vstructs(equclass_2.1, arcs = TRUE), lwd = 2, col = &quot;red&quot;)
+)</code></pre>
+<p><img src="/courses/bayes-nets/2022-10-25-nagara-static_files/figure-html/unnamed-chunk-6-1.png" width="1440" /></p>
+</div>
+<div id="part-b-1" class="section level4">
+<h4>Part B</h4>
+<blockquote>
+<p>Fill the nodes with different colors according to their role in the diagnostic process: causes (“visit to Asia” and “smoking”), effects (“tuberculosis,” “lung cancer,” and “bronchitis”), and the diagnosis proper (“chest X-ray,” “dyspnea,” and “either tuberculosis or lung cancer/bronchitis”).</p>
+</blockquote>
+<p>No clue on how to do this with <code>graphviz.plot</code> and the solution provided in the book results in an error message. Instead, I use <code>igraph</code> for plotting:</p>
+<pre class="r"><code># create igraph object
+equclass_igraph &lt;- graph_from_edgelist(arcs(equclass_2.1))
+# assign colours, effects = red; causes = green; diagnosis = blue
+V(equclass_igraph)$color &lt;- c(&quot;blue&quot;, &quot;red&quot;, &quot;green&quot;, &quot;green&quot;, &quot;red&quot;, &quot;blue&quot;, &quot;red&quot;, &quot;green&quot;)
+V(equclass_igraph)$name &lt;- c(&quot;Visit to Asia&quot;, &quot;Tubercolosis&quot;, &quot;Bronchitis&quot;, &quot;Dyspnoea&quot;, &quot;Smoking&quot;, &quot;Tuberculosis vs Cancer&quot;, &quot;X-Ray&quot;, &quot;Lung Cancer&quot;)
+# plotting
+plot(equclass_igraph,
+  layout = layout.circle,
+  vertex.size = 30,
+  vertex.label.color = &quot;black&quot;
+)</code></pre>
+<p><img src="/courses/bayes-nets/2022-10-25-nagara-static_files/figure-html/unnamed-chunk-7-1.png" width="1440" /></p>
+</div>
+<div id="part-c-1" class="section level4">
+<h4>Part C</h4>
+<blockquote>
+<p>Explore different layouts by changing the <code>layout</code> and <code>shape</code> arguments.</p>
+</blockquote>
+<pre class="r"><code>par(mfrow = c(2, 5))
+layout &lt;- c(&quot;dot&quot;, &quot;neato&quot;, &quot;twopi&quot;, &quot;circo&quot;, &quot;fdp&quot;)
+shape &lt;- c(&quot;ellipse&quot;, &quot;circle&quot;)
+for (l in layout) {
+  for (s in shape) {
+    graphviz.plot(equclass_2.1, shape = s, layout = l, main = paste(l, s))
+  }
+}</code></pre>
+<p><img src="/courses/bayes-nets/2022-10-25-nagara-static_files/figure-html/unnamed-chunk-8-1.png" width="1440" /></p>
+</div>
+</div>
+<div id="nagarajan-2.3" class="section level3">
+<h3>Nagarajan 2.3</h3>
+<blockquote>
+<p>Consider the <code>marks</code> data set analyzed in Sect. 2.3.</p>
+</blockquote>
+<pre class="r"><code>data(marks)</code></pre>
+<div id="part-a-2" class="section level4">
+<h4>Part A</h4>
+<blockquote>
+<p>Discretize the data using a quantile transform and different numbers of intervals (say, from 2 to 5). How does the network structure learned from the resulting data sets change as the number of intervals increases?</p>
+</blockquote>
+<pre class="r"><code>intervals &lt;- 2:5
+par(mfrow = c(1, length(intervals)))
+for (int in intervals) {
+  disc_data &lt;- discretize(marks, breaks = int, method = &quot;quantile&quot;)
+  graphviz.plot(hc(disc_data), main = int)
+}</code></pre>
+<p><img src="/courses/bayes-nets/2022-10-25-nagara-static_files/figure-html/unnamed-chunk-10-1.png" width="1440" /></p>
+<p>The network structure becomes flatter. I reckon this is caused by the loss of information as the number of intervals is increased and variables are discretised with no regard for joint distributions.</p>
+</div>
+<div id="part-b-2" class="section level4">
+<h4>Part B</h4>
+<blockquote>
+<p>Repeat the discretization using interval discretization using up to 5 intervals, and compare the resulting networks with the ones obtained previously with quantile discretization.</p>
+</blockquote>
+<pre class="r"><code>intervals &lt;- 2:5
+par(mfrow = c(1, length(intervals)))
+for (int in intervals) {
+  disc_data &lt;- discretize(marks, breaks = int, method = &quot;interval&quot;)
+  graphviz.plot(hc(disc_data), main = int)
+}</code></pre>
+<p><img src="/courses/bayes-nets/2022-10-25-nagara-static_files/figure-html/unnamed-chunk-11-1.png" width="1440" /></p>
+<p>Although the specific placement of the nodes changes between the two discretisation approaches, the general pattern of loss of arcs as number of intervals increases stays constant.</p>
+</div>
+<div id="part-c-2" class="section level4">
+<h4>Part C</h4>
+<blockquote>
+<p>Does Hartemink’s discretization algorithm perform better than either quantile or interval discretization? How does its behavior depend on the number of initial breaks?</p>
+</blockquote>
+<pre class="r"><code>intervals &lt;- 2:5
+par(mfrow = c(1, length(intervals)))
+for (int in intervals) {
+  disc_data &lt;- discretize(marks, breaks = int, method = &quot;hartemink&quot;, ibreaks = 50, idisc = &quot;interval&quot;)
+  graphviz.plot(hc(disc_data), main = int)
+}</code></pre>
+<p><img src="/courses/bayes-nets/2022-10-25-nagara-static_files/figure-html/unnamed-chunk-12-1.png" width="1440" /></p>
+<p>This form of discretisation seems more robust when assessing how accurately the DAG structure is learned when number of intervals is increased.</p>
+</div>
+</div>
+<div id="nagarajan-2.4" class="section level3">
+<h3>Nagarajan 2.4</h3>
+<blockquote>
+<p>The ALARM network (Beinlich et al. 1989) is a Bayesian network designed to provide an alarm message system for patients hospitalized in intensive care units (ICU). Since ALARM is commonly used as a benchmark in literature, a synthetic data set of 5000 observations generated from this network is available from bnlearn as <code>alarm</code>.</p>
+</blockquote>
+<pre class="r"><code>data(alarm)</code></pre>
+<div id="part-a-3" class="section level4">
+<h4>Part A</h4>
+<blockquote>
+<p>Create a <code>bn</code> object for the “true” structure of the network using the model string provided in its manual page.</p>
+</blockquote>
+<pre class="r"><code>true_bn &lt;- model2network(paste(&quot;[HIST|LVF][CVP|LVV]&quot;, &quot;[PCWP|LVV][HYP][LVV|HYP:LVF][LVF]&quot;,
+  &quot;[STKV|HYP:LVF][ERLO][HRBP|ERLO:HR]&quot;, &quot;[HREK|ERCA:HR][ERCA][HRSA|ERCA:HR][ANES]&quot;,
+  &quot;[APL][TPR|APL][ECO2|ACO2:VLNG][KINK]&quot;, &quot;[MINV|INT:VLNG][FIO2][PVS|FIO2:VALV]&quot;,
+  &quot;[SAO2|PVS:SHNT][PAP|PMB][PMB][SHNT|INT:PMB]&quot;, &quot;[INT][PRSS|INT:KINK:VTUB][DISC][MVS]&quot;,
+  &quot;[VMCH|MVS][VTUB|DISC:VMCH]&quot;, &quot;[VLNG|INT:KINK:VTUB][VALV|INT:VLNG]&quot;,
+  &quot;[ACO2|VALV][CCHL|ACO2:ANES:SAO2:TPR]&quot;, &quot;[HR|CCHL][CO|HR:STKV][BP|CO:TPR]&quot;,
+  sep = &quot;&quot;
+))</code></pre>
+</div>
+<div id="part-b-3" class="section level4">
+<h4>Part B</h4>
+<blockquote>
+<p>Compare the networks learned with different constraint-based algorithms with the true one, both in terms of structural differences and using either BIC or BDe.</p>
+</blockquote>
+<pre class="r"><code># learning
+bn.gs &lt;- gs(alarm)
+bn.iamb &lt;- iamb(alarm)
+bn.inter &lt;- inter.iamb(alarm)
+# plotting
+par(mfrow = c(2, 2))
+graphviz.plot(true_bn, main = &quot;True Structure&quot;)
+graphviz.plot(bn.gs, main = &quot;Grow-Shrink&quot;)
+graphviz.plot(bn.iamb, main = &quot;IAMB&quot;)
+graphviz.plot(bn.inter, main = &quot;Inter-IAMB&quot;)</code></pre>
+<p><img src="/courses/bayes-nets/2022-10-25-nagara-static_files/figure-html/unnamed-chunk-15-1.png" width="1440" /></p>
+<pre class="r"><code># comparisons
+unlist(bnlearn::compare(true_bn, bn.gs))</code></pre>
+<pre><code>## tp fp fn 
+##  5 14 41</code></pre>
+<pre class="r"><code>unlist(bnlearn::compare(true_bn, bn.iamb))</code></pre>
+<pre><code>## tp fp fn 
+## 16 18 30</code></pre>
+<pre class="r"><code>unlist(bnlearn::compare(true_bn, bn.inter))</code></pre>
+<pre><code>## tp fp fn 
+## 27 11 19</code></pre>
+<pre class="r"><code># Scores
+score(cextend(true_bn), alarm, type = &quot;bde&quot;)</code></pre>
+<pre><code>## [1] -218063</code></pre>
+<pre class="r"><code>score(cextend(bn.gs), alarm, type = &quot;bde&quot;)</code></pre>
+<pre><code>## [1] -337116.1</code></pre>
+<pre class="r"><code>score(cextend(bn.iamb), alarm, type = &quot;bde&quot;)</code></pre>
+<pre><code>## [1] -263670.8</code></pre>
+<pre class="r"><code>score(cextend(bn.inter), alarm, type = &quot;bde&quot;)</code></pre>
+<pre><code>## [1] -259922.1</code></pre>
+</div>
+<div id="part-c-3" class="section level4">
+<h4>Part C</h4>
+<blockquote>
+<p>The overall performance of constraint-based algorithms suggests that the asymptotic <span class="math inline">\(\chi^2\)</span> conditional independence tests may not be appropriate for analyzing <code>alarm</code>. Are permutation or shrinkage tests better choices?</p>
+</blockquote>
+<p>This should improve the performance drastically. However, computational time is so high that I refuse to run this code. Even the first call to <code>gs()</code> below takes more than 12 hours to run. I don’t know what the authors of the exercise material had envisioned the learning outcome of this to be.</p>
+<pre class="r"><code>bn.gs2 &lt;- gs(alarm, test = &quot;smc-x2&quot;)
+bn.iamb2 &lt;- iamb(alarm, test = &quot;smc-x2&quot;)
+bn.inter2 &lt;- inter.iamb(alarm, test = &quot;smc-x2&quot;)
+unlist(compare(true_bn, bn.gs2))
+unlist(compare(true_bn, bn.iamb2))
+unlist(compare(true_bn, bn.inter2))</code></pre>
+</div>
+<div id="part-d-1" class="section level4">
+<h4>Part D</h4>
+<blockquote>
+<p>How are the above learning strategies affected by changes to <code>alpha</code>?</p>
+</blockquote>
+<p>Shrinkage should also improves structure learning performance, but computational time should be much lower than it is with permutation tests. Much like with the previous exercise, however, the code below just takes too long for my liking to finish running.</p>
+<pre class="r"><code>bn.gs3 &lt;- gs(alarm, test = &quot;smc-x2&quot;, alpha = 0.01)
+bn.iamb3 &lt;- iamb(alarm, test = &quot;smc-x2&quot;, alpha = 0.01)
+bn.inter3 &lt;- inter.iamb(alarm, test = &quot;smc-x2&quot;, alpha = 0.01)
+unlist(compare(true, bn.gs3))
+unlist(compare(true, bn.iamb3))
+unlist(compare(true, bn.inter3))</code></pre>
+</div>
+</div>
+<div id="nagarajan-2.5" class="section level3">
+<h3>Nagarajan 2.5</h3>
+<blockquote>
+<p>Consider again the <code>alarm</code> network used in Exercise 2.4.</p>
+</blockquote>
+<div id="part-a-4" class="section level4">
+<h4>Part A</h4>
+<blockquote>
+<p>Learn its structure with hill-climbing and tabu search, using the posterior density BDe as a score function. How does the network structure change with the imaginary sample size <code>iss</code>?</p>
+</blockquote>
+<pre class="r"><code>par(mfrow = c(2, 5))
+for (iss in c(1, 5, 10, 20, 50)) {
+  bn &lt;- hc(alarm, score = &quot;bde&quot;, iss = iss)
+  main &lt;- paste(&quot;hc(..., iss = &quot;, iss, &quot;)&quot;, sep = &quot;&quot;)
+  sub &lt;- paste(narcs(bn), &quot;arcs&quot;)
+  graphviz.plot(bn, main = main, sub = sub)
+}
+for (iss in c(1, 5, 10, 20, 50)) {
+  bn &lt;- tabu(alarm, score = &quot;bde&quot;, iss = iss)
+  main &lt;- paste(&quot;tabu(..., iss = &quot;, iss, &quot;)&quot;, sep = &quot;&quot;)
+  sub &lt;- paste(narcs(bn), &quot;arcs&quot;)
+  graphviz.plot(bn, main = main, sub = sub)
+}</code></pre>
+<p><img src="/courses/bayes-nets/2022-10-25-nagara-static_files/figure-html/unnamed-chunk-18-1.png" width="1440" /></p>
+<p>The number of arcs increases with <code>iss</code>. Large values of <code>iss</code> over-smooth the data and thus result in networks with similar scores and therefore allow for many arcs to be included in the final networks.</p>
+</div>
+<div id="part-b-4" class="section level4">
+<h4>Part B</h4>
+<blockquote>
+<p>Does the length of the tabu list have a significant impact on the network structures learned with <code>tabu</code>?</p>
+</blockquote>
+<pre class="r"><code>par(mfrow = c(1, 5))
+for (n in c(10, 15, 20, 50, 100)) {
+  bn &lt;- tabu(alarm, score = &quot;bde&quot;, tabu = n)
+  bde &lt;- score(bn, alarm, type = &quot;bde&quot;)
+  main &lt;- paste(&quot;tabu(..., tabu = &quot;, n, &quot;)&quot;, sep = &quot;&quot;)
+  sub &lt;- paste(ntests(bn), &quot;steps, score&quot;, bde)
+  graphviz.plot(bn, main = main, sub = sub)
+}</code></pre>
+<p><img src="/courses/bayes-nets/2022-10-25-nagara-static_files/figure-html/unnamed-chunk-19-1.png" width="1440" /></p>
+<p>Increasing the tabu length severely affects the learned structure of the final network. Firstly, it does so by increasing the raw number of network structures explored by tabu. Secondly, getting stuck in local maxima becomes increasingly unlikely.</p>
+</div>
+<div id="part-c-4" class="section level4">
+<h4>Part C</h4>
+<blockquote>
+<p>How does the BIC score compare with BDe at different sample sizes in terms of structure and score of the learned network?</p>
+</blockquote>
+<pre class="r"><code>par(mfrow = c(2, 6))
+for (n in c(100, 200, 500, 1000, 2000, 5000)) {
+  bn.bde &lt;- hc(alarm[1:n, ], score = &quot;bde&quot;)
+  bn.bic &lt;- hc(alarm[1:n, ], score = &quot;bic&quot;)
+  bde &lt;- score(bn.bde, alarm, type = &quot;bde&quot;)
+  bic &lt;- score(bn.bic, alarm, type = &quot;bic&quot;)
+  main &lt;- paste(&quot;BDe, sample size&quot;, n)
+  sub &lt;- paste(ntests(bn.bde), &quot;steps, score&quot;, bde)
+  graphviz.plot(bn.bde, main = main, sub = sub)
+  main &lt;- paste(&quot;BIC, sample size&quot;, n)
+  sub &lt;- paste(ntests(bn.bic), &quot;steps, score&quot;, bic)
+  graphviz.plot(bn.bic, main = main, sub = sub)
+}</code></pre>
+<p><img src="/courses/bayes-nets/2022-10-25-nagara-static_files/figure-html/unnamed-chunk-20-1.png" width="1440" /></p>
+<p>The networks become more similar as sample size increases. At small sample sizes, BIC results in sparser networks than BDe.</p>
+</div>
+</div>
+<div id="nagarajan-2.6" class="section level3">
+<h3>Nagarajan 2.6</h3>
+<blockquote>
+<p>Consider the observational data set from Sachs et al. (2005) used in Sect. 2.5.1 (the original data set, not the discretized one).</p>
+</blockquote>
+<div id="part-a-5" class="section level4">
+<h4>Part A</h4>
+<blockquote>
+<p>Evaluate the networks learned by hill-climbing with BIC and BGe using cross-validation and the log-likelihood loss function.</p>
+</blockquote>
+<p>The sachs data file is available<a href="https://www.bnlearn.com/book-useR/code/sachs.data.txt.gz">here</a>.</p>
+<pre class="r"><code>sachs &lt;- read.table(&quot;sachs.data.txt&quot;, header = TRUE)
+bn.bic &lt;- hc(sachs, score = &quot;bic-g&quot;)
+bn.cv(bn.bic, data = sachs)</code></pre>
+<pre><code>## 
+##   k-fold cross-validation for Bayesian networks
+## 
+##   target network structure:
+##    [praf][PIP2][p44.42][PKC][pmek|praf][PIP3|PIP2][pakts473|p44.42][P38|PKC][plcg|PIP3][PKA|p44.42:pakts473][pjnk|PKC:P38] 
+##   number of folds:                       10 
+##   loss function:                         Log-Likelihood Loss (Gauss.) 
+##   expected loss:                         65.48251</code></pre>
+<pre class="r"><code>bn.bge &lt;- hc(sachs, score = &quot;bge&quot;)
+bn.cv(bn.bge, data = sachs)</code></pre>
+<pre><code>## 
+##   k-fold cross-validation for Bayesian networks
+## 
+##   target network structure:
+##    [praf][plcg][PIP2][p44.42][PKC][pmek|praf][PIP3|PIP2][pakts473|p44.42][P38|PKC][PKA|p44.42:pakts473][pjnk|PKC:P38] 
+##   number of folds:                       10 
+##   loss function:                         Log-Likelihood Loss (Gauss.) 
+##   expected loss:                         65.3477</code></pre>
+<p>The BGe network fits the data slightly better than the BIC-network.</p>
+</div>
+<div id="part-b-5" class="section level4">
+<h4>Part B</h4>
+<blockquote>
+<p>Use bootstrap resampling to evaluate the distribution of the number of arcs present in each of the networks learned in the previous point. Do they differ significantly?</p>
+</blockquote>
+<pre class="r"><code>set.seed(42)
+narcs.bic &lt;- bn.boot(sachs, algorithm = &quot;hc&quot;, algorithm.args = list(score = &quot;bic-g&quot;), statistic = narcs)
+narcs.bge &lt;- bn.boot(sachs, algorithm = &quot;hc&quot;, algorithm.args = list(score = &quot;bge&quot;), statistic = narcs)
+narcs.bic &lt;- unlist(narcs.bic)
+narcs.bge &lt;- unlist(narcs.bge)
+par(mfrow = c(1, 2))
+hist(narcs.bic, main = &quot;BIC&quot;, freq = FALSE)
+curve(dnorm(x, mean = mean(narcs.bic), sd = sd(narcs.bic)), add = TRUE, col = 2)
+hist(narcs.bge, main = &quot;BGe&quot;, freq = FALSE)
+curve(dnorm(x, mean = mean(narcs.bge), sd = sd(narcs.bge)), add = TRUE, col = 2)</code></pre>
+<p><img src="/courses/bayes-nets/2022-10-25-nagara-static_files/figure-html/unnamed-chunk-22-1.png" width="1440" /></p>
+<p>Number-of-arc-distributions are markedly different between BIC and BGe networks.</p>
+</div>
+<div id="part-c-5" class="section level4">
+<h4>Part C</h4>
+<blockquote>
+<p>Compute the averaged network structure for <code>sachs</code> using hill-climbing with BGe and different imaginary sample sizes. How does the value of the significance threshold change as <code>iss</code> increases?</p>
+</blockquote>
+<pre class="r"><code>set.seed(42)
+t &lt;- c()
+iss &lt;- c(5, 10, 20, 50, 100)
+for (i in iss) {
+  s &lt;- boot.strength(sachs,
+    algorithm = &quot;hc&quot;,
+    algorithm.args = list(score = &quot;bge&quot;, iss = i)
+  )
+  t &lt;- c(t, attr(s, &quot;threshold&quot;))
+}
+t</code></pre>
+<pre><code>## [1] 0.780 0.415 0.430 0.380 0.440</code></pre>
+</div>
+</div>
+</div>
+<div id="session-info" class="section level2">
+<h2>Session Info</h2>
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>## R version 4.2.1 (2022-06-23 ucrt)
+## Platform: x86_64-w64-mingw32/x64 (64-bit)
+## Running under: Windows 10 x64 (build 19044)
+## 
+## Matrix products: default
+## 
+## locale:
+## [1] LC_COLLATE=English_Germany.utf8  LC_CTYPE=English_Germany.utf8    LC_MONETARY=English_Germany.utf8 LC_NUMERIC=C                     LC_TIME=English_Germany.utf8    
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+## [1] igraph_1.3.4  bnlearn_4.8.1
+## 
+## loaded via a namespace (and not attached):
+##  [1] highr_0.9           bslib_0.4.0         compiler_4.2.1      jquerylib_0.1.4     R.methodsS3_1.8.2   R.utils_2.12.0      tools_4.2.1         digest_0.6.29       jsonlite_1.8.0     
+## [10] evaluate_0.16       R.cache_0.16.0      pkgconfig_2.0.3     rlang_1.0.5         graph_1.74.0        cli_3.3.0           rstudioapi_0.14     Rgraphviz_2.40.0    yaml_2.3.5         
+## [19] parallel_4.2.1      blogdown_1.13       xfun_0.33           fastmap_1.1.0       styler_1.8.0        stringr_1.4.1       knitr_1.40          sass_0.4.2          vctrs_0.4.1        
+## [28] grid_4.2.1          stats4_4.2.1        R6_2.5.1            rmarkdown_2.16      bookdown_0.29       purrr_0.3.4         magrittr_2.0.3      htmltools_0.5.3     BiocGenerics_0.42.0
+## [37] stringi_1.7.8       cachem_1.0.6        R.oo_1.25.0</code></pre>
+</div>

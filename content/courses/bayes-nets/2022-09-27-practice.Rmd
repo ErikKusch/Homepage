@@ -1,0 +1,440 @@
+---
+title: "(Bayesian) Networks & R"
+author: Erik Kusch
+date: '2022-09-27'
+slug: networksR
+categories:
+  - Bayesian Networks
+tags:
+  - Bayes
+  - Networks
+  - Bayesian Statistics
+  - Statistics
+subtitle: "Expressing Networks with `R`"
+summary: 'Here, we lay the foundation for registering networks and their structure in `R` and show how to visualise them.'
+authors: []
+lastmod: '2022-09-27T20:00:00+01:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: 
+output:
+  blogdown::html_page:
+    keep_md: true
+    # toc: true
+    # toc_depth: 1
+    # number_sections: false
+# header-includes:
+#   <script src = "https://polyfill.io/v3/polyfill.min.js?features = es6"></script>
+#   <script id = "MathJax-script" async src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+math: true
+type: docs
+toc: true 
+menu:
+  bayesnets:
+    parent: 1 - Theory
+    weight: 2
+weight: 2
+---
+
+<style>
+
+blockquote{
+color:#ffffff;
+}
+
+</style> 
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, tidy = 'styler', tidy.opts = list(strict = TRUE), fig.width = 15, fig.height = 8)
+options(width = 200)
+```
+
+## Material
+
+- [Networks in `R`](/courses/bayes-nets/2-Networks-in-R_27-09-22.html)  
+
+## Exercises
+
+These are answers and solutions to the exercises at the end of chapter 1 in [Bayesian Networks in R with Applications in Systems Biology](https://link.springer.com/book/10.1007/978-1-4614-6446-4)  by Radhakrishnan Nagarajan, Marco Scutari \& Sophie Lèbre. Much of my inspiration for these solutions, where necessary, by consulting the solutions provided by the authors themselves as in the appendix.
+
+### Nagarajan 1.1
+> 1.1. Consider a directed acyclic graph with n nodes.
+
+> (a) Show that at least one node must not have any incoming arc, i.e., the graph must contain at least one root node.
+
+A graph without a root node violates the premise of acyclicity inherent to Bayesian Networks. 
+
+Assuming our graph is directed with G = (**V**, A), and assuming that there is no root node present, for any vertex $V_i$ that we chose of the set **V**, we can find a path that $V_i \rightarrow ... \rightarrow V_n$ which spans all nodes in **V**. However, $V_n$ must have an outgoing arc ($V_n \rightarrow ...$) which must connect to any of the nodes already on the path between $V_i$ and $V_n$ thereby incurring a loop or cycle.
+
+> (b) Show that such a graph can have at most n(n−1) arcs.
+
+This can be explained as an iterative process. Starting with any node $V_1 \in \boldsymbol V$, not violating the prerequisite for acyclicity, $V_1$ may only contain $n-1$ outgoing arcs (an arc linking to itself would create a cycle). Continuing now to another node $V_2 \in \boldsymbol V$ and $V_2 \neq V_1$, this node may only contain $n-2$ outgoing arcs as any arc linking to itself or $V_1$ would introduce a cycle or loop.
+
+Continuing this process to its logical conclusion of $V_n$, we can summarise the number of possible outgoing arcs thusly:
+
+\begin{equation}
+A \leq (n-1) + (n-2) + ... + (1) = \left( n\atop{2} \right) = \frac{n(n-1)}{2}
+\end{equation}
+
+> (c) Show that a path can span at most n−1 arcs.
+
+Any arc contains two nodes - one tail and one head. Therefore, a path spanning n arcs would have to contain n+1 vertices, thus passing trough one vertex twice and introducing a cycle.
+
+> (d) Describe an algorithm to determine the topological ordering of the graph.
+
+Two prominent examples are [breadth-first](https://en.wikipedia.org/wiki/Breadth-first_search) (BF) and [depth-first](https://en.wikipedia.org/wiki/Depth-first_search) (DF) algorithms. 
+
+The former (BF) attempts to locate a node that satisfies a certain query conditions by exploring a graph from a root node and subsequently evaluating nodes which are equidistant to the root (at a distance of one arc). If none of these nodes satisfies the search criteria, the distance to root node is increased by an additional arc distance.
+
+DF, on the other hand, starts at a root node and fully explores a randomly chosen path until either a node satisfying the search criteria is reached or the path has ended in which case a new path is explored starting at the root node.
+
+### Nagarajan 1.2
+
+> 1.2. Consider the graphs shown in Fig. 1.1.
+
+<!-- Figure 1.1 is the following: -->
+<img src="/courses/bayes-nets/Nagara1.1.JPG" width="900"/>
+
+> (a) Obtain the skeleton of the partially directed and directed graphs.
+
+I start by loading the `visNetwork` `R` package. I chose this package simply because I like how it creates interactive visualisations - try it out! Click some of the vertices below or try and drag them around.
+
+I also load additional html libraries with which I can include the thml outputs produced by `visNetwork` in this blog:
+
+```{r}
+library(visNetwork)
+library(htmlwidgets)
+library(htmltools)
+```
+
+Next, I register the node set as well as the two arc sets we are working with:
+```{r}
+V <- data.frame(id = c("A", "B", "C", "D", "E"),
+                label = c("A", "B", "C", "D", "E"))
+A_directed <- data.frame(from = c("C", "C", "C", "D", "A"),
+                         to = c("E", "A", "D", "B", "B"))
+A_partial <- data.frame(from = c("E", "D", "A", "C", "C"),
+                        to = c("B", "E", "D", "D", "A"))
+```
+
+Note that I still have to register a direction even for undirected edges.
+
+Now, to visualise the skeletons, we simply plot the graphs without any edge directionality:
+
+
+<details>
+  <summary>Click here for the plotting call of the skeleton of the directed graph:</summary>
+```{r}
+## skeleton of directed graph
+Nagara1.2aD <- visNetwork(nodes = V,
+           edges = A_directed)  %>%
+  visNodes(shape = "circle", 
+           font = list(size = 40, color = "white"),
+           color = list(background = "darkgrey", 
+                        border = "black", 
+                        highlight = "orange"),
+           shadow = list(enabled = TRUE, size = 10)) %>%
+           visEdges(color = list(color = "green", 
+                                 highlight = "red")) %>%
+  visLayout(randomSeed = 42)
+saveWidget(Nagara1.2aD, "Nagara1.2aD.html")
+```
+</details>
+
+<iframe seamless src="/courses/bayes-nets/Nagara1.2aD.html" width="900" height="500"></iframe>
+
+<details>
+  <summary>Click here for the plotting call of the skeleton of the partially directed graph:</summary>
+```{r}
+## skeleton of partially directed graph
+Nagara1.2aP <- visNetwork(nodes = V,
+           edges = A_partial)  %>%
+  visNodes(shape = "circle", 
+           font = list(size = 40, color = "white"),
+           color = list(background = "darkgrey", 
+                        border = "black", 
+                        highlight = "orange"),
+           shadow = list(enabled = TRUE, size = 10)) %>%
+           visEdges(color = list(color = "green", 
+                                 highlight = "red")) %>%
+  visLayout(randomSeed = 42)
+
+saveWidget(Nagara1.2aP, "Nagara1.2aP.html")
+```
+</details>
+
+<iframe seamless src="/courses/bayes-nets/Nagara1.2aP.html" width="900" height="500"></iframe>
+
+> (b) Enumerate the acyclic graphs that can be obtained by orienting the undirected arcs of the partially directed graph.
+
+Right. Sorting this out using `visNetwork` would be a royal pain. So I instead opt for using `igraph` for this exercise.
+
+First, I load the necessary `R` package:
+
+```{r}
+library(igraph)
+```
+
+Next, I consider the edge and node set of the partially directed graph:
+
+```{r}
+V <- data.frame(id = c("A", "B", "C", "D", "E"))
+A_partial <- data.frame(from = c("E", "D", "A", "C", "C"),
+                        to = c("B", "E", "D", "D", "A"))
+```
+
+To enumerate all DAGs from these sets, I may only change the directions of the last three edges listed in my edge set.
+
+Objectively, this exercise could be solved by simply *thinking* about the different constellations. **However**, I code for a living. One may argue that thinking is not necessarily in my wheelhouse (on may also claim the opposite). Hence, I will automate the procedure.
+
+To do so, I will need to create all possible combinations of directions of currently undirected edges in the graph in question and check whether they create cycles or not.
+
+To do so, I load the `bnlearn` package as it comes with an error message when trying to assign an arc set that introduces cycles. I also register a base graph consisting of only our vertex set:
+```{r}
+library(bnlearn)
+base_bn <- empty.graph(nodes = V$id)
+```
+
+Now, I simply loop over my three arcs in question and alternate which direction they are pointing. At the deepest level of this monstrosity, I am then assingning the final arcs to the base graph and only retain it if the cyclicity error has not been thrown:
+```{r}
+A_iter <- A_partial
+A_ls <- list()
+counter <- 1
+for(AD in 1:2){
+  A_iter[3,] <- if(AD == 1){A_partial[3,]}else{rev(A_partial[3,])}
+  for(CD in 1:2){
+    A_iter[4,] <- if(CD == 1){A_partial[4,]}else{rev(A_partial[4,])}
+    for(CA in 1:2){
+      A_iter[5,] <- if(CA == 1){A_partial[5,]}else{rev(A_partial[5,])}
+      A_check <- tryCatch({arcs(base_bn) <- A_iter}, error = function(e){"error"})
+      if(all(A_check != "error")){
+        A_ls[[counter]] <- base_bn
+        counter <- counter + 1 
+      }
+    }
+  }
+}
+```
+
+How many valid DAGs did this result in?
+```{r}
+length(A_ls)
+```
+
+Let's plot these out and be done with it:
+```{r, results = "asis"}
+par(mfrow = c(2, 3))
+for(plot_iter in A_ls){
+  dag_igraph <- graph_from_edgelist(arcs(plot_iter))
+plot(dag_igraph,
+     layout = layout.circle,
+     vertex.size = 30)
+}
+```
+
+> (c) List the arcs that can be reversed (i.e., turned in the opposite direction), one at a time, without introducing cycles in the directed graph.
+
+All arcs of the directed graph can be reversed without introducing cycles.
+
+### Nagarajan 1.3
+
+> 1.3. The (famous) iris data set reports the measurements in centimeters of the sepal length and width and the petal length and width for 50 flowers from each of 3 species of iris (“setosa,” “versicolor,” and “virginica”).
+
+> (a) Load the iris data set (it is included in the datasets package, which is part of the base R distribution and does not need to be loaded explicitly) and read its manual page.
+
+```{r}
+data(iris)
+```
+
+```{r, eval = FALSE}
+?iris
+```
+
+> (b) Investigate the structure of the data set.
+
+```{r}
+str(iris)
+```
+
+> (c) Compare the sepal length among the three species by plotting histograms side by side.
+
+```{r}
+library(ggplot2)
+ggplot(iris, aes(x = Sepal.Length)) + 
+  geom_histogram() + 
+  facet_wrap(~ Species) + 
+  theme_bw()
+```
+
+> (d) Repeat the previous point using boxplots.
+
+```{r}
+library(ggplot2)
+ggplot(iris, aes(x = Species, y = Sepal.Length)) + 
+  geom_boxplot() + 
+  theme_bw()
+```
+
+### Nagarajan 1.4
+
+> 1.4. Consider again the iris data set from Exercise 1.3.
+
+> (a) Write the data frame holding iris data frame into a space-separated text file named “iris.txt,” and read it back into a second data frame called iris2.
+
+```{r}
+write.table(iris, file = "iris.txt", row.names = FALSE)
+iris2 <- read.table("iris.txt", header = TRUE)
+```
+
+> (b) Check that iris and iris2 are identical.
+
+```{r}
+identical(iris, iris2)
+```
+
+Why are they not identical? That's because `iris` stores `Species` as a `factor`. Information which is lost when writing to a .txt file. Let's reformat this and check again:
+
+```{r}
+iris2$Species <- factor(iris2$Species)
+identical(iris, iris2)
+```
+
+> (c) Repeat the previous two steps with a file compressed with bzip2 named “iris.txt.bz2.”
+
+```{r}
+bzfd <- bzfile("iris.txt.bz2", open = "w")
+write.table(iris, file = bzfd, row.names = FALSE)
+close(bzfd)
+bzfd <- bzfile("iris.txt.bz2", open = "r")
+iris2 <- read.table(bzfd, header = TRUE)
+close(bzfd)
+iris2$Species <- factor(iris2$Species)
+identical(iris, iris2)
+```
+
+> (d) Save iris directly (e.g., without converting it to a text table) into a file called “iris.rda,” and read it back.
+
+```{r}
+save(iris, file = "iris.rda")
+load("iris.rda")
+```
+
+> (e) List all R objects in the global environment and remove all of them apart from iris.
+
+```{r}
+ls()
+l <- ls()
+rm(list = l[l != "iris"])
+```
+
+> (f) Exit the R saving the contents of the current session.
+
+```{r, eval = FALSE}
+quit(save = "yes")
+```
+
+### Nagarajan 1.5
+> 1.5. Consider the gaussian.test data set included in bnlearn.
+
+> (a) Print the column names.
+
+```{r}
+colnames(gaussian.test)
+```
+
+> (b) Print the range and the quartiles of each variable.
+
+```{r}
+## range 
+for(var in names(gaussian.test)){
+  print(range(gaussian.test[, var]))
+}
+## quantiles
+for(var in names(gaussian.test)){
+  print(quantile(gaussian.test[, var]))
+}  
+```
+
+> (c) Print all the observations for which A falls in the interval [3,4] and B in (−∞,−5]∪[10,∞).
+
+```{r}
+TestA <- (gaussian.test[, "A"] >= 3) & (gaussian.test[, "A"] <= 4)
+TestB <- (gaussian.test[, "B"] <= -4) | (gaussian.test[, "B"] >= 4)
+gaussian.test[TestA & TestB, ]
+```
+
+> (d) Sample 50 rows without replacement.
+
+I'm leaving out the output to save some space.
+
+```{r, eval = FALSE}
+set.seed(42)
+gaussian.test[sample(50, replace = FALSE), ]
+```
+
+> (e) Draw a bootstrap sample (e.g., sample 5,000 observations with replacement) and compute the mean of each variable.
+
+```{r}
+colMeans(gaussian.test[sample(5000, replace = TRUE), ])
+```
+
+> (f) Standardize each variable.
+
+I'm leaving out the oputput to save some space.
+
+```{r, eval = FALSE}
+scale(gaussian.test)
+``` 
+
+### Nagarajan 1.6
+> 1.6. Generate a data frame with 100 observations for the following variables:
+
+> (a) A categorical variable with two levels, low and high. The first 50 observations should be set to low, the others to high.
+
+```{r}
+A <- factor(c(rep("low", 50), rep("high", 50)), levels = c("low", "high"))
+```
+
+> (b) A categorical variable with two levels, good and bad, nested within the first variable, i.e., the first 25 observations should be set to good, the second 25 to bad, and so on.
+
+```{r}
+nesting <- c(rep("good", 25), rep("bad", 25))
+B <- factor(rep(nesting, 2), levels = c("good", "bad"))
+```
+
+> (c) A continuous, numerical variable following a Gaussian distribution with mean 2 and variance 4 when the first variable is equal to low and with mean 4 and variance 1 if the first variable is equal to high. In addition, compute the standard deviation of the last variable for each configuration of the first two variables.
+
+```{r}
+set.seed(42)
+C <- c(rnorm(50, mean = 2, sd = 2), rnorm(50, mean = 4, sd = 1))
+data <- data.frame(A = A, B = B, C = C)
+aggregate(C ~ A+B, data = data, FUN = sd)
+```
+
+<!-- ### Scutari Exercises -->
+
+<!-- These are answers and solutions to the exercises at the end of Part 5 in [Bayesian Networks with Examples in R](https://www.bnlearn.com/book-crc/) by M. Scutari and J.-B. Denis. Much of my inspiration for these solutions, where necessary, by consulting the solutions provided by the authors themselves as in the appendix. -->
+
+<!-- #### Scutari 5.1 -->
+<!-- > One essential task in any analysis is to import and export the R objects describing models from different packages. This is all the more true in the case of BN modelling, as no package implements all of structure learning, parameter learning and inference. -->
+
+<!-- > 1. Create the dag.bnlearn object from Section 5.1.1. -->
+
+<!-- > 2. Export it to deal. -->
+
+<!-- >3. Import the result back into bnlearn. -->
+
+<!-- > 4. Export dag.bnlearn to catnet and import it back in bnlearn. -->
+
+<!-- > 5. Perform parameter learning using the discretised dmarks and dag.bnlearn and export it to a DSC file, which can be read in Hugin and GeNIe. -->
+
+<!-- #### Scutari 5.2 -->
+
+<!-- > Learn a GBN from the marks data (without the LAT variable) using pcalg and a custom test that defines dependence as significant if the corresponding partial correlation is greater than 0.50. -->
+
+<!-- #### Scutari 5.3 -->
+
+<!-- > Reproduce the example of structure learning from Section 5.1.1 using deal, but set the imaginary sample size to 20. How does the resulting network change? -->

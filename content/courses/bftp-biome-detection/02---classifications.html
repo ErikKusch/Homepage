@@ -1,0 +1,354 @@
+---
+title: "Cluster Analysis"
+subtitle: 'Identifying Biomes And Their Shifts Using Remote Sensing'
+author: "Erik Kusch"
+date: "2020-06-10"
+slug: Cluster Analysis
+categories: [BFTP Projects]
+tags: [R, Statistics, Remote Sensing]
+summary: ''
+authors: [Erik Kusch]
+lastmod: '2020-06-10'
+featured: no
+projects:
+output:
+  blogdown::html_page:
+    toc: true
+    toc_depth: 2
+    number_sections: false
+    fig_width: 6
+linktitle: 2 - Cluster Analysis
+menu:
+  BFTP:
+    parent: Exercises 
+    weight: 2
+# toc: true
+type: docs
+weight: 2
+---
+
+
+<div id="TOC">
+<ul>
+<li><a href="#preparing-the-work">Preparing The Work</a><ul>
+<li><a href="#head">Head</a></li>
+<li><a href="#preamble">Preamble</a></li>
+<li><a href="#coding">Coding</a></li>
+</ul></li>
+<li><a href="#cluster-analysis">Cluster Analysis</a><ul>
+<li><a href="#loading-data">Loading Data</a></li>
+<li><a href="#data-extraction">Data Extraction</a></li>
+<li><a href="#data-prepartion">Data Prepartion</a></li>
+<li><a href="#cluster-identification">Cluster Identification</a></li>
+</ul></li>
+<li><a href="#saving-workspace">Saving Workspace</a><ul>
+<li><a href="#what-is-it-and-why-do-we-do-it">What Is It And Why Do We Do It?</a></li>
+<li><a href="#saving-and-loading-the-workspace">Saving And Loading The Workspace</a></li>
+</ul></li>
+</ul>
+</div>
+
+<div id="preparing-the-work" class="section level1">
+<h1>Preparing The Work</h1>
+<p>Let’s create our basic structure for this document:</p>
+<div id="head" class="section level2">
+<h2>Head</h2>
+<p>Not much has changed in the <strong>head</strong> when compared to our last exercise. We merely change the <em>contents</em> and and the <em>edit</em> tag, since the rest stays the same for the entire project.</p>
+<pre class="r"><code># ####################################################################### #
+# PROJECT: [BFTP] Identifying Biomes And Their Shifts Using Remote Sensing
+# CONTENTS: Functionality to identify clusters of NDVI mean and seasonality
+# AUTHOR: Erik Kusch
+# EDIT: 18/03/20
+# ####################################################################### #</code></pre>
+</div>
+<div id="preamble" class="section level2">
+<h2>Preamble</h2>
+<p>I am keeping the same <strong>preamble</strong> as last time because we will need to index the data and the plot directory in this exercise. Our preamble then looks like this:</p>
+<pre class="r"><code>rm(list=ls()) # clearing the entire environment
+Dir.Base &lt;- getwd() # identifying the current directory
+Dir.Data &lt;- paste(Dir.Base, &quot;Data&quot;, sep=&quot;/&quot;) # generating the folder path for data folder
+Dir.Plots &lt;- paste(Dir.Base, &quot;Plots&quot;, sep=&quot;/&quot;) # generating the folder path for figures folder</code></pre>
+<p>Notice, that we do not call the function <code>dir.create()</code> this time. We don’t need to do so, because we already created the two directories established above in our last exercise. Usually, we would create this entire analysis of your BFTP project in one <code>R</code> code script. In this case, we would only have one preamble which defines and creates directories instead of doing this step for every single sub-part of the analysis. Alas, we want to break this down for you. Therefore, you see this preamble here and will again in the next exercise.</p>
+<p>Again, this is where would load packages, but I am going to install and load the necessary packages when needed to show you what they are good for. Personally, I recommend you always load all necessary packages at the beginning of your code file and leave comments as to what you load them for. This will make it easier to remove packages you don’t need anymore when you change things.</p>
+</div>
+<div id="coding" class="section level2">
+<h2>Coding</h2>
+<p>Again, all of the important <strong>Coding</strong> happens after the head and the preamble are written and run in <code>R</code>. Basically, this is the rest of this document once more.</p>
+</div>
+</div>
+<div id="cluster-analysis" class="section level1">
+<h1>Cluster Analysis</h1>
+<p>Cluster analyses come in many forms. Here, we are interested in a k-means clustering approach. These approaches identify <span class="math inline">\(k\)</span> (a number) clusters. One of the most prominent ways to do this in <code>R</code> is undoubtedly the <code>mclust</code> <code>R</code> package. Clusters can be thought of as groupings of data in multi-dimensional space. The number of dimensions is equal to the number of clustering components. In the <code>mclust</code> <code>R</code> package, the characteristics of these clusters (orientation, volume, shape) are, if not specified otherwise, estimated from the data.</p>
+<!-- They can be set to vary between clusters or constrained to be the same for all clusters. Depending on cluster characteristics, `mclust` distinguishes 20 individual models which you can see in table \ref{tab:MClustModels}, but are not expected to understand fully.   -->
+<!-- \begin{table}[ht!] -->
+<!--   \centering -->
+<!--   \caption[Models in mclust]{\textbf{Models in mclust:} The r-package mclust distinguishes 20 different models for data clustering based on distribution and cluster characteristics.} -->
+<!--     \begin{tabular}{|lcccc|} -->
+<!--     Acronym & Distribution & Volume & Shape & Orientation \\ -->
+<!--     \hline -->
+<!--     E     & univariate & equal & -     & - \\ -->
+<!--     V     & univariate & variable & -     & - \\ \hdashline -->
+<!--     EII   & spherical  & equal & equal & NA \\ -->
+<!--     VII   & spherical  & variable & equal & NA \\ \hdashline -->
+<!--     EEI   & diagonal & equal & equal & coordinate axes \\ -->
+<!--     VEI   & diagonal & variable & equal & coordinate axes \\ -->
+<!--     EVI   & diagonal & equal & variable & coordinate axes \\ -->
+<!--     VVI   & diagonal & variable & variable & coordinate axes \\ \hdashline -->
+<!--     EEE   & ellipsoidal & equal & equal & equal \\ -->
+<!--     EVE   & ellipsoidal & equal & variable & equal \\ -->
+<!--    VEE   & ellipsoidal & variable & equal & equal \\     -->
+<!--     VVE   & ellipsoidal & variable & variable & equal \\ -->
+<!--     EEV   & ellipsoidal & equal & equal & variable \\ -->
+<!--     VEV   & ellipsoidal & variable & equal & variable \\ -->
+<!--     EEV   & ellipsoidal & equal & variable & variable \\ -->
+<!--     VVV   & ellipsoidal & variable & variable & variable \\ \hdashline -->
+<!--     X    & \multicolumn{4}{c|}{univariate normal} \\ -->
+<!--     XII      & \multicolumn{4}{c|}{spherical multivariate normal} \\ -->
+<!--     XXI      & \multicolumn{4}{c|}{diagonal multivariate normal} \\ -->
+<!--     XXX      & \multicolumn{4}{c|}{ellipsoidal multivariate normal} \\ -->
+<!--     \hline -->
+<!--     \end{tabular}% -->
+<!--   \label{tab:MClustModels}% -->
+<!-- \end{table} -->
+<p><code>mclust</code> provides the user with a very autonomous process of model calculation and selection. First, if not specified otherwise, <code>mclust</code> calculates all available models for a range of cluster component numbers (by default one to nine clusters). Secondly, once the models are established, <code>mclust</code> selects the most appropriate of the models according to their respective Bayesian Information Criterion (BIC) value. The BIC is an indicator of model quality: the lower the BIC, the better the model fits the data. Conclusively, <code>mclust</code> chooses the model with the lowest BIC available for clustering the data.</p>
+<!-- As an example: for a clustering of data with four individual variables, `mclust` will, by default, calculate 126 individual models (14 model classes $*$ 9 cluster possibilities). It will calculate models from only 14 classes, since E, V, X, XII, XXI and XXX models are only appropriate for single variable clustering.   -->
+<div id="loading-data" class="section level2">
+<h2>Loading Data</h2>
+<p>Before we can get started with our analysis, we have to load our NDVI mean and seasonality data (see last exercise) back into <code>R</code>, we do this as follows:</p>
+<pre class="r"><code>library(raster) # the raster package for rasters
+Mean1982_ras &lt;- raster(paste(Dir.Data, &quot;1982Mean.nc&quot;, sep=&quot;/&quot;)) # loading means
+Season1982_ras &lt;- raster(paste(Dir.Data, &quot;1982Season.nc&quot;, sep=&quot;/&quot;)) # loading seasonalities</code></pre>
+<p>Now that we have loaded the data into <code>R</code>, it is time to introduce you to another useful feature of the <code>raster</code> package - the <strong>stack</strong>. With a stack of rasters, you can do exactly what the name suggests, stack rasters of the same resolution, and extent into one <code>R</code> object. You do this by calling the <code>stack()</code>function in <code>R</code>:</p>
+<pre class="r"><code>All1982_ras &lt;- stack(Mean1982_ras, Season1982_ras) # creating a stack
+names(All1982_ras) &lt;- c(&quot;Mean&quot;, &quot;Seasonality&quot;) # assign names to stack layers
+All1982_ras</code></pre>
+<pre><code>## class      : RasterStack 
+## dimensions : 237, 590, 139830, 2  (nrow, ncol, ncell, nlayers)
+## resolution : 0.083, 0.083  (x, y)
+## extent     : -179, -130, 51, 71  (xmin, xmax, ymin, ymax)
+## crs        : +proj=longlat +datum=WGS84 +no_defs 
+## names      : Mean, Seasonality 
+## min values :    0,           0 
+## max values : 0.84,        1.00</code></pre>
+<p>As you can see, this object contains both rasters as <em>layers</em> which we have already assigned names to.</p>
+<p>Now let’s see how plotting works with this. This time, I am adding a couple of arguments to the <code>plot()</code> function to make the plots nicer than before:</p>
+<pre class="r"><code>plot(All1982_ras, # what to plot
+     colNA = &quot;black&quot;, # which colour to assign to NA values
+     legend.shrink=1, # vertical size of legend
+     legend.width=2 # horizontal size of legend
+     )</code></pre>
+<p><img src="/courses/BFTP - Biome Detection/02---Classifications_files/figure-html/Loading3-1.png" width="1152" /></p>
+<p>Using stacks makes plotting easier in <code>R</code> if you want to plot more than one raster at a time.</p>
+</div>
+<div id="data-extraction" class="section level2">
+<h2>Data Extraction</h2>
+<p>We’re now ready to extract data from our data sets. <code>mclust</code> let’s us assess multi-dimensional clusters but wants the data to be handed over in one file - as a matrix, to be precise. Let’s see what happens when we just look the first few (<code>head()</code>) values (<code>values()</code>) of our raster stack:</p>
+<pre class="r"><code>head(values(All1982_ras))</code></pre>
+<pre><code>##      Mean Seasonality
+## [1,]   NA          NA
+## [2,]   NA          NA
+## [3,]   NA          NA
+## [4,]   NA          NA
+## [5,]   NA          NA
+## [6,]   NA          NA</code></pre>
+<p>As you can see, the data gets extracted but there are NA values here. This is because the top-left corner of our rasters (which is where values start) contains a lot of NA cells.</p>
+<p>Let’s see what kind of object this is:</p>
+<pre class="r"><code>class(values(All1982_ras))</code></pre>
+<pre><code>## [1] &quot;matrix&quot; &quot;array&quot;</code></pre>
+<p>It is a matrix! Just what <code>mclust</code> wants! Let’s actually create that as an object:</p>
+<pre class="r"><code>Vals1982_mat &lt;- values(All1982_ras)
+rownames(Vals1982_mat) &lt;- 1:dim(Vals1982_mat)[1] # rownames to index raster cell number</code></pre>
+<p>Finally, let’s carry out a sanity check to make sure that we really have ported all values from both source rasters to our matrix. For this to be the case, the rownumber of our matrix (<code>dim()[1]</code>) needs to be the same as the amount (<code>length()</code>) of values (<code>values()</code>) in our rasters:</p>
+<pre class="r"><code>dim(Vals1982_mat)[1] == length(values(Mean1982_ras)) &amp; 
+  dim(Vals1982_mat)[1] == length(values(Season1982_ras))</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+<p>This checks out!</p>
+</div>
+<div id="data-prepartion" class="section level2">
+<h2>Data Prepartion</h2>
+<p>As you remember, there were plenty of NA values in our data set. No cluster algorithm can handle these. Therefore, we need to get rid of them. This is done as follows:</p>
+<pre class="r"><code>Vals1982_mat &lt;- na.omit(Vals1982_mat) # omit all rows which contain at least one NA record
+dim(Vals1982_mat) # new dimensions of our matrix</code></pre>
+<pre><code>## [1] 39460     2</code></pre>
+<p>This seriously cut our data down and will speed up our clustering approach a lot.</p>
+</div>
+<div id="cluster-identification" class="section level2">
+<h2>Cluster Identification</h2>
+<p>Let’s install and load the <code>mclust</code> package.</p>
+<pre class="r"><code>install.packages(&quot;mclust&quot;)
+library(mclust)</code></pre>
+<div id="cluster-model-selection" class="section level3">
+<h3>Cluster Model Selection</h3>
+<p>Let’s start with the <code>mclust</code> functionality to identify the best fitting clustering with a range of 1 to 9 clusters. To do so, we first need to identify the BIC fit for all of our possible cluster models. <code>mclust</code> does this automatically:</p>
+<pre class="r"><code>dataBIC &lt;- mclustBIC(Vals1982_mat) # identify BICs for different models
+print(summary(dataBIC)) # show summary of top-ranking models</code></pre>
+<pre><code>## Best BIC values:
+##           EVV,9  VVE,7  EVV,7
+## BIC      137048 136674 136402
+## BIC diff      0   -374   -646</code></pre>
+<p>The output above tells us that the best performing model was of type EVV (ellipsoidal distribution, equal volume, variable shape, and variable orientation of clusters) identifying 9 clusters.</p>
+<p>Let’s see a visual overview of this:</p>
+<pre class="r"><code>plot(dataBIC)</code></pre>
+<p><img src="/courses/BFTP - Biome Detection/02---Classifications_files/figure-html/MClust1b-1.png" width="1152" />
+Here, you can see different models compared to each other given certain numbers of clusters that have been considered.</p>
+<p>Now we can build our model:</p>
+<pre class="r"><code>mod &lt;- Mclust(Vals1982_mat, # data for the cluster model
+                   G = 7 # BIC index for model to be built
+                   )</code></pre>
+<p>We now have our full model! How many clusters did it identify?</p>
+<pre class="r"><code>mod$G # number of groups/clusters in model</code></pre>
+<pre><code>## [1] 7</code></pre>
+<p>No surprises here, we’ve got 7 clusters.</p>
+<p>Now let’s look at the mean values of the clusters:</p>
+<pre class="r"><code>mod[[&quot;parameters&quot;]][[&quot;mean&quot;]] # mean values of clusters</code></pre>
+<pre><code>##             [,1] [,2]  [,3] [,4] [,5] [,6] [,7]
+## Mean        0.54 0.44 0.081 0.67 0.21 0.27 0.36
+## Seasonality 0.54 0.72 0.269 0.34 0.59 0.65 0.76</code></pre>
+<p>These can be interpreted biologically, but I will leave that to you.</p>
+<p>Now let’s see how well these clusters distinguish the mean-seasonality space:</p>
+<pre class="r"><code>plot(mod, what = &quot;uncertainty&quot;)</code></pre>
+<p><img src="/courses/BFTP - Biome Detection/02---Classifications_files/figure-html/MClust1f-1.png" width="1152" /></p>
+<p>How do we map this? We <em>predict</em> our clusters for our initial data as follows:</p>
+<pre class="r"><code>ModPred &lt;- predict.Mclust(mod, Vals1982_mat) # prediction
+Pred_ras &lt;- Mean1982_ras # establishing a rediction raster
+values(Pred_ras) &lt;- NA # set everything to NA
+# set values of prediction raster to corresponding classification according to rowname
+values(Pred_ras)[as.numeric(rownames(Vals1982_mat))] &lt;- as.vector(ModPred$classification)
+Pred_ras</code></pre>
+<pre><code>## class      : RasterLayer 
+## dimensions : 237, 590, 139830  (nrow, ncol, ncell)
+## resolution : 0.083, 0.083  (x, y)
+## extent     : -179, -130, 51, 71  (xmin, xmax, ymin, ymax)
+## crs        : +proj=longlat +datum=WGS84 +no_defs 
+## source     : memory
+## names      : layer 
+## values     : 1, 7  (min, max)</code></pre>
+<p>As you can see, this has the same extent and resolution as our source rasters but the values range from 1 to 7. These are our cluster assignments.</p>
+<p>Now let’s plot this:</p>
+<pre class="r"><code>colours &lt;- rainbow(mod$G) # define 7 colours
+plot(Pred_ras, # what to plot
+     col = colours, # colours for groups
+     colNA = &quot;black&quot;, # which colour to assign to NA values
+     legend.shrink=1, # vertical size of legend
+     legend.width=2 # horizontal size of legend
+     )</code></pre>
+<p><img src="/courses/BFTP - Biome Detection/02---Classifications_files/figure-html/MClust1h-1.png" width="1152" /></p>
+<p>How often do we observe which assignment?</p>
+<pre class="r"><code>table(values(Pred_ras))</code></pre>
+<pre><code>## 
+##     1     2     3     4     5     6     7 
+##  1760  5661  2903  1101  7353  7984 12698</code></pre>
+</div>
+<div id="pre-defined-number" class="section level3">
+<h3>Pre-Defined Number</h3>
+<p>As biologists, we have got decades of work already present concerning biome distributions across the Earth. One such classification are the Terrestrial Ecoregions of the World (). We want to identify how many biomes this data set identifies across Australia.</p>
+<p>Firstly, we download the data and unpack it:</p>
+<pre class="r"><code># downloading Terrestrial Ecoregion Shapefile as zip
+download.file(&quot;http://assets.worldwildlife.org/publications/15/files/original/official_teow.zip&quot;,
+              destfile = file.path(Dir.Data, &quot;wwf_ecoregions.zip&quot;)
+              )
+# unpacking the zip
+unzip(file.path(Dir.Data, &quot;wwf_ecoregions.zip&quot;), 
+      exdir = file.path(Dir.Data, &quot;WWF_ecoregions&quot;)
+      )</code></pre>
+<p>Secondly, we load the data into <code>R</code>:</p>
+<pre class="r"><code># loading shapefile for biomes
+wwf &lt;- readOGR(file.path(Dir.Data, &quot;WWF_ecoregions&quot;, &quot;official&quot;, &quot;wwf_terr_ecos.shp&quot;),
+               verbose = FALSE)</code></pre>
+<p>Thirdly, we need to limit the global terrestrial ecoregion shapefile to the state of Alaska and need our Alaska shapefile for this:</p>
+<pre class="r"><code>Shapes &lt;- readOGR(Dir.Data, # where to look for the file
+                  &quot;ne_10m_admin_1_states_provinces&quot;, # the file name
+                  verbose = FALSE) # we don&#39;t want an overview of the loaded data
+Position &lt;- which(Shapes$name_en == &quot;Alaska&quot;) # find the english name that&#39;s &quot;Alaska&quot;
+Alaska_Shp &lt;- Shapes[Position,] # extract the Alaska shapefile
+Alaska_Shp &lt;- crop(Alaska_Shp, # what to crop
+                   extent(-190, -130, 51, 71)) # which extent to crop to</code></pre>
+<p>Now, we need to limit the global biome shapefile to the shape of Alaska:</p>
+<pre class="r"><code>wwf_ready &lt;- crop(wwf, extent(Alaska_Shp)) # cropping to Alaska extent
+wwf_ready &lt;- intersect(Alaska_Shp, wwf) # masking of two shapefiles
+plot(wwf_ready,  # plotting final shape
+     col = wwf_ready@data[[&quot;BIOME&quot;]] # use BIOME specification for colours
+     )</code></pre>
+<p><img src="/courses/BFTP - Biome Detection/02---Classifications_files/figure-html/MClust2c-1.png" width="1152" /></p>
+<p>We first identify the BICs:</p>
+<pre class="r"><code># identify BICs for different models
+dataBIC2 &lt;- mclustBIC(Vals1982_mat, 
+                     G = length(unique(wwf_ready@data[[&quot;G200_BIOME&quot;]]))) 
+print(summary(dataBIC2)) # show summary of top-ranking models</code></pre>
+<pre><code>## Best BIC values:
+##           EVV,4  EVE,4  EEV,4
+## BIC      133034 126884 121698
+## BIC diff      0  -6149 -11336</code></pre>
+<p>As you can see, the shapefile gives us 4 clusters across Alaska even though the map only shows 3. The fourth biome is only represented by a single polygon across all of Alaska and we might want to reduce the set to 3.</p>
+<p>For now, we are running with the idea of 4 clusters:</p>
+<pre class="r"><code>mod2 &lt;- Mclust(Vals1982_mat, # data for the cluster model
+                   G = 4 # BIC index for model to be built
+                   )</code></pre>
+<p>We now have our full model!</p>
+<p>Now let’s look at the mean values of the clusters:</p>
+<pre class="r"><code>mod2[[&quot;parameters&quot;]][[&quot;mean&quot;]] # mean values of clusters</code></pre>
+<pre><code>##             [,1] [,2] [,3] [,4]
+## Mean        0.60 0.41 0.27 0.13
+## Seasonality 0.44 0.73 0.67 0.39</code></pre>
+<p>Again, I leave the biological interpretation to you.</p>
+<p>Finally, we will plot our assignments in mean-seasonality space:</p>
+<pre class="r"><code>plot(mod2, what = &quot;uncertainty&quot;)</code></pre>
+<p><img src="/courses/BFTP - Biome Detection/02---Classifications_files/figure-html/MClust2h-1.png" width="1152" /></p>
+<p>Again, let’s <em>predict</em> our clusters for our initial data as follows:</p>
+<pre class="r"><code>ModPred2 &lt;- predict.Mclust(mod2, Vals1982_mat) # prediction
+Pred2_ras &lt;- Mean1982_ras # establishing a rediction raster
+values(Pred2_ras) &lt;- NA # set everything to NA
+# set values of prediction raster to corresponding classification according to rowname
+values(Pred2_ras)[as.numeric(rownames(Vals1982_mat))] &lt;- as.vector(ModPred2$classification)
+Pred2_ras</code></pre>
+<pre><code>## class      : RasterLayer 
+## dimensions : 237, 590, 139830  (nrow, ncol, ncell)
+## resolution : 0.083, 0.083  (x, y)
+## extent     : -179, -130, 51, 71  (xmin, xmax, ymin, ymax)
+## crs        : +proj=longlat +datum=WGS84 +no_defs 
+## source     : memory
+## names      : layer 
+## values     : 1, 4  (min, max)</code></pre>
+<p>As you can see, this has the same extent and resolution as our source rasters but the values range from 1 to 4. These are our cluster assignments.</p>
+<p>Now let’s plot this:</p>
+<pre class="r"><code>colours &lt;- rainbow(mod2$G) # define 4 colours
+plot(Pred2_ras, # what to plot
+     col = colours, # colours for groups
+     colNA = &quot;black&quot;, # which colour to assign to NA values
+     legend.shrink=1, # vertical size of legend
+     legend.width=2 # horizontal size of legend
+     )</code></pre>
+<p><img src="/courses/BFTP - Biome Detection/02---Classifications_files/figure-html/MClust2j-1.png" width="1152" /></p>
+<p>How often do we observe which assignment?</p>
+<pre class="r"><code>table(values(Pred2_ras))</code></pre>
+<pre><code>## 
+##     1     2     3     4 
+##  2326 12193 20858  4083</code></pre>
+</div>
+</div>
+</div>
+<div id="saving-workspace" class="section level1">
+<h1>Saving Workspace</h1>
+<div id="what-is-it-and-why-do-we-do-it" class="section level2">
+<h2>What Is It And Why Do We Do It?</h2>
+<p>The workspace records all of our elements in <code>R</code>. Since we want to pick up from this point in our next exercise, we want to save the workspace and restore it at a later point to assess all of our elements again.</p>
+</div>
+<div id="saving-and-loading-the-workspace" class="section level2">
+<h2>Saving And Loading The Workspace</h2>
+<p>Saving a workspace goes as follows:</p>
+<pre class="r"><code># save workspace
+save.image(file = (paste(Dir.Base, &quot;Workspace.RData&quot;, sep=&quot;/&quot;)))</code></pre>
+<p>Now let’s load it again:</p>
+<pre class="r"><code>rm(list=ls()) # clean workspace
+load(file = &quot;Workspace.RData&quot;) # load workspace
+ls() # list elements in workspace</code></pre>
+<pre><code>##  [1] &quot;Alaska_Shp&quot;     &quot;All1982_ras&quot;    &quot;colours&quot;       
+##  [4] &quot;dataBIC&quot;        &quot;dataBIC2&quot;       &quot;Dir.Base&quot;      
+##  [7] &quot;Dir.Data&quot;       &quot;Dir.Plots&quot;      &quot;Mean1982_ras&quot;  
+## [10] &quot;mod&quot;            &quot;mod2&quot;           &quot;ModPred&quot;       
+## [13] &quot;ModPred2&quot;       &quot;Position&quot;       &quot;Pred_ras&quot;      
+## [16] &quot;Pred2_ras&quot;      &quot;Season1982_ras&quot; &quot;Shapes&quot;        
+## [19] &quot;Vals1982_mat&quot;   &quot;wwf&quot;            &quot;wwf_ready&quot;</code></pre>
+<p>All our files are back!</p>
+</div>
+</div>

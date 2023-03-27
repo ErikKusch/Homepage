@@ -1,0 +1,273 @@
+---
+title: "Hybrid Bayesian Networks"
+author: Erik Kusch
+date: '2021-06-08'
+slug: part-3
+categories:
+  - Bayesian Networks
+tags:
+  - Bayes
+  - Networks
+  - Bayesian Statistics
+  - Statistics
+subtitle: "Hybrid Bayesian Networks"
+summary: 'Answers and solutions to the exercises belonging to Part 3 in [Bayesian Networks with Examples in R](https://www.bnlearn.com/book-crc/) by M. Scutari and J.-B. Denis.'
+authors: []
+lastmod: '2021-06-08T20:00:00+01:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: 
+output:
+  blogdown::html_page:
+    keep_md: true
+    # toc: true
+    # toc_depth: 1
+    # number_sections: false
+# header-includes:
+#   <script src = "https://polyfill.io/v3/polyfill.min.js?features = es6"></script>
+#   <script id = "MathJax-script" async src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+math: true
+type: docs
+toc: true 
+menu:
+  bayesnets:
+    parent: 2 - Static Networks
+    weight: 3
+weight: 3
+---
+
+
+<div id="TOC">
+
+</div>
+
+<style>
+
+blockquote{
+color:#ffffff;
+}
+
+</style>
+<div id="material" class="section level2">
+<h2>Material</h2>
+<ul>
+<li><a href="/courses/bayes-nets/5-Hybrid-Bayesian-Networks_18-10-22.html">Hybrid Bayesian Networks</a><br />
+</li>
+<li><a href="/courses/bayes-nets/Hybrid-BNs.html">Hybrid Bayesian Networks</a> by <a href="https://github.com/arielsaffer">Ariel Saffer</a> (one of our study group members)</li>
+</ul>
+</div>
+<div id="exercises" class="section level2">
+<h2>Exercises</h2>
+<p>These are answers and solutions to the exercises at the end of Part 3 in <a href="https://www.bnlearn.com/book-crc/">Bayesian Networks with Examples in R</a> by M. Scutari and J.-B. Denis. Much of my inspiration for these solutions, where necessary, by consulting the solutions provided by the authors themselves as in the appendix.</p>
+<div id="r-environment" class="section level3">
+<h3><code>R</code> Environment</h3>
+<p>For today’s exercise, I load the following packages:</p>
+<pre class="r"><code>library(bnlearn)
+library(rjags)</code></pre>
+</div>
+<div id="scutari-3.1" class="section level3">
+<h3>Scutari 3.1</h3>
+<blockquote>
+<p>Explain why it is logical to get a three-step function for the discretised approach in Figure 3.2.</p>
+</blockquote>
+<p>Figure 3.2 shows this discretisation:</p>
+<p><img src="/post/networksscutari/Screenshot 2021-06-08 153234.png" width="900"/></p>
+<p>the reason we obtain a three-step function here is down to the intervals that were chosen to bin the continuous diametre data into discrete categories:</p>
+<p><span class="math display">\[&lt;6.16\]</span>
+<span class="math display">\[[6.16; 6.19]\]</span>
+<span class="math display">\[&gt;6.19\]</span></p>
+<p>Owing to these intervals, we fit all of our continuous data into three categories which mirror the three-step function portrayed in the above figure.</p>
+</div>
+<div id="scutari-3.2" class="section level3">
+<h3>Scutari 3.2</h3>
+<blockquote>
+<p>Starting from the BUGS model in Section 3.1.1, write another BUGSmodel for the discretised model proposed in Section 3.1.2. The functions required for this task are described in the JAGS manual.</p>
+</blockquote>
+<p>The model for the hybrid case (which we are to adapt to the discretised approach) reads as such:</p>
+<pre class="r"><code>model{ 
+  csup ~ dcat(sp); 
+  cdiam ~ dnorm(mu[csup], 1/sigma^2);
+}</code></pre>
+<p>To adapt it for discretised data, I simply change the outcome distribution for <code>cdiam</code> to also be categorical:</p>
+<pre class="r"><code>model{ 
+  csup ~ dcat(sp); 
+  cdiam ~ dcat(Diams[, csup]);
+}</code></pre>
+<p>where <code>Diams</code> is a matrix that contains probabilities for the different diameters (rows) for suppliers (columns).</p>
+</div>
+<div id="scutari-3.3" class="section level3">
+<h3>Scutari 3.3</h3>
+<blockquote>
+<p>Let d = 6.0, 6.1, 6.2, 6.4.</p>
+</blockquote>
+<blockquote>
+<ol style="list-style-type: decimal">
+<li>Using the BUGS model proposed in Section 3.1.1, write the <code>R</code> script to estimate <span class="math inline">\(P(S = s1 | D = d)\)</span> for the continuous approach demonstrated in the same section.</li>
+</ol>
+</blockquote>
+<p>I start by simply repeating the code in section 3.1.1:</p>
+<pre class="r"><code>sp &lt;- c(0.5, 0.5)
+mu &lt;- c(6.1, 6.25)
+sigma &lt;- 0.05</code></pre>
+<p>From here, I take inspiration from the book in the later section on the crop model and write a sampling loop for which to retain samples. First, I create some objects to store data and outputs as well as do some housekeeping:</p>
+<pre class="r"><code>## house-keeping
+set.seed(42) # there are random processes here
+
+## object creation
+diameters_vec &lt;- c(6.0, 6.1, 6.2, 6.4)
+prob_vec &lt;- rep(NA, length(diameters_vec))
+names(prob_vec) &lt;- diameters_vec</code></pre>
+<p>Next, I greatly dislike the reliance on model files that the book insists on and so I register my JAGS model code as an active text connection in <code>R</code>:</p>
+<pre class="r"><code>jags_mod &lt;- textConnection(&quot;model{
+                           csup ~ dcat(sp);
+                           cdiam ~ dnorm(mu[csup], 1/sigma^2);
+                           }&quot;)</code></pre>
+<p>Finally, I am ready to estimate <span class="math inline">\(P(S = s1 | D = d)\)</span>:</p>
+<pre class="r"><code>for (samp_iter in seq(length(diameters_vec))) {
+  # create data list
+  jags.data &lt;- list(sp = sp, mu = mu, sigma = sigma, cdiam = diameters_vec[samp_iter])
+  # compile model
+  model &lt;- jags.model(file = jags_mod, data = jags.data, quiet = TRUE)
+  update(model, n.iter = 1e4)
+  # sample model and retrieve vector of supplier identity (containing values 1 and 2)
+  simu &lt;- coda.samples(model = model, variable.names = &quot;csup&quot;, n.iter = 2e4, thin = 20)[[1]]
+  # compute probability of supplier 1
+  prob_vec[samp_iter] &lt;- sum(simu == 1) / length(simu)
+}
+prob_vec</code></pre>
+<pre><code>##     6   6.1   6.2   6.4 
+## 1.000 0.982 0.197 0.000</code></pre>
+<blockquote>
+<ol start="2" style="list-style-type: decimal">
+<li>Using the BUGS model obtained in Exercise 3.2, write the <code>R</code> script to estimate <span class="math inline">\(P(S = s1 | D = d)\)</span> for the discretised approach suggested in Section 3.1.2.</li>
+</ol>
+</blockquote>
+<p>Again, I start by typing out important parameters from the book:</p>
+<pre class="r"><code>sp &lt;- c(0.5, 0.5)
+Diams &lt;- matrix(c(0.88493, 0.07914, 0.03593, 0.03593, 0.07914, 0.88493), 3)
+Diams</code></pre>
+<pre><code>##         [,1]    [,2]
+## [1,] 0.88493 0.03593
+## [2,] 0.07914 0.07914
+## [3,] 0.03593 0.88493</code></pre>
+<p>Once more, I perform housekeeping and object creation prior to sampling. This time, however, I create a probability matrix to store the probability of each rod diametre in each diametre class belonging to supplier 1:</p>
+<pre class="r"><code>## house-keeping
+set.seed(42) # there are random processes here
+
+## object creation
+diameters_vec &lt;- c(6.0, 6.1, 6.2, 6.4)
+cdiam_vec &lt;- 1:3
+dimnames &lt;- list(
+  paste(&quot;cdiam&quot;, cdiam_vec, sep = &quot;_&quot;),
+  diameters_vec
+)
+prob_mat &lt;- matrix(rep(NA, 12), ncol = 4)
+dimnames(prob_mat) &lt;- dimnames</code></pre>
+<p>And there’s our model:</p>
+<pre class="r"><code>jags_mod &lt;- textConnection(&quot;model{
+                            csup ~ dcat(sp);
+                            cdiam ~ dcat(Diams[, csup]);
+                            }&quot;)</code></pre>
+<p>Finally, I am ready to estimate <span class="math inline">\(P(S = s1 | D = d)\)</span>:</p>
+<pre class="r"><code>for (samp_iter in seq(length(cdiam_vec))) {
+  # create data list
+  jags.data &lt;- list(sp = sp, Diams = Diams, cdiam = cdiam_vec[samp_iter])
+  # compile model
+  model &lt;- jags.model(file = jags_mod, data = jags.data, quiet = TRUE)
+  update(model, n.iter = 1e4)
+  # sample model and retrieve vector of supplier identity (containing values 1 and 2)
+  simu &lt;- coda.samples(model = model, variable.names = &quot;csup&quot;, n.iter = 2e4, thin = 20)[[1]]
+  # compute probability of supplier 1
+  prob_mat[samp_iter, ] &lt;- sum(simu == 1) / length(simu)
+}
+prob_mat</code></pre>
+<pre><code>##             6   6.1   6.2   6.4
+## cdiam_1 0.966 0.966 0.966 0.966
+## cdiam_2 0.490 0.490 0.490 0.490
+## cdiam_3 0.035 0.035 0.035 0.035</code></pre>
+<blockquote>
+<p>And check the results with Figure 3.2.</p>
+</blockquote>
+<p>Looking at figure 3.2, I’d argue the above probabilities align with the figure:</p>
+<p><img src="/courses/bayes-nets/Scutari3.2.png" width="900"/></p>
+</div>
+<div id="scutari-3.4" class="section level3">
+<h3>Scutari 3.4</h3>
+<blockquote>
+<p>In Section 3.1.1, the probability that the supplier is <code>s1</code> knowing that the diameter is 6.2 was estimated to be 0.1824 which is not identical to the value obtained with JAGS.</p>
+</blockquote>
+<blockquote>
+<ol style="list-style-type: decimal">
+<li>Explain why the calculation with the <code>R</code> function <code>dnorm</code> is right and why the value 0.1824 is correct. Can you explain why the JAGS result is not exact? Propose a way to improve it.</li>
+</ol>
+</blockquote>
+<p>Since either function relies on random processes, differences in seeds may explain the difference in inference. To improve the accuracy of the JAGS result, I would suggest increasing the sample size that led to its creation.</p>
+<blockquote>
+<ol start="2" style="list-style-type: decimal">
+<li>Would this value be different if we modify the marginal distribution for the two suppliers?</li>
+</ol>
+</blockquote>
+<p>Yes. Marginal distributions are essential to the Bayes’ Theorem and a change thereof would necessitate a change in inference.</p>
+</div>
+<div id="scutari-3.5" class="section level3">
+<h3>Scutari 3.5</h3>
+<blockquote>
+<p>Revisiting the discretisation in Section 3.1.2, compute the conditional probability tables for $ D | S $ and $ S | D $ when the interval boundaries are set to $ (6.10, 6.18) $ instead of $ (6.16, 6.19)$ . Compared to the results presented in Section 3.1.2, what is your conclusion?</p>
+</blockquote>
+<p>Let’s start by repeating book code and updating the intervals to obtain <span class="math inline">\(D | S\)</span>:</p>
+<pre class="r"><code>mu &lt;- c(6.1, 6.25)
+sigma &lt;- 0.05
+limits &lt;- c(6.10, 6.18)
+dsd &lt;- matrix(
+  c(
+    diff(c(0, pnorm(limits, mu[1], sigma), 1)),
+    diff(c(0, pnorm(limits, mu[2], sigma), 1))
+  ),
+  3, 2
+)
+dimnames(dsd) &lt;- list(D = c(&quot;thin&quot;, &quot;average&quot;, &quot;thick&quot;), S = c(&quot;s1&quot;, &quot;s2&quot;))
+dsd</code></pre>
+<pre><code>##          S
+## D                 s1          s2
+##   thin    0.50000000 0.001349898
+##   average 0.44520071 0.079406761
+##   thick   0.05479929 0.919243341</code></pre>
+<p>To obtain $ S | D $, we apply Bayes’ Theorem:</p>
+<pre class="r"><code>jointd &lt;- dsd / 2 # dive by 2 to get joint distribution over suppliers of which we have 2
+mardd &lt;- rowSums(jointd) # marginal distribution of diametre class irrespective of supplier
+dds &lt;- t(jointd / mardd) # find conditional probabilites
+dds</code></pre>
+<pre><code>##     D
+## S           thin   average      thick
+##   s1 0.997307473 0.8486359 0.05625964
+##   s2 0.002692527 0.1513641 0.94374036</code></pre>
+<p>One of our new limits in in fact the mean diametre supplied by supplier 1. That is clearly not a helpful limit as it simply shifts probability to supplier 1.</p>
+</div>
+</div>
+<div id="session-info" class="section level2">
+<h2>Session Info</h2>
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>## R version 4.2.1 (2022-06-23 ucrt)
+## Platform: x86_64-w64-mingw32/x64 (64-bit)
+## Running under: Windows 10 x64 (build 19044)
+## 
+## Matrix products: default
+## 
+## locale:
+## [1] LC_COLLATE=English_Germany.utf8  LC_CTYPE=English_Germany.utf8    LC_MONETARY=English_Germany.utf8 LC_NUMERIC=C                     LC_TIME=English_Germany.utf8    
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+## [1] rjags_4-13    coda_0.19-4   bnlearn_4.8.1
+## 
+## loaded via a namespace (and not attached):
+##  [1] bslib_0.4.0       compiler_4.2.1    pillar_1.8.1      jquerylib_0.1.4   R.methodsS3_1.8.2 R.utils_2.12.0    tools_4.2.1       digest_0.6.29     jsonlite_1.8.0    evaluate_0.16    
+## [11] lifecycle_1.0.2   R.cache_0.16.0    lattice_0.20-45   rlang_1.0.5       cli_3.3.0         rstudioapi_0.14   yaml_2.3.5        parallel_4.2.1    blogdown_1.13     xfun_0.33        
+## [21] fastmap_1.1.0     styler_1.8.0      stringr_1.4.1     knitr_1.40        vctrs_0.4.1       sass_0.4.2        grid_4.2.1        glue_1.6.2        R6_2.5.1          fansi_1.0.3      
+## [31] rmarkdown_2.16    bookdown_0.29     purrr_0.3.4       magrittr_2.0.3    htmltools_0.5.3   utf8_1.2.2        stringi_1.7.8     cachem_1.0.6      R.oo_1.25.0</code></pre>
+</div>

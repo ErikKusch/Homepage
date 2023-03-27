@@ -1,0 +1,526 @@
+---
+title: "Third-Party Data"
+author: Erik Kusch
+date: '2022-05-26'
+slug: third-party
+categories:
+  - KrigR
+  - Climate Data
+tags:
+  - Climate Data
+  - Statistical Downscaling
+  - KrigR
+subtitle: "Using KrigR with third-party data"
+summary: 'Using `KrigR` with third-party data.'
+authors: []
+lastmod: '2021-05-26T20:00:00+01:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: 
+output:
+  blogdown::html_page:
+    keep_md: true
+    # toc: true
+    # toc_depth: 1
+    # number_sections: false
+# header-includes:
+#   <script src = "https://polyfill.io/v3/polyfill.min.js?features = es6"></script>
+#   <script id = "MathJax-script" async src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+math: true
+type: docs
+toc: true 
+menu:
+  krigr:
+    parent: Workshop
+    weight: 25
+weight: 25
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+<div id="TOC">
+
+</div>
+
+<p>{{% hint danger %}}
+This part of the workshop is dependant on set-up and preparation done previously <a href="/courses/krigr/prep/">here</a>.
+{{% /hint %}}</p>
+<p>First, we load <code>KrigR</code>:</p>
+<pre class="r"><code>library(KrigR)</code></pre>
+<div id="matching-third-party-data" class="section level2">
+<h2>Matching Third-Party Data</h2>
+<p>I expect that you won’t want to downscale to specific resolutions most of the time, but rather, match an already existing spatial data set in terms of spatial resolution and extent. Again, the <code>KrigR</code> package got you covered!</p>
+<p>{{% hint warning %}}
+Usually, you probably want to downscale data to match a certain pre-existing data set rather than a certain resolution.
+{{% /hint %}}</p>
+<p>Here, we illustrate this with an NDVI-based example. The NDVI is a satellite-derived vegetation index which tells us how green the Earth is. It comes in bi-weekly intervals and at a spatial resolution of <code>.08333</code> (roughly 9km). Here, we download all NDVI data for the year 2015 and then create the annual mean. This time, we do so for all of Germany because of its size and topographical variety.</p>
+<div id="third-party-data" class="section level3">
+<h3>Third-Party Data</h3>
+<pre class="r"><code>Shape_shp &lt;- ne_countries(country = &quot;Germany&quot;)</code></pre>
+<pre class="r"><code>## downloading gimms data
+gimms_files &lt;- downloadGimms(x = as.Date(&quot;2015-01-01&quot;), # download from January 1982
+                             y = as.Date(&quot;2015-12-31&quot;), # download to December 1982
+                             dsn = Dir.Data, # save downloads in data folder
+                             quiet = FALSE # show download progress
+                             )
+## prcoessing gimms data
+gimms_raster &lt;- rasterizeGimms(x = gimms_files, # the data we rasterize
+                               remove_header = TRUE # we don&#39;t need the header of the data
+                               )
+indices &lt;- monthlyIndices(gimms_files) # generate month indices from the data
+gimms_raster_mvc &lt;- monthlyComposite(gimms_raster, # the data
+                                     indices = indices # the indices
+                                     )
+Negatives &lt;- which(values(gimms_raster_mvc) &lt; 0) # identify all negative values
+values(gimms_raster_mvc)[Negatives] &lt;- 0 # set threshold for barren land (NDVI&lt;0)
+gimms_raster_mvc &lt;- crop(gimms_raster_mvc, extent(Shape_shp)) # crop to extent
+gimms_mask &lt;- KrigR::mask_Shape(gimms_raster_mvc[[1]], Shape = Shape_shp) # create mask ith KrigR-internal function to ensure all edge cells are contained
+NDVI_ras &lt;- mask(gimms_raster_mvc, gimms_mask) # mask out shape
+NDVI_ras &lt;- calc(NDVI_ras, fun = mean, na.rm = TRUE) # annual mean
+writeRaster(NDVI_ras, format = &quot;CDF&quot;, file = file.path(Dir.Data, &quot;NDVI&quot;)) # save file</code></pre>
+<p>So what does this raster look like?</p>
+<pre class="r"><code>NDVI_ras</code></pre>
+<pre><code>## class      : RasterStack 
+## dimensions : 92, 108, 9936, 1  (nrow, ncol, ncell, nlayers)
+## resolution : 0.08333333, 0.08333333  (x, y)
+## extent     : 6, 15, 47.33333, 55  (xmin, xmax, ymin, ymax)
+## crs        : +proj=longlat +datum=WGS84 +no_defs 
+## names      :     layer 
+## min values : 0.2430333 
+## max values : 0.8339083</code></pre>
+<p>And a visualisation of the same:</p>
+<pre class="r"><code>Plot_Raw(NDVI_ras, 
+         Shp = Shape_shp,
+         Dates = &quot;Mean NDVI 2015&quot;, 
+         COL = viridis(100, begin = 0.5, direction = -1))</code></pre>
+<p><img src="/courses/krigr/krigr-third-party_files/figure-html/unnamed-chunk-5-1.png" width="1440" />
+As stated above, we want to match this with our output.</p>
+</div>
+<div id="krigr-workflow" class="section level3">
+<h3><code>KrigR</code> Workflow</h3>
+<p>We could do this whole analysis in our three steps as outlined above, but why bother when the <a href="/courses/krigr/quickstart/#the-pipeline">pipeline</a> gets the job done just as well?</p>
+<p>{{% hint info %}}
+Matching Kriging outputs with a pre-existing data set is as easy as plugging the pre-existing raster into the <code>Target_res</code> argument of the <code>krigR()</code> or the <code>download_DEM()</code> function.
+{{% /hint %}}</p>
+<p>This time we want to downscale from ERA5 resolution (roughly 30km) because the ERA5-Land data already matches the NDVI resolution (roughly 9km). Here’s how we do this:</p>
+<pre class="r"><code>NDVI_Krig &lt;- krigR(
+  ## download_ERA block
+  Variable = &#39;2m_temperature&#39;,
+  Type = &#39;reanalysis&#39;,
+  DataSet = &#39;era5&#39;,
+  DateStart = &#39;2015-01-01&#39;,
+  DateStop = &#39;2015-12-31&#39;,
+  TResolution = &#39;year&#39;,
+  TStep = 1,
+  Extent = Shape_shp,
+  API_User = API_User,
+  API_Key = API_Key,
+  SingularDL = TRUE,
+  ## download_DEM block
+  Target_res = NDVI_ras,
+  Source = &quot;Drive&quot;,
+  ## krigR block
+  Cores = 1,
+  FileName = &quot;AirTemp_NDVI.nc&quot;,
+  nmax = 80, 
+  Dir = Dir.Exports)</code></pre>
+<pre><code>## download_ERA() is starting. Depending on your specifications, this can take a significant time.</code></pre>
+<pre><code>## User 39340 for cds service added successfully in keychain</code></pre>
+<pre><code>## Staging 1 download(s).</code></pre>
+<pre><code>## Staging your request as a singular download now. This can take a long time due to size of required product.</code></pre>
+<pre><code>## 0001_2m_temperature_2015-01-01_2015-12-31_year.nc download queried</code></pre>
+<pre><code>## Requesting data to the cds service with username 39340</code></pre>
+<pre><code>## - staging data transfer at url endpoint or request id:</code></pre>
+<pre><code>##   850485ad-d5f1-43f5-94e8-e238c5ec9593</code></pre>
+<pre><code>## - timeout set to 10.0 hours</code></pre>
+<pre><code>## - polling server for a data transfer \ polling server for a data transfer | polling
+## server for a data transfer / polling server for a data transfer - polling server for a
+## data transfer \ polling server for a data transfer | polling server for a data transfer /
+## polling server for a data transfer - polling server for a data transfer \ polling server
+## for a data transfer | polling server for a data transfer / polling server for a data
+## transfer - polling server for a data transfer \ polling server for a data transfer |
+## polling server for a data transfer / polling server for a data transfer - polling server
+## for a data transfer \ polling server for a data transfer | polling server for a data
+## transfer / polling server for a data transfer - polling server for a data transfer \
+## polling server for a data transfer | polling server for a data transfer / polling server
+## for a data transfer - polling server for a data transfer</code></pre>
+<pre><code>## 
+  |                                                                                      
+  |                                                                                |   0%
+  |                                                                                      
+  |=============================================================                   |  76%
+  |                                                                                      
+  |================================================================================| 100%</code></pre>
+<pre><code>## - moved temporary file to -&gt; C:/Users/erike/Documents/Website/content/courses/krigr/Exports/0001_2m_temperature_2015-01-01_2015-12-31_year.nc
+## - request purged from queue!
+## Checking for known data issues.
+## Loading downloaded data for masking and aggregation.
+## Masking according to shape/buffer polygon
+## Aggregating to temporal resolution of choice</code></pre>
+<pre><code>## 
+  |                                                                                      
+  |                                                                                |   0%
+  |                                                                                      
+  |===========================                                                     |  33%
+  |                                                                                      
+  |=====================================================                           |  67%
+  |                                                                                      
+  |================================================================================| 100%
+## </code></pre>
+<pre><code>## Commencing Kriging</code></pre>
+<pre><code>## 
+  |                                                                                      
+  |                                                                                |   0%
+  |                                                                                      
+  |================================================================================| 100%</code></pre>
+<p>So? Did we match the pre-existing data?</p>
+<pre class="r"><code>NDVI_Krig[[1]]</code></pre>
+<pre><code>## class      : RasterBrick 
+## dimensions : 92, 108, 9936, 1  (nrow, ncol, ncell, nlayers)
+## resolution : 0.08333333, 0.08333333  (x, y)
+## extent     : 6, 15, 47.33333, 55  (xmin, xmax, ymin, ymax)
+## crs        : +proj=longlat +datum=WGS84 +no_defs 
+## source     : memory
+## names      : var1.pred 
+## min values :  275.9705 
+## max values :  285.7357</code></pre>
+<p>We nailed this!</p>
+<p>Let’s take one final look at our (A) raw ERA5 data, (B) NDVI data, (C) Kriged ERA5 data, and (D) standard error of our Kriging output:</p>
+<details>
+<summary>
+Click here for download plotting calls
+</summary>
+<pre class="r"><code>### ERA-Plot
+ERA_df &lt;- as.data.frame(raster(file.path(Dir.Exports, &quot;2m_temperature_2015-01-01_2015-12-31_year.nc&quot;)), xy = TRUE) # turn raster into dataframe
+colnames(ERA_df)[c(-1,-2)] &lt;- &quot;Air Temperature 2015 (ERA5)&quot;
+ERA_df &lt;- gather(data = ERA_df, key = Values, value = &quot;value&quot;, colnames(ERA_df)[c(-1,-2)]) #  make ggplot-ready
+Raw_plot &lt;- ggplot() + # create a plot
+  geom_raster(data = ERA_df , aes(x = x, y = y, fill = value)) + # plot the raw data
+  facet_wrap(~Values) + # split raster layers up
+  theme_bw() + labs(x = &quot;Longitude&quot;, y = &quot;Latitude&quot;) + # make plot more readable
+  scale_fill_gradientn(name = &quot;Air Temperature [K]&quot;, colours = inferno(100)) + # add colour and legend
+  geom_polygon(data = Shape_shp, aes(x = long, y = lat, group = group), colour = &quot;black&quot;, fill = &quot;NA&quot;) # add shape
+### NDVI-Plot
+NDVI_df &lt;- as.data.frame(NDVI_ras, xy = TRUE) # turn raster into dataframe
+colnames(NDVI_df)[c(-1,-2)] &lt;- &quot;NDVI 2015&quot;
+NDVI_df &lt;- gather(data = NDVI_df, key = Values, value = &quot;value&quot;, colnames(NDVI_df)[c(-1,-2)]) #  make ggplot-ready
+NDVI_plot &lt;- ggplot() + # create a plot
+  geom_raster(data = NDVI_df , aes(x = x, y = y, fill = value)) + # plot the raw data
+  facet_wrap(~Values) + # split raster layers up
+  theme_bw() + labs(x = &quot;Longitude&quot;, y = &quot;Latitude&quot;) + # make plot more readable
+  scale_fill_gradientn(name = &quot;NDVI&quot;, colours = rev(terrain.colors(100))) + # add colour and legend
+  geom_polygon(data = Shape_shp, aes(x = long, y = lat, group = group), colour = &quot;black&quot;, fill = &quot;NA&quot;) # add shape
+### KRIGED-Plots
+Dates = c(&quot;Kriged Air Temperature 2015 (NDVI Resolution)&quot;)
+Type_vec &lt;- c(&quot;Prediction&quot;, &quot;Standard Error&quot;) # these are the output types of krigR
+Colours_ls &lt;- list(inferno(100), rev(viridis(100))) # we want separate colours for the types
+Plots_ls &lt;- as.list(NA, NA) # this list will be filled with the output plots
+KrigDF_ls &lt;- as.list(NA, NA) # this list will be filled with the output data
+for(Plot in 1:2){ # loop over both output types
+  Krig_df &lt;- as.data.frame(NDVI_Krig[[Plot]], xy = TRUE) # turn raster into dataframe
+  colnames(Krig_df)[c(-1,-2)] &lt;- paste(Type_vec[Plot], Dates) # set colnames
+  Krig_df &lt;- gather(data = Krig_df, key = Values, value = &quot;value&quot;, colnames(Krig_df)[c(-1,-2)]) # make ggplot-ready
+  Plots_ls[[Plot]] &lt;- ggplot() + # create plot
+    geom_raster(data = Krig_df , aes(x = x, y = y, fill = value)) + # plot the kriged data
+    facet_wrap(~Values) + # split raster layers up
+    theme_bw() + labs(x = &quot;Longitude&quot;, y = &quot;Latitude&quot;) + # make plot more readable
+    scale_fill_gradientn(name = &quot;Air Temperature [K]&quot;, colours = Colours_ls[[Plot]]) + # add colour and legend
+    theme(plot.margin = unit(c(0, 0, 0, 0), &quot;cm&quot;)) + # reduce margins (for fusing of plots)
+    geom_polygon(data = Shape_shp, aes(x = long, y = lat, group = group), colour = &quot;black&quot;, fill = &quot;NA&quot;) # add shape
+  KrigDF_ls[[Plot]] &lt;- Krig_df
+} # end of type-loop</code></pre>
+</details>
+<pre class="r"><code>plot_grid(plotlist = list(Raw_plot, NDVI_plot, Plots_ls[[1]], Plots_ls[[2]]), 
+          nrow = 2, labels = &quot;AUTO&quot;)</code></pre>
+<p><img src="/courses/krigr/krigr-third-party_files/figure-html/unnamed-chunk-9-1.png" width="1440" /></p>
+<p>So what can we learn from this? Let’s plot the relation between temperature and NDVI:</p>
+<pre class="r"><code>plot_df &lt;- as.data.frame(cbind(KrigDF_ls[[1]][,4], 
+                               KrigDF_ls[[2]][,4],
+                               NDVI_df[,4]))
+colnames(plot_df) &lt;- c(&quot;Temperature&quot;, &quot;Uncertainty&quot;, &quot;NDVI&quot;)
+ggplot(plot_df,
+       aes(x = Temperature, y = NDVI, size = Uncertainty)) + 
+  geom_point(alpha = 0.15) + 
+  theme_bw()</code></pre>
+<p><img src="/courses/krigr/krigr-third-party_files/figure-html/unnamed-chunk-10-1.png" width="1440" /></p>
+<p>Looks like NDVI increases as mean annual temperatures rise, but reaches a peak around 281-282 Kelvin with a subsequent decrease as mean annual temperatures rise higher.</p>
+</div>
+</div>
+<div id="using-third-party-data" class="section level2">
+<h2>Using Third-Party Data</h2>
+<p>{{% hint danger %}}
+<strong>ATTENTION:</strong> Kriging only works on <strong>square-cell spatial products</strong>!
+{{% /hint %}}</p>
+<p>The <code>krigR()</code> function is designed to work with non-ERA5(-Land) data as well as non-GMTED2010 covariate data. To downscale your own spatial products using different covariate data than the GMTED2010 DEM we use as a default, you need to step into the three-step workflow.</p>
+<p>{{% hint warning %}}
+Most spatial products won’t be reliably downscaled using only elevation covariate data.
+{{% /hint %}}</p>
+<p><code>krigR()</code> supports any combination of ERA5-family reanalysis, GMTED2010, third-party climate data, and third-party covariate data. Here, we just demonstrate the use of other covariates than the GMTED2010 used by <code>KrigR</code> by default.</p>
+<p>The product we will focus on here is the soil moisture data contained in our <code>BCq_ras</code> product established <a href="/courses/krigr/bioclim/#water-availability-variables">here</a>. With this data set, we also revert back to our original <a href="/courses/krigr/prep/#shape-of-interest-spatialpolygons">study region</a>:</p>
+<p>The reason we focus on soil moisture for this exercise? In <a href="https://iopscience.iop.org/article/10.1088/1748-9326/ac39bf">this publication (Figure 3)</a>, we demonstrate that soil moisture data can be statistically downscales using kriging with some third-party covariates. As such, we pick up from where we left off when we discussed <a href="/courses/krigr/bioclim/#water-availability-3">kriging of bioclimatic products</a>.</p>
+<details>
+<summary>
+Click here for file:
+</summary>
+<pre><code>Download </code></pre>
+<a href="/courses/krigr/Data/Qsoil_BC.nc">Qsoil_BC.nc</a> and place it into your data directory.
+</details>
+<pre class="r"><code>BCq_ras &lt;- stack(file.path(Dir.Data, &quot;Qsoil_BC.nc&quot;))</code></pre>
+<div id="third-party-data-covariates" class="section level3">
+<h3>Third-Party Data Covariates</h3>
+<p>In <a href="https://iopscience.iop.org/article/10.1088/1748-9326/ac39bf">this publication</a>, we demonstrate how soil moisture data can be reliably statistically downscaled using soil property data which we obtain from the <a href="http://globalchange.bnu.edu.cn/research/soil4.jsp">Land-Atmosphere Interaction Research Group at Sun Yat-sen University</a>.</p>
+<p>Below, you will find the code needed to obtain the data of global coverage at roughly 1km spatial resolution. The code chunk below also crops and masks the data according to our study region and subsequently deletes the storage-heavy global files (3.5GB each in size). This process takes a long time due to download speeds.</p>
+<details>
+<summary>
+Click here for the covariate file to save yourself downloading and processing of global data:
+</summary>
+<pre><code>Download </code></pre>
+<a href="/courses/krigr/Covariates/SoilCovs.nc">SoilCovs.nc</a> and place it into your covariates directory.
+</details>
+<pre class="r"><code># documentation of these can be found here http://globalchange.bnu.edu.cn/research/soil4.jsp
+SoilCovs_vec &lt;- c(&quot;tkdry&quot;, &quot;tksat&quot;, &quot;csol&quot;, &quot;k_s&quot;, &quot;lambda&quot;, &quot;psi&quot;, &quot;theta_s&quot;) # need these names for addressing soil covariates
+if(!file.exists(file.path(Dir.Covariates, &quot;SoilCovs.nc&quot;))){
+  print(&quot;#### Loading SOIL PROPERTY covariate data. ####&quot;) 
+  # create lists to combine soil data into one
+  SoilCovs_ls &lt;- as.list(rep(NA, length(SoilCovs_vec)))
+  names(SoilCovs_ls) &lt;- c(SoilCovs_vec)
+  ## Downloading, unpacking, and loading
+  for(Soil_Iter in SoilCovs_vec){
+    if(!file.exists(file.path(Dir.Covariates, paste0(Soil_Iter, &quot;.nc&quot;)))) { # if not downloaded and processed yet
+      print(paste(&quot;Handling&quot;, Soil_Iter, &quot;data.&quot;))
+      Dir.Soil &lt;- file.path(Dir.Covariates, Soil_Iter)
+      dir.create(Dir.Soil)
+      download.file(paste0(&quot;http://globalchange.bnu.edu.cn/download/data/worldptf/&quot;, Soil_Iter,&quot;.zip&quot;),
+                    destfile = file.path(Dir.Soil, paste0(Soil_Iter, &quot;.zip&quot;))
+      ) # download data
+      unzip(file.path(Dir.Soil, paste0(Soil_Iter, &quot;.zip&quot;)), exdir = Dir.Soil) # unzip data
+      File &lt;- list.files(Dir.Soil, pattern = &quot;.nc&quot;)[1] # only keep first soil layer
+      Soil_ras &lt;- raster(file.path(Dir.Soil, File)) # load data
+      SoilCovs_ls[[which(names(SoilCovs_ls) == Soil_Iter)]] &lt;- Soil_ras # save to list
+      writeRaster(x = Soil_ras, filename = file.path(Dir.Covariates, Soil_Iter), format = &quot;CDF&quot;)
+      unlink(Dir.Soil, recursive = TRUE)
+    }else{
+      print(paste(Soil_Iter, &quot;already downloaded and processed.&quot;))
+      SoilCovs_ls[[which(names(SoilCovs_ls) == Soil_Iter)]] &lt;- raster(file.path(Dir.Covariates, paste0(Soil_Iter, &quot;.nc&quot;)))
+    }
+  }
+  ## data handling and manipulation
+  SoilCovs_stack &lt;- stack(SoilCovs_ls) # stacking raster layers from list
+  SoilCovs_stack &lt;- crop(SoilCovs_stack, extent(BCq_ras)) # cropping to extent of data we have
+  SoilCovs_mask &lt;- KrigR::mask_Shape(SoilCovs_stack[[1]], Shape = Shape_shp) # create mask with KrigR-internal function to ensure all edge cells are contained
+  SoilCovs_stack &lt;- mask(SoilCovs_stack, SoilCovs_mask) # mask out shape
+  ## writing the data
+  writeRaster(x = SoilCovs_stack, filename = file.path(Dir.Covariates, &quot;SoilCovs&quot;), format = &quot;CDF&quot;)
+  ## removing the global files due to their size
+  unlink(file.path(Dir.Covariates, paste0(SoilCovs_vec, &quot;.nc&quot;)))
+}
+SoilCovs_stack &lt;- stack(file.path(Dir.Covariates, &quot;SoilCovs.nc&quot;))
+names(SoilCovs_stack) &lt;- SoilCovs_vec</code></pre>
+<p>Let’s have a look at these data:</p>
+<pre class="r"><code>SoilCovs_stack</code></pre>
+<pre><code>## class      : RasterStack 
+## dimensions : 408, 648, 264384, 7  (nrow, ncol, ncell, nlayers)
+## resolution : 0.008333333, 0.008333333  (x, y)
+## extent     : 9.725, 15.125, 49.75, 53.15  (xmin, xmax, ymin, ymax)
+## crs        : +proj=longlat +datum=WGS84 +no_defs 
+## names      :         tkdry,         tksat,          csol,           k_s,        lambda,           psi,       theta_s 
+## min values :  5.200000e-02,  1.337000e+00,  2.141000e+06,  5.212523e+00,  8.600000e-02, -5.307258e+01,  3.230000e-01 
+## max values :  2.070000e-01,  2.862000e+00,  2.346400e+06,  2.461686e+02,  3.330000e-01, -5.205317e+00,  5.320000e-01</code></pre>
+<p>Now we need to establish target and training resolution of our covariate data.</p>
+<p>First, we focus on the training resolution covariate data. We match our covariate data to our spatial product which we wish to downscale by resampling the covariate data to the coarser resolution:</p>
+<pre class="r"><code>Coarsecovs &lt;- resample(x = SoilCovs_stack, y = BCq_ras)</code></pre>
+<p>Second, we aggregate the covariate data to our desired resolution. In this case, 0.02 as done previously <a href="/courses/krigr/bioclim/#kriging-bioclimatic-products">here</a>:</p>
+<pre class="r"><code>Finecovs &lt;- aggregate(SoilCovs_stack, fact = 0.02/res(SoilCovs_stack)[1])</code></pre>
+<p>Finally, we combine these into a list like the output of <code>download_DEM()</code>:</p>
+<pre class="r"><code>Covs_ls &lt;- list(Coarsecovs, Finecovs)
+Plot_Covs(Covs = Covs_ls, Shape_shp)</code></pre>
+<p><img src="/courses/krigr/krigr-third-party_files/figure-html/SoilCovs-1.png" width="1440" /></p>
+<p>{{% hint %}}
+Our <a href="/courses/outlook/">development goals</a> include creating a function that automatically carries out all of the above for you with a specification alike to <code>download_DEM()</code>.
+{{% /hint %}}</p>
+</div>
+<div id="kriging-third-party-data" class="section level3">
+<h3>Kriging Third-Party Data</h3>
+<p>Finally, we can statistically downscale our soil moisture data using the soil property covariates. For this, we need to specify a new <code>KrigingEquation</code>.</p>
+<p>{{% hint %}}
+With the <code>KrigingEquation</code> argument, you may specify non-linear combinations of covariates for your call to <code>krigR()</code>.
+{{% /hint %}}</p>
+<p>{{% hint info %}}
+If you don’t specify a <code>KrigingEquation</code> in <code>krigR()</code> and your covariates do not contain a layer called <code>"DEM"</code>, <code>krigR()</code> will notify you that its default formula cannot be executed and will attempt to build an additive formula from the data it can find. <code>krigr()</code> will inform you of this and ask for your approval before proceeding.
+{{% /hint %}}</p>
+<p>This auto-generated formula would be the same as the one we specify here - an additive combination of all covariates found both at coarse and fine resolutions. Of course, this formula can also be specified to reflect interactive effects.</p>
+<p>Here, I automate the generation of our <code>KrigingEquation</code>:</p>
+<pre class="r"><code>KrigingEquation &lt;- paste0(&quot;ERA ~ &quot;, paste(SoilCovs_vec, collapse = &quot; + &quot;))
+KrigingEquation</code></pre>
+<pre><code>## [1] &quot;ERA ~ tkdry + tksat + csol + k_s + lambda + psi + theta_s&quot;</code></pre>
+<p>In accordance with our <a href="/courses/krigr/bioclim/#temperatures-3">downscaling of the temperature-portion of the bioclimatic data</a>, (1) I only hand the last 8 layers to the kriging call because those are the soil moisture data, (2) I leave out the <code>Cores</code> argument, so that <code>krigR()</code> determines how many cores your machine has and uses all of them to speed up the computation of the multi-layer raster, and (3) I set <code>nmax</code> to 80 to approximate a typical weather system in size:</p>
+<pre class="r"><code>BC_Water_Krig  &lt;- krigR(Data = BCq_ras[[12:19]], 
+                    Covariates_coarse = Covs_ls[[1]], 
+                    Covariates_fine = Covs_ls[[2]],
+                    KrigingEquation = KrigingEquation, 
+                    FileName = &quot;BC_Water_Krig&quot;,
+                    Dir = Dir.Covariates,
+                    nmax = 80
+)</code></pre>
+<div id="bio12---annual-mean-soil-moisture" class="section level4">
+<h4>BIO12 - Annual Mean Soil Moisture</h4>
+<p>{{% hint normal %}}
+Interpolating this data is just like statistically downscaling any other soil moisture product and can be done without any problems.
+{{% /hint %}}</p>
+<details>
+<summary>
+Click here for plotting call and plot:
+</summary>
+<p>{{% hint normal %}}
+Look at how well the river Elbe sows up in this!
+{{% /hint %}}</p>
+<pre class="r"><code>Plot_Krigs(lapply(BC_Water_Krig[-3], &quot;[[&quot;, 1), 
+           Shp = Shape_shp,
+           Dates = &quot;BIO12 - Annual Mean Soil Moisture&quot;)</code></pre>
+<img src="/courses/krigr/krigr-third-party_files/figure-html/unnamed-chunk-18-1.png" width="1440" />
+</details>
+</div>
+<div id="bio13---soil-moisture-of-wettest-month" class="section level4">
+<h4>BIO13 - Soil Moisture of Wettest Month</h4>
+<p>{{% hint normal %}}
+Interpolating this data is just like statistically downscaling any other soil moisture product and can be done without any problems.
+{{% /hint %}}</p>
+<details>
+<summary>
+Click here for plotting call and plot:
+</summary>
+<pre class="r"><code>Plot_Krigs(lapply(BC_Water_Krig[-3], &quot;[[&quot;, 2), 
+           Shp = Shape_shp,
+           Dates = &quot;BIO13 - Soil Moisture of Wettest Month&quot;)</code></pre>
+<img src="/courses/krigr/krigr-third-party_files/figure-html/unnamed-chunk-19-1.png" width="1440" />
+</details>
+</div>
+<div id="bio14---soil-moisture-of-driest-month" class="section level4">
+<h4>BIO14 - Soil Moisture of Driest Month</h4>
+<p>{{% hint normal %}}
+Interpolating this data is just like statistically downscaling any other soil moisture product and can be done without any problems.
+{{% /hint %}}</p>
+<details>
+<summary>
+Click here for plotting call and plot:
+</summary>
+<pre class="r"><code>Plot_Krigs(lapply(BC_Water_Krig[-3], &quot;[[&quot;, 3), 
+           Shp = Shape_shp,
+           Dates = &quot;BIO13 - Soil Moisture of Driest Month&quot;)</code></pre>
+<img src="/courses/krigr/krigr-third-party_files/figure-html/unnamed-chunk-20-1.png" width="1440" />
+</details>
+</div>
+<div id="bio15---soil-moisture-seasonality" class="section level4">
+<h4>BIO15 - Soil Moisture Seasonality</h4>
+<p>{{% hint warning %}}
+This data product is calculated using the standard deviation of mean values throughout our time frame. Conclusively, it would be interpolated better by first statistically downscaling the underlying data rather than the final bioclimatic variable.
+{{% /hint %}}</p>
+<details>
+<summary>
+Click here for plotting call and plot:
+</summary>
+<pre class="r"><code>Plot_Krigs(lapply(BC_Water_Krig[-3], &quot;[[&quot;, 4), 
+           Shp = Shape_shp,
+           Dates = &quot;BIO15 - Precipitation Seasonality&quot;)</code></pre>
+<img src="/courses/krigr/krigr-third-party_files/figure-html/unnamed-chunk-21-1.png" width="1440" />
+</details>
+</div>
+<div id="bio16-bio17---soil-moisture-of-wettest-and-driest-quarter" class="section level4">
+<h4>BIO16 &amp; BIO17 - Soil Moisture of Wettest and Driest Quarter</h4>
+<p>{{% hint danger %}}
+<strong>I do not recommend you use these kriging outputs!</strong> They rely on mean quarterly soil moisture data which is not being interpolated here. Subsequently, the patchiness of the underlying data is lost and with it: information.
+{{% /hint %}}</p>
+<details>
+<summary>
+Click here for plotting call and plot:
+</summary>
+<pre class="r"><code>Plot_Krigs(lapply(BC_Water_Krig[-3], &quot;[[&quot;, 5:6), 
+           Shp = Shape_shp,
+           Dates = c(&quot;BIO16 - Soil Moisture of Wettest Quarter&quot;, 
+                     &quot;BIO17 - Soil Moisture of Driest Quarter&quot;)
+           )</code></pre>
+<img src="/courses/krigr/krigr-third-party_files/figure-html/unnamed-chunk-22-1.png" width="1440" />
+</details>
+</div>
+<div id="bio18-bio19---precipitation-of-warmest-and-coldest-quarter" class="section level4">
+<h4>BIO18 &amp; BIO19 - Precipitation of Warmest and Coldest Quarter</h4>
+<p>{{% hint danger %}}
+<strong>I do not recommend you use these kriging outputs!</strong> They rely on mean quarterly temperature data which is not being interpolated here. Subsequently, the patchiness of the underlying data is lost and with it: information.
+{{% /hint %}}</p>
+<details>
+<summary>
+Click here for plotting call and plot:
+</summary>
+<pre class="r"><code>Plot_Krigs(lapply(BC_Water_Krig[-3], &quot;[[&quot;, 7:8), 
+           Shp = Shape_shp,
+           Dates = c(&quot;BIO16 - Soil Moisture of Warmest Quarter&quot;, 
+                     &quot;BIO17 - Soil Moisture of Coldest Quarter&quot;)
+           )</code></pre>
+<img src="/courses/krigr/krigr-third-party_files/figure-html/unnamed-chunk-23-1.png" width="1440" />
+</details>
+<p>This concludes our exercise for using third-party data in <code>KrigR</code>.</p>
+</div>
+</div>
+</div>
+<div id="session-info" class="section level2">
+<h2>Session Info</h2>
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>## R version 4.0.5 (2021-03-31)
+## Platform: x86_64-w64-mingw32/x64 (64-bit)
+## Running under: Windows 10 x64 (build 19043)
+## 
+## Matrix products: default
+## 
+## locale:
+## [1] LC_COLLATE=English_United Kingdom.1252  LC_CTYPE=English_United Kingdom.1252   
+## [3] LC_MONETARY=English_United Kingdom.1252 LC_NUMERIC=C                           
+## [5] LC_TIME=English_United Kingdom.1252    
+## 
+## attached base packages:
+## [1] parallel  stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+##  [1] mapview_2.10.2          rnaturalearthdata_0.1.0 rnaturalearth_0.1.0    
+##  [4] gimms_1.2.0             ggmap_3.0.0             cowplot_1.1.1          
+##  [7] viridis_0.6.0           viridisLite_0.4.0       ggplot2_3.3.6          
+## [10] tidyr_1.1.3             KrigR_0.1.2             httr_1.4.2             
+## [13] stars_0.5-3             abind_1.4-5             fasterize_1.0.3        
+## [16] sf_1.0-0                lubridate_1.7.10        automap_1.0-14         
+## [19] doSNOW_1.0.19           snow_0.4-3              doParallel_1.0.16      
+## [22] iterators_1.0.13        foreach_1.5.1           rgdal_1.5-23           
+## [25] raster_3.4-13           sp_1.4-5                stringr_1.4.0          
+## [28] keyring_1.2.0           ecmwfr_1.3.0            ncdf4_1.17             
+## 
+## loaded via a namespace (and not attached):
+##  [1] bitops_1.0-7             satellite_1.0.2          xts_0.12.1              
+##  [4] webshot_0.5.2            tools_4.0.5              bslib_0.3.1             
+##  [7] utf8_1.2.1               R6_2.5.0                 zyp_0.10-1.1            
+## [10] KernSmooth_2.23-18       DBI_1.1.1                colorspace_2.0-0        
+## [13] withr_2.4.2              tidyselect_1.1.0         gridExtra_2.3           
+## [16] leaflet_2.0.4.1          curl_4.3.2               compiler_4.0.5          
+## [19] leafem_0.1.3             gstat_2.0-7              labeling_0.4.2          
+## [22] bookdown_0.22            sass_0.4.1               scales_1.1.1            
+## [25] classInt_0.4-3           proxy_0.4-25             digest_0.6.27           
+## [28] rmarkdown_2.14           base64enc_0.1-3          jpeg_0.1-8.1            
+## [31] pkgconfig_2.0.3          htmltools_0.5.2          highr_0.9               
+## [34] fastmap_1.1.0            htmlwidgets_1.5.3        rlang_0.4.11            
+## [37] FNN_1.1.3                farver_2.1.0             jquerylib_0.1.4         
+## [40] generics_0.1.0           zoo_1.8-9                jsonlite_1.7.2          
+## [43] crosstalk_1.1.1          dplyr_1.0.5              magrittr_2.0.1          
+## [46] Rcpp_1.0.7               munsell_0.5.0            fansi_0.4.2             
+## [49] lifecycle_1.0.0          stringi_1.5.3            yaml_2.2.1              
+## [52] plyr_1.8.6               grid_4.0.5               crayon_1.4.1            
+## [55] lattice_0.20-41          knitr_1.33               pillar_1.6.0            
+## [58] boot_1.3-27              rjson_0.2.20             spacetime_1.2-4         
+## [61] stats4_4.0.5             codetools_0.2-18         glue_1.4.2              
+## [64] evaluate_0.14            blogdown_1.3             vctrs_0.3.7             
+## [67] png_0.1-7                RgoogleMaps_1.4.5.3      gtable_0.3.0            
+## [70] purrr_0.3.4              reshape_0.8.8            assertthat_0.2.1        
+## [73] cachem_1.0.4             xfun_0.31                lwgeom_0.2-6            
+## [76] e1071_1.7-6              rnaturalearthhires_0.2.0 class_7.3-18            
+## [79] Kendall_2.2              tibble_3.1.1             intervals_0.15.2        
+## [82] memoise_2.0.0            units_0.7-2              ellipsis_0.3.2</code></pre>
+</div>

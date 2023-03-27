@@ -4,14 +4,51 @@
 #   The weight parameter defines the order that the links will appear in.
 
 [[main]]
-  name = "Demo"
-  url = "#hero"
+  name = "Home"
+  url = "/"
   weight = 10
 
 [[main]]
-  name = "Posts"
-  url = "#posts"
+  name = "Courses & Workshops"
+  url = "#courses"
   weight = 20
+  identifier = "courses"
+  
+#  [[main]]
+#  name = "KrigR - State-of-the-Art Climate Data within R"
+#  url = "/courses/krigr/"
+#  weight = 1
+#  parent = "courses"
+
+  #[[main]]
+  #name = "Statistical Rethinking - Introduction to Bayesian Statistics"
+  #url = "/courses/rethinking/"
+  #weight = 2
+  #parent = "courses"
+  
+  #[[main]]
+  #name = "Bayesian Networks - Causality through Bayesian Approaches"
+  #url = "/courses/bayes-nets/"
+  #weight = 3
+  #parent = "courses"
+  
+  #[[main]]
+  #name = "Biostats 101 - An Introduction to Biostatistics"
+  #url = "/courses/an-introduction-to-biostatistics/"
+  #weight = 4
+  #parent = "courses"
+  
+  #[[main]]
+  #name = "Biostats 301 - Excursions into Biostatistics"
+  #url = "/courses/excursions-into-biostatistics/"
+  #weight = 5
+  #parent = "courses"
+  
+  #[[main]]
+  #name = "BFTP - First Steps in Macroecology in R"
+  #url = "/courses/bftp-biome-detection/"
+  #weight = 6
+  #parent = "courses"
 
 [[main]]
   name = "Projects"
@@ -23,19 +60,25 @@
   url = "#featured"
   weight = 40
 
-[[main]]
-  name = "Courses"
-  url = "courses/"
-  weight = 50
-
-[[main]]
-  name = "Contact"
-  url = "#contact"
+#[[main]]
+#  name = "Posts"
+#  url = "#posts"
+#  weight = 50
+  
+  [[main]]
+  name = "Talks"
+  url = "#talks"
   weight = 60
 
+[[main]]
+  name = "About & Contact"
+  url = "/about"
+  weight = 70
+
 # Link to a PDF of your resume/CV from the menu.
-# To enable, copy your resume/CV to `static/files/cv.pdf` and uncomment the lines below.
-# [[main]]
-#    name = "CV"
-#    url = "files/cv.pdf"
-#    weight = 70
+# To enable, copy your resume/CV to `static/media/resume.pdf` and uncomment the lines below.
+[[main]]
+  name = "CV"
+  url = "https://htmlpreview.github.io/?https://github.com/ErikKusch/Website/blob/master/static/media/CV_ErikKusch.html"
+  target = "_blank"
+  weight = 80

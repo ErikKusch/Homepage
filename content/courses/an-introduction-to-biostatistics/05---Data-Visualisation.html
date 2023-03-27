@@ -1,0 +1,127 @@
+---
+title: "Data Visualisation"
+subtitle: ''
+author: "Erik Kusch"
+date: "2020-06-10"
+slug: Data Visualisation
+categories: [An Introduction to Biostatistics]
+tags: [R, Statistics]
+summary: 'These are the solutions to the exercises contained within the handout to Data Visualisation which walks you through the basics of data visualisation in `R`using `ggplot2`. The plots presented here are using data from the `iris` data set supplied through the `datasets` package.'
+authors: [Erik Kusch]
+lastmod: '2020-06-10'
+featured: no
+projects:
+output:
+  blogdown::html_page:
+    keep_md: true
+    # toc: true
+    # toc_depth: 2
+    # number_sections: false
+    fig_width: 6
+linktitle: 05 - Data Visualisation
+menu:
+  example:
+    parent: Sessions 
+    weight: 5
+toc: true
+type: docs
+weight: 5
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+<div id="TOC">
+
+</div>
+
+<div id="theory" class="section level2">
+<h2>Theory</h2>
+<p>These are the solutions to the exercises contained within the handout to Data Visualisation which walks you through the basics of data visualisation in <code>R</code>using <code>ggplot2</code>. The plots presented here are using data from the <code>iris</code> data set supplied through the <code>datasets</code> package. Keep in mind that there is probably a myriad of other ways to reach the same conclusions as presented in these solutions.</p>
+<p>I have prepared some {{&lt; staticref “courses/an-introduction-to-biostatistics/05—Data-Visualisation_Handout.html” “newtab” &gt;}} Lecture Slides {{&lt; /staticref &gt;}} for this session.</p>
+</div>
+<div id="data" class="section level2">
+<h2>Data</h2>
+<p>This practical makes use of R-internal data so you don’t need to download anything extra today.</p>
+</div>
+<div id="packages" class="section level2">
+<h2>Packages</h2>
+<p>Recall the exercise that went along with the last seminar (Descriptive Statistics) where we learnt the difference between a basic and advanced preamble for package loading in <code>R</code>. Here (and in future exercises) I will only supply you with the advanced version of the preamble.</p>
+<p>Now let’s load the <code>ggplot2</code> package into our <code>R</code> session so we’ll be able to use its functionality for data visualisation as well as the <code>datasets</code> package to get the <code>iris</code> data set.</p>
+<pre class="r"><code># function to load packages and install them if they haven&#39;t been installed yet
+install.load.package &lt;- function(x) {
+  if (!require(x, character.only = TRUE))
+    install.packages(x)
+  require(x, character.only = TRUE)
+}
+# packages to load/install if necessary
+package_vec &lt;- c(&quot;ggplot2&quot;, &quot;datasets&quot;)
+# applying function install.load.package to all packages specified in package_vec
+sapply(package_vec, install.load.package)</code></pre>
+<pre><code>## Loading required package: ggplot2</code></pre>
+<pre><code>##  ggplot2 datasets 
+##     TRUE     TRUE</code></pre>
+</div>
+<div id="loading-r-internal-data-sets-iris" class="section level2">
+<h2>Loading <code>R</code>-internal data sets (<code>iris</code>)</h2>
+<p>The <code>iris</code> data set is included in the <code>datasets</code> package in <code>R</code>. An <code>R</code>-internal data set is loaded through the command <code>data()</code>. Take note that you do not have to assign this command’s output to a new object (via <code>&lt;-</code>). Instead, the dataset is loaded to your current environment by its name (iris, in this case). Keep in mind that this <strong>can override</strong> objects of the same name that are already present in your current session of <code>R</code>.</p>
+<pre class="r"><code>data(&quot;iris&quot;)</code></pre>
+</div>
+<div id="inspect-the-data-set" class="section level2">
+<h2>Inspect the data set</h2>
+<p>Since we know that <code>iris</code> is a dataset, we can be reasonably sure that this object will be complex enough to warrant using the <code>str()</code> function for inspection:</p>
+<pre class="r"><code>str(iris)</code></pre>
+<pre><code>## &#39;data.frame&#39;:    150 obs. of  5 variables:
+##  $ Sepal.Length: num  5.1 4.9 4.7 4.6 5 5.4 4.6 5 4.4 4.9 ...
+##  $ Sepal.Width : num  3.5 3 3.2 3.1 3.6 3.9 3.4 3.4 2.9 3.1 ...
+##  $ Petal.Length: num  1.4 1.4 1.3 1.5 1.4 1.7 1.4 1.5 1.4 1.5 ...
+##  $ Petal.Width : num  0.2 0.2 0.2 0.2 0.2 0.4 0.3 0.2 0.2 0.1 ...
+##  $ Species     : Factor w/ 3 levels &quot;setosa&quot;,&quot;versicolor&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...</code></pre>
+<p>The <code>iris</code> dataset contains four measurements (<code>Sepal.Length</code>, <code>Sepal.Width</code>, <code>Petal.Length</code>, <code>Petal.Width</code>) for 150 flowers representing three species of iris (<em>Iris setosa</em>, <em>versicolor</em> and <em>virginica</em>).</p>
+</div>
+<div id="boxplot-of-petal.length-by-species" class="section level2">
+<h2><strong>Boxplot</strong> of <code>Petal.Length</code> by <code>Species</code></h2>
+<pre class="r"><code>ggplot(iris, # the data set
+       aes(x=Species, y=Petal.Length) # aesthetics
+       ) + geom_boxplot() + # this is the end of the bare minimum plot
+  theme_bw() + labs(title=&quot;Petal Length of three different species of Iris&quot;)</code></pre>
+<p><img src="/courses/an-introduction-to-biostatistics/05---Data-Visualisation_files/figure-html/PlottingExercise1-1.png" width="576" /></p>
+<p>THis boxplot shows us exactly how the distributions of petal length measurements of our three species of Iris are differing from one another. Despite the obvious trend in the data, <strong>be sure not to report results through figures alone!</strong> We will find out how to test whether the pattern we can observe here holds up to scrutiny at a later point in time of our seminars.</p>
+</div>
+<div id="scatterplot-of-petal.length-and-petal.width" class="section level2">
+<h2><strong>Scatterplot</strong> of <code>Petal.Length</code> and <code>Petal.Width</code></h2>
+<pre class="r"><code>ggplot(iris, # the data set
+       aes(x=Petal.Width, y=Petal.Length) # aesthetics
+       ) + geom_point() + # this is the end of the bare minimum plot
+  theme_bw() + labs(title=&quot;Petal Width and Petal Length of three different species of Iris&quot;)</code></pre>
+<p><img src="/courses/an-introduction-to-biostatistics/05---Data-Visualisation_files/figure-html/PlottingExercise2-1.png" width="576" /></p>
+</div>
+<div id="scatterplot-of-petal.length-and-petal.width-grouped-by-species" class="section level2">
+<h2><strong>Scatterplot</strong> of <code>Petal.Length</code> and <code>Petal.Width</code> grouped by <code>Species</code></h2>
+<pre class="r"><code>ggplot(iris, # the data set
+       aes(x=Petal.Width, y=Petal.Length, colour = Species) # aesthetics
+       ) + geom_point() + # this is the end of the bare minimum plot
+  theme_bw() + labs(title=&quot;Petal Width and Petal Length of three different species of Iris&quot;) + 
+  theme(legend.justification=c(1,0), legend.position=c(1,0)) + # legend inside
+  scale_color_discrete(name=&quot;Iris Species&quot;)  # Change legend title</code></pre>
+<p><img src="/courses/an-introduction-to-biostatistics/05---Data-Visualisation_files/figure-html/PlottingExercise3-1.png" width="576" /></p>
+</div>
+<div id="relationship-of-sepal.length-and-sepal.width" class="section level2">
+<h2>Relationship of <code>Sepal.Length</code> and <code>Sepal.Width</code></h2>
+<pre class="r"><code>ggplot(iris, # the data set
+       aes(x=Sepal.Width, y=Sepal.Length) # aesthetics
+       ) + geom_point() + geom_smooth() + # this is the end of the bare minimum plot
+  theme_bw() + labs(title=&quot;Petal Width and Petal Length of three different species of Iris&quot;)</code></pre>
+<pre><code>## `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;</code></pre>
+<p><img src="/courses/an-introduction-to-biostatistics/05---Data-Visualisation_files/figure-html/PlottingExercise4-1.png" width="576" /></p>
+</div>
+<div id="relationship-of-sepal.length-and-sepal.width-grouped-by-species" class="section level2">
+<h2>Relationship of <code>Sepal.Length</code> and <code>Sepal.Width</code> (grouped by <code>Species</code>)</h2>
+<pre class="r"><code>ggplot(iris, # the data set
+       aes(x=Sepal.Width, y=Sepal.Length, colour = Species) # aesthetics
+       ) + geom_point() + geom_smooth() + # this is the end of the bare minimum plot
+  theme_bw() + labs(title=&quot;Petal Width and Petal Length of three different species of Iris&quot;) + 
+  theme(legend.justification=c(1,0), legend.position=c(1,0)) + # legend inside
+  scale_color_discrete(name=&quot;Iris Species&quot;)  # Change legend title</code></pre>
+<pre><code>## `geom_smooth()` using method = &#39;loess&#39; and formula &#39;y ~ x&#39;</code></pre>
+<p><img src="/courses/an-introduction-to-biostatistics/05---Data-Visualisation_files/figure-html/PlottingExercise5-1.png" width="576" /></p>
+</div>

@@ -1,0 +1,150 @@
+---
+title: "Development Goals"
+author: Erik Kusch
+date: '2022-05-26'
+slug: outlook
+categories:
+  - KrigR
+  - Climate Data
+tags:
+  - Climate Data
+  - Statistical Downscaling
+  - KrigR
+subtitle: "The future directions for `KrigR`"
+summary: 'The future directions for `KrigR`.'
+authors: []
+lastmod: '2021-05-26T20:00:00+01:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: 
+output:
+  blogdown::html_page:
+    keep_md: true
+    # toc: true
+    # toc_depth: 1
+    # number_sections: false
+# header-includes:
+#   <script src = "https://polyfill.io/v3/polyfill.min.js?features = es6"></script>
+#   <script id = "MathJax-script" async src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+math: true
+type: docs
+toc: true 
+menu:
+  krigr:
+    parent: Introduction
+    weight: 8
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+<div id="TOC">
+
+</div>
+
+<p>{{% hint danger %}}
+The current release of <code>KrigR</code> is stable, but it is still undergoing development. Any and all feedback you can give us is more than welcome.
+{{% /hint %}}</p>
+<p>{{% hint info %}}
+I am currently in the progress of closing out my <a href="/project/phd-packages/">PhD Project</a> and am thus unable to develop <code>KrigR</code> right now. If you, or someone you know, would happen to be interested in hiring me to do so after my PhD, I’d be more than happy for that opportunity.
+{{% /hint %}}</p>
+<div id="data-objects-to-be-included-in-krigr" class="section level2">
+<h2>Data Objects to be included in <code>KrigR</code>:</h2>
+<p>In the future, we hope to ship <code>KrigR</code> with a few in-built data sets for easier demoing of the package:
+- ERA5-Land data<br />
+- GMTED 2010 data</p>
+<p>To improve user-friendliness of the <code>download_ERA()</code> experience, we plan to ship <code>KrigR</code> with metadata files for each data set containing:<br />
+- Name of dataset<br />
+- Dataset spatial extent<br />
+- Time-window of dataset<br />
+- Subsets of dataset (e.g. monthly averaged reanalysis, vs. monthly averaged reanalysis by hour of the day)<br />
+- Temporal resolution of dataset and subsets<br />
+- Variables contained in dataset<br />
+- Variable-dependant issues (i.e. missing values for starting intervals of time series, cumulative records)<br />
+- Obligatory and optional arguments for API call<br />
+- Citation key<br />
+- Link to data set</p>
+<p>These metadata files will be used for sanity checking of download request before execution, automatic fixes of first-hour issues and the like, easier request building and piping through <code>ecmwfr</code> behind the scenes, and will be possible to query to give users an overview of datasets.</p>
+</div>
+<div id="function-changes" class="section level2">
+<h2>Function Changes</h2>
+<p><code>KrigR</code> works as intended, but there are some changes to the core functions of <code>KrigR</code> which we have set our eyes on in an effort to improve efficiency and user-friendliness:</p>
+<div id="general-function-changes" class="section level3">
+<h3>General Function Changes</h3>
+<ul>
+<li>Try <code>terra</code> functions instead of <code>raster</code> functions for a potential increase in computational speed<br />
+</li>
+<li>Check if <code>tidyverse</code> is loaded and multiple cores are specified. Unload tidyverse packages at the beginning of <code>KrigR</code> functions and reload them when code exits with <code>on.exit()</code></li>
+<li>Enable saving of raster in non-NETCDF formats</li>
+</ul>
+</div>
+<div id="download-function" class="section level3">
+<h3>Download Function</h3>
+<ul>
+<li>Support additional ECMWF products (e.g.: CMIP6 climate projections)<br />
+</li>
+<li>Download by hours of date, too<br />
+</li>
+<li>Export NETCDFS with layer names according to desired time-window and temporal resolution<br />
+</li>
+<li>Make temporal aggregation dependant on dataset metadata file<br />
+</li>
+<li>Ensemble spread download for data sets which offer ensembles for uncertainty metrics<br />
+</li>
+<li>Optional argument to return extracted values for points in data frame with arguments passed on to <code>raster::extract()</code> function<br />
+</li>
+<li>Temporal aggregation time windows and entire time series match check before downloading<br />
+</li>
+<li>Investigate ways to reduce the two month data download for a single month of cumulative records<br />
+</li>
+<li>Toggle <code>SingularDL</code> on intelligently depending on download specification by default<br />
+</li>
+<li>Multi-core temporal aggregation<br />
+</li>
+<li>Make it recognise tibbles or spatialpoints for points<br />
+</li>
+<li>Query to CDS download queue?<br />
+</li>
+<li>Cumulative back calculation function<br />
+</li>
+<li>Check for cumulatively stored variables and cumulative back-calculation</li>
+</ul>
+</div>
+<div id="covariate-function" class="section level3">
+<h3>Covariate Function</h3>
+<ul>
+<li>Include query to HWSD and Soil Property covariates<br />
+</li>
+<li>Aggregation and preparation of user-provided covariates (provided at target resolution)</li>
+</ul>
+</div>
+<div id="kriging-function" class="section level3">
+<h3>Kriging Function</h3>
+<ul>
+<li>Kriging recommendation table<br />
+</li>
+<li>Covariates that vary over time<br />
+</li>
+<li>Duration timer into call list</li>
+</ul>
+</div>
+</div>
+<div id="shiny-web-client-application" class="section level2">
+<h2>Shiny / Web-Client Application</h2>
+<p>To further reduce barrier of entry to the use of <code>KrigR</code>, we intend to, in the future, ship <code>KrigR</code> with a shiny app with which to create download scripts from a more visual interface.</p>
+<ul>
+<li>Browser-based creation of download script for <code>KrigR</code><br />
+</li>
+<li>Time-line with coloured sections according to chosen time-window and temporal resolution<br />
+</li>
+<li>Map for Visualisation of dataset extent<br />
+</li>
+<li>Map for Extent selection<br />
+</li>
+<li>Map for Polygon shapefile creation<br />
+</li>
+<li>Map for Point selection by clicking or typing coordinates out</li>
+</ul>
+</div>

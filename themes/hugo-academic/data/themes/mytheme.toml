@@ -1,0 +1,21 @@
+# Theme metadata
+name = "Erik's Theme"
+
+# Is theme light or dark?
+light = true
+
+# Primary
+primary = "#00694b" #005b37
+
+# Menu
+menu_primary = "#00694b"
+menu_text = "rgba(255,255,255,0.9)"
+menu_text_active = "rgba(255,255,255,1)"
+menu_title = "#fff"
+
+# Backgrounds
+background = "hsla(16, 24%, 90%, 1)"
+home_section_odd = "hsla(16, 24%, 90%, 1)"
+home_section_even = "hsla(16, 24%, 85%, 1)"
+
+font = "rose"

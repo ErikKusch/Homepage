@@ -1,0 +1,260 @@
+---
+title: "Preparing the Workshop"
+author: Erik Kusch
+date: '2022-05-26'
+slug: prep
+categories:
+  - KrigR
+  - Climate Data
+tags:
+  - Climate Data
+  - Statistical Downscaling
+  - KrigR
+subtitle: ""
+summary: 'Preparations for the workshop.'
+authors: []
+lastmod: '2021-05-26T20:00:00+01:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: 
+output:
+  blogdown::html_page:
+    keep_md: true
+    # toc: true
+    # toc_depth: 1
+    # number_sections: false
+# header-includes:
+#   <script src = "https://polyfill.io/v3/polyfill.min.js?features = es6"></script>
+#   <script id = "MathJax-script" async src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+math: true
+type: docs
+toc: true 
+menu:
+  krigr:
+    parent: Workshop
+    weight: 5
+weight: 5
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, tidy=FALSE, tidy.opts=list(strict=TRUE))
+options(width = 90)
+if("KrigR" %in% rownames(installed.packages()) == FALSE){ # KrigR check
+  Sys.setenv(R_REMOTES_NO_ERRORS_FROM_WARNINGS="true")
+  devtools::install_github("https://github.com/ErikKusch/KrigR")
+}
+library(KrigR)
+source("PersonalSettings.R") # I do this here to specify number of cores and API credentials and am thus not sharing this file
+```
+
+<!-- # Preparing the Workshop -->
+
+## `R` Packages for the Workshop
+
+For the sake of this series of tutorials, we need some extra packages for visualisations. To load them, we use a custom function (`install.load.package()`, see below). This function checks whether a package is already installed, subsequently install (if necessary) and loads the package. To carry this operation out for several packages, we simply apply it to a vector of package names using `sapply()`:
+
+```{r MiscPackages}
+install.load.package <- function(x){
+  if (!require(x, character.only = TRUE))
+    install.packages(x, repos='http://cran.us.r-project.org')
+  require(x, character.only = TRUE)
+}
+package_vec <- c("tidyr", # for turning rasters into ggplot-dataframes
+                 "ggplot2", # for plotting
+                 "viridis", # colour palettes
+                 "cowplot", # gridding multiple plots
+                 "ggmap", # obtaining satellite maps
+                 "gimms", # to get some pre-existing data to match in our downscaling
+                 "rnaturalearth", # for shapefiles
+                 "rnaturalearthdata", # for high-resolution shapefiles
+                 "mapview" # for generating mapview outputs
+                 )
+sapply(package_vec, install.load.package)
+```
+
+
+## Setting up Directories
+The workshop is designed to run completely from scratch. For this to work in a structured way, we create a folder/directory structure so that we got some nice compartments on our hard drives. We create the following directories:  
+
+- A **Data** directory for all of our data downloads  
+- A **Covariate** directory for all of our covariate data  
+- An **Exports** directory for all of our Kriging outputs  
+
+```{r Directories}
+Dir.Base <- getwd() # identifying the current directory
+Dir.Data <- file.path(Dir.Base, "Data") # folder path for data
+Dir.Covariates <- file.path(Dir.Base, "Covariates") # folder path for covariates
+Dir.Exports <- file.path(Dir.Base, "Exports") # folder path for exports
+## create directories, if they don't exist yet
+Dirs <- sapply(c(Dir.Data, Dir.Covariates, Dir.Exports), 
+               function(x) if(!dir.exists(x)) dir.create(x))
+```
+
+## Visualiation Functions 
+
+In order to easily visualise our Kriging procedure including (1) inputs, (2) covariates, and (3) outputs without repeating too much of the same code, we have prepared some plotting functions which you can download as [FUN_Plotting.R](/courses/krigr/FUN_Plotting.R).
+
+With the `FUN_Plotting.R` file placed in the project directory of your workshop material (i.e., the directory returned by `Dir.Base`), running the following will register the three plotting functions in your `R` environment.
+
+```{r}
+source("FUN_Plotting.R")
+```
+
+The plotting functions you have just loaded are called:  
+
+- `Plot_Raw()` - we will use this function to visualise data downloaded with `KrigR`  
+- `Plot_Covs()` - this function will help us visualise the covariates we use for statistical interpolation  
+- `Plot_Krigs()` - kriged products and their associated uncertainty will be visualised using this function  
+
+{{% hint normal %}}
+Don’t worry about understanding how these functions work off the bat here. Kriging and the package `KrigR` are what we want to demonstrate here - not visualisation strategies. 
+{{% /hint %}}
+
+## Locations of Interest
+
+### Our Workshop Target Region 
+
+To keep this workshop material concise and make it so you don't need access to a server of cluster throughout the following demonstrations of `KrigR`, we will specify a set of locations in which we are interested.
+
+The locations we focus on for this workshop are situated throughout eastern Germany and the north-western parts of the Czech Republic. Why do we focus on this particular part of the Earth? There are three reasons:  
+
+1. *Topographical Heterogeneity* - the area we select here contains large swaths of flat lowlands as well as some mountain ridges. This will make for visually pleasing plots and highlight the capability of kriging.  
+2. *Geographic Scale* - the area we are selecting here hits a certain sweet-spot for our purposes as its size makes it so that all `KrigR` functions run to completion in a relatively short time.  
+3. *Familiarity* - I was born and grew up in this region and have fond memories of the place. Please excuse my indulging in a bit of nostalgia.  
+
+{{% hint danger %}}
+Change the locations of interest at your own risk.
+{{% /hint %}}
+
+Using a different set of locations than the ones we specify here will change computational load and time as well as disk space required when working through the workshop material.
+
+{{% hint info %}}
+`KrigR` will be able to get you the data you want for the locations you desire, but computational requirements will vary.
+{{% /hint %}}
+
+### Spatial Preferences in `KrigR`
+
+{{% hint info %}}
+`KrigR` is capable of learning about your spatial preferences in three ways:  
+
+1. As an `extent` input (a rectangular box).  
+2. As a `SpatialPolygons` input (a polygon or set of polygons).  
+3. As a set of locations stored in a `data.frame`.  
+{{% /hint %}}
+
+To demonstrate the range of specifications permitted in `KrigR`, we make use of all three specifications. As we will see in this tutorial, masking out unnecessary areas from our analyses speeds up Kriging tremendously hence why we strongly suggest you make use of `SpatialPolygons` or `data.frames` whenever possible.
+
+#### Area of Interest (`extent`)
+
+The simplest way in which you can run the functions of the `KrigR` package is by specifying a rectangular bounding box (i.e., an `extent`) to specify your study region(s). We simply specify the longitude and latitude ranges and store the object as an `extent`:
+
+```{r Extent}
+Extent_ext <- extent(c(9.87, 15.03, 49.89, 53.06))
+```
+
+#### Shape of Interest (`SpatialPolygons`)
+
+To define `SpatialPolygons` for our purposes, I make use of the [NaturalEarthData](https://www.naturalearthdata.com/). Here, I select a set of polygons corresponding to some states in Germany and the Czech Republic:
+
+```{r Shapes}
+Shape_shp <- ne_states(country = c("Germany", "Czech Republic"))
+Shape_shp <- Shape_shp[Shape_shp$name_en %in% c("Saxony", "Saxony-Anhalt", "Thuringia", 
+                                                "Ústí nad Labem Region", "Karlovy Vary Region"), ]
+```
+
+{{% hint warning %}}
+The above requires the `naturalhighres` package which can give some users troubles.
+{{% /hint %}}
+
+Here's a workaround if `naturalhighres` does not work for you:
+
+```{r ShapesAlt, eval = FALSE}
+download.file("https://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/cultural/ne_10m_admin_1_states_provinces.zip",
+              destfile = "highres.zip")
+unzip("highres.zip")
+Shape_shp <- readOGR("ne_10m_admin_1_states_provinces.shp")
+Shape_shp <- Shape_shp[Shape_shp$name_en %in% c("Saxony", "Saxony-Anhalt", "Thuringia",
+                                                "ÃÅ¡stÃÂ­ nad Labem", "Karlovy Vary"), ]
+```
+
+#### Points of Interest (`data.frame`)
+
+Finally, to represent specific points of interest, I have prepared a small data set of mountains for each state in the shapefile above. You can download this file here: [Mountains_df.RData](/courses/krigr/Data/Mountains_df.RData). Simply place this file into your data directory and continue the workshop.
+
+```{r Mountains, echo = FALSE}
+if(!file.exists(file.path(Dir.Data, "Mountains_df.RData"))){
+ Mountains_df <- data.frame(Mountain = c("Fichtelberg",
+                                         "Brocken",
+                                         "Großer Beerberg",
+                                         "Meluzína",
+                                         "Milešovka"),
+                           Lon = c(12.954722,
+                                   10.617222,
+                                   10.746111,
+                                   13.00778,
+                                   13.931533),
+                           Lat = c(50.428611,
+                                   51.800556,
+                                   50.659444, 
+                                   50.39028, 
+                                   50.555233)
+                           )
+Mountains_df
+save(Mountains_df, file = file.path(Dir.Data, "Mountains_df.RData"))
+}
+```
+
+Let's load this data set and quickly visualise it:
+
+```{r}
+load(file.path(Dir.Data, "Mountains_df.RData")) # load an sp object called Mountains_sp
+Mountains_df
+```
+
+{{% hint normal %}}
+We now have all of our objects for spatial preferences ready for the workshop.
+{{% /hint %}}
+
+### Visualising our Study Setting
+
+To finish our preparations for this workshop, let's visualise the different locations of interest:
+
+```{r, fig.width=15}
+## Establish rectangular bounding box from extent
+bbox <- as.numeric(as(Extent_ext, 'SpatialPolygons')@bbox)
+names(bbox) <- c("left", "bottom", "right", "top")
+
+## Make locations of mountains into SpatialPoints
+Mountains_sp <- Mountains_df
+coordinates(Mountains_sp) <- ~Lon+Lat
+
+## download a map of the area specified by the extent
+back_gg <- get_map(bbox, maptype = 'terrain')
+
+## combine locations of interest into one plot
+ggmap(back_gg, extent = "device") + # plot the extent area
+  ## display the SpatialPolygons area
+  geom_polygon(aes(x = long, y = lat, group = id), data = fortify(Shape_shp),
+               colour = 'black', size = 1, fill = 'black', alpha = .5) + 
+  ## add the data.frame data
+  geom_point(aes(x = Lon, y = Lat), data = data.frame(Mountains_sp), 
+             colour = "red", size = 4, pch = 13) + 
+  ## some style additions
+  theme_bw() + labs(x= "Longitude [°]", y = "Latitude  [°]") + 
+  theme(plot.margin=unit(c(0, 1, 0, 1),"lines"))
+```
+
+In the above figure, the map area designates the `extent` specifications while the grey overlay display the `SpatialPolygons` preference and points of interest (form our `data.frame` input) are highlighted with red plotting symbols.
+
+
+{{% hint normal %}}
+We are now ready to start the `KrigR` portion of the workshop!
+{{% /hint %}}
+
+## Session Info
+```{r, echo = FALSE}
+sessionInfo()
+```

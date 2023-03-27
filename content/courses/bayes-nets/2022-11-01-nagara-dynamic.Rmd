@@ -1,0 +1,334 @@
+---
+title: "Dynamic Bayesian Networks"
+author: Erik Kusch
+date: '2022-11-01'
+slug: dynamic
+categories:
+  - Bayesian Networks
+tags:
+  - Bayes
+  - Networks
+  - Bayesian Statistics
+  - Statistics
+subtitle: "Dynamic Bayesian Networks"
+summary: 'Answers and solutions to the exercises belonging to chapter 3 in [Bayesian Networks in R with Applications in Systems Biology](https://link.springer.com/book/10.1007/978-1-4614-6446-4) by by Radhakrishnan Nagarajan, Marco Scutari \& Sophie Lèbre.'
+authors: []
+lastmod: '2022-11-01T20:00:00+01:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: 
+output:
+  blogdown::html_page:
+    keep_md: true
+    # toc: true
+    # toc_depth: 1
+    # number_sections: false
+# header-includes:
+#   <script src = "https://polyfill.io/v3/polyfill.min.js?features = es6"></script>
+#   <script id = "MathJax-script" async src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+math: true
+type: docs
+toc: true 
+menu:
+  bayesnets:
+    parent: 3 - Dynamic Networks
+    weight: 1
+weight: 1
+---
+
+<style>
+
+blockquote{
+color:#ffffff;
+}
+
+</style>
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, tidy = 'styler', tidy.opts = list(strict = TRUE), fig.width = 15, fig.height = 8)
+options(width = 200)
+```
+
+## Material
+
+- [Dynamic Bayesian Networks](/courses/bayes-nets/Dynamic-BNs.html) by [Gregor Mathes](https://gregor-mathes.netlify.app/) (one of our study group members)
+
+## Exercises
+These are answers and solutions to the exercises at the end of chapter 3 in [Bayesian Networks in R with Applications in Systems Biology](https://link.springer.com/book/10.1007/978-1-4614-6446-4) by by Radhakrishnan Nagarajan, Marco Scutari \& Sophie Lèbre. Much of my inspiration for these solutions, where necessary, by consulting the solutions provided by the authors themselves as in the appendix.
+
+### `R` Environment
+For today's exercise, I load the following packages:
+```{r}
+library(vars)
+library(lars)
+library(GeneNet)
+library(G1DBN) # might have to run remotes::install_version("G1DBN", "3.1.1") first
+```
+
+### Nagarajan 3.1 
+> Consider the `Canada` data set from the vars package, which we analyzed in Sect. 3.5.1.
+
+```{r}
+data(Canada)
+```
+
+#### Part A
+> Load the data set from the `vars` package and investigate its properties using the exploratory analysis techniques covered in Chap. 1.
+
+```{r}
+str(Canada)
+summary(Canada)
+```
+
+#### Part B
+> Estimate a VAR(1) process for this data set.
+
+```{r}
+(var1 <- VAR(Canada, p = 1, type = "const"))
+```
+
+#### Part C
+> Build the auto-regressive matrix $A$ and the constant matrix $B$ defining the VAR(1) model.
+
+```{r}
+## base object creation
+base_mat <- matrix(0, 4, 5)
+colnames(base_mat) <- c("e", "prod", "rw", "U", "constant")
+p <- 0.05
+## object filling 
+pos <- which(coef(var1)$e[, "Pr(>|t|)"] < p)
+base_mat[1, pos] <- coef(var1)$e[pos, "Estimate"]
+pos <- which(coef(var1)$prod[, "Pr(>|t|)"] < p)
+base_mat[2, pos] <- coef(var1)$prod[pos, "Estimate"]
+pos <- which(coef(var1)$rw[, "Pr(>|t|)"] < p)
+base_mat[3, pos] <- coef(var1)$rw[pos, "Estimate"]
+pos <- which(coef(var1)$U[, "Pr(>|t|)"] < p)
+base_mat[4, pos] <- coef(var1)$U[pos, "Estimate"]
+## final objects
+(A <- base_mat[, 1:4])
+(B <- base_mat[, 5])
+```
+
+#### Part D
+> Compare the results with the LASSO matrix when estimating the L1-penalty with cross-validation.
+
+```{r fig.keep='none'}
+## data preparation
+data_df <- Canada[-nrow(Canada), ] # remove last row of data
+## Lasso
+Lasso_ls <- lapply(colnames(Canada), function(gene){
+  y <- Canada[-1, gene] # remove first row of data, and select only target gene
+  lars(y = y, x = data_df, type = "lasso") # LASSO matrix
+  })
+## Cross-validation
+CV_ls <- lapply(1:ncol(Canada), function(gene){
+  y <- Canada[-1, gene] # remove first row of data, and select only target gene
+  lasso.cv <- cv.lars(y = y, x = data_df, mode = "fraction")
+  frac <- lasso.cv$index[which.min(lasso.cv$cv)]
+  predict(Lasso_ls[[gene]], s = frac, type = "coef", mode = "fraction")
+})
+## output
+rbind(CV_ls[[1]]$coefficients,
+      CV_ls[[2]]$coefficients,
+      CV_ls[[3]]$coefficients,
+      CV_ls[[4]]$coefficients)
+```
+
+And for comparison the previously identified $A$:
+
+```{r}
+A
+```
+
+#### Part E
+> What can you conclude?
+
+The whole point of LASSO, as far as I understand it, is to shrink parameter estimates towards 0 often times reaching 0 exactly. In the above this has not happened for many parameters, but is the case with the estimation provided by `vars`. I assume this might be because there just aren't enough variables and/or observations in time.
+
+### Nagarajan 3.2
+> Consider the `arth800` data set from the GeneNet package, which we analyzed in Sects. 3.5.2 and 3.5.3.
+
+```{r}
+data(arth800)
+data(arth800.expr)
+```
+
+#### Part A
+> Load the data set from the `GeneNet` package. The time series expression of the 800 genes is included in a data set called `arth800.expr`. Investigate its properties using the exploratory analysis techniques covered in Chap. 1.
+
+```{r}
+str(arth800.expr)
+summary(arth800.expr)
+```
+
+#### Part B
+> For this practical exercise, we will work on a subset of variables (one for each gene) having a large variance. Compute the variance of each of the 800 variables, plot the various variance values in decreasing order, and create a data set with the variables greater than 2.
+
+```{r}
+## variance calculation
+variance <- diag(var(arth800.expr))
+## plotting
+plot(sort(variance, decreasing = TRUE), type = "l", ylab = "Variance")
+abline(h = 2, lty = 2)
+## variables with variances greater than 2
+dataVar2 <- arth800.expr[, which(variance > 2)]
+dim(dataVar2)
+```
+
+#### Part C
+> Can you fit a VAR process with a usual approach from this data set?
+
+I don't think so. There are more variables (genes) than there are samples (time steps):
+
+```{r}
+dim(dataVar2)
+```
+
+#### Part D
+> Which alternative approaches can be used to fit a VAR process from this data set?
+
+The chapter discusses these alternatives:  
+
+- LASSO  
+- James-Stein Shrinkage  
+- Low-order conditional dependency approximation  
+
+#### Part E
+> Estimate a dynamic Bayesian network with each of the alternative approaches presented in this chapter.
+
+First, I prepare the data by re-ordering them:
+
+```{r}
+## make the data sequential for both repetitions
+dataVar2seq <- dataVar2[c(seq(1, 22, by = 2), seq(2, 22, by = 2)), ]
+```
+
+*LASSO* with the `lars` package: 
+
+```{r}
+x <- dataVar2seq[-c(21:22), ] # remove final rows (end of sequences)
+Lasso_ls <- lapply(colnames(dataVar2seq), function(gene){
+  y <- dataVar2seq[-(1:2), gene]
+  lars(y = y, x = x, type = "lasso")
+  })
+CV_ls <- lapply(1:ncol(dataVar2seq), function(gene){
+  y <- dataVar2seq[-(1:2), gene]
+  lasso.cv <- cv.lars(y = y, x = x, mode = "fraction", plot.it = FALSE)
+  frac <- lasso.cv$index[which.min(lasso.cv$cv)]
+  predict(Lasso_ls[[gene]], s = frac, type = "coef", mode = "fraction")
+  })
+Lasso_mat <- matrix(0, dim(dataVar2seq)[2], dim(dataVar2seq)[2])
+for(i in 1:dim(Lasso_mat)[1]){
+  Lasso_mat[i, ] <- CV_ls[i][[1]]$coefficients
+  }
+sum(Lasso_mat != 0) # number of arcs
+plot(sort(abs(Lasso_mat), decr = TRUE)[1:500], type = "l", ylab = "Absolute coefficients")
+```
+
+*James-Stein shrinkage* with the `GeneNet` package:
+
+```{r}
+DBNGeneNet <- ggm.estimate.pcor(dataVar2, method = "dynamic")
+DBNGeneNet.edges <- network.test.edges(DBNGeneNet) # p-values, q-values and posterior probabilities for each potential arc
+plot(DBNGeneNet.edges[, "prob"], type = "l") # arcs probability by decreasing order
+sum(DBNGeneNet.edges$prob > 0.95) # arcs with prob > 0.95
+```
+
+*First-order conditional dependency* with the `G1DBN` package:
+
+```{r}
+G1DB_BN <- DBNScoreStep1(dataVar2seq, method = "ls")
+G1DB_BN <- DBNScoreStep2(G1DB_BN$S1ls, dataVar2seq, method = "ls", alpha1 = 0.5)
+plot(sort(G1DB_BN, decreasing = TRUE), type = "l", ylab = "Arcs’ p-values")
+```
+
+### Nagarajan 3.3
+> Consider the dimension reduction approaches used in the previous exercise and the `arth800` data set from the `GeneNet` package.
+
+```{r}
+data(arth800)
+data(arth800.expr)
+```
+
+#### Part A
+> For a comparative analysis of the different approaches, select the top 50 arcs for each approach (function `BuildEdges` from the `G1DBN` package can be used to that end).
+
+*LASSO*
+```{r}
+lasso_tresh <- mean(sort(abs(Lasso_mat), decreasing = TRUE)[50:51]) # Lasso_mat from exercise 3.2
+lasso_50 <- BuildEdges(score = -abs(Lasso_mat), threshold = -lasso_tresh)
+```
+
+*James-Stein shrinkage* with the `GeneNet` package:
+```{r}
+DBNGeneNet_50 <- cbind(DBNGeneNet.edges[1:50, "node1"], DBNGeneNet.edges[1:50, "node2"])
+```
+
+*First-order conditional dependency* with the `G1DBN` package:
+```{r}
+G1DBN_tresh <- mean(sort(G1DB_BN)[50:51])
+G1DBN.edges <- BuildEdges(score = G1DB_BN, threshold = G1DBN_tresh, prec = 3)
+```
+
+
+#### Part B
+> Plot the four inferred networks with the function plot from package `G1DBN`.
+
+Four inferred networks? I assume the exercise so far wanted me to also analyse the data using the LASSO approach with the SIMoNe (`simone`) package. I will skip over that one and continue with the three I have:
+
+```{r}
+par(mfrow = c(1, 3))
+
+## LASSO
+LASSO_plot <- graph.edgelist(cbind(lasso_50[, 1], lasso_50[, 2]))
+Lasso_layout = layout.fruchterman.reingold(LASSO_plot)
+plot(LASSO_plot, 
+     layout = Lasso_layout, 
+     edge.arrow.size = 0.5, vertex.size = 10,
+     main = "LASSO")
+
+## James-Stein
+DBN_plot <- graph.edgelist(DBNGeneNet_50)
+# DBN_layout <- layout.fruchterman.reingold(DBN_plot)
+plot(DBN_plot,
+     layout = Lasso_layout,
+     edge.arrow.size = 0.5, vertex.size = 10,
+     main = "GeneNet")
+
+## First-order conditional
+G1DBN_plot <- graph.edgelist(cbind(G1DBN.edges[, 1], G1DBN.edges[, 2]))
+# G1DBN_layout = layout.fruchterman.reingold(G1DBN_plot)
+plot(G1DBN_plot, layout = Lasso_layout,
+     edge.arrow.size = 0.5, vertex.size = 10,
+     main = "G1DBN")
+```
+#### Part C
+> How many arcs are common to the four inferred networks?
+
+```{r}
+## extract edges
+LASSO_el <- as_edgelist(LASSO_plot)
+DBN_el <- as_edgelist(DBN_plot)
+G1DBN_el <- as_edgelist(G1DBN_plot)
+
+## number of repeated edges in pairwise comparisons
+sum(duplicated(rbind(LASSO_el, DBN_el)))
+sum(duplicated(rbind(LASSO_el, G1DBN_el)))
+sum(duplicated(rbind(DBN_el, G1DBN_el)))
+### all at once
+sum(duplicated(rbind(LASSO_el, DBN_el, G1DBN_el)))
+```
+
+#### Part D
+> Are the top 50 arcs of each inferred network similar? What can you conclude?
+
+No, they are not. I can conclude that different dimension reductions produce different DAG structures.
+
+
+## Session Info
+```{r}
+sessionInfo()
+```

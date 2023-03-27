@@ -1,0 +1,573 @@
+---
+title: "Model Selection"
+subtitle: 'Be Sure of your Science'
+author: "Erik Kusch"
+date: "2021-02-27"
+slug: Excursion into Biostatistics
+categories: [Excursion into Biostatistics]
+tags: [R, Statistics]
+summary: 'These are exercises and solutions meant as a compendium to my talk on Model Selection and Model Building.'
+authors: [Erik Kusch]
+lastmod: '2020-02-27'
+featured: no
+projects:
+output:
+  blogdown::html_page:
+    keep_md: true
+    # toc: true
+    # toc_depth: 2
+    # number_sections: false
+    fig_width: 8
+linktitle: Model Selection and Statistical Significance
+menu:
+  Excursions:
+    parent: Seminars
+    weight: 8
+toc: true
+type: docs
+weight: 8
+header-includes:
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+---
+
+```{r setup, include=FALSE}
+rm(list=ls())
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, tidy='styler', tidy.opts=list(strict=TRUE), fig.width = 15, fig.height = 8)
+options(width = 200)
+source("PersonalSettings.R") # I do this here to specify number of cores and API credentials and am thus not sharing this file
+```
+
+## Theory
+These are exercises and solutions meant as a compendium to my talk on Model Selection and Model Building.  
+
+I have prepared some I have prepared some {{< staticref "courses/excursions-into-biostatistics/Model-Selection-and-Statistical-Significance---Reporting-the-Best-Science.html" "newtab" >}} Lecture Slides {{< /staticref >}} for this session. For a more mathematical look at these concepts, I cannot recommend enough [Eduardo García Portugués' blog](https://bookdown.org/egarpor/PM-UC3M/lm-ii-modsel.html).
+
+## `R` Environment
+
+For this exercise, we will need the following packages:
+
+```{r, warning = FALSE, message = FALSE}
+install.load.package <- function(x) {
+  if (!require(x, character.only = TRUE))
+    install.packages(x, repos='http://cran.us.r-project.org')
+  require(x, character.only = TRUE)
+  }
+package_vec <- c(
+  "ggplot2", # for visualisation 
+  "leaflet",  # for maps
+  "splitstackshape", # for stratified sampling
+  "caret", # for cross-validation exercises
+  "boot", # for bootstrap parameter estimates
+  "tidyr", # for reshaping data frames
+  "tidybayes", # for visualisation of bootstrap estimates
+  "pROC", # for ROC-curves
+  "olsrr", # for subset selection
+  "MASS", # for stepwise subset selection
+  "nlme", # for mixed effect models
+  "mclust", # for k-means clustering,
+  "randomForest", # for randomForest classifier
+  "lmeresampler" # for validation of lmer models
+)
+sapply(package_vec, install.load.package)
+```
+
+Using the above function is way more sophisticated than the usual `install.packages()` & `library()` approach since it automatically detects which packages require installing and only install these thus not overwriting already installed packages.
+
+## Our Resarch Project
+
+Today, we are looking at a big (and entirely fictional) data base of the common house sparrow (*Passer domesticus*). In particular, we are interested in the **Evolution of *Passer domesticus* in Response to Climate Change** which was previously explained {{< staticref "courses/excursions-into-biostatistics/research-project/" "newtab" >}} here{{< /staticref >}}.
+
+### The Data
+
+I have created a large data set for this exercise which is available {{< staticref "courses/excursions-into-biostatistics/Data.rar" "newtab" >}} here{{< /staticref >}} and we previously cleaned up so that is now usable {{< staticref "courses/excursions-into-biostatistics/data-handling-and-data-assumptions/" "newtab" >}} here{{< /staticref >}}.
+
+### Reading the Data into `R`
+
+Let's start by reading the data into `R` and taking an initial look at it:
+```{r}
+Sparrows_df <- readRDS(file.path("Data", "SparrowDataClimate.rds"))
+head(Sparrows_df)
+```
+
+### Hypotheses
+Let's remember our hypotheses:  
+
+1. **Sparrow Morphology** is determined by:  
+    A. *Climate Conditions* with sparrows in stable, warm environments fairing better than those in colder, less stable ones.  
+    B. *Competition* with sparrows in small flocks doing better than those in big flocks.  
+    C. *Predation* with sparrows under pressure of predation doing worse than those without.    
+2. **Sites**  accurately represent **sparrow morphology**. This may mean:  
+    A. *Population status* as inferred through morphology.  
+    B. *Site index* as inferred through morphology.  
+    C. *Climate* as inferred through morphology.  
+
+We have already built some models for these {{< staticref "courses/excursions-into-biostatistics/classifications-order-from-chaos/" "newtab" >}} here{{< /staticref >}} and {{< staticref "courses/excursions-into-biostatistics/regressions-correlations-for-the-advanced/" "newtab" >}} here{{< /staticref >}}.
+
+## Candidate Models
+Before we can get started on model selection and validation, we need some actual models. Let's create some. Since the data set contains three variables pertaining to sparrow morphology (i.e. `Weight`, `Height`, `Wing.Chord`) and I don't want this exercise to spiral out of control with models that account for more than one response variable, we need to settle on one as our response variable in the first hypothesis. I am going with `Weight`.
+
+Additionally, because I am under a bit of time pressure in creating this material, I forego all checking of assumptions on any of the following candidate models as the goal with this material is model selection/validation and not model assumption checking.
+
+### Continuous Models
+```{r}
+load(file = file.path("Data", "H1_Models.RData"))
+```
+
+This just loaded three objects into `R`:  
+- `H1_ModelSparrows_ls` - a list of candidate models built for the entire `Sparrow_df` data set  
+- `Sparrows_df` - the data frame used to build the global candidate models  
+- `H1_ModelCNA_ls` - a list of candidate models built just for three coastal sites across Central and North America  
+- `CentralNorthAm_df` - the data frame used to build the candidate model for Central and North America
+
+#### Global Models
+Global regression models include:  
+
+```{r}
+sapply(H1_ModelSparrows_ls, "[[", "call")
+```
+
+#### Local Models
+Local regression models for the region of Central/North America include:  
+
+```{r}
+sapply(H1_ModelCNA_ls, "[[", "call")
+```
+
+
+### Categorical Models
+
+```{r}
+load(file = file.path("Data", "H2_Models.RData"))
+```
+
+This just loaded three objects into `R`:  
+- `H2_PS_mclust` - a k-means classifier aiming to group `Population.Status` by `Weight`, `Height`, and `Wing.Chord`  
+- `H2_PS_RF` - a random forest classifier which identifies `Population.Status` by `Weight`, `Height`, and `Wing.Chord`  
+- `H2_Index_RF` - a random forest classifier which identifies `Index` of sites by `Weight`, `Height`, and `Wing.Chord`
+
+## Model Comparison/Selection
+### (adjusted) Coefficient of Determination
+The coefficient of determination ($R^2$) measures the proportion of variation in our response (`Weight`) that can be explained by regression using our predictor(s). The higher this value, the better. Unfortunately, $R^2$ does not penalize complex models (i.e. those with multiple parameters) while the adjusted $R^2$ does. Extracting these for a model object is as easy as writing:
+
+```{r}
+ExampleModel <- H1_ModelSparrows_ls$Comp_Flock.Size
+summary(ExampleModel)$r.squared
+summary(ExampleModel)$adj.r.squared
+```
+This tells us that the flock size model explains roughly `r round(mean(c(summary(ExampleModel)$r.squared, summary(ExampleModel)$adj.r.squared)), 3)`% of the variation in the `Weight` variable. That is pretty decent. 
+
+To check for all other models, I have written a quick `sapply` function that does the extraction for us. Because obtaining (adjusted) $R^2$ requires additional packages, I am excluding these from this analysis:
+
+#### Global Regression Models
+```{r}
+H1_Summary_ls <- sapply(H1_ModelSparrows_ls[-length(H1_ModelSparrows_ls)], summary)
+R2_df <- data.frame(R2 = sapply(H1_Summary_ls, "[[", "r.squared"),
+                 Adj.R2 = sapply(H1_Summary_ls, "[[", "adj.r.squared")
+                 )
+R2_df
+```
+You can immediately see that some of our candidate models are doing quite well for themselves.
+
+#### Local Regression Models
+```{r}
+H1_Summary_ls <- sapply(H1_ModelCNA_ls[-length(H1_ModelCNA_ls)], summary)
+R2_df <- data.frame(R2 = sapply(H1_Summary_ls, "[[", "r.squared"),
+                 Adj.R2 = sapply(H1_Summary_ls, "[[", "adj.r.squared")
+                 )
+R2_df
+```
+
+Oof! None of our locally fitted models did well at explaining the data to begin with. With that identified, we are sure not going to trust them when it comes to predictions and so we are scrapping all of them.
+
+Consequently, we can generalise our naming conventions a bit and now write:
+
+```{r}
+H1_Model_ls <- H1_ModelSparrows_ls
+```
+
+### Anova
+Analysis of Variance (Anova) is another tool you will often run into when trying to understand explanatory power of a model. Here, I do something relatively complex to run an anova for all models in our list without having to type them all out. Again,we omit the mixed effect model:
+```{r}
+eval(parse(text=paste("anova(",paste("H1_Model_ls[[",1:(length(H1_Model_ls)-1),"]]",sep="",collapse=","),")")))
+```
+
+As you can see, according to this, all of our models are doing much better in explaining our underlying data when compared to the Null Model.
+
+### Information Criteria
+Personally, I would like to have a model that's good at predicting things instead of "just" explaining things and so we step into *information criteria* next. These aim to provide us with exactly that information: "How well will our model predict new data?" Information criteria make use of information theory which allows us to make such statements with pretty decent certainty despite not having new data.
+
+#### Akaike Information Criterion (AIC)
+Looking at the AIC:
+```{r}
+sapply(H1_Model_ls, AIC)
+```
+Our full model is the clear favourite here.
+
+
+#### Bayesian Information Criterion (BIC)
+As far as the BIC is concerned:
+```{r}
+sapply(H1_Model_ls, BIC)
+```
+Our full model wins again!
+
+#### Receiver-Operator Characteristic (ROC)
+
+The Receiver-Operator Characteristic (ROC) shows the trade-off between *Sensitivity* (rate of true positives) and *Specificity* (rate of true negatives). It also provides an *Area under the Curve* which serves as a proxy of classification accuracy.
+
+First, we establish the ROC-Curve for our classification of `Population.Status` given sparrow Morphology and a k-means algorithm:
+```{r}
+Mclust_PS.roc <- roc(Sparrows_df$Population.Status, # known outcome
+                     H2_PS_mclust$z[,1] # probability of assigning one out of two outcomes
+                     )
+plot(Mclust_PS.roc)
+auc(Mclust_PS.roc)
+```
+Certainly, we could do better! Let's see what more advanced methods have to offer.
+
+With that, we turn to random forest:
+```{r}
+RF_PS.roc <- roc(Sparrows_df$Population.Status, 
+                 H2_PS_RF$votes[,1])
+plot(RF_PS.roc)
+auc(RF_PS.roc)
+```
+Now this is doing much better!
+
+Lastly, we want to look at the site `Index` as predicted by sparrow morphology given a random forest algorithm:
+```{r}
+RF_Index.roc <- multiclass.roc(Sparrows_df$Index, # known outcome 
+                               H2_Index_RF$votes # matrix of certainties of prediction
+                               )
+RF_Index.roc[["auc"]] # average ROC-AUC
+## Plot ROC curve for each binary comparison
+rs <- RF_Index.roc[['rocs']] ## extract comparisons
+plot.roc(rs[[1]][[1]]) # blot first comparison
+plot.roc(rs[[1]][[2]], add = TRUE) # plot first comparison, in opposite direction
+invisible(capture.output(sapply(2:length(rs),function(i) lines.roc(rs[[i]][[1]],col=i))))
+invisible(capture.output(sapply(2:length(rs),function(i) lines.roc(rs[[i]][[2]],col=i))))
+```
+
+This is certainly busy, but look at that average AUC of almost 1! That is the power of Random Forest.
+
+### Summary of Model Selection
+#### Morphology Hypothesis
+Regarding our morphology hypothesis, we saw that most of our hypothesised effects can be detected. However, some models clearly perform better than others. Usual model selection exercises would have us discard all but the best model (`Full`, in this case) and leave the rest never to be spoken of again. Doing so would have us miss a pretty neat opportunity to do some **model comparison** which can already help us identify which effects to focus on in particular.
+
+To demonstrate some of this, allow me step into the local regression models:
+```{r}
+sapply(H1_ModelCNA_ls, AIC)
+```
+
+as well as global regression models:
+
+```{r}
+sapply(H1_Model_ls, AIC)
+```
+
+1. *Climate* - interestingly,  temperature variability is much more informative than average temperature and even adding the two into the same model only marginally improves over the variability-only model. This tells us much about which effects are probably meaningful and which aren't.  
+2. *Competition* -  The competition models did well across the board, but were aided immensely by adding climate information and accounting for random effects.    
+3. *Predation* - predation effects were best explained by predation type with only a marginal improvement of adding predator presence. That is because predator type already contains all of the information that is within predator presence.   
+
+What we can do so far, is remove some obviously erroneous models which in this case is the entirety of local regression models.
+
+#### Categorisation Hypothesis
+As far as the categorisation hypotheses are concerned, we now have confirmation that population status and sparrow morphology are linked quite well. 
+
+We have also learned that random forest is an incredibly powerful method for classification and variable selection.
+
+## Model Validation
+So far, we have not introduced our models to any new data. We have looked at *explanatory power* with (adjusted) $R^2$, and the Anova. We have also looked at *estimates of predictive power* with our information criteria (e.g. AIC, BIC). 
+
+What about actually seeing how robust and accurate our models are? That's what Model Validation is for!
+
+### Cross-Validation
+Before we get started, I remove the Null model from our model list. Doing cross-validation on this does not make any sense because there are no actual predictors in it which could be affected by cross-validation processes.
+```{r}
+H1_Model_ls <- H1_Model_ls[-1]
+```
+
+#### Training vs. Test Data
+The simplest example of cross-validation is the *validation data cross-validation* approach; also known as **Training vs. Test Data** approach. 
+
+To make use of this approach, we need to (1) randomly split our data, (2) build our models using the training data, and (3) test our models on the test data.
+
+Since we have highly compartmentalised data at different sites, I am employing a stratified sampling scheme to ensure all of my sites are represented in each data set resulting from the split:
+```{r}
+set.seed(42) # make randomness reproducible
+Stratified_ls <- stratified(Sparrows_df, # what to split
+                            group = "Index", # by which group to stratify
+                            size = .7, # what proportion of each group shall be contained in the training data
+                            bothSets = TRUE # save both training and test data
+                            )
+Train_df <- Stratified_ls$SAMP1 # extract training data
+Test_df <- Stratified_ls$SAMP2 # extract test data
+```
+
+Now that we have our training and test data, we are ready to run our pre-specified models on said data and subsequently test it's performance on the test data by predicting with the newly trained model and calculating mean squared test error.
+
+For a single model, we can do it like this:
+```{r}
+ExampleModel <- H1_ModelSparrows_ls$Comp_Flock.Size # extract Model from list
+ExampleModel <- update(ExampleModel, data = Train_df) # train model on training data
+Prediction <- predict(ExampleModel, newdata = Test_df) # predict outcome for test data
+sum((Test_df$Weight - Prediction)^2) # Mean Squared Error
+```
+Since we have multiple models stored in a list, here's a way to do the above for the entire list:
+```{r}
+H1_Train_ls <- sapply(X = H1_Model_ls, FUN = function(x)update(x, data = Train_df))
+H1_Test_mat <- sapply(X = H1_Train_ls, FUN = function(x)predict(x, newdata = Test_df))
+apply(H1_Test_mat, MARGIN = 2, FUN = function(x)sum((Test_df$Weight - x)^2))
+```
+Again, our full model comes out on top!
+
+Unfortunately, this approach is fickle due to the randomness of the data split. How can we make this more robust? Easy. We split many, many times and average our mean squared errors out.
+
+This bring us to traditional Cross-Validation approaches. Luckily, the complex parts of cross-validation are already offered to us with the `caret` package in `R`
+
+#### Leave-One-Out Cross-Validation (LOOCV)
+Leave-One-Out Cross-Validation is a method within which we split our data into a training data set with $n-1$ observation and a test data set that contains just $1$ observation. We do training and testing as above on this split and then repeat this procedure until every observation has been left out once.
+
+For a simple model, this can be done like such:
+```{r}
+train(Weight ~ Climate, data = Sparrows_df,
+      method = "lm",
+      trControl = trainControl(method = "LOOCV"))
+```
+Notice the RMSE (Residual mean squared error). That's what we use to compare models.
+
+Here, I create a function that automatically rebuilds our models for the LOOCV so we can run this on our list of models later.
+```{r}
+CV_LOOCV <- function(x){
+  if(length(x[["terms"]][[3]]) == 1){
+    Terms <- paste(x[["terms"]][[3]], collapse = " + ")
+  }else{
+    Terms <- paste(x[["terms"]][[3]][-1], collapse = " + ")
+  }
+  train(as.formula(paste("Weight ~", Terms)), data = Sparrows_df,
+      method = "lm",
+      trControl = trainControl(method = "LOOCV"))
+}
+```
+
+Unfortunately, this cannot be executed for mixed effect models, so for now, I only run this on all our models except the mixed effect model:
+```{r}
+Begin <- Sys.time()
+H1_LOOCV_ls <- sapply(H1_Model_ls[-length(H1_Model_ls)], CV_LOOCV)
+End <- Sys.time()
+End-Begin
+sapply(H1_LOOCV_ls, "[[", "results")[-1, ]
+```
+Unsurprisingly, our full model has the lowest RMSE (which is the mark of a good model).
+
+So what about our mixed effect model? Luckily, doing LOOCV by hand isn't all that difficult and so we can still compute a RMSE for LOOCV for our mixed effect model:
+```{r}
+RMSE_LOOCV <- rep(NA, nrow(Sparrows_df))
+for(Fold_Iter in 1:nrow(Sparrows_df)){
+  Iter_mod <- update(H1_Model_ls$Mixed_Full, data = Sparrows_df[-Fold_Iter,])
+  Prediction <- predict(Iter_mod, newdata = Sparrows_df[Fold_Iter,])
+  RMSE_LOOCV[Fold_Iter] <- (Sparrows_df[Fold_Iter,]$Weight - Prediction)^2
+}
+mean(RMSE_LOOCV)
+```
+Ouh... that is quite worse than out other models. Curious. This goes to show how much less robust a more complex model can be.
+
+#### k-Fold Cross-Validation (k-fold CV)
+k-Fold Cross-Validation uses the same concept as all of the previous cross-validation methods, but at less of a computational cost than LOOCV and more robustly than the training/test data approach:
+
+Again, I write a function for this and run it on my list of models without the mixed effect model:
+```{r}
+CV_kFold <- function(x){
+  if(length(x[["terms"]][[3]]) == 1){
+    Terms <- paste(x[["terms"]][[3]], collapse = " + ")
+  }else{
+    Terms <- paste(x[["terms"]][[3]][-1], collapse = " + ")
+  }
+  train(as.formula(paste("Weight ~", Terms)), data = Sparrows_df,
+      method = "lm",
+      trControl = trainControl(method = "cv", number = 15))
+}
+Begin <- Sys.time()
+H1_kFold_ls <- sapply(H1_Model_ls[-length(H1_Model_ls)], CV_kFold)
+End <- Sys.time()
+End-Begin
+sapply(H1_kFold_ls, "[[", "results")[-1, ]
+```
+Full model performs best still and see how much quicker that was done!
+
+### Bootstrap
+On to the Bootstrap. God, I love the boostrap. 
+
+The idea here is to run a model multiple times on a random sample of the underlying data and then store all of the estimates or the parameters as well as avaerage out the RMSE:
+```{r}
+BootStrap <- function(x){
+  if(length(x[["terms"]][[3]]) == 1){
+    Terms <- paste(x[["terms"]][[3]], collapse = " + ")
+  }else{
+    Terms <- paste(x[["terms"]][[3]][-1], collapse = " + ")
+  }
+  train(as.formula(paste("Weight ~", Terms)), data = Sparrows_df,
+      method = "lm",
+      trControl = trainControl(method="boot", number=100))
+}
+Begin <- Sys.time()
+H1_BootStrap_ls <- sapply(H1_Model_ls[-length(H1_Model_ls)], BootStrap)
+End <- Sys.time()
+End-Begin
+sapply(H1_BootStrap_ls, "[[", "results")[-1, ]
+```
+The full model is still doing great, of course.
+
+But what about our mixed effect model? Luckily, there is a function that can do bootstrapping for us on our `lme` objects:
+```{r}
+## Bootstrap mixed model
+Mixed_boot <- lmeresampler::bootstrap(H1_Model_ls[[length(H1_Model_ls)]], .f=fixef, type="parametric",B=5e3)
+Mixed_boot
+```
+With this, we are getting into the heart of the bootstrap. Distributions of our parameter estimates. These give us an amazing understanding of just which parameter values our model sees as plausible given our data:
+
+```{r}
+Estimates_df <- data.frame(Mixed_boot[["replicates"]])
+## reshape estimates data frame for plotting
+Hist_df <- data.frame(pivot_longer(
+  data = Estimates_df,
+  cols = colnames(Estimates_df)
+  )
+)
+## plot parameter estimate distributions
+ggplot(data = Hist_df, aes (x = value, group = name)) + 
+  tidybayes::stat_pointinterval() +
+  tidybayes::stat_dots() +
+  facet_wrap(~ name, scales = "free") +
+  labs(x = "Parameter Estimate", y = "Parameter",
+     title = paste("Bootstrap parameter estimates of", names(H1_Model_ls[[length(H1_Model_ls)]]), "Model")) + 
+  theme_bw()
+```
+As you can see for our mixed effect model, while most parameter estimates are nicely constrained, the Intercept estimate can vary wildly. This is likely to do with our model being very flexible and allowing for a bunch of different combinations of intercepts. 
+
+Let's do the same for our remaining three candidate models:
+```{r}
+BootPlot_ls <- as.list(rep(NA, (length(H1_Model_ls)-1)))
+for(Model_Iter in 1:(length(H1_Model_ls)-1)){ # loop over all models except the null model
+  ## Formula to compute coefficients
+   x <- H1_Model_ls[[Model_Iter]]
+    if(length(x[["terms"]][[3]]) == 1){
+      Terms <- as.character(x[["terms"]][[3]])
+    }else{
+      Terms <- paste(as.character(x[["terms"]][[3]])[-1], collapse = as.character(x[["terms"]][[3]])[1])
+    }
+  model_coef <- function(data, index){
+     coef(lm(as.formula(paste("Weight ~", Terms)), data = data, subset = index))
+  }
+  ## Bootstrapping
+  Boot_test <- boot(data = Sparrows_df, statistic = model_coef, R = 1e4)
+  ## set column names of estimates to coefficients
+  colnames(Boot_test[["t"]]) <- names(H1_Model_ls[[Model_Iter]][["coefficients"]])
+  ## make data frame of estimates
+  Estimates_df <- data.frame(Boot_test[["t"]])
+  ## reshape estimates data frame for plotting
+  Hist_df <- data.frame(pivot_longer(
+    data = Estimates_df,
+    cols = colnames(Estimates_df)
+    )
+  )
+  ## plot parameter estimate distributions
+  BootPlot_ls[[Model_Iter]] <- ggplot(data = Hist_df, aes (x = value, group = name)) + 
+  tidybayes::stat_pointinterval() +
+  tidybayes::stat_dots() +
+  facet_wrap(~ name, scales = "free") +
+  labs(x = "Parameter Estimate", y = "Parameter",
+     title = paste("Bootstrap parameter estimates of", names(H1_Model_ls)[[Model_Iter]], "Model"),
+     subtitle = paste("Weight ~", Terms)) +
+  theme_bw()
+}
+BootPlot_ls[[1]]
+BootPlot_ls[[2]]
+BootPlot_ls[[3]]
+```
+ 
+## Subset Selection
+So far, we have built our own models according to out intuition. Did we test all possible models? No. Should we go back and test all possible models by hand? Hell no! Can we let `R` do it for us? You bet we can!
+
+### Best Subset Selection
+Let's start with best subset selection. Doing so asks us/`R` to establish all possible models and then select the one that performs best according to information criteria. Because our data set contains over 20 variables, including all of our variables would have us establish close to 1 million (you read that right) models. THat is, of course, infeasible.
+
+Therefore, let's just allow our subset selection to use all variables we have used ourselves thus far (with the exclusion of `Index` because it's an amazing, but ultimately useless shorthand):
+```{r}
+Reduced_df <- Sparrows_df[, c("Weight", "Climate", "TAvg", "TSD", "Population.Status", "Flock.Size", "Predator.Type", "Predator.Presence")] # reduce data
+model <- lm(Weight ~ ., data = Reduced_df) # specify full model
+k <- ols_step_best_subset(model) # create all models and select the best
+k # show us comparison of best subsets
+```
+
+Model 5 (`Climate TAvg TSD Flock.Size Predator.Type `) is the one we want to go for here.
+
+Let's look at visualisation of our different model selection criteria:
+```{r}
+plot(k)
+```
+
+### Forward Subset Selection
+Ok. So best subset selection can become intractable given a lot of variables. How about building our models up to be increasingly complex until we hit on gold?
+
+Unfortunately, doing so does not guarantee finding an optimal model and can easily get stuck, depending on what the model starts off with:
+```{r}
+model <- lm(Weight ~ Climate, data = Reduced_df) 
+step.model <- stepAIC(model, direction = "forward", 
+                      trace = FALSE)
+summary(step.model)
+```
+We immediately remain on `Climate` as the only predictor in this example.
+
+What if we start with a true null model?
+```{r}
+model <- lm(Weight ~ 1, data = Reduced_df)
+step.model <- stepAIC(model, direction = "forward", 
+                      trace = FALSE)
+summary(step.model)
+```
+We even get stuck on our null model! 
+
+### Backward Subset Selection
+So what about making our full model simpler?
+```{r}
+model <- lm(Weight ~ ., data = Reduced_df)
+step.model <- stepAIC(model, direction = "backward", 
+                      trace = FALSE)
+summary(step.model)
+```
+
+Interesting. This time, we have hit on the same model that was identified by the best subset selection above.
+
+### Forward & Backward 
+Can we combine the directions of stepwise model selection? Yes, we can:
+```{r}
+model <- lm(Weight ~ ., data = Reduced_df)
+step.model <- stepAIC(model, direction = "both", 
+                      trace = FALSE)
+summary(step.model)
+```
+
+Again, we land on our best subset selection model! 
+
+### Subset Selection vs. Our Intuition
+Given our best subset selection, we have a very good idea of which model to go for. 
+
+To see how well said model shapes up against our full model, we can simply look at LOOCV:
+```{r}
+train(Weight ~ Climate + TAvg + TSD + Flock.Size + Predator.Type, data = Sparrows_df,
+      method = "lm",
+      trControl = trainControl(method = "LOOCV"))
+sapply(H1_LOOCV_ls, "[[", "results")[-1, ]
+```
+
+And our full model still wins! But why? Didn't we test for all models? Yes, we tested for all additive models, but our Full model contains an interaction terms which the automated functions above just cannot handle, sadly.
+
+Let's ask a completely different question. Would we have even adopted the best subset selection model if we had thought of it given the assumptions of a linear regression?
+```{r}
+par(mfrow=c(2,2))
+plot(lm(Weight ~ Climate + TAvg + TSD + Flock.Size + Predator.Type, data = Sparrows_df))
+```
+
+As it turns out, this is a perfectly reasonable model. It's just not as good as our full model.

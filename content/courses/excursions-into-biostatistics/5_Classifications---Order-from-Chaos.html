@@ -1,0 +1,607 @@
+---
+title: Classifications
+subtitle: Order from Chaos
+date: "2021-02-27"
+slug: Classifications - Order from Chaos
+categories: [Excursion into Biostatistics]
+tags: [R, Statistics]
+summary: 'These are exercises and solutions meant as a compendium to my talk on Classifications.'
+authors: [Erik Kusch]
+lastmod: '2020-02-27'
+featured: no
+projects:
+output:
+  blogdown::html_page:
+    keep_md: true
+    # toc: true
+    # toc_depth: 2
+    # number_sections: false
+    fig_width: 8
+linktitle: Classifications - Order from Chaos
+menu:
+  Excursions:
+    parent: Seminars
+    weight: 6
+toc: true
+type: docs
+weight: 6
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+<div id="TOC">
+
+</div>
+
+<div id="theory" class="section level2">
+<h2>Theory</h2>
+<p>These are exercises and solutions meant as a compendium to my talk on Model Selection and Model Building.</p>
+<p>I have prepared some {{&lt; staticref “courses/excursions-into-biostatistics/Classifications—Order-from-Chaos.html” “newtab” &gt;}} Lecture Slides {{&lt; /staticref &gt;}} for this session.</p>
+</div>
+<div id="our-resarch-project" class="section level2">
+<h2>Our Resarch Project</h2>
+<p>Today, we are looking at a big (and entirely fictional) data base of the common house sparrow (<em>Passer domesticus</em>). In particular, we are interested in the <strong>Evolution of <em>Passer domesticus</em> in Response to Climate Change</strong> which was previously explained {{&lt; staticref “courses/excursions-into-biostatistics/research-project/” “newtab” &gt;}} here{{&lt; /staticref &gt;}}.</p>
+<div id="the-data" class="section level3">
+<h3>The Data</h3>
+<p>I have created a large data set for this exercise which is available {{&lt; staticref “courses/excursions-into-biostatistics/Data.rar” “newtab” &gt;}} here{{&lt; /staticref &gt;}} and we previously cleaned up so that is now usable {{&lt; staticref “courses/excursions-into-biostatistics/data-handling-and-data-assumptions/” “newtab” &gt;}} here{{&lt; /staticref &gt;}}.</p>
+</div>
+<div id="reading-the-data-into-r" class="section level3">
+<h3>Reading the Data into <code>R</code></h3>
+<p>Let’s start by reading the data into <code>R</code> and taking an initial look at it:</p>
+<pre class="r"><code>Sparrows_df &lt;- readRDS(file.path(&quot;Data&quot;, &quot;SparrowDataClimate.rds&quot;))
+head(Sparrows_df)</code></pre>
+<pre><code>##   Index Latitude Longitude     Climate Population.Status Weight Height Wing.Chord Colour    Sex Nesting.Site Nesting.Height Number.of.Eggs Egg.Weight Flock Home.Range Predator.Presence Predator.Type
+## 1    SI       60       100 Continental            Native  34.05  12.87       6.67  Brown   Male         &lt;NA&gt;             NA             NA         NA     B      Large               Yes         Avian
+## 2    SI       60       100 Continental            Native  34.86  13.68       6.79   Grey   Male         &lt;NA&gt;             NA             NA         NA     B      Large               Yes         Avian
+## 3    SI       60       100 Continental            Native  32.34  12.66       6.64  Black Female        Shrub          35.60              1       3.21     C      Large               Yes         Avian
+## 4    SI       60       100 Continental            Native  34.78  15.09       7.00  Brown Female        Shrub          47.75              0         NA     E      Large               Yes         Avian
+## 5    SI       60       100 Continental            Native  35.01  13.82       6.81   Grey   Male         &lt;NA&gt;             NA             NA         NA     B      Large               Yes         Avian
+## 6    SI       60       100 Continental            Native  32.36  12.67       6.64  Brown Female        Shrub          32.47              1       3.17     E      Large               Yes         Avian
+##       TAvg      TSD
+## 1 269.9596 15.71819
+## 2 269.9596 15.71819
+## 3 269.9596 15.71819
+## 4 269.9596 15.71819
+## 5 269.9596 15.71819
+## 6 269.9596 15.71819</code></pre>
+</div>
+<div id="hypotheses" class="section level3">
+<h3>Hypotheses</h3>
+<p>Let’s remember our hypotheses:</p>
+<ol style="list-style-type: decimal">
+<li><strong>Sparrow Morphology</strong> is determined by:<br />
+A. <em>Climate Conditions</em> with sparrows in stable, warm environments fairing better than those in colder, less stable ones.<br />
+B. <em>Competition</em> with sparrows in small flocks doing better than those in big flocks.<br />
+C. <em>Predation</em> with sparrows under pressure of predation doing worse than those without.<br />
+</li>
+<li><strong>Sites</strong> accurately represent <strong>sparrow morphology</strong>. This may mean:<br />
+A. <em>Population status</em> as inferred through morphology.<br />
+B. <em>Site index</em> as inferred through morphology.<br />
+C. <em>Climate</em> as inferred through morphology.</li>
+</ol>
+<p>Quite obviously, <strong>hypothesis 2</strong> is the only one lending itself well to classification exercises. In fact, what we want to answer is the question: <em>“Can we successfully classify populations at different sites according to their morphological expressions?”</em>.</p>
+</div>
+</div>
+<div id="r-environment" class="section level2">
+<h2><code>R</code> Environment</h2>
+<p>For this exercise, we will need the following packages:</p>
+<pre class="r"><code>install.load.package &lt;- function(x) {
+  if (!require(x, character.only = TRUE)) {
+    install.packages(x, repos = &quot;http://cran.us.r-project.org&quot;)
+  }
+  require(x, character.only = TRUE)
+}
+package_vec &lt;- c(
+  &quot;ggplot2&quot;, # for visualisation
+  &quot;mclust&quot;, # for k-means clustering,
+  &quot;vegan&quot;, # for distance matrices in hierarchical clustering
+  &quot;rpart&quot;, # for decision trees
+  &quot;rpart.plot&quot;, # for plotting decision trees
+  &quot;randomForest&quot;, # for randomForest classifier
+  &quot;car&quot;, # check multicollinearity
+  &quot;MASS&quot; # for ordinal logistic regression
+)
+sapply(package_vec, install.load.package)</code></pre>
+<pre><code>##      ggplot2       mclust        vegan        rpart   rpart.plot randomForest          car         MASS 
+##         TRUE         TRUE         TRUE         TRUE         TRUE         TRUE         TRUE         TRUE</code></pre>
+<p>Using the above function is way more sophisticated than the usual <code>install.packages()</code> &amp; <code>library()</code> approach since it automatically detects which packages require installing and only install these thus not overwriting already installed packages.</p>
+</div>
+<div id="logistic-regression" class="section level2">
+<h2>Logistic Regression</h2>
+<p>Remember the <strong>Assumptions of Logistic Regression</strong>:</p>
+<ol style="list-style-type: decimal">
+<li>Absence of influential outliers<br />
+</li>
+<li>Absence of multi-collinearity<br />
+</li>
+<li>Predictor Variables and log odds are related in a linear fashion</li>
+</ol>
+<div id="binary-logistic-regression" class="section level3">
+<h3>Binary Logistic Regression</h3>
+<p>Binary Logistic regression only accommodates binary outcomes. This leaves only one of our hypotheses open for investigation - <strong>2.A.</strong> <em>Population Status</em> - since this is the only response variable boasting two levels.</p>
+<p>To reduce the effect of as many confounding variables as possible, I reduce the data set to just those observations belonging to our station in Siberia and Manitoba. Both are located at very similar latitudes. They really only differ in their climate condition and the population status:</p>
+<pre class="r"><code>LogReg_df &lt;- Sparrows_df[Sparrows_df$Index == &quot;MA&quot; | Sparrows_df$Index == &quot;SI&quot;, c(&quot;Population.Status&quot;, &quot;Weight&quot;, &quot;Height&quot;, &quot;Wing.Chord&quot;)]
+LogReg_df$PS &lt;- as.numeric(LogReg_df$Population.Status) - 1 # make climate numeric for model</code></pre>
+<div id="initial-model-collinearity" class="section level4">
+<h4>Initial Model &amp; Collinearity</h4>
+<p>Let’s start with the biggest model we can build here and then assess if our assumptions are met:</p>
+<pre class="r"><code>H2_LogReg_mod &lt;- glm(PS ~ Weight + Height + Wing.Chord,
+  data = LogReg_df,
+  family = binomial(link = &quot;logit&quot;),
+)
+summary(H2_LogReg_mod)</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = PS ~ Weight + Height + Wing.Chord, family = binomial(link = &quot;logit&quot;), 
+##     data = LogReg_df)
+## 
+## Deviance Residuals: 
+##        Min          1Q      Median          3Q         Max  
+## -2.657e-05  -2.110e-08  -2.110e-08   2.110e-08   2.855e-05  
+## 
+## Coefficients:
+##               Estimate Std. Error z value Pr(&gt;|z|)
+## (Intercept)  1.557e+03  3.312e+07   0.000    1.000
+## Weight       7.242e+01  3.735e+04   0.002    0.998
+## Height       2.153e+01  1.061e+06   0.000    1.000
+## Wing.Chord  -6.247e+02  6.928e+06   0.000    1.000
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 1.8437e+02  on 132  degrees of freedom
+## Residual deviance: 6.8926e-09  on 129  degrees of freedom
+## AIC: 8
+## 
+## Number of Fisher Scoring iterations: 25</code></pre>
+<p>Well… nothing here is significant. Let’s see what the culprit might be. With morphological traits, you are often looking at a whole set of collinearity, so let’s start by investigating that:</p>
+<pre class="r"><code>vif(H2_LogReg_mod)</code></pre>
+<pre><code>##      Weight      Height  Wing.Chord 
+##    9.409985 6550.394447 6342.683547</code></pre>
+<p>A Variance Inflation Factor (VIF) value of <span class="math inline">\(\geq5-10\)</span> is seen as identifying problematic collinearity. Quite obviously, this is the case. We need to throw away some predictors. I only want to keep <code>Weight</code>.</p>
+</div>
+<div id="weight-model-and-further-assumptions" class="section level4">
+<h4><code>Weight</code> Model and Further Assumptions</h4>
+<p>Let’s run a simplified model that just used <code>Weight</code> as a predictor:</p>
+<pre class="r"><code>H2_LogReg_mod &lt;- glm(PS ~ Weight,
+  data = LogReg_df,
+  family = binomial(link = &quot;logit&quot;)
+)
+summary(H2_LogReg_mod)</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = PS ~ Weight, family = binomial(link = &quot;logit&quot;), 
+##     data = LogReg_df)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -2.1980  -0.5331  -0.1235   0.5419   1.9067  
+## 
+## Coefficients:
+##             Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept) -46.3244     7.8319  -5.915 3.32e-09 ***
+## Weight        1.4052     0.2374   5.920 3.23e-09 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 184.37  on 132  degrees of freedom
+## Residual deviance: 105.08  on 131  degrees of freedom
+## AIC: 109.08
+## 
+## Number of Fisher Scoring iterations: 5</code></pre>
+<p>A significant effect, huzzah! We still need to test for our assumptions, however. Checking for <strong>multicollinearity</strong> makes no sense since we only use one predictor, so we can skip that.</p>
+<p><strong>Linear Relationship</strong> between predictor(s) and log-odds of the output can be assessed as follows:</p>
+<pre class="r"><code>probabilities &lt;- predict(H2_LogReg_mod, type = &quot;response&quot;) # predict model response on original data
+LogReg_df$Probs &lt;- probabilities # safe probabilities to data frame
+LogReg_df$LogOdds &lt;- log(probabilities / (1 - probabilities)) # calculate log-odds
+## Plot Log-Odds vs. Predictor
+ggplot(data = LogReg_df, aes(x = Weight, y = LogOdds)) +
+  geom_point() +
+  geom_smooth(method = &quot;lm&quot;, se = TRUE) +
+  theme_bw()</code></pre>
+<p><img src="/courses/excursions-into-biostatistics/5_Classifications---Order-from-Chaos_files/figure-html/unnamed-chunk-7-1.png" width="1440" /></p>
+<p>That is clearly linear relationship!</p>
+<p>Moving on to our final assumption, we want to assess whether there are influential <strong>Outliers</strong>. For this, we want to look at the <em>Cook’s distance</em> as well as the <em>standardised residuals</em> per observation:</p>
+<pre class="r"><code>## Cook&#39;s distance
+plot(H2_LogReg_mod, which = 4, id.n = 3)</code></pre>
+<p><img src="/courses/excursions-into-biostatistics/5_Classifications---Order-from-Chaos_files/figure-html/unnamed-chunk-8-1.png" width="1440" /></p>
+<pre class="r"><code>## Standardises Residuals
+Outlier_df &lt;- data.frame(
+  Residuals = resid(H2_LogReg_mod),
+  Index = 1:nrow(LogReg_df),
+  Outcome = factor(LogReg_df$PS)
+)
+Outlier_df$Std.Resid &lt;- scale(Outlier_df$Residuals)
+# Plot Residuals
+ggplot(Outlier_df, aes(Outcome, Std.Resid)) +
+  geom_boxplot() +
+  theme_bw()</code></pre>
+<p><img src="/courses/excursions-into-biostatistics/5_Classifications---Order-from-Chaos_files/figure-html/unnamed-chunk-8-2.png" width="1440" />
+Both of these plots do not highlight any worrying influential outliers. An influential outliers would manifest with a prominent standardises residual (<span class="math inline">\(|Std.Resid|\sim3\)</span>)/Cook’s distance.</p>
+<p>Let’s finally plot what the model predicts:</p>
+<pre class="r"><code>ggplot(data = LogReg_df, aes(x = Weight, y = LogReg_df$PS)) +
+  geom_point() +
+  theme_bw() +
+  geom_smooth(
+    data = LogReg_df, aes(x = Weight, y = Probs),
+    method = &quot;glm&quot;,
+    method.args = list(family = &quot;binomial&quot;),
+    se = TRUE
+  ) +
+  labs(y = &quot;Introduced Population&quot;)</code></pre>
+<p><img src="/courses/excursions-into-biostatistics/5_Classifications---Order-from-Chaos_files/figure-html/unnamed-chunk-9-1.png" width="1440" /></p>
+</div>
+</div>
+<div id="ordinal-logistic-regression" class="section level3">
+<h3>Ordinal Logistic Regression</h3>
+<p>Ordinal Logistic regression allows for multiple levels of the response variable so long as they are on an ordinal scale. Here, we could test all of our above hypotheses. However, I’d like to stick with <strong>2.C.</strong> <em>Climate</em> for this example.</p>
+<p>Again, to reduce the effect of as many confounding variables as possible, I reduce the data set to just those observations belonging to our station in Siberia, Manitoba, and also the United Kingdom this time. All three are located at very similar latitudes. They really only differ in their climate condition and the population status:</p>
+<pre class="r"><code>LogReg_df &lt;- Sparrows_df[Sparrows_df$Index == &quot;UK&quot; | Sparrows_df$Index == &quot;MA&quot; | Sparrows_df$Index == &quot;SI&quot;, c(&quot;Climate&quot;, &quot;Weight&quot;, &quot;Height&quot;, &quot;Wing.Chord&quot;)]
+LogReg_df$CL &lt;- factor(as.numeric(LogReg_df$Climate) - 1) # make climate factored numeric for model</code></pre>
+<div id="initial-model-collinearity-1" class="section level4">
+<h4>Initial Model &amp; Collinearity</h4>
+<p>Let’s start with the biggest model we can build here and then assess if our assumptions are met:</p>
+<pre class="r"><code>H2_LogReg_mod &lt;- polr(CL ~ Weight + Height + Wing.Chord,
+  data = LogReg_df,
+  Hess = TRUE
+)
+summary_table &lt;- coef(summary(H2_LogReg_mod))
+pval &lt;- pnorm(abs(summary_table[, &quot;t value&quot;]), lower.tail = FALSE) * 2
+summary_table &lt;- cbind(summary_table, &quot;p value&quot; = round(pval, 6))
+summary_table</code></pre>
+<pre><code>##                   Value Std. Error      t value p value
+## Weight       -0.4595713 0.09750017    -4.713544   2e-06
+## Height       25.0804875 0.19522593   128.469037   0e+00
+## Wing.Chord -164.1081894 0.51246105  -320.235438   0e+00
+## 0|1        -788.2027631 0.11008584 -7159.892373   0e+00
+## 1|2        -786.7913024 0.18747881 -4196.694599   0e+00</code></pre>
+<p>Well… a lot here is significant. We identified <strong>multicollinearity</strong> as a problem earlier. Let’s investigate that again:</p>
+<pre class="r"><code>vif(H2_LogReg_mod)</code></pre>
+<pre><code>##       Weight       Height   Wing.Chord 
+## 1.205383e+13 3.563792e+15 3.782106e+15</code></pre>
+<p>Horrible!. A Variance Inflation Factor (VIF) value of <span class="math inline">\(\geq5-10\)</span> is seen as identifying problematic collinearity. Quite obviously, this is the case. We need to throw away some predictors. I only want to keep <code>Weight</code>.</p>
+</div>
+<div id="weight-model-and-further-assumptions-1" class="section level4">
+<h4><code>Weight</code> Model and Further Assumptions</h4>
+<p>Let’s run a simplified model that just used <code>Weight</code> as a predictor:</p>
+<pre class="r"><code>H2_LogReg_mod &lt;- polr(CL ~ Weight,
+  data = LogReg_df,
+  Hess = TRUE
+)
+summary_table &lt;- coef(summary(H2_LogReg_mod))
+pval &lt;- pnorm(abs(summary_table[, &quot;t value&quot;]), lower.tail = FALSE) * 2
+summary_table &lt;- cbind(summary_table, &quot;p value&quot; = round(pval, 6))
+summary_table</code></pre>
+<pre><code>##               Value Std. Error      t value  p value
+## Weight -0.020768177  0.0761669 -0.272666718 0.785109
+## 0|1    -1.354848455  2.5131706 -0.539099272 0.589818
+## 1|2     0.009549511  2.5112093  0.003802754 0.996966</code></pre>
+<p>Well… this model doesn’t help us at all in understanding climate through morphology of our sparrows. Let’s abandon this and move on to classification methods which are much better suited to this task.</p>
+</div>
+</div>
+</div>
+<div id="k-means-clustering" class="section level2">
+<h2>K-Means Clustering</h2>
+<p>K-Means clustering is incredibly potent in identifying a number of appropriate clusters, their attributes, and sort observations into appropriate clusters.</p>
+<div id="population-status-classifier" class="section level3">
+<h3>Population Status Classifier</h3>
+<p>Let’s start with understanding population status through morphological traits:</p>
+<pre class="r"><code>Morph_df &lt;- Sparrows_df[, c(&quot;Weight&quot;, &quot;Height&quot;, &quot;Wing.Chord&quot;, &quot;Population.Status&quot;)]
+H2_PS_mclust &lt;- Mclust(Morph_df[-4], G = length(unique(Morph_df[, 4])))
+plot(H2_PS_mclust, what = &quot;uncertainty&quot;)</code></pre>
+<p><img src="/courses/excursions-into-biostatistics/5_Classifications---Order-from-Chaos_files/figure-html/unnamed-chunk-14-1.png" width="1440" /></p>
+<p>As we can see, K-means clustering is able to really neatly identify two groups in our data. But do they actually belong do the right groups of <code>Population.Status</code>? We’ll find out in {{&lt; staticref “courses/excursions-into-biostatistics/excursion-into-biostatistics/” “newtab” &gt;}} Model Selection and Validation{{&lt; /staticref &gt;}}.</p>
+</div>
+<div id="site-classifier" class="section level3">
+<h3>Site Classifier</h3>
+<p>On to our site index classification. Running the k-means clustering algorithm returns:</p>
+<pre class="r"><code>Morph_df &lt;- Sparrows_df[, c(&quot;Weight&quot;, &quot;Height&quot;, &quot;Wing.Chord&quot;, &quot;Index&quot;)]
+H2_Index_mclust &lt;- Mclust(Morph_df[-4], G = length(unique(Morph_df[, 4])))
+plot(H2_Index_mclust, what = &quot;uncertainty&quot;)</code></pre>
+<p><img src="/courses/excursions-into-biostatistics/5_Classifications---Order-from-Chaos_files/figure-html/unnamed-chunk-15-1.png" width="1440" /></p>
+<p>That’s a pretty bad classification. I would not place trust in these clusters seeing how much they overlap.</p>
+</div>
+<div id="climate-classifier" class="section level3">
+<h3>Climate Classifier</h3>
+<p>Lastly, turning to our climate classification using k-means classification:</p>
+<pre class="r"><code>Morph_df &lt;- Sparrows_df[, c(&quot;Weight&quot;, &quot;Height&quot;, &quot;Wing.Chord&quot;, &quot;Climate&quot;)]
+H2_Climate_mclust &lt;- Mclust(Morph_df[-4], G = length(unique(Morph_df[, 4])))
+plot(H2_Climate_mclust, what = &quot;uncertainty&quot;)</code></pre>
+<p><img src="/courses/excursions-into-biostatistics/5_Classifications---Order-from-Chaos_files/figure-html/unnamed-chunk-16-1.png" width="1440" />
+These clusters are decent although there is quite a bit of overlap between the blue and red cluster.</p>
+</div>
+<div id="optimal-model" class="section level3">
+<h3>Optimal Model</h3>
+<p>K-means clustering is also able to identify the most “appropriate” number of clusters given the data and uncertainty of classification:</p>
+<pre class="r"><code>Morph_df &lt;- Sparrows_df[, c(&quot;Weight&quot;, &quot;Height&quot;, &quot;Wing.Chord&quot;)]
+dataBIC &lt;- mclustBIC(Morph_df)
+summary(dataBIC) # show summary of top-ranking models</code></pre>
+<pre><code>## Best BIC values:
+##             VVV,7     EVV,7     EVV,8
+## BIC      63.39237 -304.1895 -336.0531
+## BIC diff  0.00000 -367.5819 -399.4455</code></pre>
+<pre class="r"><code>plot(dataBIC)</code></pre>
+<p><img src="/courses/excursions-into-biostatistics/5_Classifications---Order-from-Chaos_files/figure-html/unnamed-chunk-17-1.png" width="1440" /></p>
+<pre class="r"><code>G &lt;- as.numeric(strsplit(names(summary(dataBIC))[1], &quot;,&quot;)[[1]][2])
+H2_Opt_mclust &lt;- Mclust(Morph_df, # data for the cluster model
+  G = G # BIC index for model to be built
+)
+H2_Opt_mclust[[&quot;parameters&quot;]][[&quot;mean&quot;]] # mean values of clusters</code></pre>
+<pre><code>##                 [,1]      [,2]     [,3]      [,4]      [,5]      [,6]      [,7]
+## Weight     34.830000 32.677280 33.63023 31.354892 30.146417 22.585240 22.796014
+## Height     13.641765 13.570427 14.20721 14.317070 14.085826 18.847550 19.036621
+## Wing.Chord  6.787059  6.780954  6.99186  7.044881  6.965047  8.576106  8.609035</code></pre>
+<pre class="r"><code>plot(H2_Opt_mclust, what = &quot;uncertainty&quot;)</code></pre>
+<p><img src="/courses/excursions-into-biostatistics/5_Classifications---Order-from-Chaos_files/figure-html/unnamed-chunk-17-2.png" width="1440" /></p>
+<p>Here, K-means clustering would have us settle on 7 clusters. That does not coincide with anything we could really test for at this point. COnclusively, this model goes into the category of “Nice to have, but ultimately useless here”.</p>
+</div>
+<div id="summary-of-k-means-clustering" class="section level3">
+<h3>Summary of K-Means Clustering</h3>
+<p>So what do we take from this? Well… Population status was well explained all morphological traits and so would in turn also do a good job of being a proxy for the other when doing mixed regression models, for example. Hence, we might want to include this variable in future {{&lt; staticref “courses/excursions-into-biostatistics/regressions-correlations-for-the-advanced/” “newtab” &gt;}} Regression Models{{&lt; /staticref &gt;}}.</p>
+</div>
+</div>
+<div id="hierarchical-clustering" class="section level2">
+<h2>Hierarchical Clustering</h2>
+<p>Moving on to hierarchical clustering, we luckily only need to create a few trees to start with:</p>
+<pre class="r"><code>Morph_df &lt;- Sparrows_df[, c(&quot;Weight&quot;, &quot;Height&quot;, &quot;Wing.Chord&quot;)] # selecting morphology data
+dist_mat &lt;- dist(Morph_df) # distance matrix
+## Hierarchical clustering using different linkages
+H2_Hierachical_clas1 &lt;- hclust(dist_mat, method = &quot;complete&quot;)
+H2_Hierachical_clas2 &lt;- hclust(dist_mat, method = &quot;single&quot;)
+H2_Hierachical_clas3 &lt;- hclust(dist_mat, method = &quot;average&quot;)
+## Plotting Hierarchies
+par(mfrow = c(1, 3))
+plot(H2_Hierachical_clas1, main = &quot;complete&quot;)
+plot(H2_Hierachical_clas2, main = &quot;single&quot;)
+plot(H2_Hierachical_clas3, main = &quot;average&quot;)</code></pre>
+<p><img src="/courses/excursions-into-biostatistics/5_Classifications---Order-from-Chaos_files/figure-html/unnamed-chunk-18-1.png" width="1440" /></p>
+<p>Here, you can see that the type of linkage employed by your hierarchical approach is very important as to how the hierarchy ends up looking like. For now, we run with all of them.</p>
+<div id="population-status-classifier-1" class="section level3">
+<h3>Population Status Classifier</h3>
+<p>For our population status classifier, let’s obtain our data and cluster number we are after:</p>
+<pre class="r"><code>Morph_df &lt;- Sparrows_df[, c(&quot;Weight&quot;, &quot;Height&quot;, &quot;Wing.Chord&quot;, &quot;Population.Status&quot;)]
+G &lt;- length(unique(Morph_df[, 4]))</code></pre>
+<p>Now we can look at how well our different Hierarchies fair at explaining these categories when cut at the point where the same number of categories is present in the tree:</p>
+<pre class="r"><code>clusterCut &lt;- cutree(H2_Hierachical_clas1, k = G) # cut tree
+table(clusterCut, Morph_df$Population.Status) # assess fit</code></pre>
+<pre><code>##           
+## clusterCut Introduced Native
+##          1        682    134
+##          2        250      0</code></pre>
+<pre class="r"><code>clusterCut &lt;- cutree(H2_Hierachical_clas2, k = G) # cut tree
+table(clusterCut, Morph_df$Population.Status) # assess fit</code></pre>
+<pre><code>##           
+## clusterCut Introduced Native
+##          1        682    134
+##          2        250      0</code></pre>
+<pre class="r"><code>clusterCut &lt;- cutree(H2_Hierachical_clas3, k = G) # cut tree
+table(clusterCut, Morph_df$Population.Status) # assess fit</code></pre>
+<pre><code>##           
+## clusterCut Introduced Native
+##          1        682    134
+##          2        250      0</code></pre>
+<p>Interestingly enough, no matter the linkage, all of these approaches get Introduced and Native populations confused in the first group, but not the second.</p>
+<p>Let’s look at the decisions that we could make when following a decision tree for this example:</p>
+<pre class="r"><code>H2_PS_decision &lt;- rpart(Population.Status ~ ., data = Morph_df)
+rpart.plot(H2_PS_decision)</code></pre>
+<p><img src="/courses/excursions-into-biostatistics/5_Classifications---Order-from-Chaos_files/figure-html/unnamed-chunk-21-1.png" width="1440" /></p>
+<p>Following this decision tree we first ask <em>“Is our sparrow lighter than 35g?”</em>. If the answer is yes, we move to the left and ask the question <em>“Is the wing span of our sparrow greater/equal than 6.9cm?”</em>. If the answer is yes, we move to the left and assign this sparrow to an introduced population status. 62% of all observations are in this node and to 2% we believe that this node might actually be a Native node. All other nodes are explained accordingly. More about their interpretation can be found in this <a href="https://www.google.com/url?sa=t&amp;rct=j&amp;q=&amp;esrc=s&amp;source=web&amp;cd=&amp;ved=2ahUKEwizk67jmJDvAhUnMuwKHbaiD90QFjAAegQIARAD&amp;url=http%3A%2F%2Fwww.milbo.org%2Frpart-plot%2Fprp.pdf&amp;usg=AOvVaw2DpMfeZC2yVdRaYZBXBA8K">PDF Manual</a>.</p>
+</div>
+<div id="site-classifier-1" class="section level3">
+<h3>Site Classifier</h3>
+<p>Moving on to the site index classifier, we need our data and number of clusters:</p>
+<pre class="r"><code>Morph_df &lt;- Sparrows_df[, c(&quot;Weight&quot;, &quot;Height&quot;, &quot;Wing.Chord&quot;, &quot;Index&quot;)]
+G &lt;- length(unique(Morph_df[, 4]))</code></pre>
+<p>Looking at our different outputs:</p>
+<pre class="r"><code>clusterCut &lt;- cutree(H2_Hierachical_clas1, k = G) # cut tree
+table(clusterCut, Morph_df$Index) # assess fit</code></pre>
+<pre><code>##           
+## clusterCut  AU  BE  FG  FI  LO  MA  NU  RE  SA  SI  UK
+##         1   24   0   0  21   0  15  17   0   0  22  13
+##         2   17   0   0   5   3   7   6   0   0  31   5
+##         3   19   0   0  29  12  22  21   0   0  13  25
+##         4   24  26   0   2  33   5   7  32  16   0  12
+##         5    3   0   0  12   4  18  13   0   0   0  13
+##         6    0  60   0   0  20   0   0  49  77   0   0
+##         7    0  19   0   0   9   0   0  14  21   0   0
+##         8    0   0  80   0   0   0   0   0   0   0   0
+##         9    0   0 138   0   0   0   0   0   0   0   0
+##         10   0   0  16   0   0   0   0   0   0   0   0
+##         11   0   0  16   0   0   0   0   0   0   0   0</code></pre>
+<pre class="r"><code>clusterCut &lt;- cutree(H2_Hierachical_clas2, k = G) # cut tree
+table(clusterCut, Morph_df$Index) # assess fit</code></pre>
+<pre><code>##           
+## clusterCut  AU  BE  FG  FI  LO  MA  NU  RE  SA  SI  UK
+##         1    0   0   0   0   0   0   0   0   0  28   0
+##         2   87 102   0  69  80  67  64  95 112  32  68
+##         3    0   0   0   0   0   0   0   0   0   4   0
+##         4    0   0   0   0   0   0   0   0   0   2   0
+##         5    0   0   0   0   1   0   0   0   0   0   0
+##         6    0   1   0   0   0   0   0   0   0   0   0
+##         7    0   2   0   0   0   0   0   0   0   0   0
+##         8    0   0 122   0   0   0   0   0   0   0   0
+##         9    0   0 126   0   0   0   0   0   0   0   0
+##         10   0   0   2   0   0   0   0   0   0   0   0
+##         11   0   0   0   0   0   0   0   0   2   0   0</code></pre>
+<pre class="r"><code>clusterCut &lt;- cutree(H2_Hierachical_clas3, k = G) # cut tree
+table(clusterCut, Morph_df$Index) # assess fit</code></pre>
+<pre><code>##           
+## clusterCut  AU  BE  FG  FI  LO  MA  NU  RE  SA  SI  UK
+##         1   44   0   0  15  14  15  22   0   0  45  19
+##         2   42  31   0  50  50  49  40  27   0  12  44
+##         3    1   0   0   0   0   0   0   0   0   5   0
+##         4    0   0   0   0   0   0   0   0   0   4   0
+##         5    0   6   0   4   9   3   2   1   0   0   5
+##         6    0  34   0   0   0   0   0  35  81   0   0
+##         7    0  21   0   0   8   0   0  27  23   0   0
+##         8    0  13   0   0   0   0   0   5  10   0   0
+##         9    0   0 106   0   0   0   0   0   0   0   0
+##         10   0   0 134   0   0   0   0   0   0   0   0
+##         11   0   0  10   0   0   0   0   0   0   0   0</code></pre>
+<p>We can now see clearly how different linkages have a major impact in determining how our hierarchy groups different observations. I won’t go into interpretations here to save time and energy since these outputs are so busy.</p>
+<p>Our decision tree is also excrutiatingly busy:</p>
+<pre class="r"><code>H2_Index_decision &lt;- rpart(Index ~ ., data = Morph_df)
+rpart.plot(H2_Index_decision)</code></pre>
+<p><img src="/courses/excursions-into-biostatistics/5_Classifications---Order-from-Chaos_files/figure-html/unnamed-chunk-24-1.png" width="1440" /></p>
+</div>
+<div id="climate-classifier-1" class="section level3">
+<h3>Climate Classifier</h3>
+<p>Back over to our climate classifier:</p>
+<pre class="r"><code>Morph_df &lt;- Sparrows_df[, c(&quot;Weight&quot;, &quot;Height&quot;, &quot;Wing.Chord&quot;, &quot;Climate&quot;)]
+G &lt;- length(unique(Morph_df[, 4]))</code></pre>
+<p>Let’s look at how the different linkages impact our results:</p>
+<pre class="r"><code>clusterCut &lt;- cutree(H2_Hierachical_clas1, k = G) # cut tree
+table(clusterCut, Morph_df$Climate) # assess fit</code></pre>
+<pre><code>##           
+## clusterCut Coastal Continental Semi-Coastal
+##          1     577         105           60
+##          2      19          48            7
+##          3     250           0            0</code></pre>
+<pre class="r"><code>clusterCut &lt;- cutree(H2_Hierachical_clas2, k = G) # cut tree
+table(clusterCut, Morph_df$Climate) # assess fit</code></pre>
+<pre><code>##           
+## clusterCut Coastal Continental Semi-Coastal
+##          1     595         153           67
+##          2       1           0            0
+##          3     250           0            0</code></pre>
+<pre class="r"><code>clusterCut &lt;- cutree(H2_Hierachical_clas3, k = G) # cut tree
+table(clusterCut, Morph_df$Climate) # assess fit</code></pre>
+<pre><code>##           
+## clusterCut Coastal Continental Semi-Coastal
+##          1     596         153           67
+##          2     240           0            0
+##          3      10           0            0</code></pre>
+<p>All of our linkage types have problems discerning Coastal types. I wager that is because of a ton of confounding effects which drive morphological traits in addition to climate types.</p>
+<p>Here’s another look at a decision tree:</p>
+<pre class="r"><code>H2_Climate_decision &lt;- rpart(Climate ~ ., data = Morph_df)
+rpart.plot(H2_Climate_decision)</code></pre>
+<p><img src="/courses/excursions-into-biostatistics/5_Classifications---Order-from-Chaos_files/figure-html/unnamed-chunk-27-1.png" width="1440" /></p>
+</div>
+<div id="summary-of-hierarchical-clustering" class="section level3">
+<h3>Summary of Hierarchical Clustering</h3>
+<p>We have seen that site indices may hold some explanatory power regarding sparrow morphology, but the picture is very complex. We may want to keep them in mind as random effects for future models (don’t worry if that doesn’t mean much to you yet).</p>
+</div>
+</div>
+<div id="random-forest" class="section level2">
+<h2>Random Forest</h2>
+<p>Random Forests are one of the most powerful classification methods and I love them. They are incredibly powerful, accurate, and easy to use. Unfortunately, they are black-box algorithms (you don’t know what’s happening in them exactly in numerical terms) and they require observed outcomes. That’s not a problem for us with this research project!</p>
+<div id="population-status-classifier-2" class="section level3">
+<h3>Population Status Classifier</h3>
+<p>Running our random for model for population statuses:</p>
+<pre class="r"><code>set.seed(42) # set seed because the process is random
+H2_PS_RF &lt;- tuneRF(
+  x = Sparrows_df[, c(&quot;Weight&quot;, &quot;Height&quot;, &quot;Wing.Chord&quot;)], # variables which to use for clustering
+  y = Sparrows_df$Population.Status, # correct cluster assignment
+  strata = Sparrows_df$Population.Status, # stratified sampling
+  doBest = TRUE, # run the best overall tree
+  ntreeTry = 20000, # consider this number of trees
+  improve = 0.0000001, # improvement if this is exceeded
+  trace = FALSE, plot = FALSE
+)</code></pre>
+<pre><code>## -0.08235294 1e-07</code></pre>
+<p>Works perfectly.</p>
+<p>Random forests give us access to <em>confusion matrices</em> which tell us about classification accuracy:</p>
+<pre class="r"><code>H2_PS_RF[[&quot;confusion&quot;]]</code></pre>
+<pre><code>##            Introduced Native class.error
+## Introduced        902     30  0.03218884
+## Native             55     79  0.41044776</code></pre>
+<p>Evidently, we are good at predicting Introduced population status, but Native population status is almost as random as a coin toss.</p>
+<p>Which variables give us the most information when establishing these groups?</p>
+<pre class="r"><code>varImpPlot(H2_PS_RF)</code></pre>
+<p><img src="/courses/excursions-into-biostatistics/5_Classifications---Order-from-Chaos_files/figure-html/unnamed-chunk-30-1.png" width="1440" /></p>
+<p>Well look who it is. <code>Weight</code> comes out as the most important variable once again!</p>
+</div>
+<div id="site-classifier-2" class="section level3">
+<h3>Site Classifier</h3>
+<p>Let’s run a random forest analysis for our site indices:</p>
+<pre class="r"><code>set.seed(42) # set seed because the process is random
+H2_Index_RF &lt;- tuneRF(
+  x = Sparrows_df[, c(&quot;Weight&quot;, &quot;Height&quot;, &quot;Wing.Chord&quot;)], # variables which to use for clustering
+  y = Sparrows_df$Index, # correct cluster assignment
+  strata = Sparrows_df$Index, # stratified sampling
+  doBest = TRUE, # run the best overall tree
+  ntreeTry = 20000, # consider this number of trees
+  improve = 0.0000001, # improvement if this is exceeded
+  trace = FALSE, plot = FALSE
+)</code></pre>
+<pre><code>## 0.01630435 1e-07 
+## 0 1e-07</code></pre>
+<pre class="r"><code>H2_Index_RF[[&quot;confusion&quot;]]</code></pre>
+<pre><code>##    AU  BE  FG FI LO MA NU RE  SA SI UK class.error
+## AU 77   0   0  2  8  0  0  0   0  0  0  0.11494253
+## BE  0 102   0  0  0  0  0  0   3  0  0  0.02857143
+## FG  0   0 250  0  0  0  0  0   0  0  0  0.00000000
+## FI  0   0   0 33  0 21  0  0   0  0 15  0.52173913
+## LO  9   0   0  0 69  0  0  2   0  0  1  0.14814815
+## MA  0   0   0 17  0 26  2  0   0  0 22  0.61194030
+## NU  0   0   0  0  0  7 44  0   0  7  6  0.31250000
+## RE  0   4   0  0  3  0  0 87   1  0  0  0.08421053
+## SA  0   5   0  0  0  0  0  0 109  0  0  0.04385965
+## SI  0   0   0  0  0  1  7  0   0 58  0  0.12121212
+## UK  0   0   0 14  0 25  1  0   0  0 28  0.58823529</code></pre>
+<pre class="r"><code>varImpPlot(H2_Index_RF)</code></pre>
+<p><img src="/courses/excursions-into-biostatistics/5_Classifications---Order-from-Chaos_files/figure-html/unnamed-chunk-31-1.png" width="1440" /></p>
+<p>Except for Manitoba and the UK (which are often mistaken for each other), morphology (and mostly <code>Weight</code>) explains station indices quite adequately.</p>
+</div>
+<div id="climate-classifier-2" class="section level3">
+<h3>Climate Classifier</h3>
+<p>Lastly, we turn to our climate classifier again:</p>
+<pre class="r"><code>set.seed(42) # set seed because the process is random
+H2_Climate_RF &lt;- tuneRF(
+  x = Sparrows_df[, c(&quot;Weight&quot;, &quot;Height&quot;, &quot;Wing.Chord&quot;)], # variables which to use for clustering
+  y = Sparrows_df$Climate, # correct cluster assignment
+  strata = Sparrows_df$Climate, # stratified sampling
+  doBest = TRUE, # run the best overall tree
+  ntreeTry = 20000, # consider this number of trees
+  improve = 0.0000001, # improvement if this is exceeded
+  trace = FALSE, plot = FALSE
+)</code></pre>
+<pre><code>## 0.05172414 1e-07 
+## -0.02727273 1e-07</code></pre>
+<pre class="r"><code>H2_Climate_RF[[&quot;confusion&quot;]]</code></pre>
+<pre><code>##              Coastal Continental Semi-Coastal class.error
+## Coastal          797          16           33  0.05791962
+## Continental       15         137            1  0.10457516
+## Semi-Coastal      47           0           20  0.70149254</code></pre>
+<pre class="r"><code>varImpPlot(H2_Climate_RF)</code></pre>
+<p><img src="/courses/excursions-into-biostatistics/5_Classifications---Order-from-Chaos_files/figure-html/unnamed-chunk-32-1.png" width="1440" /></p>
+<p>Oof. We get semi-coastal habitats almost completely wrong. The other climate conditions are explained well through morphology, though.</p>
+</div>
+</div>
+<div id="final-models" class="section level2">
+<h2>Final Models</h2>
+<p>In our upcoming {{&lt; staticref “courses/excursions-into-biostatistics/excursion-into-biostatistics/” “newtab” &gt;}} Model Selection and Validation{{&lt; /staticref &gt;}} Session, we will look into how to compare and validate models. We now need to select some models we have created here today and want to carry forward to said session.</p>
+<p>Personally, I am quite enamoured with our models <code>H2_PS_mclust</code> (k-means clustering of population status), <code>H2_PS_RF</code> (random forest of population status), and <code>H2_Index_RF</code> (random forest of site indices). Let’s save these as a separate object ready to be loaded into our <code>R</code> environment in the coming session:</p>
+<pre class="r"><code>save(H2_PS_mclust, H2_PS_RF, H2_Index_RF, file = file.path(&quot;Data&quot;, &quot;H2_Models.RData&quot;))</code></pre>
+</div>
+<div id="sessioninfo" class="section level2">
+<h2>SessionInfo</h2>
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>## R version 4.0.5 (2021-03-31)
+## Platform: x86_64-w64-mingw32/x64 (64-bit)
+## Running under: Windows 10 x64 (build 19043)
+## 
+## Matrix products: default
+## 
+## locale:
+## [1] LC_COLLATE=English_United Kingdom.1252  LC_CTYPE=English_United Kingdom.1252    LC_MONETARY=English_United Kingdom.1252 LC_NUMERIC=C                           
+## [5] LC_TIME=English_United Kingdom.1252    
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+##  [1] MASS_7.3-53.1       car_3.0-10          carData_3.0-4       randomForest_4.6-14 rpart.plot_3.0.9    rpart_4.1-15        vegan_2.5-7         lattice_0.20-41     permute_0.9-5      
+## [10] mclust_5.4.7        ggplot2_3.3.3      
+## 
+## loaded via a namespace (and not attached):
+##  [1] Rcpp_1.0.7        assertthat_0.2.1  digest_0.6.27     utf8_1.2.1        cellranger_1.1.0  R6_2.5.0          backports_1.2.1   evaluate_0.14     highr_0.9         blogdown_1.3     
+## [11] pillar_1.6.0      rlang_0.4.11      readxl_1.3.1      curl_4.3.2        data.table_1.14.0 jquerylib_0.1.4   R.utils_2.10.1    R.oo_1.24.0       Matrix_1.3-2      rmarkdown_2.7    
+## [21] styler_1.4.1      labeling_0.4.2    splines_4.0.5     stringr_1.4.0     foreign_0.8-81    munsell_0.5.0     compiler_4.0.5    xfun_0.22         pkgconfig_2.0.3   mgcv_1.8-34      
+## [31] htmltools_0.5.1.1 tidyselect_1.1.0  tibble_3.1.1      bookdown_0.22     rio_0.5.26        fansi_0.4.2       crayon_1.4.1      dplyr_1.0.5       withr_2.4.2       R.methodsS3_1.8.1
+## [41] grid_4.0.5        nlme_3.1-152      jsonlite_1.7.2    gtable_0.3.0      lifecycle_1.0.0   DBI_1.1.1         magrittr_2.0.1    scales_1.1.1      zip_2.1.1         stringi_1.5.3    
+## [51] farver_2.1.0      bslib_0.2.4       ellipsis_0.3.2    generics_0.1.0    vctrs_0.3.7       openxlsx_4.2.3    rematch2_2.1.2    tools_4.0.5       forcats_0.5.1     R.cache_0.14.0   
+## [61] glue_1.4.2        purrr_0.3.4       hms_1.0.0         abind_1.4-5       parallel_4.0.5    yaml_2.2.1        colorspace_2.0-0  cluster_2.1.1     knitr_1.33        haven_2.4.1      
+## [71] sass_0.3.1</code></pre>
+</div>

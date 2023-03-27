@@ -1,0 +1,283 @@
+---
+title: "Data Allocation"
+subtitle: 'Identifying Biomes And Their Shifts Using Remote Sensing'
+author: "Erik Kusch"
+date: "2020-06-10"
+slug: Data Allocation
+categories: [BFTP Projects]
+tags: [R, Statistics, Remote Sensing]
+summary: ''
+authors: [Erik Kusch]
+lastmod: '2020-06-10'
+featured: no
+projects:
+output:
+  blogdown::html_page:
+    toc: true
+    toc_depth: 2
+    number_sections: false
+    fig_width: 6
+linktitle: 1 - Data Allocation
+menu:
+  BFTP:
+    parent: Exercises 
+    weight: 1
+# toc: true
+type: docs
+weight: 1
+---
+
+
+<div id="TOC">
+<ul>
+<li><a href="#preparing-the-work">Preparing The Work</a><ul>
+<li><a href="#head">Head</a></li>
+<li><a href="#preamble">Preamble</a></li>
+<li><a href="#coding">Coding</a></li>
+</ul></li>
+<li><a href="#downloading-ndvi-data">Downloading NDVI Data</a><ul>
+<li><a href="#packages">Packages</a></li>
+<li><a href="#downloading">Downloading</a></li>
+</ul></li>
+<li><a href="#aggregating-ndvi-data">Aggregating NDVI Data</a><ul>
+<li><a href="#composites">Composites</a></li>
+<li><a href="#annual-values">Annual Values</a></li>
+</ul></li>
+<li><a href="#cropping-ndvi-data">Cropping NDVI Data</a><ul>
+<li><a href="#packages-data">Packages &amp; Data</a></li>
+<li><a href="#crop-mask">Crop &amp; Mask</a></li>
+</ul></li>
+</ul>
+</div>
+
+<div id="preparing-the-work" class="section level1">
+<h1>Preparing The Work</h1>
+<p>First of all, most <code>.R</code> scripts will follow the same kind of structure:</p>
+<div id="head" class="section level2">
+<h2>Head</h2>
+<p>The <strong>Head</strong> is used as an information statement at the top of your code document that informs the user of the contents, author, and (sometimes) date of the last edit on said document. This is highly useful when you are intending to give your document to other people at some point. The head for our analysis might look something like this:</p>
+<pre class="r"><code># ####################################################################### #
+# PROJECT: [BFTP] Identifying Biomes And Their Shifts Using Remote Sensing
+# CONTENTS: Functionality to download, aggregate, and crop/mask NDVI data
+# AUTHOR: Erik Kusch
+# EDIT: 09/03/20
+# ####################################################################### #</code></pre>
+</div>
+<div id="preamble" class="section level2">
+<h2>Preamble</h2>
+<p>The <strong>Preamble</strong> is where you set up the most important parameters/guidelines for your coding script. Personally, I <em>highly</em> recommend to make your first line in the preamble read <code>rm(list=ls())</code>. This nifty line of code clears your entire working environment in <code>R</code> meaning that you work from a clean slate thus eliminating all possible interference of previous work. If your code works as intended after this line, it means that your project is <em>internally consistent</em> and <em>self-contained</em> which makes your analysis <strong>reproducible</strong> (we want that!).</p>
+<p>Afterwards, I like to establish a <em>directory</em> (i.e. “folder”) structure. After all, no one likes a cluttered folder on their hard drive.Therefore, we identify our current working directory (wd) with <code>getwd()</code> and save it as an object in <code>R</code> which we call <code>Dir.Base</code>. This is the folder in which our document is located and where <code>R</code> is looking for and saving files to. We don’t want to dump everything there. Conclusively, we need to create our own folders within our project folder. We would like to call these folders “Data” and “Plots” (the purpose of these folders should be obvious from their names). To actually create these folders on your hard drive, we must first establish the folder paths. We do so by using the <code>paste()</code> command in <code>R</code> which combines objects and writes the <code>sep</code> argument between the combined objects. Here, we take the path to our project folder (<code>Dir.Base</code>) and combine it with the name of the folder we want (e.g. “Data”) while using the backslash (“/”) between these two objects as it indicates the jump in a folder hierarchy. The folder is then created using the <code>dir.create()</code> function.</p>
+<p>Our preamble then looks like this:</p>
+<pre class="r"><code>rm(list=ls()) # clearing the entire environment
+Dir.Base &lt;- getwd() # identifying the current directory
+Dir.Data &lt;- paste(Dir.Base, &quot;Data&quot;, sep=&quot;/&quot;) # generating the folder path for data folder
+dir.create(Dir.Data) # creating the data folder
+Dir.Plots &lt;- paste(Dir.Base, &quot;Plots&quot;, sep=&quot;/&quot;) # generating the folder path for figures folder
+dir.create(Dir.Plots) # creating the figures folder</code></pre>
+<p>Usually, this is also where we load <em>packages</em> for more functionality of our analyses. However, this time, we will do so when they are necessary to give you a better overview and explanation what they do.</p>
+</div>
+<div id="coding" class="section level2">
+<h2>Coding</h2>
+<p>All of the important <strong>Coding</strong> happens after the head and the preamble are written and run in <code>R</code>. Basically, this is the rest of this document.</p>
+</div>
+</div>
+<div id="downloading-ndvi-data" class="section level1">
+<h1>Downloading NDVI Data</h1>
+<p>First of all, we need to download the NDVI data that we are interested in. One particularly useful repository for this is the Global Inventory Modelling and Mapping Studies (GIMMS) 3g v.1 data set obtained via the Advanced Very High Resolution Radiometer (AVHRR). This time series goes back all the way to January 1982 and contains bi-weekly, global projects of NDVI values.</p>
+<div id="packages" class="section level2">
+<h2>Packages</h2>
+<p>Firstly, we need some packages:<br />
+- <code>gimms</code> is a package which enables us to download the GIMMS 3g v.1 data set directly through <code>R</code><br />
+- <code>raster</code> is a package which allows us to establish, handle, and save spatial gridded products of any variable we want (NDVI in this case)<br />
+We install and load our packages as follows:</p>
+<pre class="r"><code>install.packages(&quot;gimms&quot;) # for GIMMS NDVI data download
+library(gimms)
+install.packages(&quot;raster&quot;) # for spatial raster format
+library(raster)</code></pre>
+</div>
+<div id="downloading" class="section level2">
+<h2>Downloading</h2>
+<p>Let’s download the GIMMS 3g v.1 NDVI data for the entire year of 1982:</p>
+<pre class="r"><code>gimms_files &lt;- downloadGimms(x = as.Date(&quot;1982-01-01&quot;), # download from January 1982
+                             y = as.Date(&quot;1982-12-31&quot;), # download to December 1982
+                             dsn = Dir.Data, # save downloads in data folder
+                             quiet = FALSE # show download progress
+                             )</code></pre>
+<p>Now, we want to turn our downloaded data into a raster so we can do spatial analyses with it:</p>
+<pre class="r"><code>gimms_raster &lt;- rasterizeGimms(x = gimms_files, # the data we rasterize
+                               remove_header = TRUE # we don&#39;t need the header of the data
+                               )
+gimms_raster # some information about the raster stack we created here</code></pre>
+<pre><code>## class      : RasterStack 
+## dimensions : 2160, 4320, 9331200, 24  (nrow, ncol, ncell, nlayers)
+## resolution : 0.083, 0.083  (x, y)
+## extent     : -180, 180, -90, 90  (xmin, xmax, ymin, ymax)
+## crs        : +proj=longlat +datum=WGS84 +no_defs 
+## names      : ndvi.1.1, ndvi.2.1, ndvi.3.1, ndvi.4.1, ndvi.5.1, ndvi.6.1, ndvi.7.1, ndvi.8.1, ndvi.9.1, ndvi.10.1, ndvi.11.1, ndvi.12.1, ndvi.1.2, ndvi.2.2, ndvi.3.2, ... 
+## min values :     -0.3,     -0.3,     -0.3,     -0.3,     -0.3,     -0.3,     -0.3,     -0.3,     -0.3,      -0.3,      -0.3,      -0.3,     -0.3,     -0.3,     -0.3, ... 
+## max values :     0.99,     0.99,     1.00,     0.99,     0.99,     0.99,     1.00,     1.00,     0.99,      0.99,      1.00,      1.00,     1.00,     1.00,     1.00, ...</code></pre>
+<p>Here, you can see that we have successfully created a <code>RasterStack</code> with 24 layers (two for each month because measurements were bi-weekly), for the entire earth (extent of -180, 180, -90, 90). We can also see that there are some values below 0 which we don’t expect for the NDVI and we will fix this in a second. For now, just notice that we have successfully downloaded the data.</p>
+</div>
+</div>
+<div id="aggregating-ndvi-data" class="section level1">
+<h1>Aggregating NDVI Data</h1>
+<p>With our data successfully downloaded, it is now time to prepare the data further for our analysis.</p>
+<div id="composites" class="section level2">
+<h2>Composites</h2>
+<p>Firstly, we want to deal with monthly NDVI values. To do so, we want to build monthly maximum composites. Luckily, the <code>gimms</code> package has just the right option for us:</p>
+<pre class="r"><code>indices &lt;- monthlyIndices(gimms_files) # generate month indices from the data
+gimms_raster_mvc &lt;- monthlyComposite(gimms_raster, # the data
+                                     indices = indices # the indices
+                                     )
+gimms_raster_mvc # some information about our monthly composite raster stack</code></pre>
+<pre><code>## class      : RasterStack 
+## dimensions : 2160, 4320, 9331200, 12  (nrow, ncol, ncell, nlayers)
+## resolution : 0.083, 0.083  (x, y)
+## extent     : -180, 180, -90, 90  (xmin, xmax, ymin, ymax)
+## crs        : +proj=longlat +datum=WGS84 +no_defs 
+## names      : index_1.1, index_1.2, index_1.3, index_1.4, index_1.5, index_1.6, index_1.7, index_1.8, index_1.9, index_1.10, index_1.11, index_1.12 
+## min values :     -0.30,     -0.30,     -0.30,     -0.29,     -0.30,     -0.30,     -0.30,     -0.30,     -0.30,      -0.30,      -0.30,      -0.30 
+## max values :      0.99,      1.00,      0.99,      1.00,      0.99,      1.00,      1.00,      1.00,      1.00,       1.00,       0.99,       0.99</code></pre>
+<p>As you can see above, our new raster stack has the same dimensions, resolution, coordinate reference system (crs), and extent as the previous one. However, we have reduced the number of layers to 12 (one for each month).</p>
+<p>Since there are still negative values present (an artifact of how NASA stores the data or cloud cover), we simply set these to 0:</p>
+<pre class="r"><code>Negatives &lt;- which(values(gimms_raster_mvc) &lt; 0) # identify all negative values
+values(gimms_raster_mvc)[Negatives] &lt;- 0 # set threshold for barren land (NDVI&lt;0)
+gimms_raster_mvc</code></pre>
+<pre><code>## class      : RasterBrick 
+## dimensions : 2160, 4320, 9331200, 12  (nrow, ncol, ncell, nlayers)
+## resolution : 0.083, 0.083  (x, y)
+## extent     : -180, 180, -90, 90  (xmin, xmax, ymin, ymax)
+## crs        : +proj=longlat +datum=WGS84 +no_defs 
+## source     : memory
+## names      : index_1.1, index_1.2, index_1.3, index_1.4, index_1.5, index_1.6, index_1.7, index_1.8, index_1.9, index_1.10, index_1.11, index_1.12 
+## min values :         0,         0,         0,         0,         0,         0,         0,         0,         0,          0,          0,          0 
+## max values :      0.99,      1.00,      0.99,      1.00,      0.99,      1.00,      1.00,      1.00,      1.00,       1.00,       0.99,       0.99</code></pre>
+<p>See how all of the <code>min values</code> are now on 0!</p>
+<p>Lastly, we want to see what our data looks like (visual inspection is an important step to sanity check your work). We do so as follows:</p>
+<pre class="r"><code>plot(gimms_raster_mvc)</code></pre>
+<p><img src="/courses/BFTP - Biome Detection/01---Data_Allocation_files/figure-html/Aggr3-1.png" width="1152" /></p>
+<p>What a beautiful seasonal trend of greening we can observe (I’ll stop nerding out here before it get’s out of hand, don’t worry)!</p>
+</div>
+<div id="annual-values" class="section level2">
+<h2>Annual Values</h2>
+<p>Lastly, we may wish (and in fact, you will have to) aggregate our data to annual and even more-than-annual means and seasonality measures.</p>
+<div id="mean-values" class="section level3">
+<h3>Mean Values</h3>
+<p>To establish annual mean values, we simply take the mean for each cell in our raster stack for all the layers as such:</p>
+<pre class="r"><code>gimms_annual &lt;- calc(gimms_raster_mvc, # data from which to calculate
+                     fun=mean, # function which to calculate with
+                     na.rm = TRUE # ignore NAs
+                     )</code></pre>
+</div>
+<div id="seasonality-values" class="section level3">
+<h3>Seasonality Values</h3>
+<p>Measures of seasonality are defined as the span between the maximum value of a cell and the minimum value of the same cell. So, we calculate a maximum raster and a minimum raster and then simply subtract the minimum from the maximum as follows:</p>
+<pre class="r"><code>maxi &lt;- calc(gimms_raster_mvc, fun=max)
+mini &lt;- calc(gimms_raster_mvc, fun=min)
+gimms_seasonality &lt;- maxi-mini</code></pre>
+<div style="page-break-after: always;"></div>
+</div>
+<div id="plots" class="section level3">
+<h3>Plots</h3>
+<p>Let’s have a look at our annual mean and seasonality:</p>
+<pre class="r"><code>plot(gimms_annual, main = &quot;Mean&quot;)</code></pre>
+<p><img src="/courses/BFTP - Biome Detection/01---Data_Allocation_files/figure-html/Aggr6-1.png" width="1152" /></p>
+<pre class="r"><code>plot(gimms_seasonality, main = &quot;Seasonality&quot;)</code></pre>
+<p><img src="/courses/BFTP - Biome Detection/01---Data_Allocation_files/figure-html/Aggr6-2.png" width="1152" /></p>
+</div>
+</div>
+</div>
+<div id="cropping-ndvi-data" class="section level1">
+<h1>Cropping NDVI Data</h1>
+<p>Our data is still on a global scale. We are only interested in data across Alaska, though. Let’s deal with that.</p>
+<div id="packages-data" class="section level2">
+<h2>Packages &amp; Data</h2>
+<p>Again, we have to install some packages and load them.</p>
+<pre class="r"><code>install.packages(&quot;sp&quot;) # for spatialpolygons format
+library(sp)
+install.packages(&quot;rgdal&quot;) # for shapefiles
+library(rgdal)</code></pre>
+<p>Secondly, we require the actual shape files. Personally, I am a big fan of the Natural Earth Shape files () because of all the different shape files I can get there. Here, we are interested in states/provinces and so want to download the data from here: . Thankfully, <code>R</code>let’s us do the downloading as well as the unpacking of archived (.zip) data:</p>
+<pre class="r"><code># Downloading
+download.file(&quot;https://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/cultural/ne_10m_admin_1_states_provinces.zip&quot;,
+              destfile = paste(Dir.Data, &quot;Shapes.zip&quot;, sep=&quot;/&quot;)) # destination file
+# Unzipping
+unzip(paste(Dir.Data, &quot;Shapes.zip&quot;, sep=&quot;/&quot;), # which file to unzip
+      exdir = Dir.Data) # where to unzip to</code></pre>
+<p>Finally, we want to load our shape files into <code>R</code>. We do this using the <code>readOGR()</code> function in <code>R</code>:</p>
+<pre class="r"><code>Shapes &lt;- readOGR(Dir.Data, # where to look for the file
+                  &quot;ne_10m_admin_1_states_provinces&quot;, # the file name
+                  verbose = FALSE) # we don&#39;t want an overview of the loaded data</code></pre>
+</div>
+<div id="crop-mask" class="section level2">
+<h2>Crop &amp; Mask</h2>
+<p>Now, we are ready to use our shape file for Alaska. First, we have to find out which of our shape files is for Alaska:</p>
+<pre class="r"><code>Position &lt;- which(Shapes$name_en == &quot;Alaska&quot;) # find the english name that&#39;s &quot;Alaska&quot; in our shapefiles
+Alaska_Shp &lt;- Shapes[Position,] # extract the Alaska shapefile
+plot(Alaska_Shp) # plot it for inspection</code></pre>
+<p><img src="/courses/BFTP - Biome Detection/01---Data_Allocation_files/figure-html/Crop4-1.png" width="1152" />
+We really don’t care much about that island chain all the way to the right in our plot.</p>
+<p>This is likely to be an extent-caused issue and we should crop our shape file extent to the easternmost point of Alaska on the continent:</p>
+<pre class="r"><code>extent(Alaska_Shp) # extent clearly shows the super-eastern coordinates</code></pre>
+<pre><code>## class      : Extent 
+## xmin       : -179 
+## xmax       : 180 
+## ymin       : 51 
+## ymax       : 71</code></pre>
+<pre class="r"><code># Crop
+Alaska_Shp &lt;- crop(Alaska_Shp, # what to crop
+                   extent(-190, -130, 51, 71)) # which extent to crop to
+plot(Alaska_Shp) # visualising the cropped product</code></pre>
+<p><img src="/courses/BFTP - Biome Detection/01---Data_Allocation_files/figure-html/Crop5-1.png" width="1152" /></p>
+<p>Lovely. That resolved the issue. We are ready for final cropping of our data and saving of the cropped data.</p>
+<div id="mean-values-1" class="section level3">
+<h3>Mean Values</h3>
+<p>Let’s deal with the annual mean for 1982:</p>
+<pre class="r"><code># Crop
+gimms_annual &lt;- crop(gimms_annual, # mean annual data
+                     extent(Alaska_Shp)) # cropped Alaska extent
+# Mask (this keeps only cells that fall into our shapefile)
+gimms_annual &lt;- mask(gimms_annual, # cropped annual means
+                     Alaska_Shp) # cropped Alaska shapefile
+plot(gimms_annual, main =&quot;Annual Mean 1982&quot;) # inspection time!</code></pre>
+<p><img src="/courses/BFTP - Biome Detection/01---Data_Allocation_files/figure-html/Crop6-1.png" width="1152" /></p>
+<pre class="r"><code># Save data
+writeRaster(x = gimms_annual, # which raster to save
+            file = paste(Dir.Data, &quot;1982Mean&quot;, sep=&quot;/&quot;), # which file to save to
+            format = &quot;CDF&quot;, overwrite = TRUE) # which format to use and whether to overwrite</code></pre>
+<pre><code>## class      : RasterLayer 
+## dimensions : 237, 590, 139830  (nrow, ncol, ncell)
+## resolution : 0.083, 0.083  (x, y)
+## extent     : -179, -130, 51, 71  (xmin, xmax, ymin, ymax)
+## crs        : +proj=longlat +datum=WGS84 +no_defs 
+## source     : D:/Documents/Website/content/courses/BFTP - Biome Detection/Data/1982Mean.nc 
+## names      : layer 
+## values     : 0, 0.84  (min, max)
+## zvar       : layer</code></pre>
+</div>
+<div id="seasonality-values-1" class="section level3">
+<h3>Seasonality Values</h3>
+<pre class="r"><code># Crop
+gimms_seasonality &lt;- crop(gimms_seasonality, # mean seasonality data
+                     extent(Alaska_Shp)) # cropped Alaska extent
+# Mask (this keeps only cells that fall into our shapefile)
+gimms_seasonality &lt;- mask(gimms_seasonality, # cropped seasonality data
+                     Alaska_Shp) # cropped Alaska shapefile
+plot(gimms_seasonality, main = &quot;Seasonality 1982&quot;) # inspection time!</code></pre>
+<p><img src="/courses/BFTP - Biome Detection/01---Data_Allocation_files/figure-html/Crop7-1.png" width="1152" /></p>
+<pre class="r"><code># Save data
+writeRaster(x = gimms_seasonality, # which raster to save
+            file = paste(Dir.Data, &quot;1982Season&quot;, sep=&quot;/&quot;), # which file to save to
+            format = &quot;CDF&quot;, overwrite = TRUE) # which format to use and whether to overwrite</code></pre>
+<pre><code>## class      : RasterLayer 
+## dimensions : 237, 590, 139830  (nrow, ncol, ncell)
+## resolution : 0.083, 0.083  (x, y)
+## extent     : -179, -130, 51, 71  (xmin, xmax, ymin, ymax)
+## crs        : +proj=longlat +datum=WGS84 +no_defs 
+## source     : D:/Documents/Website/content/courses/BFTP - Biome Detection/Data/1982Season.nc 
+## names      : layer 
+## values     : 0, 1  (min, max)
+## zvar       : layer</code></pre>
+</div>
+</div>
+</div>

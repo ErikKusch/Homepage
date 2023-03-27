@@ -1,0 +1,174 @@
+---
+title: Research Project
+subtitle: A Fictional Study of Sparrows
+date: "2021-02-27"
+slug: Research Project
+categories: [Excursion into Biostatistics]
+tags: [R, Statistics]
+summary: 'This is a quick documentation of a mock research project used throughout all `R` exercises during this seminar series.'
+authors: [Erik Kusch]
+lastmod: '2020-02-27'
+featured: no
+projects:
+output:
+  blogdown::html_page:
+    keep_md: true
+    # toc: true
+    # toc_depth: 2
+    # number_sections: false
+    fig_width: 8
+linktitle: Research Project for our Exercises
+menu:
+  Excursions:
+    parent: Seminars
+    weight: 4
+toc: true
+type: docs
+weight: 4
+---
+
+```{r setup, include=FALSE}
+rm(list=ls())
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, tidy='styler', tidy.opts=list(strict=TRUE), fig.width = 15, fig.height = 8)
+options(width = 200)
+source("PersonalSettings.R") # I do this here to specify number of cores and API credentials and am thus not sharing this file
+```
+
+## Our Resarch Project
+
+Here (and over the next few exercises in this "course"), we are looking at a big (and entirely fictional) data base of the common house sparrow (*Passer domesticus*). In particular, we are interested in the **Evolution of *Passer domesticus* in Response to Climate Change**.
+
+### The Data
+
+I have created a large data set for this exercise which is available in a cleaned and properly handled version {{< staticref "courses/excursions-into-biostatistics/Data.rar" "newtab" >}} here{{< /staticref >}}.
+
+#### Reading the Data into `R`
+
+Let's start by reading the data into `R` and taking an initial look at it:
+```{r}
+Sparrows_df <- readRDS(file.path("Data", "SparrowData.rds"))
+Sparrows_df <- Sparrows_df[!is.na(Sparrows_df$Weight), ]
+head(Sparrows_df)
+```
+
+#### Variables
+When building models or trying to explain anything about our data set, we need to consider all the different variables and the information contained therein. In this data set, we have access to:  
+
+1. `Index` [*Factor*] - an abbreviation of `Site` records  
+2. `Latitude` [*Numeric*] - an identifier of where specific sparrow measurements where taken  
+3. `Longitude` [*Numeric*] - an identifier of where specific sparrow measurements where taken  
+4. `Climate` [*Factor*] - local climate types that sparrows are subjected to (e.g. coastal, continental, and semi-coastal)  
+5. `Population.Status` [*Factor*] - population status (e.g. native or introduced)  
+6. `Weight` [*Numeric*] - sparrow weight [g]; Range: 13-40g  
+7. `Height` [*Numeric*] - sparrow height/length [cm]; Range: 10-22cm  
+8. `Wing.Chord` [*Numeric*] - wing length [cm]; Range: 6-10cm  
+9. `Colour` [*Factor*] - main plumage colour (e.g. brown, grey, and black)  
+10. `Sex` [*Factor*] - sparrow sex  
+11. `Nesting.Site` [*Factor*] - nesting conditions, only recorded for females (e.g. tree or shrub)  
+12. `Nesting.Height` [*Numeric*] - nest elevation above ground level, only recorded for females  
+13. `Number.of.Eggs` [*Numeric*] - number of eggs per nest, only recorded for females  
+14. `Egg.Weight` [*Numeric*] - mean weight of eggs per nest, only recorded for females  
+15. `Flock` [*Factor*] - which flock at each location each sparrow belongs to  
+16. `Home.Range` [*Factor*] - size of home range of each flock (e.g. Small, Medium, and Large)  
+17. `Predator.Presence` [*Factor*] - if a predator is present at a station (e.g. No or Yes)  
+18. `Predator.Type` [*Factor*] - what kind of predator is present (e.g. Avian, Non-Avian, or None)  
+
+Note that the variables `Longitude` and `Latitude` may be used to retrieve climate data variables from a host of data sources.
+
+#### Locations 
+Looking at our data, we notice that it comes at distinct stations. Let's visualise where they are:
+```{r, message = FALSE, warning = FALSE}
+library("leaflet")
+Plot_df <- Sparrows_df[,c("Longitude", "Latitude", "Index", "Climate", "Population.Status")]
+Plot_df <- unique(Plot_df)
+m <- leaflet()
+m <- addTiles(m)
+m <- addMarkers(m,
+                lng = Plot_df$Longitude,
+                lat = Plot_df$Latitude,
+                label = Plot_df$Index,
+                popup = paste(Plot_df$Population.Status, Plot_df$Climate, sep = ";"))
+m
+```
+
+Note that you can zoom and drag the above map as well as click the station markers for some additional information.
+
+### Adding Information
+
+How do we get the data for this? Well, I wrote an `R`-Package that does exactly that.
+
+First, said package needs to be installed from my GitHub repository for it. Subsequently, we need to set API Key and User number obtained at the [Climate Data Store](https://cds.climate.copernicus.eu/api-how-to). I have already baked these into my material, so I don't set them here, but include lines of code that ask you for your credentials when copy & pasted over:
+```{r}
+if("KrigR" %in% rownames(installed.packages()) == FALSE){ # KrigR check
+  Sys.setenv(R_REMOTES_NO_ERRORS_FROM_WARNINGS="true")
+  devtools::install_github("https://github.com/ErikKusch/KrigR")
+}
+library(KrigR)
+#### CDS API (needed for ERA5-Land downloads)
+if(!exists("API_Key") | !exists("API_User")){ # CS API check: if CDS API credentials have not been specified elsewhere
+  API_User <- readline(prompt = "Please enter your Climate Data Store API user number and hit ENTER.")
+  API_Key <- readline(prompt = "Please enter your Climate Data Store API key number and hit ENTER.")
+} # end of CDS API check
+
+#### NUMBER OF CORES
+if(!exists("numberOfCores")){ # Core check: if number of cores for parallel processing has not been set yet
+  numberOfCores <- readline(prompt = paste("How many cores do you want to allocate to these processes? Your machine has", parallel::detectCores()))
+} # end of Core check
+```
+
+Now that we have the package, we can download some state-of-the-art climate data. I have already prepared all of this in the data directory you downloaded earlier so this step will automatically be skipped:
+
+```{r}
+if(!file.exists(file.path("Data", "SparrowDataClimate.rds"))){
+  colnames(Plot_df)[1:3] <- c("Lon", "Lat", "ID") # set column names to be in line with what KrigR wants
+  Points_Raw <- download_ERA(
+    Variable = "2m_temperature",
+    DataSet = "era5",
+    DateStart = "1982-01-01",
+    DateStop = "2012-12-31",
+    TResolution = "month",
+    TStep = 1,
+    Extent = Plot_df, # the point data with Lon and Lat columns
+    Buffer = 0.5, # a 0.5 degree buffer should be drawn around each point
+    ID = "ID", # this is the column which holds point IDs
+    API_User = API_User,
+    API_Key = API_Key,
+    Dir = file.path(getwd(), "Data"),
+    FileName = "AT_Climatology.nc"
+  )
+  Points_mean <- calc(Points_Raw, fun = mean)
+  Points_sd <-calc(Points_Raw, fun = sd)
+  Sparrows_df$TAvg <- as.numeric(extract(x = Points_mean, y = Sparrows_df[,c("Longitude", "Latitude")], buffer = 0.3))
+  Sparrows_df$TSD <- as.numeric(extract(x = Points_sd, y = Sparrows_df[,c("Longitude", "Latitude")], buffer = 0.3))
+  saveRDS(Sparrows_df, file.path("Data", "SparrowDataClimate.rds"))
+}else{
+  Sparrows_df <- readRDS(file.path("Data", "SparrowDataClimate.rds"))
+}
+```
+
+We have now effectively added two more variables to the data set:  
+
+19. `TAvg` [*Numeric*] - Average air temperature for a 30-year time-period    
+20. `TSD` [*Numeric*] - Standard deviation of mean monthly air temperature for a 30-year time-period     
+
+Now we have the data set we will look at for the rest of the exercises in this seminar series. But how did we get here? Find the answer {{< staticref "courses/excursions-into-biostatistics/data-handling-and-data-assumptions/" "newtab" >}} here{{< /staticref >}}.
+
+
+### Hypotheses 
+Let's consider the following two hypotheses for our exercises for this simulated research project:  
+  
+1. **Sparrow Morphology** is determined by:  
+    A. *Climate Conditions* with sparrows in stable, warm environments fairing better than those in colder, less stable ones.  
+    B. *Competition* with sparrows in small flocks doing better than those in big flocks.  
+    C. *Predation* with sparrows under pressure of predation doing worse than those without.    
+2. **Sites**  accurately represent **sparrow morphology**. This may mean:  
+    A. *Population status* as inferred through morphology.  
+    B. *Site index* as inferred through morphology.  
+    C. *Climate* as inferred through morphology.  
+    
+We try to answer these over the next few sessions.
+
+## SessionInfo
+```{r}
+sessionInfo()
+```

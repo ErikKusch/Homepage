@@ -1,0 +1,288 @@
+---
+title: "Gaussian Bayesian Networks"
+author: Erik Kusch
+date: '2021-06-01'
+slug: part-2
+categories:
+  - Bayesian Networks
+tags:
+  - Bayes
+  - Networks
+  - Bayesian Statistics
+  - Statistics
+subtitle: "Gaussian Bayesian Networks"
+summary: 'Answers and solutions to the exercises belonging to Part 2 in [Bayesian Networks with Examples in R](https://www.bnlearn.com/book-crc/) by M. Scutari and J.-B. Denis.'
+authors: []
+lastmod: '2021-06-01T20:00:00+01:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: 
+output:
+  blogdown::html_page:
+    keep_md: true
+    # toc: true
+    # toc_depth: 1
+    # number_sections: false
+# header-includes:
+#   <script src = "https://polyfill.io/v3/polyfill.min.js?features = es6"></script>
+#   <script id = "MathJax-script" async src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+math: true
+type: docs
+toc: true 
+menu:
+  bayesnets:
+    parent: 2 - Static Networks
+    weight: 2
+weight: 2
+---
+
+
+<div id="TOC">
+
+</div>
+
+<style>
+
+blockquote{
+color:#ffffff;
+}
+
+</style>
+<div id="material" class="section level2">
+<h2>Material</h2>
+<ul>
+<li><a href="/courses/bayes-nets/4-Gaussian-Networks_11-10-22.html">Gaussian Bayesian Networks</a></li>
+</ul>
+</div>
+<div id="exercises" class="section level2">
+<h2>Exercises</h2>
+<p>These are answers and solutions to the exercises at the end of Part 2 in <a href="https://www.bnlearn.com/book-crc/">Bayesian Networks with Examples in R</a> by M. Scutari and J.-B. Denis. Much of my inspiration for these solutions, where necessary, by consulting the solutions provided by the authors themselves as in the appendix.</p>
+<div id="r-environment" class="section level3">
+<h3><code>R</code> Environment</h3>
+<p>For today’s exercise, I load the following packages:</p>
+<pre class="r"><code>library(bnlearn)
+library(ggplot2)
+library(tidyr)
+library(tidybayes)</code></pre>
+</div>
+<div id="scutari-2.1" class="section level3">
+<h3>Scutari 2.1</h3>
+<blockquote>
+<p>Prove that Equation (2.2) implies Equation (2.3).</p>
+</blockquote>
+<p>Equation 2.2 reads:</p>
+<p><span class="math display">\[f(C | G = g) \neq f(C)\]</span></p>
+<p>Equation 2.3 reads:</p>
+<p><span class="math display">\[f(G | C = c) \neq f(G)\]</span></p>
+<p>So how do we go about demonstrating that the first implies the latter? Well, we are using Bayesian theory here so why not use the Bayes’ theorem? So let’s start by rewriting equation 2.2:</p>
+<p><span class="math display">\[f(C | G) = \frac{f(C, G)}{f(G)} = \frac{f(G | C) f(C)}{f(G)}\]</span>
+So how does this relate to the question that equation 2.2 implies equation 2.3? Well, if <span class="math inline">\(f(C|G) = f(C)\)</span> then this equation would reveal that <span class="math inline">\(f(G|C) = f(G)\)</span> (so that the <span class="math inline">\(f(G)\)</span> terms factor out). Our proof stipulates that these statements aren’t true, but one still implies the other and we land of quod erat demonstrandum.</p>
+</div>
+<div id="scutari-2.2" class="section level3">
+<h3>Scutari 2.2</h3>
+<blockquote>
+<p>Within the context of the DAG shown in Figure 2.1, prove that Equation (2.5) is true using Equation (2.6).</p>
+</blockquote>
+<p>This is the DAG in question:</p>
+<p><img src="/post/networksscutari/Screenshot 2021-06-02 135704.png" width="900"/></p>
+<p>The equation to prove (2.5) is:</p>
+<p><span class="math display">\[f(N, W | V = v) = f(N | V = v) f(W | V = v)\]</span></p>
+<p>and we use this equation (2.6) for our proof:</p>
+<p><span class="math display">\[f(G, E, V, N, W, C) = f(G) f(E) f(V | G, E) f(N | V) f(W | V) f(C | N, W)\]</span></p>
+<p>Let’s start the proof by integrating over all variables that aren’t <span class="math inline">\(N\)</span>, <span class="math inline">\(W\)</span>, and <span class="math inline">\(V\)</span> (the variables contained in the equation we are tasked to prove):</p>
+<p><span class="math display">\[f(V, W, N) = \int_G \int_E \int_Cf(G,E,V,N,W,C)\]</span></p>
+<p>We do this to remove all but the variables we are after from our equation so let’s follow this rationale:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\int_G \int_E \int_Cf(G,E,V,N,W,C) = &amp;f(V) f(N|V) f(W|V)  \newline
+&amp;\times \left( \int_G \int_E f(G) f(E) f(V|G,E) \right) \newline
+&amp;\left( \int_C f(C|N,W) \right)
+\end{aligned}
+\]</span></p>
+<p>Simplifying this mess, we arrive at:</p>
+<p><span class="math display">\[f(V, W, N) = f(V) f(N|V) f(W|V)\]</span></p>
+<p>Finally, we can obtain our original formula:</p>
+<p><span class="math display">\[f(W,N|V) = \frac{f(V,W,N)}{f(V)} = \frac{f(V) f(N|V) f(W|V)}{f(V)} = f(N|V) f(W|N)\]</span></p>
+<p>Another case of the quod erat demonstrandums.</p>
+</div>
+<div id="scutari-2.3" class="section level3">
+<h3>Scutari 2.3</h3>
+<blockquote>
+<p>Compute the marginal variance of the two nodes with two parents from the local distributions proposed in Table 2.1. Why is it much more complicated for C than for V?</p>
+</blockquote>
+<p>Table 2.1 is hardly a table at all, but I did locate it. Basically, it is an amalgamation of the probability distributions proposed for the DAG from the previous exercise:</p>
+<p><img src="/post/networksscutari/Screenshot 2021-06-02 141404.png" width="900"/></p>
+<p>Note that the parameter <span class="math inline">\(07v\)</span> in the second-to-last row should read <span class="math inline">\(0.7v\)</span>.</p>
+<p>The two nodes we are after are <span class="math inline">\(V\)</span> and <span class="math inline">\(C\)</span>. Since the task already tells us that the computation of the marginal variance for <span class="math inline">\(V\)</span> is easier than for <span class="math inline">\(C\)</span>, I start with this one.</p>
+<ol style="list-style-type: decimal">
+<li>Computation for <span class="math inline">\(V\)</span></li>
+</ol>
+<p>Simply translating the probability distribution into a linear model, we receive:</p>
+<p><span class="math display">\[V = -10.35534 + 0.5G + 0.70711E + \epsilon_V\]</span></p>
+<p>with the variances of our independent variables <span class="math inline">\(G\)</span>, <span class="math inline">\(E\)</span>, and <span class="math inline">\(\epsilon_V\)</span> being <span class="math inline">\(10^2\)</span>, <span class="math inline">\(10^2\)</span>, and <span class="math inline">\(5^2\)</span> respectively. Consequently the variance of <span class="math inline">\(V\)</span> can be calculated as follows:</p>
+<p><span class="math display">\[VAR(V) = 0.5^2VAR(G) + 0.70711^2VAR(E) + VAR(\epsilon_V)\]</span>
+<span class="math display">\[VAR(V) = 0.5^210^2+0.70711^210^2+5^2 = 10\]</span></p>
+<ol start="2" style="list-style-type: decimal">
+<li>Computation for <span class="math inline">\(C\)</span></li>
+</ol>
+<p>For <span class="math inline">\(C\)</span>, we can transform our portability distribution into a linear model again:</p>
+<p><span class="math display">\[C = 0.3N+0.7W+\epsilon_C\]</span></p>
+<p>this time, however the <strong>predictors variables</strong> are <strong>not independent</strong> since they share node <span class="math inline">\(V\)</span> as their parent. Consequently, we have to compute their covariance:</p>
+<p><span class="math display">\[COV(N,W) = COV(0.1V, 0.7V) = 0.1 * 0.7 * Var(V) = 0.1 * 0.7 * 10^2\]</span></p>
+<p>So we actually needed to calculate the variance for <span class="math inline">\(V\)</span> to even be able to calculate the variance for <span class="math inline">\(C\)</span>. Let’s round this out now, then:</p>
+<p><span class="math display">\[
+\begin{aligned}
+Var(C) &amp;= 0.3^2 * VAR(N) + 0.7^2VAR(W) \newline
+&amp;+ VAR(\epsilon_C) + 2 * 0.3 * 0.7 * COV(N,W)
+\end{aligned}
+\]</span></p>
+<p>Now, I simply plug the values into the formula and arrive at:</p>
+<p><span class="math display">\[
+\begin{aligned}
+Var(C) &amp;= 0.3^2 * 9.949874^2+0.7^2 * 7.141428 \newline
+&amp;+6.25^2+2 * 0.3 * 0.7 * 0.1 * 0.7 * 10^2  \newline
+&amp; = 54.4118
+\end{aligned}
+\]</span></p>
+<p>Curiously, the book suggest this as the solution:</p>
+<p><span class="math display">\[Var(C) = (0.3^2+0.7^2+0.3 * 0.7 * 0.14)10^2+6.25^2 = 100.0024\]</span></p>
+<p>I am not sure where the values for VAR(N) and VAR(W) have gone here. If anyone who is reading this knows the answer to it, please contact me and let me know as well.</p>
+</div>
+<div id="scutari-2.4" class="section level3">
+<h3>Scutari 2.4</h3>
+<blockquote>
+<p>Write an R script using only the <code>rnorm</code> and <code>cbind</code> functions to create a 100 × 6 matrix of 100 observations simulated from the BN defined in Table 2.1. Compare the result with those produced by a call to <code>cpdist</code> function.</p>
+</blockquote>
+<p>To simulate a table of observation using the formulae in the probability distribution collection from the previous question (Table 1), we simply select random values for all parent nodes according to their distributions and let the distributions for all offspring nodes do the rest. One important note here, is that the <code>rnorm()</code> function in <code>R</code> takes as an argument of variation the standard deviation <span class="math inline">\(\sigma\)</span> rather than the variance <span class="math inline">\(\sigma^2\)</span>:</p>
+<pre class="r"><code>set.seed(42) # making things reproducible
+n &lt;- 1e2 # number of replicates
+G &lt;- rnorm(n, 50, 10)
+E &lt;- rnorm(n, 50, 10)
+V &lt;- rnorm(n, -10.35534 + 0.5 * G + 0.70711 * E, 5)
+N &lt;- rnorm(n, 45 + 0.1 * V, 9.949874)
+W &lt;- rnorm(n, 15 + 0.7 * V, 7.141428)
+C &lt;- rnorm(n, 0.3 * N + 0.7 * W, 6.25)
+sim1 &lt;- data.frame(cbind(G, E, V, N, W, C))</code></pre>
+<p>Now we do this using the <code>cpdist()</code> function. To do so, we first have to create our Bayesian Network:</p>
+<pre class="r"><code>dag.bnlearn &lt;- model2network(&quot;[G][E][V|G:E][N|V][W|V][C|N:W]&quot;)
+disE &lt;- list(coef = c(&quot;(Intercept)&quot; = 50), sd = 10)
+disG &lt;- list(coef = c(&quot;(Intercept)&quot; = 50), sd = 10)
+disV &lt;- list(coef = c(&quot;(Intercept)&quot; = -10.35534, E = 0.70711, G = 0.5), sd = 5)
+disN &lt;- list(coef = c(&quot;(Intercept)&quot; = 45, V = 0.1), sd = 9.949874)
+disW &lt;- list(coef = c(&quot;(Intercept)&quot; = 15, V = 0.7), sd = 7.141428)
+disC &lt;- list(coef = c(&quot;(Intercept)&quot; = 0, N = 0.3, W = 0.7), sd = 6.25)
+dis.list &lt;- list(E = disE, G = disG, V = disV, N = disN, W = disW, C = disC)
+gbn.bnlearn &lt;- custom.fit(dag.bnlearn, dist = dis.list)
+sim2 &lt;- data.frame(cpdist(gbn.bnlearn, nodes = nodes(gbn.bnlearn), evidence = TRUE))</code></pre>
+<p>this is pretty much exactly what is done in the chapter.</p>
+<p>So let’s compare these simulation outputs:</p>
+<pre class="r"><code># preparing all data together in one data frame for plotting
+sim1$sim &lt;- 1
+sim2$sim &lt;- 2
+Plot_df &lt;- rbind(sim1, sim2[, match(colnames(sim1), colnames(sim2))])
+Plot_df &lt;- gather(data = Plot_df, key = &quot;node&quot;, value = &quot;value&quot;, G:C)
+Plot_df$sim &lt;- as.factor(Plot_df$sim)
+## plotting
+ggplot(Plot_df, aes(x = value, y = sim)) +
+  stat_halfeye() +
+  facet_wrap(~node, scales = &quot;free&quot;) +
+  theme_bw()</code></pre>
+<p><img src="/courses/bayes-nets/2021-05-25-crc_part2_files/figure-html/unnamed-chunk-4-1.png" width="1440" /></p>
+<p>As is apparent from this, all results fall close to the expected values of roughly 50. There are noticeable differences between the simulations. I would suggest that these are due to the fairly low sample size for <code>sim1</code>.</p>
+</div>
+<div id="scutari-2.5" class="section level3">
+<h3>Scutari 2.5</h3>
+<blockquote>
+<p>Imagine two ways other than changing the size of the points (as in Section 2.7.2) to introduce a third variable in the plot.</p>
+</blockquote>
+<p>The plot in question is this one:</p>
+<p><img src="/post/networksscutari/Screenshot 2021-06-02 163301.png" width="900"/></p>
+<p>this plot is aimed at showing the distribution of <span class="math inline">\(C\)</span> when both <span class="math inline">\(E\)</span> and <span class="math inline">\(V\)</span> vary. Here, the variation in <span class="math inline">\(V\)</span> is shown along the x-axis, while the variation of <span class="math inline">\(E\)</span> is contained within the sizes of the circles. The y-axis represents the values of <span class="math inline">\(C\)</span> according to its distributions.</p>
+<p>So how else could we add information of <span class="math inline">\(E\)</span> to a plot of <span class="math inline">\(V\)</span> and <span class="math inline">\(C\)</span>? I reckon we could:<br />
+- Make three scatter plots. One for each pairing of our variables.<br />
+- Represent the values of <span class="math inline">\(E\)</span> with a colour saturation gradient.</p>
+</div>
+<div id="scutari-2.6" class="section level3">
+<h3>Scutari 2.6</h3>
+<blockquote>
+<p>Can GBNs be extended to log-normal distributions? If so how, if not, why?</p>
+</blockquote>
+<p>GBNs are Gaussian Bayesian Networks - Bayesian Networks where each node follows a Gaussian distribution.</p>
+<p>Yes, absolutely they can! We can simply take the logarithm of all initial variables and apply the GBN right away. Of course, all values that shall be transformed using the logarithm have to be positive.</p>
+</div>
+<div id="scutari-2.7" class="section level3">
+<h3>Scutari 2.7</h3>
+<blockquote>
+<p>How can we generalise GBNs as defined in Section 2.3 in order to make each node’s variance depend on the node’s parents?</p>
+</blockquote>
+<p>I see absolutely no problem here. Let’s say we have two nodes:</p>
+<ul>
+<li><span class="math inline">\(A\)</span>; parent node with a constant variance<br />
+</li>
+<li><span class="math inline">\(B\)</span>; child node with a variance dependant the parent node</li>
+</ul>
+<p>Then we can easily define the variance of <span class="math inline">\(B\)</span> given <span class="math inline">\(A\)</span> (<span class="math inline">\(VAR(B|A)\)</span>) as follows:</p>
+<p><span class="math display">\[VAR(B|A) = \left(A-E(A)\right)^2 * \sigma^2_B\]</span></p>
+</div>
+<div id="scutari-2.8" class="section level3">
+<h3>Scutari 2.8</h3>
+<blockquote>
+<p>From the first three lines of Table 2.1, prove that the joint distribution of E, G and V is trivariate normal.</p>
+</blockquote>
+<p>This one is a doozy and I really needed to consult the solutions in the book for this one. Let’s first remind ourselves of the first lines of said table:</p>
+<p><img src="/post/networksscutari/Screenshot 2021-06-02 141404_2.png" width="900"/></p>
+<p>To approach this problem it is useful to point out that the logarithm of the density of a multivariate normal distribution is defined as such:</p>
+<p><span class="math display">\[f(x) \propto -\frac{1}{2}(x-\mu)^T\sum^{-2}(x-\mu)\]</span></p>
+<p>with <span class="math inline">\(x\)</span> being a random vector and <span class="math inline">\(\mu\)</span> denoting our expectation. <span class="math inline">\(\sum\)</span> identifies the covariance matrix.</p>
+<p>Simplifying this, we can transform our variables <span class="math inline">\(G\)</span>, <span class="math inline">\(E\)</span>, and <span class="math inline">\(V\)</span> to give them a zero marginal expectation and a unity marginal variance. That is a very long-winded way of saying: we normalise our variables:</p>
+<p><span class="math display">\[\overline G = \frac{G-E(G)}{\sqrt{VAR(G)}} = \frac{G-50}{10} \sim Normal(0, 1)\]</span>
+<span class="math display">\[\overline E = \frac{E-E(E)}{\sqrt{VAR(E)}} = \frac{E-50}{10} \sim Normal(0, 1)\]</span>
+<span class="math display">\[\overline V = \frac{V-E(V)}{\sqrt{VAR(V)}} = \frac{V-50}{10}\]</span>
+Solving for <span class="math inline">\(\overline V | \overline G, \overline E\)</span>, we obtain:</p>
+<p><span class="math display">\[\begin{equation}
+\overline V | \overline G, \overline E = Normal\left(\frac{1}{2} \overline G + \sqrt{\frac{1}{2}} \overline E , (\frac{1}{2})^2 \right)
+\end{equation}\]</span></p>
+<!-- $$\overline V | \overline G, \overline E = Normal\left(\frac{1}{2} \overline G + \sqrt{\frac{1}{2}} \overline E , (\frac{1}{2})^2 \right)$$ -->
+<p>I have to honestly that I don’t quite understand how this happened and if anyone reading this has intuition for this solution, please let me know.</p>
+<p>Now, we can compute the joint density distribution of these three normalised variables:</p>
+<p><span class="math display">\[\begin{eqnarray}  f(\overline G, \overline E, \overline V) &amp;\propto&amp; f(\overline G)+f(\overline E)+f(\overline V | \overline G, \overline E) \newline
+&amp;=&amp; -\frac{g^2}{2}-\frac{e^2}{2}-2 \left( v- \frac{1}{2}g - \sqrt{\frac{1}{2}}e \right)^2     \newline
+&amp;=&amp; -\begin{bmatrix} g \newline e \newline v\end{bmatrix}^T \begin{bmatrix} 1 &amp; \frac{\sqrt{2}}{2} &amp; -1\newline \frac{\sqrt{2}}{2} &amp; \frac{3}{2} &amp; -\sqrt{2} \newline -1 &amp; -\sqrt{2} &amp; 2 \end{bmatrix} \begin{bmatrix} g \newline e \newline v\end{bmatrix}  \newline
+&amp;=&amp; -\frac{1}{2} \begin{bmatrix} g \newline e \newline v\end{bmatrix}^T \begin{bmatrix} 1 &amp; 0 &amp; \frac{1}{2}\newline 0 &amp; 1 &amp; \frac{1}{2} \newline \frac{1}{2} &amp; \sqrt{\frac{1}{2}} &amp; 1 \end{bmatrix} \begin{bmatrix} g \newline e \newline v\end{bmatrix}  \newline
+\end{eqnarray}\]</span></p>
+<p>I have to admit that most of this is, as of right now, beyond me as I came to this book for the “<em>applications in R</em>” in the first place. The book concludes that this results in:</p>
+<p><span class="math display">\[VAR \left( \begin{bmatrix} \overline G \newline \overline E \newline \overline V\end{bmatrix} \right) = \begin{bmatrix} 1 &amp; 0 &amp; \frac{1}{2}\newline 0 &amp; 1 &amp; \frac{1}{2} \newline \frac{1}{2} &amp; \sqrt{\frac{1}{2}} &amp; 1 \end{bmatrix} \]</span></p>
+<p>which results in our proof.</p>
+</div>
+</div>
+<div id="session-info" class="section level2">
+<h2>Session Info</h2>
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>## R version 4.2.1 (2022-06-23 ucrt)
+## Platform: x86_64-w64-mingw32/x64 (64-bit)
+## Running under: Windows 10 x64 (build 19044)
+## 
+## Matrix products: default
+## 
+## locale:
+## [1] LC_COLLATE=English_Germany.utf8  LC_CTYPE=English_Germany.utf8    LC_MONETARY=English_Germany.utf8 LC_NUMERIC=C                     LC_TIME=English_Germany.utf8    
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+## [1] tidybayes_3.0.2 tidyr_1.2.0     ggplot2_3.3.6   bnlearn_4.8.1  
+## 
+## loaded via a namespace (and not attached):
+##  [1] styler_1.8.0         tidyselect_1.1.2     xfun_0.33            bslib_0.4.0          purrr_0.3.4          lattice_0.20-45      colorspace_2.0-3     vctrs_0.4.1          generics_0.1.3      
+## [10] htmltools_0.5.3      yaml_2.3.5           utf8_1.2.2           rlang_1.0.5          R.oo_1.25.0          jquerylib_0.1.4      pillar_1.8.1         glue_1.6.2           withr_2.5.0         
+## [19] DBI_1.1.3            R.utils_2.12.0       distributional_0.3.1 R.cache_0.16.0       lifecycle_1.0.2      stringr_1.4.1        posterior_1.3.1      munsell_0.5.0        blogdown_1.13       
+## [28] gtable_0.3.1         R.methodsS3_1.8.2    coda_0.19-4          evaluate_0.16        labeling_0.4.2       knitr_1.40           fastmap_1.1.0        parallel_4.2.1       fansi_1.0.3         
+## [37] highr_0.9            arrayhelpers_1.1-0   backports_1.4.1      checkmate_2.1.0      scales_1.2.1         cachem_1.0.6         jsonlite_1.8.0       abind_1.4-5          farver_2.1.1        
+## [46] tensorA_0.36.2       digest_0.6.29        svUnit_1.0.6         stringi_1.7.8        bookdown_0.29        dplyr_1.0.9          grid_4.2.1           ggdist_3.2.0         cli_3.3.0           
+## [55] tools_4.2.1          magrittr_2.0.3       sass_0.4.2           tibble_3.1.8         pkgconfig_2.0.3      ellipsis_0.3.2       assertthat_0.2.1     rmarkdown_2.16       rstudioapi_0.14     
+## [64] R6_2.5.1             compiler_4.2.1</code></pre>
+</div>

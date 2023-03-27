@@ -1,0 +1,451 @@
+---
+title: Classifications
+subtitle: Order from Chaos
+date: "2021-02-27"
+slug: Classifications - Order from Chaos
+categories: [Excursion into Biostatistics]
+tags: [R, Statistics]
+summary: 'These are exercises and solutions meant as a compendium to my talk on Classifications.'
+authors: [Erik Kusch]
+lastmod: '2020-02-27'
+featured: no
+projects:
+output:
+  blogdown::html_page:
+    keep_md: true
+    # toc: true
+    # toc_depth: 2
+    # number_sections: false
+    fig_width: 8
+linktitle: Classifications - Order from Chaos
+menu:
+  Excursions:
+    parent: Seminars
+    weight: 6
+toc: true
+type: docs
+weight: 6
+---
+
+```{r setup, include=FALSE}
+rm(list=ls())
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, tidy='styler', tidy.opts=list(strict=TRUE), fig.width = 15, fig.height = 8)
+options(width = 200)
+```
+
+## Theory
+These are exercises and solutions meant as a compendium to my talk on Model Selection and Model Building.  
+
+I have prepared some {{< staticref "courses/excursions-into-biostatistics/Classifications---Order-from-Chaos.html" "newtab" >}} Lecture Slides {{< /staticref >}} for this session.
+
+## Our Resarch Project
+
+Today, we are looking at a big (and entirely fictional) data base of the common house sparrow (*Passer domesticus*). In particular, we are interested in the **Evolution of *Passer domesticus* in Response to Climate Change** which was previously explained {{< staticref "courses/excursions-into-biostatistics/research-project/" "newtab" >}} here{{< /staticref >}}.
+
+### The Data
+
+I have created a large data set for this exercise which is available {{< staticref "courses/excursions-into-biostatistics/Data.rar" "newtab" >}} here{{< /staticref >}} and we previously cleaned up so that is now usable {{< staticref "courses/excursions-into-biostatistics/data-handling-and-data-assumptions/" "newtab" >}} here{{< /staticref >}}.
+
+### Reading the Data into `R`
+
+Let's start by reading the data into `R` and taking an initial look at it:
+```{r}
+Sparrows_df <- readRDS(file.path("Data", "SparrowDataClimate.rds"))
+head(Sparrows_df)
+```
+
+### Hypotheses
+Let's remember our hypotheses:  
+
+1. **Sparrow Morphology** is determined by:  
+    A. *Climate Conditions* with sparrows in stable, warm environments fairing better than those in colder, less stable ones.  
+    B. *Competition* with sparrows in small flocks doing better than those in big flocks.  
+    C. *Predation* with sparrows under pressure of predation doing worse than those without.    
+2. **Sites**  accurately represent **sparrow morphology**. This may mean:  
+    A. *Population status* as inferred through morphology.  
+    B. *Site index* as inferred through morphology.  
+    C. *Climate* as inferred through morphology.  
+
+Quite obviously, **hypothesis 2** is the only one lending itself well to classification exercises. In fact, what we want to answer is the question: *"Can we successfully classify populations at different sites according to their morphological expressions?"*.
+
+## `R` Environment
+
+For this exercise, we will need the following packages:
+
+```{r, warning = FALSE, message = FALSE}
+install.load.package <- function(x) {
+  if (!require(x, character.only = TRUE))
+    install.packages(x, repos='http://cran.us.r-project.org')
+  require(x, character.only = TRUE)
+  }
+package_vec <- c(
+  "ggplot2", # for visualisation
+  "mclust", # for k-means clustering,
+  "vegan", # for distance matrices in hierarchical clustering
+  "rpart", # for decision trees
+  "rpart.plot", # for plotting decision trees
+  "randomForest", # for randomForest classifier
+  "car", # check multicollinearity
+  "MASS" # for ordinal logistic regression
+)
+sapply(package_vec, install.load.package)
+```
+
+Using the above function is way more sophisticated than the usual `install.packages()` & `library()` approach since it automatically detects which packages require installing and only install these thus not overwriting already installed packages.
+
+## Logistic Regression
+
+Remember the **Assumptions of Logistic Regression**:  
+
+1. Absence of influential outliers  
+2. Absence of multi-collinearity  
+3. Predictor Variables and log odds are related in a linear fashion  
+
+### Binary Logistic Regression
+Binary Logistic regression only accommodates binary outcomes. This leaves only one of our hypotheses open for investigation - **2.A.** *Population Status* - since this is the only response variable boasting two levels.
+
+To reduce the effect of as many confounding variables as possible, I reduce the data set to just those observations belonging to our station in Siberia and Manitoba. Both are located at very similar latitudes. They really only differ in their climate condition and the population status:
+```{r}
+LogReg_df <- Sparrows_df[Sparrows_df$Index == "MA" | Sparrows_df$Index == "SI", c("Population.Status", "Weight", "Height", "Wing.Chord")]
+LogReg_df$PS <- as.numeric(LogReg_df$Population.Status)-1 # make climate numeric for model
+```
+
+#### Initial Model & Collinearity
+Let's start with the biggest model we can build here and then assess if our assumptions are met:
+```{r}
+H2_LogReg_mod <- glm(PS ~ Weight + Height + Wing.Chord, 
+    data = LogReg_df,
+    family = binomial(link = 'logit'),)
+summary(H2_LogReg_mod)
+```
+Well... nothing here is significant. Let's see what the culprit might be. With morphological traits, you are often looking at a whole set of collinearity, so let's start by investigating that:
+```{r}
+vif(H2_LogReg_mod)
+```
+
+A Variance Inflation Factor (VIF) value of $\geq5-10$ is seen as identifying problematic collinearity. Quite obviously, this is the case. We need to throw away some predictors. I only want to keep `Weight`.
+
+#### `Weight` Model and Further Assumptions
+Let's run a simplified model that just used `Weight` as a predictor:
+```{r}
+H2_LogReg_mod <- glm(PS ~ Weight, 
+    data = LogReg_df,
+    family = binomial(link = 'logit')
+    )
+summary(H2_LogReg_mod)
+```
+A significant effect, huzzah! We still need to test for our assumptions, however. Checking for **multicollinearity** makes no sense since we only use one predictor, so we can skip that.
+
+**Linear Relationship** between predictor(s) and log-odds of the output can be assessed as follows:
+```{r}
+probabilities <- predict(H2_LogReg_mod, type = "response") # predict model response on original data
+LogReg_df$Probs <- probabilities # safe probabilities to data frame
+LogReg_df$LogOdds <- log(probabilities/(1-probabilities)) # calculate log-odds
+## Plot Log-Odds vs. Predictor
+ggplot(data = LogReg_df, aes(x = Weight, y = LogOdds)) + 
+  geom_point() + geom_smooth(method = "lm", se = TRUE) + 
+  theme_bw() 
+```
+
+That is clearly linear relationship!
+
+Moving on to our final assumption, we want to assess whether there are influential **Outliers**. For this, we want to look at the *Cook's distance* as well as the *standardised residuals* per observation:
+```{r}
+## Cook's distance
+plot(H2_LogReg_mod, which = 4, id.n = 3)
+## Standardises Residuals
+Outlier_df <- data.frame(Residuals = resid(H2_LogReg_mod),
+           Index = 1:nrow(LogReg_df),
+           Outcome = factor(LogReg_df$PS))
+Outlier_df$Std.Resid <- scale(Outlier_df$Residuals)
+# Plot Residuals
+ggplot(Outlier_df, aes(Outcome, Std.Resid)) + 
+  geom_boxplot() +
+  theme_bw()
+```
+Both of these plots do not highlight any worrying influential outliers. An influential outliers would manifest with a prominent standardises residual ($|Std.Resid|\sim3$)/Cook's distance.
+
+Let's finally plot what the model predicts:
+```{r}
+ggplot(data = LogReg_df, aes(x = Weight, y = LogReg_df$PS)) + 
+  geom_point() +
+  theme_bw() + 
+  geom_smooth(data = LogReg_df, aes(x = Weight, y = Probs),
+    method = "glm", 
+    method.args = list(family = "binomial"), 
+    se = TRUE) +
+  labs(y = "Introduced Population")
+```
+
+### Ordinal Logistic Regression
+Ordinal Logistic regression allows for multiple levels of the response variable so long as they are on an ordinal scale. Here, we could test all of our above hypotheses. However, I'd like to stick with **2.C.** *Climate* for this example.
+
+Again, to reduce the effect of as many confounding variables as possible, I reduce the data set to just those observations belonging to our station in Siberia, Manitoba, and also the United Kingdom this time. All three are located at very similar latitudes. They really only differ in their climate condition and the population status:
+```{r}
+LogReg_df <- Sparrows_df[Sparrows_df$Index == "UK" | Sparrows_df$Index == "MA" | Sparrows_df$Index == "SI", c("Climate", "Weight", "Height", "Wing.Chord")]
+LogReg_df$CL <- factor(as.numeric(LogReg_df$Climate)-1) # make climate factored numeric for model
+```
+
+#### Initial Model & Collinearity
+Let's start with the biggest model we can build here and then assess if our assumptions are met:
+```{r}
+H2_LogReg_mod <- polr(CL ~ Weight + Height + Wing.Chord, 
+    data = LogReg_df,
+    Hess = TRUE)
+summary_table <- coef(summary(H2_LogReg_mod))
+pval <- pnorm(abs(summary_table[, "t value"]), lower.tail = FALSE)*2
+summary_table <- cbind(summary_table, "p value" = round(pval,6))
+summary_table
+```
+Well... a lot here is significant. We identified **multicollinearity** as a problem earlier. Let's investigate that again:
+```{r}
+vif(H2_LogReg_mod)
+```
+Horrible!. A Variance Inflation Factor (VIF) value of $\geq5-10$ is seen as identifying problematic collinearity. Quite obviously, this is the case. We need to throw away some predictors. I only want to keep `Weight`.
+
+#### `Weight` Model and Further Assumptions
+Let's run a simplified model that just used `Weight` as a predictor:
+```{r}
+H2_LogReg_mod <- polr(CL ~ Weight, 
+    data = LogReg_df,
+    Hess = TRUE)
+summary_table <- coef(summary(H2_LogReg_mod))
+pval <- pnorm(abs(summary_table[, "t value"]), lower.tail = FALSE)*2
+summary_table <- cbind(summary_table, "p value" = round(pval,6))
+summary_table
+```
+
+Well... this model doesn't help us at all in understanding climate through morphology of our sparrows. Let's abandon this and move on to classification methods which are much better suited to this task.
+
+
+## K-Means Clustering
+
+K-Means clustering is incredibly potent in identifying a number of appropriate clusters, their attributes, and sort observations into appropriate clusters.
+
+### Population Status Classifier
+Let's start with understanding population status through morphological traits:
+```{r}
+Morph_df <- Sparrows_df[, c("Weight", "Height", "Wing.Chord", "Population.Status")]
+H2_PS_mclust <- Mclust(Morph_df[-4], G = length(unique(Morph_df[,4]))) 
+plot(H2_PS_mclust, what = "uncertainty")
+```
+
+As we can see, K-means clustering is able to really neatly identify two groups in our data. But do they actually belong do the right groups of `Population.Status`? We'll find out in {{< staticref "courses/excursions-into-biostatistics/excursion-into-biostatistics/" "newtab" >}} Model Selection and Validation{{< /staticref >}}.
+
+### Site Classifier
+On to our site index classification. Running the k-means clustering algorithm returns:
+```{r}
+Morph_df <- Sparrows_df[, c("Weight", "Height", "Wing.Chord", "Index")]
+H2_Index_mclust <- Mclust(Morph_df[-4], G = length(unique(Morph_df[,4]))) 
+plot(H2_Index_mclust, what = "uncertainty")
+```
+
+That's a pretty bad classification. I would not place trust in these clusters seeing how much they overlap.
+
+### Climate Classifier
+
+Lastly, turning to our climate classification using k-means classification:
+```{r}
+Morph_df <- Sparrows_df[, c("Weight", "Height", "Wing.Chord", "Climate")]
+H2_Climate_mclust <- Mclust(Morph_df[-4], G = length(unique(Morph_df[,4]))) 
+plot(H2_Climate_mclust, what = "uncertainty")
+```
+These clusters are decent although there is quite a bit of overlap between the blue and red cluster.
+
+
+### Optimal Model
+K-means clustering is also able to identify the most "appropriate" number of clusters given the data and uncertainty of classification:
+```{r}
+Morph_df <- Sparrows_df[, c("Weight", "Height", "Wing.Chord")]
+dataBIC <- mclustBIC(Morph_df)
+summary(dataBIC) # show summary of top-ranking models
+plot(dataBIC)
+G <- as.numeric(strsplit(names(summary(dataBIC))[1], ",")[[1]][2])
+H2_Opt_mclust <- Mclust(Morph_df, # data for the cluster model
+               G = G # BIC index for model to be built
+              )
+H2_Opt_mclust[["parameters"]][["mean"]] # mean values of clusters
+plot(H2_Opt_mclust, what = "uncertainty")
+```
+
+Here, K-means clustering would have us settle on `r G` clusters. That does not coincide with anything we could really test for at this point. COnclusively, this model goes into the category of "Nice to have, but ultimately useless here".
+
+### Summary of K-Means Clustering
+So what do we take from this? Well... Population status was well explained all morphological traits and so would in turn also do a good job of being a proxy for the other when doing mixed regression models, for example. Hence, we might want to include this variable in future {{< staticref "courses/excursions-into-biostatistics/regressions-correlations-for-the-advanced/" "newtab" >}} Regression Models{{< /staticref >}}.
+
+## Hierarchical Clustering
+Moving on to hierarchical clustering, we luckily only need to create a few trees to start with:
+```{r}
+Morph_df <- Sparrows_df[, c("Weight", "Height", "Wing.Chord")] # selecting morphology data
+dist_mat <- dist(Morph_df) # distance matrix
+## Hierarchical clustering using different linkages
+H2_Hierachical_clas1 <- hclust(dist_mat, method = "complete")
+H2_Hierachical_clas2 <- hclust(dist_mat, method = "single")
+H2_Hierachical_clas3 <- hclust(dist_mat, method = "average")
+## Plotting Hierarchies
+par(mfrow = c(1,3))
+plot(H2_Hierachical_clas1, main = "complete")
+plot(H2_Hierachical_clas2, main = "single")
+plot(H2_Hierachical_clas3, main = "average")
+```
+
+Here, you can see that the type of linkage employed by your hierarchical approach is very important as to how the hierarchy ends up looking like. For now, we run with all of them.
+
+### Population Status Classifier
+For our population status classifier, let's obtain our data and cluster number we are after:
+```{r}
+Morph_df <- Sparrows_df[, c("Weight", "Height", "Wing.Chord", "Population.Status")]
+G <- length(unique(Morph_df[, 4]))
+```
+
+Now we can look at how well our different Hierarchies fair at explaining these categories when cut at the point where the same number of categories is present in the tree:
+```{r}
+clusterCut <- cutree(H2_Hierachical_clas1, k = G) # cut tree
+table(clusterCut, Morph_df$Population.Status) # assess fit
+clusterCut <- cutree(H2_Hierachical_clas2, k = G) # cut tree
+table(clusterCut, Morph_df$Population.Status) # assess fit
+clusterCut <- cutree(H2_Hierachical_clas3, k = G) # cut tree
+table(clusterCut, Morph_df$Population.Status) # assess fit
+```
+Interestingly enough, no matter the linkage, all of these approaches get Introduced and Native populations confused in the first group, but not the second.
+
+Let's look at the decisions that we could make when following a decision tree for this example:
+```{r}
+H2_PS_decision <- rpart(Population.Status ~. , data = Morph_df)
+rpart.plot(H2_PS_decision)
+```
+
+Following this decision tree we first ask *"Is our sparrow lighter than 35g?"*. If the answer is yes, we move to the left and ask the question *"Is the wing span of our sparrow greater/equal than 6.9cm?"*. If the answer is yes, we move to the left and assign this sparrow to an introduced population status. 62% of all observations are in this node and to 2% we believe that this node might actually be a Native node. All other nodes are explained accordingly. More about their interpretation can be found in this [PDF Manual](https://www.google.com/url?sa=t&rct=j&q=&esrc=s&source=web&cd=&ved=2ahUKEwizk67jmJDvAhUnMuwKHbaiD90QFjAAegQIARAD&url=http%3A%2F%2Fwww.milbo.org%2Frpart-plot%2Fprp.pdf&usg=AOvVaw2DpMfeZC2yVdRaYZBXBA8K).
+
+
+### Site Classifier
+Moving on to the site index classifier, we need our data and number of clusters:
+```{r}
+Morph_df <- Sparrows_df[, c("Weight", "Height", "Wing.Chord", "Index")]
+G <- length(unique(Morph_df[, 4]))
+```
+
+Looking at our different outputs:
+```{r}
+clusterCut <- cutree(H2_Hierachical_clas1, k = G) # cut tree
+table(clusterCut, Morph_df$Index) # assess fit
+clusterCut <- cutree(H2_Hierachical_clas2, k = G) # cut tree
+table(clusterCut, Morph_df$Index) # assess fit
+clusterCut <- cutree(H2_Hierachical_clas3, k = G) # cut tree
+table(clusterCut, Morph_df$Index) # assess fit
+```
+We can now see clearly how different linkages have a major impact in determining how our hierarchy groups different observations. I won't go into interpretations here to save time and energy since these outputs are so busy.
+
+Our decision tree is also excrutiatingly busy:
+```{r}
+H2_Index_decision <- rpart(Index ~. , data = Morph_df)
+rpart.plot(H2_Index_decision)
+```
+
+
+### Climate Classifier
+Back over to our climate classifier:
+```{r}
+Morph_df <- Sparrows_df[, c("Weight", "Height", "Wing.Chord", "Climate")]
+G <- length(unique(Morph_df[, 4]))
+```
+
+Let's look at how the different linkages impact our results:
+```{r}
+clusterCut <- cutree(H2_Hierachical_clas1, k = G) # cut tree
+table(clusterCut, Morph_df$Climate) # assess fit
+clusterCut <- cutree(H2_Hierachical_clas2, k = G) # cut tree
+table(clusterCut, Morph_df$Climate) # assess fit
+clusterCut <- cutree(H2_Hierachical_clas3, k = G) # cut tree
+table(clusterCut, Morph_df$Climate) # assess fit
+```
+
+All of our linkage types have problems discerning Coastal types. I wager that is because of a ton of confounding effects which drive morphological traits in addition to climate types.
+
+Here's another look at a decision tree:
+```{r}
+H2_Climate_decision <- rpart(Climate ~. , data = Morph_df)
+rpart.plot(H2_Climate_decision)
+```
+
+### Summary of Hierarchical Clustering
+We have seen that site indices may hold some explanatory power regarding sparrow morphology, but the picture is very complex. We may want to keep them in mind as random effects for future models (don't worry if that doesn't mean much to you yet).
+
+## Random Forest
+Random Forests are one of the most powerful classification methods and I love them. They are incredibly powerful, accurate, and easy to use. Unfortunately, they are black-box algorithms (you don't know what's happening in them exactly in numerical terms) and they require observed outcomes. That's not a problem for us with this research project!
+
+### Population Status Classifier
+
+Running our random for model for population statuses:
+```{r}
+set.seed(42) # set seed because the process is random
+H2_PS_RF <- tuneRF(x = Sparrows_df[, c("Weight", "Height", "Wing.Chord")], # variables which to use for clustering
+  y = Sparrows_df$Population.Status, # correct cluster assignment
+  strata = Sparrows_df$Population.Status, # stratified sampling
+  doBest = TRUE, # run the best overall tree
+  ntreeTry = 20000, # consider this number of trees
+  improve = 0.0000001, # improvement if this is exceeded
+  trace = FALSE, plot = FALSE)
+```
+Works perfectly. 
+
+Random forests give us access to *confusion matrices* which tell us about classification accuracy:
+```{r}
+H2_PS_RF[["confusion"]]
+```
+Evidently, we are good at predicting Introduced population status, but Native population status is almost as random as a coin toss.
+
+Which variables give us the most information when establishing these groups?
+```{r}
+varImpPlot(H2_PS_RF)
+```
+
+Well look who it is. `Weight` comes out as the most important variable once again!
+
+### Site Classifier
+Let's run a random forest analysis for our site indices:
+```{r}
+set.seed(42) # set seed because the process is random
+H2_Index_RF <- tuneRF(x = Sparrows_df[, c("Weight", "Height", "Wing.Chord")], # variables which to use for clustering
+  y = Sparrows_df$Index, # correct cluster assignment
+strata = Sparrows_df$Index, # stratified sampling
+doBest = TRUE, # run the best overall tree
+ntreeTry = 20000, # consider this number of trees
+improve = 0.0000001, # improvement if this is exceeded
+trace = FALSE, plot = FALSE)
+H2_Index_RF[["confusion"]]
+varImpPlot(H2_Index_RF)
+```
+
+Except for Manitoba and the UK (which are often mistaken for each other), morphology (and mostly `Weight`) explains station indices quite adequately. 
+
+### Climate Classifier
+Lastly, we turn to our climate classifier again:
+```{r}
+set.seed(42) # set seed because the process is random
+H2_Climate_RF <- tuneRF(x = Sparrows_df[, c("Weight", "Height", "Wing.Chord")], # variables which to use for clustering
+  y = Sparrows_df$Climate, # correct cluster assignment
+strata = Sparrows_df$Climate, # stratified sampling
+doBest = TRUE, # run the best overall tree
+ntreeTry = 20000, # consider this number of trees
+improve = 0.0000001, # improvement if this is exceeded
+trace = FALSE, plot = FALSE)
+H2_Climate_RF[["confusion"]]
+varImpPlot(H2_Climate_RF)
+```
+
+Oof. We get semi-coastal habitats almost completely wrong. The other climate conditions are explained well through morphology, though.
+
+## Final Models
+In our upcoming {{< staticref "courses/excursions-into-biostatistics/excursion-into-biostatistics/" "newtab" >}} Model Selection and Validation{{< /staticref >}} Session, we will look into how to compare and validate models. We now need to select some models we have created here today and want to carry forward to said session.
+
+Personally, I am quite enamoured with our models `H2_PS_mclust` (k-means clustering of population status), `H2_PS_RF` (random forest of population status), and `H2_Index_RF` (random forest of site indices). Let's save these as a separate object ready to be loaded into our `R` environment in the coming session:
+
+```{r}
+save(H2_PS_mclust, H2_PS_RF, H2_Index_RF, file = file.path("Data", "H2_Models.RData"))
+```
+
+## SessionInfo
+```{r}
+sessionInfo()
+```

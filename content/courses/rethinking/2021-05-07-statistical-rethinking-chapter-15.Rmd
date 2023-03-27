@@ -1,0 +1,681 @@
+---
+title: Chapter 15
+author: Erik Kusch
+date: '2021-05-06'
+slug: chapter-15
+categories:
+  - Statistical Rethinking
+tags:
+  - Statistics
+  - Bayes
+  - Bayesian Statistics
+  - AU Bayes Study Group
+subtitle: "Missing Data and Other Opportunities"
+summary: 'Answers and solutions to the exercises belonging to chapter 15 in [Satistical Rethinking 2](https://xcelab.net/rm/statistical-rethinking/) by Richard McElreath.'
+authors: []
+lastmod: '2021-05-06T18:00:00+01:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: [aubayes]
+output:
+  blogdown::html_page:
+    keep_md: true
+    # toc: true
+    # toc_depth: 1
+    # number_sections: false
+links:
+- icon: file-powerpoint
+  icon_pack: fas
+  name: Slides - Chapter 15
+  url: /post/rethinking/18__07-05-2021_SUMMARY_-Measurement-Error-and-Missing-Data.html
+# header-includes:
+#   <script src = "https://polyfill.io/v3/polyfill.min.js?features = es6"></script>
+#   <script id = "MathJax-script" async src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+math: true
+type: docs
+toc: true 
+menu:
+  Rethinking:
+    parent: Seminars
+    weight: 15
+weight: 15
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, tidy = 'styler', tidy.opts = list(strict = TRUE), fig.width = 15, fig.height = 8)
+options(width = 200)
+```
+
+# Missing Data and Other Opportunities
+
+## Material
+
+- [Slides Chapter 15](/post/rethinking/18__07-05-2021_SUMMARY_-Measurement-Error-and-Missing-Data.html)  
+
+
+## Introduction 
+These are answers and solutions to the exercises at the end of chapter 15 in [Satistical Rethinking 2](https://xcelab.net/rm/statistical-rethinking/) by Richard McElreath. I have created these notes as a part of my ongoing involvement in the [AU Bayes Study Group](/project/aubayes/). Much of my inspiration for these solutions, where necessary, has been obtained from 
+<!-- [Taras Svirskyi](https://github.com/jffist/statistical-rethinking-solutions/blob/master/ch10_hw.R), [William Wolf](https://github.com/cavaunpeu/statistical-rethinking/blob/master/chapter-10/homework.R), and [Corrie Bartelheimer](https://www.samples-of-thoughts.com/projects/statistical-rethinking/chapter_10/chp10-ex/) as well as  -->
+the solutions provided to instructors by Richard McElreath himself.
+
+## `R` Environment
+For today's exercise, I load the following packages:
+```{r}
+library(rethinking)
+library(gtools)
+```
+
+## Easy Exercises
+### Practice E1
+**Question:**  Rewrite the Oceanic tools model (from Chapter 11) below so that it assumes measured error on the log population sizes of each society. You don’t need to fit the model to data. Just modify the mathematical formula below.
+$$T_i ∼ Poisson(µ_i)$$
+$$log(µ_i) = α + β*log(P_i)$$ 
+$$α ∼ Normal(0, 1.5)$$ 
+$$β ∼ Normal(0, 1)$$
+
+**Answer:** The population variable ($P_i$) is a predictor in this model. In order to estimate/account for measurement error in a predictor variable, all we need to do is add a distribution to the observed values ($P^*_i$) with a given error ($σ_P$):
+
+$$log(P_i) ∼ Normal(P^*_i, σ_P)$$
+The final model specification combines the above line with the previous model specification and substitutes $P^*_i$ in place of $P_i$:
+
+$$T_i ∼ Poisson(µ_i)$$
+$$log(µ_i) = α + β*P^*_i$$ 
+$$log(P_i) ∼ Normal(P^*_i, σ_P)$$
+$$α ∼ Normal(0, 1.5)$$ 
+$$β ∼ Normal(0, 1)$$
+$$σ_P \sim Exponential(1)$$
+Of course, we also need a prior for $σ_P$. I don't know enough about the data to take a good educated guess for this parameter and so I just run the usual prior for standard deviations used in the book.
+
+### Practice E2
+**Question:**  Rewrite the same model so that it allows imputation of missing values for log population. There aren’t any missing values in the variable, but you can still write down a model formula that would imply imputation, if any values were missing.
+
+**Answer:** Imputation comes into play when measurement error is so intense that we have missing data - "missing data is grown-up measurement error". The trick with missing data is to establish adaptive priors for the missing data which is informed by the observations for which we do have data:
+
+$$T_i ∼ Poisson(µ_i)$$
+$$log(µ_i) = α + β*P^*_i$$ 
+
+$$P^*_i ∼ Normal(\overline{P^*}, σ_P)$$
+
+$$α ∼ Normal(0, 1.5)$$ 
+$$β ∼ Normal(0, 1)$$
+$$P^* \sim Normal(0, 1)$$
+$$σ_P \sim Exponential(1)$$
+
+With the new specification, values of $P^*_i$ (observed log-populations) are either assumed to be data or parameters according to whether data is present for observation $i$ or not.
+
+## Medium Exercises
+### Practice M1
+**Question:**  Using the mathematical form of the imputation model in the chapter, explain what is being assumed about how the missing values were generated.
+
+**Answer:** As a reminder, the mathematical form of the imputation model in the chapter is as follows:
+
+$$K_i ∼ Normal(µ_i, σ)$$
+$$µ_i = α + β_BB_i + β_M*log(M_i)$$
+$$B_i ∼ Normal(ν, σ_B)$$
+$$α ∼ Normal(0, 0.5)$$ 
+$$β_B ∼ Normal(0, 0.5)$$
+$$β_M ∼ Normal(0, 0.5)$$ 
+$$σ ∼ Exponential(1)$$ 
+$$ν ∼ Normal(0.5, 1)$$ 
+$$σ_B ∼ Exponential(1)$$
+
+The assumption about which distribution our predictor with missing data ($B$) does not contain any information about individual cases. It simply just assumes that missing values are randomly placed across the cases. As such, the model assumes that there is no causation at play for how the data came to be missing/not reported, but only states that information that is missing follows a certain distribution which is the same distribution against which to test the data which we do have.
+
+### Practice M2
+**Question:**  In earlier chapters, we threw away cases from the primate milk data, so we could use the neocortex variable. Now repeat the WAIC model comparison example from Chapter 6, but use imputation on the neocortex variable so that you can include all of the cases in the original data. The simplest form of imputation is acceptable. How are the model comparison results affected by being able to include all of the cases?
+
+**Answer:** Unfortunately, chapter 6 does not include a neocortex model in the version of the book I am working with and pulling these exercises from. However, chapter 5 does. To begin with this exercise, I load the data and prepare it the same way we did back in chapter 5, by standardising our variables for energy content of milk (`K`), and body mass (`M`). Contrary to chapter 5, I do not standardise the neocortex portion (`P`), but leave it as a proportion between 0 and 1:
+```{r, "M2"}
+data(milk)
+d <- milk
+d$neocortex.prop <- d$neocortex.perc/100
+d$logmass <- log(d$mass)
+## Incomplete cases allowed
+dat_list <- list(
+    K = standardize(d$kcal.per.g),
+    P = d$neocortex.prop,
+    M = standardize(d$logmass))
+```
+
+Why did I set the neocortex variable (`P`) to be non-standardised? So I could use priors more readily and make sure this proportion always stays between 0 and 1 - everything outside these bounds would be biological nonsense.
+
+With the data ready, we can now run our three models from chapter 5, but this time, in a way so as to account for missing data:
+```{r}
+## Mass effect (not the video game franchise); no imputation needed here
+m_M2_5.6 <- ulam( 
+  alist( 
+    K ~ dnorm(mu, sigma), 
+    mu <- a + bM*M, 
+    a ~ dnorm(0, 0.2), 
+    bM ~ dnorm(0, 0.5),
+    sigma ~ dexp(1)
+    ) , data=dat_list[-2], chains = 4, cores = 4, iter = 2000, log_lik = TRUE)
+
+## Neocortex effect
+m_M2_5.5 <- ulam(
+    alist(
+        K ~ dnorm(mu, sigma),
+        mu <- a + bP*(P-0.67), # 0.67 is the average value of P --> Intercept now represents K at average P
+        P ~ dbeta2(nu, theta), # bound between 0 and 1, but wide
+        nu ~ dbeta(2, 2), # bound between 0 and 1
+        a ~ dnorm(0, 0.2), # same as before
+        bP ~ dnorm(0, 10), # another wide prior, since there is little variation in values of P
+        theta ~ dexp(1), # standard stdev prior
+        sigma ~ dexp(1), # same as before 
+        vector[12]:P_impute ~ uniform(0, 1) # there are 12 NA-values for P, we bound them between 0 and 1
+   ), data = dat_list, chains = 4, cores = 4, iter = 2000, log_lik = TRUE)
+
+## Both predictors
+m_M2_5.7 <- ulam(
+    alist(
+        K ~ dnorm(mu, sigma),
+        mu <- a + bP*(P-0.67) + bM*M, # 0.67 is the average value of P --> Intercept now represents K at average P
+        P ~ dbeta2(nu, theta), # bound between 0 and 1, but wide
+        nu ~ dbeta(2, 2), # bound between 0 and 1
+        a ~ dnorm(0, 0.2), # same as before
+        bM ~ dnorm(0, 0.5), # same as before
+        bP ~ dnorm(0, 10), # another wide prior, since there is little variation in values of P
+        theta ~ dexp(1), # standard stdev prior
+        sigma ~ dexp(1), # same as before 
+        vector[12]:P_impute ~ uniform(0, 1) # there are 12 NA-values for P, we bound them between 0 and 1
+   ), data = dat_list, chains = 4, cores = 4, iter = 2000, log_lik = TRUE)
+```
+
+All three models are compiled. Time to compare how they perform:
+
+```{r}
+compare(m_M2_5.5, m_M2_5.6, m_M2_5.7)
+```
+
+Unsurprisingly, the full model outperforms both one-effect models here. Interestingly, the mass-only model still pulls ahead of the (now imputation-driven) neocortex-only model.
+
+Visualising what our full imputation model sees, we obtain:
+```{r}
+post <- extract.samples(m_M2_5.7)
+P_impute_mu <- apply(post$P_impute, 2, mean) 
+P_impute_ci <- apply(post$P_impute, 2, PI)
+par(mfrow = c(1,2))
+# P vs K
+plot(dat_list$P, 
+     dat_list$K, pch = 16, col = rangi2, 
+     xlab = "neocortex percent", ylab = "kcal milk (std)", xlim = c(0,1))
+miss_idx <- which(is.na(dat_list$P)) 
+Ki <- dat_list$K[miss_idx] 
+points(P_impute_mu, Ki) 
+for(i in 1:12) lines(P_impute_ci[, i], rep(Ki[i], 2))
+# M vs B 
+plot( dat_list$M , dat_list$P , pch=16 , col=rangi2 , ylab="neocortex percent (std)" , xlab="log body mass (std)", ylim = c(0,1))
+Mi <- dat_list$M[miss_idx] 
+points( Mi , P_impute_mu ) 
+for ( i in 1:12 ) lines( rep(Mi[i],2) , P_impute_ci[,i] )
+```
+
+These are the same plots as in the book in chapter 15. The only difference is that our imputed neocortex percent values now fall into clearly readable (and sensible) ranges between 0 and 1.
+
+### Practice M3
+**Question:**  Repeat the divorce data measurement error models, but this time double the standard errors. Can you explain how doubling the standard errors impacts inference?
+
+**Answer:** Again, I prepare the data the same way as the book does it:
+```{r, "M3"}
+data(WaffleDivorce)
+d <- WaffleDivorce
+dlist <- list(
+    D_obs = standardize(d$Divorce),
+    D_sd = d$Divorce.SE/sd(d$Divorce),
+    M = standardize(d$Marriage),
+    A = standardize(d$MedianAgeMarriage),
+    N = nrow(d))
+```
+
+Now, I simply take the model from the book and run it:
+```{r}
+m15.1 <- ulam(
+    alist(
+        D_obs ~ dnorm(D_true, D_sd),
+        vector[N]:D_true ~ dnorm(mu, sigma),
+        mu <- a + bA*A + bM*M,
+        a ~ dnorm(0, 0.2),
+        bA ~ dnorm(0, 0.5),
+        bM ~ dnorm(0, 0.5),
+        sigma ~ dexp(1)
+    ), data = dlist, chains = 4, cores = 4)
+
+```
+
+Now that we have our baseline model, it is time to double the standard error variable `D_sd`:
+
+```{r}
+m_M3 <- ulam(
+    alist(
+        D_obs ~ dnorm(D_true, D_sd*2.0),
+        vector[N]:D_true ~ dnorm(mu, sigma),
+        mu <- a + bA*A + bM*M,
+        a ~ dnorm(0, 0.2),
+        bA ~ dnorm(0, 0.5),
+        bM ~ dnorm(0, 0.5),
+        sigma ~ dexp(1)
+   ), data = dlist, chains = 4, cores = 4, iter = 4000)
+```
+
+Let's compare the two models for now and see what is happening:
+
+```{r}
+precis(m15.1)
+precis(m_M3)
+```
+
+Oof. Without going into any detail on the parameter estimates, I have to point out that I don't like the effective sample sizes (`n_eff`) on our new model one bit. They are much, MUCH smaller than those of our baseline model. This highlights that out second model struggled with efficient exploration of posterior parameter space. I reckon this is a result of the increased standard deviation making the posterior landscape less easy to identify.
+
+One way to work around this issue is to rewrite the model in a non-centred parametrisation:
+
+```{r}
+m_M3B <- ulam(
+    alist(
+        D_obs ~ dnorm(mu + z_true*sigma, D_sd*2.0),
+        vector[N]:z_true ~ dnorm(0, 1), # gotten rid of the prior dependency here
+        mu <- a + bA*A + bM*M,
+        a ~ dnorm(0, 0.2),
+        bA ~ dnorm(0, 0.5),
+        bM ~ dnorm(0, 0.5),
+        sigma ~ dexp(1)
+   ), data = dlist, chains = 4, cores = 4, iter = 4000,
+    control = list(max_treedepth = 14))
+```
+
+And now, let's compare these again:
+```{r}
+precis(m15.1)
+precis(m_M3B)
+```
+
+Nice. That got rid off our issues of non-effective sampling of posteriors. Now we can actually compare the model results. The biggest difference between these two models is found in the estimates for `bM` (the effect of marriage rate on divorce rate) and `sigma` (the standard deviation of the normal distribution from which the divorce rates are pulled). By increasing the standard error, we have effectively allowed individual states to exert much greater influence on the regression slope estimates thus shifting the result around.
+
+It is also worth pointing out right now that the non-centred model performs much more effective sampling, but the parameter estimates are ultimately the same irrespective of parametrisation in this example.
+
+## Hard Exercises
+### Practice H1
+**Question:**  The data in `data(elephants)` are counts of matings observed for bull elephants of differing ages. There is a strong positive relationship between age and matings. However, age is not always assessed accurately. First, fit a Poisson model predicting `MATINGS` with `AGE` as a predictor. Second, assume that the observed `AGE` values are uncertain and have a standard error of $\pm$ 5 years. Re-estimate the relationship between `MATINGS` and `AGE`, incorporating this measurement error. Compare the inferences of the two models.
+
+**Answer:** First, I load the data and take a glance at its contents:
+```{r, "H1"}
+data(elephants)
+d <- elephants
+str(d)
+```
+
+Now we can run some models. Before we get started, it is worth pointing out that there are a multitude of ways in which age could influence number of matings - exponential, logarithmic, poisson, etc. Here, I run with a poisson-approach. If this were a real-world research problem, I should probably test all three variations of the model. Alas, ain't nobody got time fo' that in an exercise.
+
+The data starts with `AGE` values at `r min(d$AGE)`. This suggests to me that this must be roughly around when elephants reach sexual maturity and will start to mate. Hence, I subtract 25 from all `AGE` values in my model - just to be safe and interpret the number of matings as "number of matings since reaching sexual maturity":
+
+```{r}
+## Basic Model without uncertainty:
+m_H1_A <- ulam(
+    alist(
+        MATINGS ~ dpois(lambda),
+        lambda <- exp(a)*(AGE-25)^bA,
+        a ~ dnorm(0, 1),
+        bA ~ dnorm(0, 1)
+   ), data = d, chains = 4, cores = 4)
+precis(m_H1_A)
+```
+
+Again, another not-so-efficient sampling model. How does it see the relationship between `AGE` and `MATINGS`?
+
+```{r}
+# ages in the data range from 27 to 53
+A_seq <- seq(from = 25, to = 55, length.out = 30)
+lambda <- link(m_H1_A, data = list(AGE = A_seq))
+lambda_mu <- apply(lambda, 2, mean)
+lambda_PI <- apply(lambda, 2, PI)
+plot(d$AGE, d$MATINGS, pch = 16, col = rangi2,
+    xlab = "age", ylab = "matings")
+lines(A_seq, lambda_mu)
+shade(lambda_PI, A_seq)
+```
+
+That's a pretty reliably positive relationship. Older elephants mate more.
+
+On to the measurement error model:
+
+```{r echo = FALSE, "C-Stack error workaround attempt"}
+# # gc()
+d$AGE0 <- d$AGE - 25 # add the sexual maturity consideration to the data
+if(!file.exists(file.path(getwd(), "m_H1_B.RData"))){
+m_H1_B <- ulam(
+    alist(
+        MATINGS ~ dpois(lambda), # same outcome as before
+        lambda <- exp(a)*AGE_est[i]^bA, # log-scale predictors
+        AGE0 ~ dnorm(AGE_est, 5), # Gaussian distribution with error 5
+        vector[41]:AGE_est ~ dunif(0, 50), # prior for individual observed ages
+        a ~ dnorm(0, 1),
+        bA ~ dnorm(0, 1)
+   ), data = d, chains = 4, cores = 4)
+save(m_H1_B, file = "m_H1_B.RData")
+}else{
+  load("m_H1_B.RData")
+}
+```
+
+```{r eval = FALSE, "Problem Chunk"}
+d$AGE0 <- d$AGE - 25 # add the sexual maturity consideration to the data
+m_H1_B <- ulam(
+    alist(
+        MATINGS ~ dpois(lambda), # same outcome as before
+        lambda <- exp(a)*AGE_est[i]^bA, # log-scale predictors
+        AGE0 ~ dnorm(AGE_est, 5), # Gaussian distribution with error 5
+        vector[41]:AGE_est ~ dunif(0, 50), # prior for individual observed ages
+        a ~ dnorm(0, 1),
+        bA ~ dnorm(0, 1)
+   ), data = d, chains = 4, cores = 4)
+```
+
+```{r}
+precis(m_H1_B)
+```
+
+Interestingly enough, the estimate of `bA` has not changed between these models. Why? Because we added completely symmetric measurement error that remains unchanged across all ages of our elephants. Hence, we don't end up biasing our model because the error in the data is not biased (at least we assume so).
+
+Let's finish this off by looking at what our model expects the ages to be like for different matings:
+```{r}
+post <- extract.samples(m_H1_B) # extract samples
+AGE_est <- apply(post$AGE_est, 2, mean) + 25 # add 25 back to ages
+MATINGS_j <- jitter(d$MATINGS) # jitter MATINGS for better readability
+plot(d$AGE, MATINGS_j, pch = 16, col = rangi2, xlab = "age", ylab = "matings", xlim = c(23, 55)) # observed ages
+points(AGE_est, MATINGS_j) # estimated ages
+for(i in 1:nrow(d)) lines(c(d$AGE[i], AGE_est[i]), rep(MATINGS_j[i], 2)) # shrinkage lines
+lines(A_seq, lambda_mu) # linear regression from previous model
+```
+
+The blue dots represent the observed ages, while the open circles depict the estimated true ages from our model. We see some shrinkage. Fascinatingly, the shrinkage appears to switch direction around the regression line, however. Values above the regression line are shrunk to higher age ranges, while the reverse is true below the regression line. What this means is that the model assumed elephants with unexpectedly high mating numbers for their observed age to be older than our data implies and vice versa. 
+
+### Practice H2
+**Question:**  Repeat the model fitting problem above, now increasing the assumed standard error on `AGE`. How large does the standard error have to get before the posterior mean for the coefficient on `AGE` reaches zero?
+
+**Answer:** To solve this, I just run the model above again, but increase the standard error. I did several times with ever-increasing standard errors. Finally I landed on a standard error of `100`:
+```{r, "H2"}
+m_H2 <- ulam(
+    alist(
+        MATINGS ~ dpois(lambda),
+        lambda <- exp(a)*AGE_est[i]^bA,
+        AGE0 ~ dnorm(AGE_est, 100), # increase standard error here
+        vector[41]:AGE_est ~ dunif(0, 50),
+        a ~ dnorm(0, 1),
+        bA ~ dnorm(0, 1)
+   ), data = d, chains = 4, cores = 4)
+precis(m_H2)
+```
+
+Albeit not having reached 0, the mean estimate of `bA` is closer to 0 now and the percentile interval around it is so large that we would not be able to identify the effect here.
+
+### Practice H3
+**Question:**  The fact that information flows in all directions among parameters sometimes leads to rather unintuitive conclusions. Here’s an example from missing data imputation, in which imputation of a single datum reverses the direction of an inferred relationship. Use these data:
+
+```{r, "H3"}
+set.seed(100) 
+x <- c(rnorm(10), NA) 
+y <- c(rnorm(10, x), 100)
+d <- list(x = x, y = y)
+```
+
+These data comprise 11 cases, one of which has a missing predictor value. You can quickly confirm that a regression of $y$ on $x$ for only the complete cases indicates a strong positive relationship between the two variables. But now fit this model, imputing the one missing value for $x$:
+
+$$y_i ∼ Normal(µ_i, σ)$$ 
+$$µ_i = α + βx_i$$ 
+$$x_i ∼ Normal(0, 1)$$ 
+$$α ∼ Normal(0, 100)$$ 
+$$β ∼ Normal(0, 100)$$ 
+$$σ ∼ HalfCauchy(0, 1)$$
+
+What has happened to the posterior distribution of $β$? Be sure to inspect the full density. Can you explain the change in inference?
+
+**Answer:** Interestingly, the `rethinking` functions also work on basic `lm` objects:
+```{r}
+precis(lm(y~x, d))
+```
+
+On to the imputation model:
+
+```{r echo=FALSE}
+# gc()
+if(!file.exists(file.path(getwd(), "m_H3.RData"))){
+ m_H3 <- ulam(
+    alist(
+        y ~ dnorm(mu, sigma),
+        mu <- a + b*x,
+        x ~ dnorm(0, 1),
+        c(a, b) ~ dnorm(0, 100),
+        sigma ~ dexp(1)
+   ), data = d, chains = 4, cores = 4, iter = 4000,
+    control = list(adapt_delta = 0.99))
+save(m_H3, file = "m_H3.RData") 
+}else{
+  load("m_H3.RData")
+}
+```
+
+```{r eval = FALSE, "ProblemChunkagain"}
+m_H3 <- ulam(
+    alist(
+        y ~ dnorm(mu, sigma),
+        mu <- a + b*x,
+        x ~ dnorm(0, 1),
+        c(a, b) ~ dnorm(0, 100),
+        sigma ~ dexp(1)
+   ), data = d, chains = 4, cores = 4, iter = 4000,
+    control = list(adapt_delta = 0.99))
+```
+```{r}
+precis(m_H3)
+```
+
+Well those percentile intervals look bad. The joint posterior distributions might help solve this mystery:
+
+```{r}
+pairs(m_H3)
+```
+
+We have a few bi-modal distributions which place the plausible values for `b` and `x_impute` either strongly in the negative or strongly in the positive realm. This feels like the issue of unidentifiable parameters all over again.
+
+The outcome variable value for which we are missing the predictor variable value is very extreme given the range of all other outcome variable values. This means, we can flip our predictor value to either extreme and still be consistent with the data and model thus forcing the regression line to be either positive or negative.
+
+Let's extract positive and negative regression estimates and their positions in our extracted samples from the posterior:
+```{r}
+post <- extract.samples(m_H3)
+post_pos <- post
+post_neg <- post
+for(i in 1:length(post)){
+    post_pos[[i]] <- post[[i]][post$b>0]
+    post_neg[[i]] <- post[[i]][post$b<0]
+}
+```
+
+With this at hand, we can now compute the two regression lines and plot them:
+
+```{r}
+par(mfrow=c(1,2))
+## positive
+x_seq <- seq(from = -2.6, to = 4, length.out = 30)
+mu_link <- function(x, post) post$a + post$b*x
+mu <- sapply(x_seq, mu_link, post = post_pos)
+mu_mu <- apply(mu, 2, mean)
+mu_PI <- apply(mu, 2, PI)
+x_impute <- mean(post_pos$x_impute)
+plot(y ~ x, d, pch = 16, col = rangi2, xlim = c(-0.85, x_impute))
+points(x_impute, 100)
+lines(x_seq, mu_mu)
+shade(mu_PI, x_seq)
+## negative
+x_seq <- seq(from = -4, to = 4, length.out = 50)
+mu <- sapply(x_seq, mu_link, post = post_neg)
+mu_mu <- apply(mu, 2, mean)
+mu_PI <- apply(mu, 2, PI)
+x_impute <- mean(post_neg$x_impute)
+plot(y ~ x, d, pch = 16, col = rangi2, xlim = c(-3.7, 0.9))
+points(x_impute, 100)
+lines(x_seq, mu_mu)
+shade(mu_PI, x_seq)
+```
+This should make it obvious just how extreme the outcome variable value is and how our model could agree with either extreme imputed variable.
+
+### Practice H4
+**Question:**  Some lad named Andrew made an eight-sided spinner. He wanted to know if it is fair. So he spun it a bunch of times, recording the counts of each value. Then he accidentally spilled coffee over the 4s and 5s. The surviving data are summarized below. 
+
+| Value      |  1 |  2 |  3 |  4 |  5 |  6 |  7 |  8 |
+| Frequency  | 18 | 19 | 22 |  ? |  ? | 19 | 20 | 22 |
+
+Your job is to impute the two missing values in the table above. Andrew doesn’t remember how many times he spun the spinner. So you will have to assign a prior distribution for the total number of spins and then marginalize over the unknown total. Andrew is not sure the spinner is fair (every value is equally likely), but he’s confident that none of the values is twice as likely as any other. Use a Dirichlet distribution to capture this prior belief. Plot the joint posterior distribution of 4s and 5s.
+
+**Answer:** First, I enter the data into `R`:
+```{r, "H4"}
+y <- c(18, 19, 22, NA, NA, 19, 20, 22)
+```
+
+What data do I need to somehow get to for my model?  
+
+1. `N` - total number of spins  
+
+For `N`, we can say that is no smaller than `r sum(y, na.rm = TRUE)` - the sum of all spins which we have observed outcomes for. The number of spins would be a count variable and so it would make sense to assign a Poisson distribution to them - especially seeing how we lack a sensible upper bound to the total number of spins. So what should our expected value be? Well, from the data above, it would be sensible to expect that the spins for sides 4 and 5 are 20 respectively - this is just a guess. As such, we could set a prior as:
+
+$$N \sim Poisson(40) + 120$$
+Why 40 and why 120? 40 is the expected number of missing spins from our data table, 120 defines the lower bound of our total spins. We have data for 120 spins.
+
+2. `Probs` - vector of probabilities for each side of the spinner  
+
+As for the vector of probabilities, we want to use the Dirichlet prior as outlined by the exercise text. The Dirichlet prior is used for categorical outcomes like these. We know that none of the outcomes is twice as likely as any other. Dirichlet doesn't give us that control directly, unfortunately. What we can do is simulate:
+
+```{r}
+p <- rdirichlet(1e3, alpha = rep(4, 8))
+plot(NULL, xlim = c(1, 8), ylim = c(0, 0.3), xlab = "outcome", ylab = "probability")
+for(i in 1:10) lines(1:8, p[i, ], type = "b", col = grau(), lwd = 2)
+```
+It is difficult to judge from this what our prior is assuming and whether our assumption is met. We can identify this numerically though:
+
+```{r}
+twicer <- function(p){
+    o <- order(p)
+    if(p[o][8]/p[o][1] > 2) return(TRUE) else return(FALSE)
+}
+sum(apply(p, 1, twicer))
+```
+
+Our prior clearly needs to be tighter since our criterion of no category being twice as likely as any other category is being violated quite heavily. 
+
+```{r}
+p <- rdirichlet(1e3, alpha = rep(50, 8))
+sum(apply(p, 1, twicer))
+```
+That looks much better! Let's plot that:
+
+```{r}
+plot(NULL, xlim = c(1, 8), ylim = c(0, 0.3), xlab = "outcome", ylab = "probability")
+for(i in 1:10) lines(1:8, p[i, ], type = "b", col = grau(), lwd = 2)
+```
+
+3. `N4` and `N5` - the counts of observations of the side 4 and 5, respectively  
+
+This is what we want to get to to help Andrew get around his coffee-spillage mishap. What we need to do here is to marginalize over all combinations of 4s and 5s. I will freely admit that I was completely lost here and took the STAN code directly from the solutions by Richard McElreath. Looking at it, there are some loops in here, which I couldn't have been able to code myself (yet). I have added some comments to indciate what I understood:
+
+```{r}
+code15H7 <- '
+data{
+    int N;
+    int y[N];
+    int y_max; // consider at most this many spins for y4 and y5
+    int S_mean;
+}
+parameters{
+    simplex[N] p;   // probabilities of each outcome
+}
+model{
+    vector[(1+y_max)*(1+y_max)] terms; // all combinations of spins for 4 and 5
+    int k = 1; // counter to index above vector of combinations
+
+    p ~ dirichlet(rep_vector(50, N)); // Dirichlet prior
+
+    // loop over possible values for unknown cells 4 and 5
+    // this code updates posterior of p
+    for(y4 in 0:y_max){
+        for(y5 in 0:y_max){
+            int Y[N] = y;  // probability of complete vector of individual spins
+            Y[4] = y4;  // spins for 4s
+            Y[5] = y5; // spins for 5s
+            terms[k] = poisson_lpmf(y4+y5|S_mean-120) + multinomial_lpmf(Y|p);  // poisson prior for individual spins and multinomial prior for vector of counts conditional on number of spins n and prior p
+            k = k + 1;
+        }//y5
+    }//y4
+    target += log_sum_exp(terms);
+}
+generated quantities{  // repeates much of the above to compute posterior probability
+    matrix[y_max+1, y_max+1] P45; // prob y4, y5 takes joint values
+    // now compute Prob(y4, y5|p)
+   {
+        matrix[(1+y_max), (1+y_max)] terms;
+        int k = 1;
+        real Z;
+        for(y4 in 0:y_max){
+            for(y5 in 0:y_max){
+              int Y[N] = y;
+              Y[4] = y4;
+              Y[5] = y5;
+              terms[y4+1, y5+1] = poisson_lpmf(y4+y5|S_mean-120) + multinomial_lpmf(Y|p);
+            }//y5
+        }//y4
+        Z = log_sum_exp(to_vector(terms));
+        for(y4 in 0:y_max)
+            for(y5 in 0:y_max)
+                P45[y4+1, y5+1] = exp(terms[y4+1, y5+1] - Z);  //  make sure all probabilities sum to 1
+    }
+}
+'
+```
+
+Here's the data that the model needs. STAN doesn't accept `NA`s, hence why the `NA` values below are now encoded as -1:
+
+```{r}
+y <- c(18, 19, 22, -1, -1, 19, 20, 22)
+dat <- list(
+    N = length(y),
+    y = y,
+    S_mean = 160,
+    y_max = 40)
+```
+
+Finally, let's run the model and plot some samples from it:
+
+```{r echo = FALSE, "C-Stack error workaround attempt2"}
+# gc()
+if(!file.exists(file.path(getwd(), "m15H7.RData"))){
+m15H7 <- stan(model_code = code15H7, data = dat, chains = 4, cores = 4)
+save(m15H7, file = "m15H7.RData")
+}else{
+  load("m15H7.RData")
+}
+```
+
+```{r eval = FALSE, "Problem Chunk2"}
+m15H7 <- stan(model_code = code15H7, data = dat, chains = 4, cores = 4)
+```
+
+```{r, "final plot"}
+post <- extract.samples(m15H7)
+y_max <- dat$y_max
+plot(NULL, xlim = c(10, y_max-10),  ylim = c(10, y_max-10),
+    xlab = "number of 4s", ylab = "number of 5s")
+mtext("posterior distribution of 4s and 5s")
+for(y4 in 0:y_max) for(y5 in 0:y_max){
+    k <- grau(mean(post$P45[, y4+1, y5+1])/0.01)
+    points(y4, y5, col = k, pch = 16, cex = 1.5)
+}
+```
+
+From this, it is apparent that 20 spins for the 4s and 5s respectively is the most likely and that there is a negative correlation between these respective spins - more spins resulting in side 4 make less spins resulting in side 5 more likely.
+
+Andrew - don't spill your coffee again. 
+
+## Session Info 
+```{r}
+sessionInfo()
+```

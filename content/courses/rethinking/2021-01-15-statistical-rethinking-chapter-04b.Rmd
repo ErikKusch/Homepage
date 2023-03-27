@@ -1,0 +1,276 @@
+---
+title: Chapter 04 (Extra Material)
+author: Erik Kusch
+date: '2021-01-15'
+slug: chapter-04b
+categories:
+  - Statistical Rethinking
+tags:
+  - Statistics
+  - Bayes
+  - Bayesian Statistics
+  - AU Bayes Study Group
+subtitle: 'Small Worlds in Large Worlds'
+summary: 'Answers and solutions to additional exercises and homework belonging to chapter 4 in [Satistical Rethinking 2](https://xcelab.net/rm/statistical-rethinking/) by Richard McElreath.'
+authors: []
+lastmod: '2021-01-15T09:00:00+01:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: [aubayes]
+output:
+  blogdown::html_page:
+    keep_md: true
+    # toc: true
+    # toc_depth: 1
+    # number_sections: false
+# header-includes:
+#   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+#   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+math: true
+type: docs
+toc: true 
+menu:
+  Rethinking:
+    parent: Seminars
+    weight: 5
+weight: 5
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, tidy='styler', tidy.opts=list(strict=TRUE), fig.width = 15, fig.height = 8)
+options(width = 200)
+```
+
+## Introduction
+These are answers and solutions to additional exercises from previous versions of the end of chapter 4 in [Satistical Rethinking 2](https://xcelab.net/rm/statistical-rethinking/) by Richard McElreath. I have created these notes as a part of my ongoing involvement in the [AU Bayes Study Group](/project/aubayes/). Much of my inspiration for these solutions, where necessary, has been obtained from [Gregor Mathes](https://gregor-mathes.netlify.app/2021/01/01/rethinking-chapter-4/).
+
+## Practice 1
+
+**Question:** Refit model `m4.3` from the chapter but omit the mean weight `xbar`. Compare the new model’s posterior to that of the original model. In particular, look at the covariance among the parameters. What is difference?
+
+**Answer:** 
+Let's firstly refit the model `m4.3` using the code on pages 100 & 101:
+
+```{r}
+library(rethinking) 
+data(Howell1) 
+d <- Howell1 
+d2 <- d[ d$age >= 18 , ]
+# define the average weight, x-bar 
+xbar <- mean(d2$weight)
+# fit original model 
+m4.3 <- quap(alist(
+  height ~ dnorm(mu , sigma) , 
+  mu <- a + b*(weight - xbar) , 
+  a ~ dnorm(178 , 20) , 
+  b ~ dlnorm(0 , 1) , 
+  sigma ~ dunif(0 , 50)
+  ) , data=d2)
+# fit reduced model
+m4.3_reduced <- quap(alist(
+  height ~ dnorm(mu , sigma) , 
+  mu <- a + b*weight, 
+  a ~ dnorm(178 , 20) , 
+  b ~ dlnorm(0 , 1) , 
+  sigma ~ dunif(0 , 50)
+  ) , data=d2)
+```
+
+How do we compare these models and their posteriors? Here, I want to look at three things:  
+
+1. Covariances between parameters estimates  
+```{r}
+round(vcov(m4.3), digits = 3)
+round(vcov(m4.3_reduced), digits = 3)
+```
+
+As we can see, the **covariances increase** quite a bit when omitting `xbar` and this **not centring**. 
+
+2. Summaries of each parameter in the posterior
+```{r}
+summary(extract.samples(m4.3))
+summary(extract.samples(m4.3_reduced))
+```
+Between the two models, neither $\beta$ (`b`) nor $\sigma$ (`sigma`) differ greatly. However, our posterior estimate of $\alpha$ (`a`) is quite a bit lower in the reduced model than it is in the original model.
+This is down to the interpretation of the $\alpha$ parameter itself. In the original model, $\alpha$ denotes the average height of a person at the mean weight in the data set. Since we removed the `xbar` component in the reduced model, $\alpha$ now identifies the average height of a person of weight $0kg$ - a nonsense metric.
+
+3. Predictions and Intervals  
+Here, I have written a function that takes a model object, data, and some additional arguments to automate plot generation:
+```{r}
+plot.predictions <- function(X, Y, data, model, main){
+  XOrig <- X
+  X <- data[, colnames(data) == X]
+  Y <- data[, colnames(data) == Y]
+  plot(Y ~ X, col = col.alpha(rangi2, 0.8), main = main)
+  # Estimate and plot the quap regression line and 97% HPDI for the mean
+  weight.seq <- seq(from = min(X), to = max(X), length.out = 1000)
+  predict_df <- data.frame(XOrig = weight.seq)
+  colnames(predict_df) <- XOrig
+  mu <- link(model, data = predict_df)
+  mu.mean <- apply(mu, 2, mean)
+  mu.HPDI <- apply(mu, 2, HPDI, prob = 0.97)
+  lines(weight.seq, mu.mean)
+  shade(mu.HPDI, weight.seq)
+  # Estimate and plot the 97% HPDI for the predicted heights
+  predict_ls <- list(weight = weight.seq)
+  names(predict_ls) <- XOrig
+  sim.height <- sim(model, data = predict_ls)
+  height.HPDI <- apply(sim.height, 2, HPDI, prob = 0.97)
+  shade(height.HPDI, weight.seq)
+}
+
+plot.predictions(X = "weight", Y = "height", data = d2, model = m4.3, main = "Original Model")
+plot.predictions(X = "weight", Y = "height", data = d2, model = m4.3_reduced, main = "Reduced Model")
+```
+
+So. Does centring or not change the predictions of our model? No, it does not. At least in this case.
+
+## Practice 2
+**Question:** In the chapter, we used 15 knots with the cherry blossom spline. Increase the number of knots and observe what happens to the resulting spline. Then adjust also the width of the prior on the weights - change the standard deviation of the prior and watch what happens. What do you think the combination of knot number and the prior on the weights controls?
+
+**Answer:** 
+Again, I start with code from the book - pages 118, 120 & 122 to be precise - and implement it into a function for easy changing of model specifications:
+```{r}
+library(rethinking) 
+library(splines) 
+data(cherry_blossoms) 
+d <- cherry_blossoms
+d2 <- d[ complete.cases(d$temp) , ] # complete cases on temp 
+
+cherry_spline <- function(n_Knots, StdV){
+  # knot list
+  knot_list <- quantile(d2$year , probs=seq(0,1,length.out=n_Knots))[-c(1,n_Knots)]
+  # basis function
+  B <- bs(d2$year,
+        knots=knot_list, 
+        degree=3 , intercept=TRUE)
+  # Run quap model
+  m4.7 <- quap(alist(T ~ dnorm(mu, sigma), 
+                     mu <- a + B %*% w, 
+                     a ~ dnorm(6, 10), 
+                     w ~ dnorm(0, StdV), 
+                     sigma ~ dexp(1)),
+               data = list(T = d2$temp, B = B, StdV = StdV), 
+                      start = list(w = rep(0, ncol(B)))
+               )
+  # get 97% posterior interval for mean and plot
+  mu <- link(m4.7) 
+  mu_PI <- apply(mu,2,PI,0.97) 
+  plot( d2$year , d2$temp , col=col.alpha(rangi2,0.3) , pch=16 , 
+        main = paste("Knots:", n_Knots, "-", "Prior Weight:", StdV)) 
+  shade( mu_PI , d2$year , col=col.alpha("black",0.5) )
+}
+```
+
+Let's start by **increasing the number of knots**:
+```{r}
+cherry_spline(n_Knots = 15, StdV = 1) 
+cherry_spline(n_Knots = 20, StdV = 1) 
+cherry_spline(n_Knots = 30, StdV = 1) 
+```
+The more knots we use, the more flexible the resulting function becomes. It fits the data better, but might overfit if we try to do predictions.
+
+
+Now, we **change the prior weights**:
+```{r}
+cherry_spline(n_Knots = 15, StdV = 1) # base standard deviation
+cherry_spline(n_Knots = 15, StdV = .1) # decreased standard deviation
+cherry_spline(n_Knots = 15, StdV = 100) # increased standard deviation
+```
+As I **decrease the standard deviation for the prior or the weights**, I see that the resulting function becomes **less flexible**. I expected our function to become less flexible as I lower the `StdV` parameter since a lower standard deviation here will increase the weights and thus give each base function more of say in determining the overall function globally, making the result smoother.
+
+## Practice 3
+**Question:** Return to `data(cherry_blossoms)` and model the association between blossom date (`doy`) and March temperature (`temp`). Note that there are many missing values in both variables. You may consider a linear model, a polynomial, or a spline on temperature. How well does temperature rend predict the blossom trend?
+
+**Answer:** 
+```{r}
+library(rethinking) 
+library(splines) 
+data(cherry_blossoms) 
+d <- cherry_blossoms[, 2:3]
+d2 <- na.omit(d)
+d2$temps <- scale(d2$temp)
+with(d2, plot(temps, doy, 
+              xlab = "Centred Temperature in March", ylab = "Day in Year")
+     )
+```
+
+There is a seemingly negative relationship here, but there is also a lot of noise. I expect polynomial or spline approaches to capture too much of that noise and opt for a simple linear regression instead:
+
+```{r}
+# define average temp
+xbar <- mean(d2$temp)
+
+# fit modell
+cherry_linear <- quap(
+  alist(doy ~ dnorm(mu, sigma),
+        mu <- a + b * (temp - xbar),
+        a ~ dnorm(115, 30),
+        b ~ dnorm(-2, 5),
+        sigma ~ dunif(0, 50)), 
+  data = d2
+  )
+
+# output
+precis(cherry_linear)
+```
+
+With average temperatures in March, cherries blossom on day `r round(precis(cherry_linear)[1,1], 0)` of the year. With every increase of 1°C in temperature in March, cherries blossom - on average - `r abs(round(precis(cherry_linear)[2,1], 0))` earlier. Our PI shows that we are pretty certain of this relationship. Let's plot this to finish:
+
+```{r}
+plot.predictions(X = "temp", Y = "doy", data = d2, model = cherry_linear, main = "Cherry Blossoms")
+```
+Off, that's quite some uncertainty there. I guess we aren't doing a tremendous job at predicting cherry blossom dates depending on temperature in March with this model.
+
+## Practice 4
+**Question:** Simulate the prior predictive distribution for the cherry blossom spline in the chapter. Adjust the prior on the weights and observe what happens. What do you think the prior on the weight is doing?
+
+**Answer:** 
+
+I haven't solved this myself (yet). In the meantime, you can consult the answer provided by [Gregor Mathes](https://gregor-mathes.netlify.app/2021/01/01/rethinking-chapter-4/#question-4h6).
+
+## Practice 5
+**Question:** The cherry blossom spline in the chapter used an intercept a, but technically it doesn’t require one. The first basis function could substitute for the intercept. Try refitting the cherry blossom spline without the intercept. What else about the model do you need to change to make this work?
+
+**Answer:** 
+```{r}
+library(rethinking) 
+library(splines) 
+data(cherry_blossoms) 
+d <- cherry_blossoms
+d2 <- d[ complete.cases(d$temp) , ] # complete cases on temp 
+
+n_Knots = 15
+# knot list
+knot_list <- quantile(d2$year , probs=seq(0,1,length.out=n_Knots))[-c(1,n_Knots)]
+# basis function
+B <- bs(d2$year,
+      knots=knot_list, 
+      degree=3 , intercept=FALSE)
+# Run quap model
+m4.7 <- quap(alist(T ~ dnorm(mu, sigma), 
+                   mu <- B %*% w, 
+                   a ~ dnorm(6, 10), 
+                   w ~ dnorm(0, 1), 
+                   sigma ~ dexp(1)),
+             data = list(T = d2$temp, B = B), 
+                    start = list(w = rep(0, ncol(B)))
+             )
+# get 97% posterior interval for mean and plot
+mu <- link(m4.7) 
+mu_PI <- apply(mu,2,PI,0.97) 
+plot( d2$year , d2$temp , col=col.alpha(rangi2,0.3) , pch=16 , 
+      main = "No Intercept") 
+shade(mu_PI , d2$year , col=col.alpha("black",0.5))
+```
+
+We need to change the deterministic formula in the model as well as the creation of basis functions by setting `Intercept = FALSE` in the `bs()` function call.
+
+
+## Session Info
+```{r}
+sessionInfo()
+```

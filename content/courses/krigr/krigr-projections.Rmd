@@ -1,0 +1,354 @@
+---
+title: "Projection Downscaling"
+author: Erik Kusch
+date: '2022-05-26'
+slug: projections
+categories:
+  - KrigR
+  - Climate Data
+tags:
+  - Climate Data
+  - Statistical Downscaling
+  - KrigR
+subtitle: ""
+summary: ''
+authors: []
+lastmod: '2021-05-26T20:00:00+01:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: 
+output:
+  blogdown::html_page:
+    keep_md: true
+    # toc: true
+    # toc_depth: 1
+    # number_sections: false
+# header-includes:
+#   <script src = "https://polyfill.io/v3/polyfill.min.js?features = es6"></script>
+#   <script id = "MathJax-script" async src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+math: true
+type: docs
+toc: true 
+menu:
+  krigr:
+    parent: Workshop
+    weight: 30
+weight: 30
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, tidy='styler', tidy.opts=list(strict=TRUE), fig.width = 15, fig.height = 8)
+options(width = 90)
+rm(list=ls())
+if("KrigR" %in% rownames(installed.packages()) == FALSE){ # KrigR check
+  Sys.setenv(R_REMOTES_NO_ERRORS_FROM_WARNINGS="true")
+  devtools::install_github("https://github.com/ErikKusch/KrigR")
+}
+source("PersonalSettings.R") # I do this here to specify number of cores and API credentials and am thus not sharing this file
+```
+
+```{r, sourcing-previous, echo = FALSE}
+source_rmd <- function(file, local = FALSE, ...){
+  options(knitr.duplicate.label = 'allow')
+
+  tempR <- tempfile(tmpdir = ".", fileext = ".R")
+  on.exit(unlink(tempR))
+  knitr::purl(file, output=tempR, quiet = TRUE)
+
+  envir <- globalenv()
+  source(tempR, local = envir, ...)
+}
+source_rmd("krigr-locations.Rmd")
+```
+
+
+{{% hint danger %}}
+This part of the workshop is dependant on set-up and preparation done previously [here](/courses/krigr/prep/).
+{{% /hint %}}
+
+First, we load `KrigR`:
+
+```{r}
+library(KrigR)
+```
+
+I expect that you will often be interested not just in past and current climatic conditions, but also in future projections of climate data at high spatial resolutions.
+
+{{% hint info %}}
+The `KrigR` workflow can be used to establish high-resolution, bias-corrected climate projection products.
+{{% /hint %}}
+
+This time, we run our exercise for all of Germany because of its size and topographical variety.
+
+```{r ShapesGer}
+Shape_shp <- ne_countries(country = "Germany")
+```
+
+## `KrigR` Process for Projections
+
+We published the the `KrigR` workflow for downscaled climate projections in [this publication (Section 3.5)](https://iopscience.iop.org/article/10.1088/1748-9326/ac48b3) and I will walk you through the contents thereof here.
+
+To achieve downscaled projection products we require three data products:  
+1. Historical climate data from ERA5(-Land)  
+2. Historical climate data from projection source  
+3. Future climate data from projection source  
+
+
+Subsequently, the data products are downscaled to the desired spatial resolution using `krigR()`. Finally, the difference between the downscaled projection-sourced data are added to the historical baseline obtained from (downscaled) ERA5(-Land) data. This achieves bias correction.
+
+### Obtaining ERA5(-Land) Data
+
+Now, let's obtain the historical baseline from ERA5-Land for the same time-period as our CMIP6 historical data.
+
+<details>
+  <summary>Click here for file if download takes too long:</summary>
+    Download 
+<a href="/courses/krigr/Data/Germany_Hist_ERA.nc">Germany_Hist_ERA.nc</a> and place it into your data directory.
+</details> 
+
+```{r}
+if(!file.exists(file.path(Dir.Data, "Germany_Hist_ERA.nc"))){
+  Hist_ERA_ras <- download_ERA(Variable = "2m_temperature",
+                               DateStart = "1981-01-01",
+                               DateStop = "1999-12-31",
+                               TResolution = "month",
+                               TStep = 1,
+                               Extent = Shape_shp,
+                               Dir = Dir.Data,
+                               FileName = "Germany_Hist_ERA", 
+                               API_Key = API_Key,
+                               API_User = API_User,
+                               SingularDL = TRUE)
+  Index <- rep(1:12, length = nlayers(Hist_ERA_ras))
+  Hist_ERA_ras <- stackApply(Hist_ERA_ras, indices = Index, fun = mean)
+  writeRaster(Hist_ERA_ras, filename = file.path(Dir.Data, "Germany_Hist_ERA"), format = "CDF")
+}
+Hist_ERA_ras <- mean(stack(file.path(Dir.Data, "Germany_Hist_ERA.nc")))
+```
+
+### Obtaining Projection Data
+
+Here, we use CMIP6 projection data manually sourced from the [ECMWF CDS distribution](https://cds.climate.copernicus.eu/cdsapp#!/dataset/projections-cmip6?tab=overview).
+
+{{% hint %}}
+Our [development goals](/courses/outlook/) include development of `download_ERA()` to work with other ECWMF CDS data sets aside from ERA5(-Land). This includes this CMIP6 data set.
+{{% /hint %}}
+
+#### Historical Baseline
+
+<details>
+  <summary>Click here for file:</summary>
+    Download 
+<a href="/courses/krigr/Data/historical_tas_1981-2000.nc">historical_tas_1981-2000.nc</a> and place it into your data directory.
+</details> 
+
+```{r}
+train_HIST <- mean(stack(file.path(Dir.Data, "historical_tas_1981-2000.nc")))
+train_HIST <- crop(train_HIST,extent(Hist_ERA_ras))
+train_mask <- KrigR::mask_Shape(train_HIST, Shape_shp)
+train_HIST <- mask(train_HIST, train_mask)
+```
+
+#### Future Projection
+
+<details>
+  <summary>Click here for file:</summary>
+    Download 
+<a href="/courses/krigr/Data/ssp585_tas_2041-2060.nc">ssp585_tas_2041-2060.nc</a> and place it into your data directory.
+</details> 
+
+```{r}
+train_SSP <- mean(stack(file.path(Dir.Data, "ssp585_tas_2041-2060.nc")))
+train_SSP <- crop(train_SSP,extent(Hist_ERA_ras))
+train_mask <- KrigR::mask_Shape(train_SSP, Shape_shp)
+train_SSP <- mask(train_SSP, train_mask)
+```
+
+#### Visualisation of CMIP6 Data
+```{r, results = "asis", fig.height = 7.5, fig.keep='all'}
+Plot_Raw(stack(train_HIST, train_SSP), 
+         Shp = Shape_shp,
+         Dates = c("Historic CMIP6", "Future CMIP6"))
+```
+
+Already, we can see that quite a bit of warming is projected to happen all across Germany. However, we want to know about this at higher spatial resolutions. That's where `KrigR` comes in.
+
+### Establishing Kriged Products
+
+For the first time in this workshop material, we will push our spatial resolution to the finest scale supported by our default GMTED 2010 DEM covariate data: 0.008333 / ~1km.
+
+{{% hint warning %}}
+These operations take quite some time - grab a tea or coffee, go for a walk, or stretch a bit.
+{{% /hint %}}
+
+The downscaling calls should be familiar by now so I will forego explaining them. In case, the following code snippets do not make sense to you, please consult the portion of this workshop concerned with [statistical downscaling](/courses/krigr/kriging/).
+
+#### Historical CMIP6
+```{r , eval = FALSE}
+## Covariate Data
+GMTED_DE <- download_DEM(
+  Train_ras = train_HIST,
+  Target_res = 0.008334,
+  Shape = Shape_shp,
+  Keep_Temporary = TRUE,
+  Dir = Dir.Covariates
+)
+## Kriging
+Output_HIST <- krigR(
+  Data = train_HIST,
+  Covariates_coarse = GMTED_DE[[1]], 
+  Covariates_fine = GMTED_DE[[2]],  
+  Keep_Temporary = FALSE,
+  Cores = 1,
+  Dir = Dir.Exports,  
+  FileName = "DE_CMIP-HIST", 
+  nmax = 40
+)
+```
+
+```{r,echo = FALSE}
+Output_HIST <- list(stack(file.path(Dir.Exports, "DE_CMIP-HIST.nc")),
+                   stack(file.path(Dir.Exports, "SE_DE_CMIP-HIST.nc")))
+```
+
+```{r , results = "asis", fig.height = 7.5, fig.keep='all'}
+Plot_Krigs(Output_HIST,
+           Shp = Shape_shp,
+           Dates = "CMIP6 Historical", columns = 2)
+```
+
+#### Future CMIP6
+```{r , eval = FALSE}
+## Covariate Data
+GMTED_DE <- download_DEM(
+  Train_ras = train_SSP,
+  Target_res = 0.008334,
+  Shape = Shape_shp,
+  Keep_Temporary = TRUE,
+  Dir = Dir.Covariates
+)
+## Kriging
+Output_SSP <- krigR(
+  Data = train_SSP,
+  Covariates_coarse = GMTED_DE[[1]], 
+  Covariates_fine = GMTED_DE[[2]],   
+  Keep_Temporary = FALSE,
+  Cores = 1,
+  Dir = Dir.Exports,  
+  FileName = "DE_SSP585_2041-2060", 
+  nmax = 40
+)
+```
+
+```{r,echo = FALSE}
+Output_SSP <- list(stack(file.path(Dir.Exports, "DE_SSP585_2041-2060.nc")),
+                   stack(file.path(Dir.Exports, "SE_DE_SSP585_2041-2060.nc")))
+```
+
+```{r , results = "asis", fig.height = 7.5, fig.keep='all'}
+Plot_Krigs(Output_SSP,
+           Shp = Shape_shp,
+           Dates = "CMIP6 Future", columns = 2)
+```
+
+#### Historical ERA5-Land
+```{r , eval = FALSE}
+## Covariate Data
+GMTED_DE <- download_DEM(
+  Train_ras = Hist_ERA_ras,
+  Target_res = 0.008334,
+  Shape = Shape_shp,
+  Keep_Temporary = TRUE,
+  Dir = Dir.Covariates
+)
+## Kriging
+Output_ERA <- krigR(
+  Data = Hist_ERA_ras,
+  Covariates_coarse = GMTED_DE[[1]], 
+  Covariates_fine = GMTED_DE[[2]],   
+  Keep_Temporary = FALSE,
+  Cores = 1,
+  Dir = Dir.Exports,  
+  FileName = "DE_hist", 
+  nmax = 40
+)
+```
+
+```{r,echo = FALSE}
+Output_ERA <- list(stack(file.path(Dir.Exports, "DE_hist.nc")),
+                   stack(file.path(Dir.Exports, "SE_DE_hist.nc")))
+```
+
+```{r , results = "asis", fig.height = 7.5, fig.keep='all'}
+Plot_Krigs(Output_ERA,
+           Shp = Shape_shp,
+           Dates = "ERA5-Land Historical", columns = 2)
+```
+
+### Putting It All Together
+
+To establish a final product of high-resolution climate projection data, we simply add the difference between the kriged CMIP6 products to the kriged ERA5-Land product:
+
+```{r , results = "asis", fig.height = 4, fig.keep='all'}
+## Creating Difference and Projection raster
+Difference_ras <- Output_SSP[[1]] - Output_HIST[[1]]
+Projection_ras <- Output_ERA[[1]] + Difference_ras
+## Adding min and max values to ocean cells to ensure same colour scale
+Output_ERA[[1]][10] <- maxValue(Projection_ras)
+Output_ERA[[1]][12] <- minValue(Projection_ras)
+Projection_ras[10] <- maxValue(Output_ERA[[1]])
+Projection_ras[12] <- minValue(Output_ERA[[1]])
+## Individual plots
+A_gg <- Plot_Raw(Output_ERA[[1]], Shp = Shape_shp, 
+                 Dates = "Historical ERA5-Land (1981-2000)")
+B_gg <- Plot_Raw(Difference_ras[[1]], Shp = Shape_shp, 
+                 Dates = "Anomalies of SSP585 - Historical CMIP-6",
+                 COL = rev(viridis(100)))
+C_gg <- Plot_Raw(Projection_ras[[1]], Shp = Shape_shp, 
+                 Dates = "Future Projection (ERA5-Land + Anomalies)")
+## Fuse the plots into one big plot
+ggPlot <- plot_grid(plotlist = list(A_gg, B_gg, C_gg), 
+                    ncol = 3, labels = "AUTO") 
+ggPlot
+```
+
+And there we have it - a downscaled, bias-corrected projection of air temperature across Germany.
+
+## Considerations for Projection Kriging
+
+Projection kriging is easily the most flexible exercise you can undertake with `KrigR`. 
+
+{{% hint warning %}}
+I have submitted a research proposal to establish best practice for projection kriging.
+{{% /hint %}}
+
+So far, two particular aspects stand out to me and should be considered by you when using `KrigR` to obtain high-resolution projection data.
+
+{{% hint danger %}}
+**Do not statistically downscale precipitation data and do not use products that do so!**
+{{% /hint %}}
+
+### Reliability
+
+Just like with all statistical downscaling exercises, it is pivotal to consider variables interpolated and consistency of statistical relationships with covariates across spatial resolutions.
+
+{{% hint warning %}}
+Kriging is a very flexible tool for statistical interpolation. Consider your choice of covariates and change in resolutions carefully. **Always inspect your data**.
+{{% /hint %}}
+
+### Uncertainty
+
+Integration of multiple kriged data sets with statistical uncertainty and each of which comes with its own underlying dynamical data uncertainty raises the question of how to combine uncertainties for meaningful uncertainty flags.
+
+{{% hint warning %}}
+I have submitted a research proposal to assess best practice for uncertainty integration across data products.
+{{% /hint %}}
+
+## Session Info
+```{r}
+sessionInfo()
+```

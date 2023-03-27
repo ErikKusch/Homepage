@@ -1,0 +1,625 @@
+---
+title: "Bayesian Network Inference"
+author: Erik Kusch
+date: '2022-11-08'
+slug: inference
+categories:
+  - Bayesian Networks
+tags:
+  - Bayes
+  - Networks
+  - Bayesian Statistics
+  - Statistics
+subtitle: "Bayesian Network Inference"
+summary: 'Answers and solutions to the exercises belonging to chapter 4 in [Bayesian Networks in R with Applications in Systems Biology](https://link.springer.com/book/10.1007/978-1-4614-6446-4) by by Radhakrishnan Nagarajan, Marco Scutari \& Sophie Lèbre and Part 4 in [Bayesian Networks with Examples in R](https://www.bnlearn.com/book-crc/) by M. Scutari and J.-B. Denis.'
+authors: []
+lastmod: '2022-11-08T20:00:00+01:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: 
+output:
+  blogdown::html_page:
+    keep_md: true
+    # toc: true
+    # toc_depth: 1
+    # number_sections: false
+# header-includes:
+#   <script src = "https://polyfill.io/v3/polyfill.min.js?features = es6"></script>
+#   <script id = "MathJax-script" async src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+math: true
+type: docs
+toc: true 
+menu:
+  bayesnets:
+    parent: 4 - Network Inference
+    weight: 1
+weight: 1
+---
+
+
+<div id="TOC">
+
+</div>
+
+<style>
+
+blockquote{
+color:#ffffff;
+}
+
+</style>
+<div id="material" class="section level2">
+<h2>Material</h2>
+<p>Most of the material in these chapters has already been covered in previous material, so the following summary is rather brief:</p>
+<ul>
+<li><a href="/courses/bayes-nets/8-Bayesian-Network-Inference_08-11-22.html">Bayesian Network Inference</a></li>
+</ul>
+<p>Please refer to earlier material for introductions of queries, structure learning, and parameter learning in theory and in <code>R</code>.</p>
+</div>
+<div id="exercises" class="section level2">
+<h2>Exercises</h2>
+<p>These are answers and solutions to the exercises at the end of chapter 4 in <a href="https://link.springer.com/book/10.1007/978-1-4614-6446-4">Bayesian Networks in R with Applications in Systems Biology</a> by by Radhakrishnan Nagarajan, Marco Scutari &amp; Sophie Lèbre and Part 4 in <a href="https://www.bnlearn.com/book-crc/">Bayesian Networks with Examples in R</a> by M. Scutari and J.-B. Denis. Much of my inspiration for these solutions, where necessary, by consulting the solutions provided by the authors themselves as in the appendix.</p>
+<div id="r-environment" class="section level3">
+<h3><code>R</code> Environment</h3>
+<p>For today’s exercise, I load the following packages:</p>
+<pre class="r"><code>library(bnlearn)
+library(gRain)
+library(GeneNet)
+library(penalized)</code></pre>
+</div>
+<div id="nagarajan-4.1" class="section level3">
+<h3>Nagarajan 4.1</h3>
+<blockquote>
+<p>Apply the junction tree algorithm to the validated network structure from Sachs et al. (2005), and draw the resulting undirected triangulated graph.</p>
+</blockquote>
+<p>Taken directly from the solutions:</p>
+<p><img src="/courses/bayes-nets/Nagarajan4_1.JPG" width="900"/></p>
+</div>
+<div id="nagarajan-4.2" class="section level3">
+<h3>Nagarajan 4.2</h3>
+<blockquote>
+<p>Consider the Sachs et al. (2005) data used in Sect. 4.2.</p>
+</blockquote>
+<p>First, let’s read the data in like it was done in the book:</p>
+<pre class="r"><code>isachs &lt;- read.table(&quot;sachs.interventional.txt&quot;, header = TRUE, colClasses = &quot;factor&quot;)
+isachs &lt;- isachs[, 1:11]
+for (i in names(isachs)) {
+  levels(isachs[, i]) &lt;- c(&quot;LOW&quot;, &quot;AVG&quot;, &quot;HIGH&quot;)
+}</code></pre>
+<p>This .txt file can be downloaded from <a href="https://www.bnlearn.com/book-useR/code/sachs.interventional.txt.gz">here</a>.</p>
+<div id="part-a" class="section level4">
+<h4>Part A</h4>
+<blockquote>
+<p>Perform parameter learning with the <code>bn.fit</code> function from <code>bnlearn</code> and the validated network structure. How do the maximum likelihood estimates differ from the Bayesian ones, and how do the latter vary as the imaginary sample size increases?</p>
+</blockquote>
+<pre class="r"><code>sachs_DAG &lt;- model2network(paste0(
+  &quot;[PKC][PKA|PKC][praf|PKC:PKA]&quot;,
+  &quot;[pmek|PKC:PKA:praf][p44.42|pmek:PKA]&quot;,
+  &quot;[pakts473|p44.42:PKA][P38|PKC:PKA]&quot;,
+  &quot;[pjnk|PKC:PKA][plcg][PIP3|plcg]&quot;,
+  &quot;[PIP2|plcg:PIP3]&quot;
+))
+f4.1_mle &lt;- bn.fit(sachs_DAG, isachs, method = &quot;mle&quot;)
+f4.1_bayes1 &lt;- bn.fit(sachs_DAG, isachs, method = &quot;bayes&quot;, iss = 1)
+f4.1_bayes10 &lt;- bn.fit(sachs_DAG, isachs, method = &quot;bayes&quot;, iss = 10)
+f4.1_bayes100 &lt;- bn.fit(sachs_DAG, isachs, method = &quot;bayes&quot;, iss = 100)</code></pre>
+<p>I omit the outputs of the individual objects created above here for space.</p>
+<p>From a theoretical standpoint mle estimates may contain NA values while bayes-inferred estimates do not. That being said, I did not see any NA outputs in the maximum likelihood estimates here.</p>
+<p>As far as iss is concerned, higher iss values result in smoother estimates.</p>
+</div>
+<div id="part-b" class="section level4">
+<h4>Part B</h4>
+<blockquote>
+<p>Node <code>PKA</code> is parent of all the nodes in the <code>praf → pmek → p44.42 → pakts473</code> chain. Use the junction tree algorithm to explore how our beliefs on those nodes change when we have evidence that <code>PKA</code> is <code>“LOW”</code>, and when <code>PKA</code> is <code>“HIGH”</code>.</p>
+</blockquote>
+<pre class="r"><code>mle_jtree &lt;- compile(as.grain(f4.1_mle))
+query &lt;- c(&quot;praf&quot;, &quot;pmek&quot;, &quot;p44.42&quot;, &quot;pakts473&quot;)
+
+## baseline query
+querygrain(mle_jtree, nodes = query)</code></pre>
+<pre><code>## $pmek
+## pmek
+##       LOW       AVG      HIGH 
+## 0.5798148 0.3066667 0.1135185 
+## 
+## $praf
+## praf
+##       LOW       AVG      HIGH 
+## 0.5112963 0.2835185 0.2051852 
+## 
+## $p44.42
+## p44.42
+##       LOW       AVG      HIGH 
+## 0.1361111 0.6062963 0.2575926 
+## 
+## $pakts473
+## pakts473
+##        LOW        AVG       HIGH 
+## 0.60944444 0.31037037 0.08018519</code></pre>
+<pre class="r"><code>## low evidence
+mle_jprop &lt;- setFinding(mle_jtree, nodes = &quot;PKA&quot;, states = &quot;LOW&quot;)
+querygrain(mle_jprop, nodes = query)</code></pre>
+<pre><code>## $pmek
+## pmek
+##        LOW        AVG       HIGH 
+## 0.35782443 0.08874046 0.55343511 
+## 
+## $praf
+## praf
+##       LOW       AVG      HIGH 
+## 0.1145038 0.1746183 0.7108779 
+## 
+## $p44.42
+## p44.42
+##       LOW       AVG      HIGH 
+## 0.3435115 0.1965649 0.4599237 
+## 
+## $pakts473
+## pakts473
+##       LOW       AVG      HIGH 
+## 0.2967557 0.2977099 0.4055344</code></pre>
+<pre class="r"><code>## high evidence
+mle_jprop &lt;- setFinding(mle_jtree, nodes = &quot;PKA&quot;, states = &quot;HIGH&quot;)
+querygrain(mle_jprop, nodes = query)</code></pre>
+<pre><code>## $pmek
+## pmek
+##         LOW         AVG        HIGH 
+## 0.981418919 0.016891892 0.001689189 
+## 
+## $praf
+## praf
+##        LOW        AVG       HIGH 
+## 0.83614865 0.13006757 0.03378378 
+## 
+## $p44.42
+## p44.42
+##        LOW        AVG       HIGH 
+## 0.07263514 0.68918919 0.23817568 
+## 
+## $pakts473
+## pakts473
+##       LOW       AVG      HIGH 
+## 0.7652027 0.2347973 0.0000000</code></pre>
+<p><code>PKA</code> inhibits all other nodes. When <code>PKA</code> is <code>HIGH</code> then the <code>LOW</code> probability of all other nodes increases.</p>
+<p>When <code>PKA</code> is <code>HIGH</code>, the activity of all the proteins corresponding to the query nodes is inhibited (the <code>LOW</code> probability increases and the <code>HIGH</code> decreases). When <code>PKA</code> is <code>LOW</code>, the opposite is true (the LOW probability decreases and the <code>HIGH</code> increases).</p>
+</div>
+<div id="part-c" class="section level4">
+<h4>Part C</h4>
+<blockquote>
+<p>Similarly, explore the effects on <code>pjnk</code> of evidence on <code>PIP2</code>, <code>PIP3</code>, and <code>plcg</code>.</p>
+</blockquote>
+<pre class="r"><code>mle_jprop &lt;- setFinding(mle_jtree,
+  nodes = c(&quot;PIP2&quot;, &quot;PIP3&quot;, &quot;plcg&quot;),
+  states = rep(&quot;LOW&quot;, 3)
+)
+
+## baseline query
+querygrain(mle_jtree, nodes = &quot;pjnk&quot;)</code></pre>
+<pre><code>## $pjnk
+## pjnk
+##        LOW        AVG       HIGH 
+## 0.53944444 0.38277778 0.07777778</code></pre>
+<pre class="r"><code>## low evidence
+querygrain(mle_jprop, nodes = &quot;pjnk&quot;)</code></pre>
+<pre><code>## $pjnk
+## pjnk
+##        LOW        AVG       HIGH 
+## 0.53944444 0.38277778 0.07777778</code></pre>
+<p>Turns out <code>pjnk</code> is unaffected by the others. The DAG shown in the answers to exercise Nagarajan 4.1 supports this.</p>
+</div>
+</div>
+<div id="nagarajan-4.3" class="section level3">
+<h3>Nagarajan 4.3</h3>
+<blockquote>
+<p>Consider the marks data set analyzed in Sect. 2.3.</p>
+</blockquote>
+<pre class="r"><code>data(marks)</code></pre>
+<div id="part-a-1" class="section level4">
+<h4>Part A</h4>
+<blockquote>
+<p>Learn both the network structure and the parameters with likelihood based approaches, i.e., BIC or AIC, for structure learning and maximum likelihood estimates for the parameters.</p>
+</blockquote>
+<pre class="r"><code>f4.3_dag &lt;- hc(marks, score = &quot;bic-g&quot;)
+f4.3_dag</code></pre>
+<pre><code>## 
+##   Bayesian network learned via Score-based methods
+## 
+##   model:
+##    [MECH][VECT|MECH][ALG|MECH:VECT][ANL|ALG][STAT|ALG:ANL] 
+##   nodes:                                 5 
+##   arcs:                                  6 
+##     undirected arcs:                     0 
+##     directed arcs:                       6 
+##   average markov blanket size:           2.40 
+##   average neighbourhood size:            2.40 
+##   average branching factor:              1.20 
+## 
+##   learning algorithm:                    Hill-Climbing 
+##   score:                                 BIC (Gauss.) 
+##   penalization coefficient:              2.238668 
+##   tests used in the learning procedure:  34 
+##   optimized:                             TRUE</code></pre>
+<pre class="r"><code>f4.3_bn &lt;- bn.fit(f4.3_dag, marks)
+f4.3_bn</code></pre>
+<pre><code>## 
+##   Bayesian network parameters
+## 
+##   Parameters of node MECH (Gaussian distribution)
+## 
+## Conditional density: MECH
+## Coefficients:
+## (Intercept)  
+##    38.95455  
+## Standard deviation of the residuals: 17.48622 
+## 
+##   Parameters of node VECT (Gaussian distribution)
+## 
+## Conditional density: VECT | MECH
+## Coefficients:
+## (Intercept)         MECH  
+##  34.3828788    0.4160755  
+## Standard deviation of the residuals: 11.01373 
+## 
+##   Parameters of node ALG (Gaussian distribution)
+## 
+## Conditional density: ALG | MECH + VECT
+## Coefficients:
+## (Intercept)         MECH         VECT  
+##  25.3619809    0.1833755    0.3577122  
+## Standard deviation of the residuals: 8.080725 
+## 
+##   Parameters of node ANL (Gaussian distribution)
+## 
+## Conditional density: ANL | ALG
+## Coefficients:
+## (Intercept)          ALG  
+##   -3.574130     0.993156  
+## Standard deviation of the residuals: 10.50248 
+## 
+##   Parameters of node STAT (Gaussian distribution)
+## 
+## Conditional density: STAT | ALG + ANL
+## Coefficients:
+## (Intercept)          ALG          ANL  
+## -11.1920114    0.7653499    0.3164056  
+## Standard deviation of the residuals: 12.60646</code></pre>
+</div>
+<div id="part-b-1" class="section level4">
+<h4>Part B</h4>
+<blockquote>
+<p>Query the network learned in the previous point for the probability to have the marks for both <code>STAT</code> and <code>MECH</code> above 60, given evidence that the mark for <code>ALG</code> is at most 60. Are the two variables independent given the evidence on <code>ALG</code>?</p>
+</blockquote>
+<pre class="r"><code>cpquery(f4.3_bn, event = (STAT &gt; 60) &amp; (MECH &gt; 60), evidence = (ALG &lt;= 60), n = 1e7)</code></pre>
+<pre><code>## [1] 0.009562571</code></pre>
+<pre class="r"><code>cpquery(f4.3_bn, event = (STAT &gt; 60), evidence = (ALG &lt;= 60), n = 1e7)</code></pre>
+<pre><code>## [1] 0.08289571</code></pre>
+<pre class="r"><code>cpquery(f4.3_bn, event = (MECH &gt; 60), evidence = (ALG &lt;= 60), n = 1e7)</code></pre>
+<pre><code>## [1] 0.0683385</code></pre>
+<p>The conditional probability of the two outcomes (0.0095912) is not the same as the product of their corresponding marginal probabilities (0.0056668). Conclusively, we can say that <code>STAT</code> and <code>MECH</code> are not independent conditional on <code>ALG</code>.</p>
+</div>
+<div id="part-c-1" class="section level4">
+<h4>Part C</h4>
+<blockquote>
+<p>What is the (conditional) probability of having an average vote (in the [60,70] range) in both <code>VECT</code> and <code>MECH</code> while having an outstanding vote in <code>ALG</code> (at least 90)?</p>
+</blockquote>
+<pre class="r"><code>cpquery(f4.3_bn,
+  event = ((MECH &gt;= 60) &amp; (MECH &lt;= 70)) | ((VECT &gt;= 60) &amp; (VECT &lt;= 70)),
+  evidence = (ALG &gt;= 90),
+  n = 1e7
+)</code></pre>
+<pre><code>## [1] 0.2872254</code></pre>
+</div>
+</div>
+<div id="nagarajan-4.4" class="section level3">
+<h3>Nagarajan 4.4</h3>
+<blockquote>
+<p>Using the dynamic Bayesian network <code>dbn2</code> from Sect. 4.3, investigate the effects of genes <code>257710_at</code> and <code>255070_at</code> observed at time t-2 on gene <code>265768_at</code> at time t.</p>
+</blockquote>
+<p>This is the network in the chapter according to the errata corrige <a href="https://www.bnlearn.com/book-useR/">here</a>:</p>
+<pre class="r"><code>data(arth800)
+subset &lt;- c(60, 141, 260, 333, 365, 424, 441, 512, 521, 578, 789, 799)
+arth12 &lt;- arth800.expr[, subset]
+x &lt;- arth12[1:(nrow(arth12) - 2), ]
+y &lt;- arth12[-(1:2), &quot;265768_at&quot;]
+lambda &lt;- optL1(response = y, penalized = x, trace = FALSE)$lambda
+lasso.t &lt;- penalized(response = y, penalized = x, lambda1 = lambda, trace = FALSE)
+y &lt;- arth12[-(1:2), &quot;245094_at&quot;]
+colnames(x)[12] &lt;- &quot;245094_at1&quot;
+lambda &lt;- optL1(response = y, penalized = x, trace = FALSE)$lambda
+lasso.s &lt;- penalized(response = y, penalized = x, lambda1 = lambda, trace = FALSE)
+## errate comes in here
+dbn2 &lt;- empty.graph(c(
+  &quot;265768_at&quot;, &quot;245094_at1&quot;,
+  &quot;258736_at&quot;, &quot;257710_at&quot;, &quot;255070_at&quot;,
+  &quot;245319_at&quot;, &quot;245094_at&quot;
+))
+dbn2 &lt;- set.arc(dbn2, &quot;245094_at&quot;, &quot;265768_at&quot;)
+for (node in names(coef(lasso.s))[-c(1, 6)]) {
+  dbn2 &lt;- set.arc(dbn2, node, &quot;245094_at&quot;)
+}
+dbn2 &lt;- set.arc(dbn2, &quot;245094_at1&quot;, &quot;245094_at&quot;)
+dbn2.data &lt;- as.data.frame(x[, nodes(dbn2)[1:6]])
+dbn2.data[, &quot;245094_at&quot;] &lt;- y
+dbn2.data[, &quot;245094_at1&quot;] &lt;- arth12[2:(nrow(arth12) - 1), &quot;245094_at&quot;]
+dbn2.fit &lt;- bn.fit(dbn2, dbn2.data)
+## errata stops here
+dbn2.fit[[&quot;265768_at&quot;]] &lt;- lasso.t
+dbn2.fit[[&quot;245094_at&quot;]] &lt;- lasso.s</code></pre>
+<p>This is the solution to the exercise:</p>
+<pre class="r"><code>set.seed(42)
+cpquery(dbn2.fit, event = (`265768_at` &gt; 8), evidence = (`257710_at` &gt; 8))</code></pre>
+<pre><code>## [1] 0.3590734</code></pre>
+<pre class="r"><code>cpquery(dbn2.fit, event = (`265768_at` &gt; 8), evidence = (`255070_at` &gt; 8))</code></pre>
+<pre><code>## [1] 0.5753049</code></pre>
+<pre class="r"><code>cpquery(dbn2.fit, event = (`265768_at` &gt; 8), evidence = TRUE)</code></pre>
+<pre><code>## [1] 0.4396</code></pre>
+<p>High expression levels of gene 257710_at at time t −2 reduce the probability of high expression levels of gene 265768_at at time t; the opposite is true for gene 255070_at.</p>
+</div>
+<div id="scutari-4.1" class="section level3">
+<h3>Scutari 4.1</h3>
+<blockquote>
+<p>Consider the survey data set from Chapter 1.</p>
+</blockquote>
+<p>The data can be obtained from <a href="https://www.bnlearn.com/book-crc/">here</a>:</p>
+<pre class="r"><code>survey &lt;- read.table(&quot;survey.txt&quot;, header = TRUE, colClasses = &quot;factor&quot;)</code></pre>
+<p>Remember, this is the corresponding DAG we know to be true:</p>
+<p><img src="/post/networksscutari/Fig1.1.JPG" width="900"/></p>
+<div id="part-a-2" class="section level4">
+<h4>Part A</h4>
+<blockquote>
+<p>Learn a BN with the IAMB algorithm and the asymptotic mutual information test.</p>
+</blockquote>
+<pre class="r"><code>s4.1_dag &lt;- iamb(survey, test = &quot;mi&quot;)
+s4.1_dag</code></pre>
+<pre><code>## 
+##   Bayesian network learned via Constraint-based methods
+## 
+##   model:
+##     [undirected graph]
+##   nodes:                                 6 
+##   arcs:                                  4 
+##     undirected arcs:                     4 
+##     directed arcs:                       0 
+##   average markov blanket size:           1.33 
+##   average neighbourhood size:            1.33 
+##   average branching factor:              0.00 
+## 
+##   learning algorithm:                    IAMB 
+##   conditional independence test:         Mutual Information (disc.) 
+##   alpha threshold:                       0.05 
+##   tests used in the learning procedure:  85</code></pre>
+</div>
+<div id="part-b-2" class="section level4">
+<h4>Part B</h4>
+<blockquote>
+<p>Learn a second BN with IAMB but using only the first 100 observations of the data set. Is there a significant loss of information in the resulting BN compared to the BN learned from the whole data set?</p>
+</blockquote>
+<pre class="r"><code>s4.1_dagB &lt;- iamb(survey[1:1e2, ], test = &quot;mi&quot;)
+s4.1_dagB</code></pre>
+<pre><code>## 
+##   Bayesian network learned via Constraint-based methods
+## 
+##   model:
+##     [undirected graph]
+##   nodes:                                 6 
+##   arcs:                                  1 
+##     undirected arcs:                     1 
+##     directed arcs:                       0 
+##   average markov blanket size:           0.33 
+##   average neighbourhood size:            0.33 
+##   average branching factor:              0.00 
+## 
+##   learning algorithm:                    IAMB 
+##   conditional independence test:         Mutual Information (disc.) 
+##   alpha threshold:                       0.05 
+##   tests used in the learning procedure:  42</code></pre>
+<p>We discover far fewer arcs!</p>
+</div>
+<div id="part-c-2" class="section level4">
+<h4>Part C</h4>
+<blockquote>
+<p>Repeat the structure learning in the previous point with IAMB and the Monte Carlo and sequential Monte Carlo mutual information tests. How do the resulting networks compare with the BN learned with the asymptotic test? Is the increased execution time justified?</p>
+</blockquote>
+<pre class="r"><code>s4.1_dagC_mcmc &lt;- iamb(survey[1:1e2, ], test = &quot;mc-mi&quot;)
+s4.1_dagC_mcmc</code></pre>
+<pre><code>## 
+##   Bayesian network learned via Constraint-based methods
+## 
+##   model:
+##     [undirected graph]
+##   nodes:                                 6 
+##   arcs:                                  1 
+##     undirected arcs:                     1 
+##     directed arcs:                       0 
+##   average markov blanket size:           0.33 
+##   average neighbourhood size:            0.33 
+##   average branching factor:              0.00 
+## 
+##   learning algorithm:                    IAMB 
+##   conditional independence test:         Mutual Information (disc., MC) 
+##   alpha threshold:                       0.05 
+##   permutations:                          5000 
+##   tests used in the learning procedure:  38</code></pre>
+<pre class="r"><code>s4.1_dagC_smc &lt;- iamb(survey[1:1e2, ], test = &quot;smc-mi&quot;)
+s4.1_dagC_smc</code></pre>
+<pre><code>## 
+##   Bayesian network learned via Constraint-based methods
+## 
+##   model:
+##     [undirected graph]
+##   nodes:                                 6 
+##   arcs:                                  1 
+##     undirected arcs:                     1 
+##     directed arcs:                       0 
+##   average markov blanket size:           0.33 
+##   average neighbourhood size:            0.33 
+##   average branching factor:              0.00 
+## 
+##   learning algorithm:                    IAMB 
+##   conditional independence test:         Mutual Information (disc., Seq. MC) 
+##   alpha threshold:                       0.05 
+##   permutations:                          5000 
+##   tests used in the learning procedure:  38</code></pre>
+<p>We do not discover more arcs, and the outputs of the two asymptotic tests are equal for this case:</p>
+<pre class="r"><code>all.equal(s4.1_dagC_mcmc, s4.1_dagC_smc, s4.1_dagB)</code></pre>
+<pre><code>## [1] TRUE</code></pre>
+</div>
+</div>
+<div id="scutari-4.2" class="section level3">
+<h3>Scutari 4.2</h3>
+<blockquote>
+<p>Consider again the survey data set from Chapter 1.</p>
+</blockquote>
+<p>The data can be obtained from <a href="https://www.bnlearn.com/book-crc/">here</a>:</p>
+<pre class="r"><code>survey &lt;- read.table(&quot;survey.txt&quot;, header = TRUE, colClasses = &quot;factor&quot;)</code></pre>
+<div id="part-a-3" class="section level4">
+<h4>Part A</h4>
+<blockquote>
+<p>Learn a BN using Bayesian posteriors for both structure and parameter learning, in both cases with <code>iss = 5</code>.</p>
+</blockquote>
+<pre class="r"><code>s4.2_dag &lt;- hc(survey, score = &quot;bde&quot;, iss = 5)
+s4.2_bn &lt;- bn.fit(s4.2_dag, survey, method = &quot;bayes&quot;, iss = 5)
+modelstring(s4.2_bn)</code></pre>
+<pre><code>## [1] &quot;[R][E|R][T|R][A|E][O|E][S|E]&quot;</code></pre>
+</div>
+<div id="part-b-3" class="section level4">
+<h4>Part B</h4>
+<blockquote>
+<p>Repeat structure learning with hc and 3 random restarts and with tabu. How do the BNs differ? Is there any evidence of numerical or convergence problems?</p>
+</blockquote>
+<pre class="r"><code>s4.2_hc &lt;- hc(survey, score = &quot;bde&quot;, iss = 5, restart = 3)
+modelstring(s4.2_hc)</code></pre>
+<pre><code>## [1] &quot;[T][R|T][E|R][A|E][O|E][S|E]&quot;</code></pre>
+<pre class="r"><code>s4.2_tabu &lt;- tabu(survey, score = &quot;bde&quot;, iss = 5)
+modelstring(s4.2_tabu)</code></pre>
+<pre><code>## [1] &quot;[O][S][E|O:S][A|E][R|E][T|R]&quot;</code></pre>
+<p>The Bayesian networks inferred here differ quite substantially in their DAG structures.</p>
+<p>The random-start hill-climbing algorithm builds a DAG structure closer to the validated structure which is supported by the <code>score</code>:</p>
+<pre class="r"><code>score(s4.2_hc, survey)</code></pre>
+<pre><code>## [1] -1998.432</code></pre>
+<pre class="r"><code>score(s4.2_tabu, survey)</code></pre>
+<pre><code>## [1] -1999.733</code></pre>
+</div>
+<div id="part-c-3" class="section level4">
+<h4>Part C</h4>
+<blockquote>
+<p>Use increasingly large subsets of the survey data to check empirically that BIC and BDe are asymptotically equivalent.</p>
+</blockquote>
+<pre class="r"><code>set.seed(42)
+breaks &lt;- seq(from = 10, to = 100, by = 10) # percentage of data
+analysis_df &lt;- data.frame(
+  bde = NA,
+  bic = NA,
+  breaks = NA
+)
+for (k in 1:1e3) {
+  bde_vec &lt;- c()
+  bic_vec &lt;- c()
+  for (i in breaks) {
+    samp &lt;- sample(1:nrow(survey), nrow(survey) / i)
+    samp &lt;- survey[samp, ]
+    s4.2_bde &lt;- hc(samp, score = &quot;bde&quot;, iss = 5)
+    s4.2_bic &lt;- hc(samp, score = &quot;bic&quot;)
+    bde_vec &lt;- c(bde_vec, score(s4.2_bde, survey))
+    bic_vec &lt;- c(bic_vec, score(s4.2_bic, survey))
+  }
+  analysis_df &lt;- rbind(
+    analysis_df,
+    data.frame(
+      bde = bde_vec,
+      bic = bic_vec,
+      breaks = breaks
+    )
+  )
+}
+
+analysis_df &lt;- na.omit(analysis_df)
+
+plot(
+  x = analysis_df$breaks,
+  y = abs(analysis_df$bde - analysis_df$bic)
+)</code></pre>
+<p><img src="/courses/bayes-nets/2022-11-08-network-inference_files/figure-html/unnamed-chunk-21-1.png" width="1440" /></p>
+</div>
+</div>
+<div id="scutari-4.3" class="section level3">
+<h3>Scutari 4.3</h3>
+<blockquote>
+<p>Consider the marks data set from Section 4.7.</p>
+</blockquote>
+<pre class="r"><code>data(marks)</code></pre>
+<div id="part-a-4" class="section level4">
+<h4>Part A</h4>
+<blockquote>
+<p>Create a bn object describing the graph in the bottom right panel of Figure 4.5 and call it <code>mdag</code>.</p>
+</blockquote>
+<pre class="r"><code>mdag &lt;- model2network(paste0(
+  &quot;[ANL][MECH][LAT|ANL:MECH]&quot;,
+  &quot;[VECT|LAT][ALG|LAT][STAT|LAT]&quot;
+))</code></pre>
+</div>
+<div id="part-b-4" class="section level4">
+<h4>Part B</h4>
+<blockquote>
+<p>Construct the skeleton, the CPDAG and the moral graph of <code>mdag</code>.</p>
+</blockquote>
+<pre class="r"><code>mdag_skel &lt;- skeleton(mdag)
+mdag_cpdag &lt;- cpdag(mdag)
+mdag_moral &lt;- moral(mdag)</code></pre>
+</div>
+<div id="part-c-4" class="section level4">
+<h4>Part C</h4>
+<blockquote>
+<p>Discretise the marks data using “interval” discretisation with 2, 3 and 4 intervals.</p>
+</blockquote>
+<pre class="r"><code>dmarks_2 &lt;- discretize(marks, &quot;interval&quot;, breaks = 2)
+dmarks_3 &lt;- discretize(marks, &quot;interval&quot;, breaks = 3)
+dmarks_4 &lt;- discretize(marks, &quot;interval&quot;, breaks = 4)</code></pre>
+</div>
+<div id="part-d" class="section level4">
+<h4>Part D</h4>
+<blockquote>
+<p>Perform structure learning with hc on each of the discretised data sets; how do the resulting DAGs differ?</p>
+</blockquote>
+<pre class="r"><code>hc_2 &lt;- hc(dmarks_2)
+modelstring(hc_2)</code></pre>
+<pre><code>## [1] &quot;[MECH][VECT|MECH][ALG|VECT][ANL|ALG][STAT|ALG]&quot;</code></pre>
+<pre class="r"><code>hc_3 &lt;- hc(dmarks_3)
+modelstring(hc_3)</code></pre>
+<pre><code>## [1] &quot;[MECH][ALG|MECH][ANL|ALG][STAT|ALG][VECT|ANL]&quot;</code></pre>
+<pre class="r"><code>hc_4 &lt;- hc(dmarks_4)
+modelstring(hc_4)</code></pre>
+<pre><code>## [1] &quot;[MECH][VECT][ALG][ANL|ALG][STAT|ANL]&quot;</code></pre>
+<p>Quite evidently, as we increase the number of intervals, we break conditional relationships so much so that fewer arcs are identified.</p>
+</div>
+</div>
+</div>
+<div id="session-info" class="section level2">
+<h2>Session Info</h2>
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>## R version 4.2.1 (2022-06-23 ucrt)
+## Platform: x86_64-w64-mingw32/x64 (64-bit)
+## Running under: Windows 10 x64 (build 19044)
+## 
+## Matrix products: default
+## 
+## locale:
+## [1] LC_COLLATE=English_Germany.utf8  LC_CTYPE=English_Germany.utf8    LC_MONETARY=English_Germany.utf8 LC_NUMERIC=C                     LC_TIME=English_Germany.utf8    
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+## [1] penalized_0.9-52    survival_3.4-0      GeneNet_1.2.16      fdrtool_1.2.17      longitudinal_1.1.13 corpcor_1.6.10      gRain_1.3.11        gRbase_1.8.7        bnlearn_4.8.1      
+## 
+## loaded via a namespace (and not attached):
+##  [1] Rcpp_1.0.9          highr_0.9           bslib_0.4.0         compiler_4.2.1      BiocManager_1.30.18 jquerylib_0.1.4     R.methodsS3_1.8.2   R.utils_2.12.0      tools_4.2.1        
+## [10] digest_0.6.29       jsonlite_1.8.0      evaluate_0.16       R.cache_0.16.0      lattice_0.20-45     pkgconfig_2.0.3     rlang_1.0.5         igraph_1.3.4        Matrix_1.5-1       
+## [19] graph_1.74.0        cli_3.3.0           rstudioapi_0.14     Rgraphviz_2.40.0    yaml_2.3.5          parallel_4.2.1      blogdown_1.13       xfun_0.33           fastmap_1.1.0      
+## [28] styler_1.8.0        stringr_1.4.1       knitr_1.40          vctrs_0.4.1         sass_0.4.2          stats4_4.2.1        grid_4.2.1          R6_2.5.1            RBGL_1.72.0        
+## [37] rmarkdown_2.16      bookdown_0.29       purrr_0.3.4         magrittr_2.0.3      splines_4.2.1       BiocGenerics_0.42.0 htmltools_0.5.3     stringi_1.7.8       cachem_1.0.6       
+## [46] R.oo_1.25.0</code></pre>
+</div>

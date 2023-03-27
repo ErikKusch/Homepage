@@ -1,0 +1,428 @@
+---
+title: "Multinomial Bayesian Networks"
+author: Erik Kusch
+date: '2021-04-13'
+slug: part-1
+categories:
+  - Bayesian Networks
+tags:
+  - Bayes
+  - Networks
+  - Bayesian Statistics
+  - Statistics
+subtitle: "Multinomial Bayesian Networks"
+summary: 'Answers and solutions to the exercises belonging to Part 1 in [Bayesian Networks with Examples in R](https://www.bnlearn.com/book-crc/) by M. Scutari and J.-B. Denis.'
+authors: []
+lastmod: '2021-04-13T20:00:00+01:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: 
+output:
+  blogdown::html_page:
+    keep_md: true
+    # toc: true
+    # toc_depth: 1
+    # number_sections: false
+# header-includes:
+#   <script src = "https://polyfill.io/v3/polyfill.min.js?features = es6"></script>
+#   <script id = "MathJax-script" async src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+math: true
+type: docs
+toc: true 
+menu:
+  bayesnets:
+    parent: 2 - Static Networks
+    weight: 1
+weight: 1
+---
+
+<style>
+
+blockquote{
+color:#ffffff;
+}
+
+</style>
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, tidy = 'styler', tidy.opts = list(strict = TRUE), fig.width = 15, fig.height = 8)
+options(width = 200)
+```
+
+## Material
+
+- [Multinomial Bayesian Networks](/courses/bayes-nets/3-Multinomial-Networks_03-10-22.html)  
+
+## Exercises
+
+These are answers and solutions to the exercises at the end of Part 1 in [Bayesian Networks with Examples in R](https://www.bnlearn.com/book-crc/) by M. Scutari and J.-B. Denis. I have created these notes as a part of a study-partnership with [Frederik Kallesøe](https://www.linkedin.com/in/frederik-have-kallesoe-0584889b/). Much of my inspiration for these solutions, where necessary, has been obtained either from chatting with Frederik or by consulting the solutions provided by the authors themselves as in the appendix.
+
+### `R` Environment
+For today's exercise, I load the following packages:
+```{r}
+library(bnlearn)
+library(gRain)
+library(ggplot2)
+library(lattice)
+library(gridExtra)
+```
+
+### Scutari 1.1  
+> Consider the DAG for the survey studied in this chapter and shown in Figure 1.1.
+
+Here's the DAG in question:
+
+<img src="/post/networksscutari/Fig1.1.JPG" width="900"/>
+
+#### Part 1. 
+> List the parents and the children of each node.
+
+| Node              | Parent(s)     | Child(ren)    |
+| ----------------- | ------------- | ------------- |
+| Age (A)           | { }           | E             |
+| Sex (S)           | { }           | E             |
+| Education (E)     | A, S          | O, R          |
+| Occupation (O)    | E             | E             |
+| Residence (R)     | E             | E             |
+| Travel (T)        | O, R          | { }           |
+
+#### Part 2. 
+> List all the fundamental connections present in the DAG, and classify them as either serial, divergent or convergent.
+
+Fundamental connections are those paths who contain three vertices/nodes. In directed graphs, they can be classified into three different categories depending on flow of dependencies.
+
+| Path              | Classification |
+| ----------------- | -------------- |
+| A → E ← S         | Convergent     |
+| A → E → O         | Serial         |
+| A → E → R         | Serial         |
+| S → E → O         | Serial         |
+| S → E → R         | Serial         |
+| O ← E → R         | Divergent      |
+| E → O → T         | Serial         |
+| E → R → T         | Serial         |
+| O → T ← R         | Convergent     |
+
+#### Part 3. 
+> Add an arc from Age to Occupation, and another arc from Travel to Education. Is the resulting graph still a valid BN? If not, why?
+
+Let's take this one arc at a time:  
+
+1. A → O. Adding this arc does not lead to the introduction of any cycles and so the Bayesian Network (BN) remains valid. I have added this graph to the figure from the book and highlighted it in green just below.  
+2. T → E. Adding this arc does introduce cyclic paths along T → E → R → T and T → E → O → T thus resulting in a non-valid BN. I have highlighted the added arc in red and shaded the cyclic paths in orange below.  
+
+<img src="/post/networksscutari/Fig1.1_Arcs.JPG" width="900"/>
+
+### Scutari 1.2 
+> Consider the probability distribution from the survey in Section 1.3.
+
+The data can be obtained from [here](https://www.bnlearn.com/book-crc/):
+
+```{r}
+survey <- read.table("survey.txt", header = TRUE, colClasses = "factor")
+A.lv <- c("young", "adult", "old")
+S.lv <- c("M", "F")
+E.lv <- c("high", "uni")
+O.lv <- c("emp", "self")
+R.lv <- c("small", "big")
+T.lv <- c("car", "train", "other")
+```
+
+#### Part 1. 
+> Compute the number of configurations of the parents of each node.
+
+`A` and `S` have no parents (refer back to the DAG in exercise 1.1). Therefore, we are only interested in the configurations of parental nodes for `E`, `O`, `R`, and `T`: 
+
+```{r}
+(E <- length(A.lv)*length(S.lv))
+(O <- length(E.lv))
+(R <- length(E.lv))
+(T <- length(O.lv)*length(R.lv))
+```
+This is a simple exercise of combinatorics. The number of parental configurations is simply the number of states each parental node can be in multiplied by the same for all other parental nodes.
+
+#### Part 2. 
+> Compute the number of parameters of the local distributions.
+
+All of this comes down to how many parameters we need to estimate to accurately represent the probability distributions belonging to each node in our DAG. Since all probabilities per node sum up to 1, we effectively only ever need to estimate a number $n-1$ parameters for each node with $n$ being the number of states said node can be in. Let's walk through this. 
+
+`A` has 3 states, so need to estimate 2 parameters ($p_A = 2$). `S` has 2 states hence we need 1 parameter for this node ($p_S = 1$). 
+
+Now we arrive at `E` and things get more complicated. The probability distribution for `E` comes in two parts - one for `"high"` and one for `"low"` education level. Both of these contain additional probability distributions of combinations of the levels of `S` and `A`. To obtain the number of parameters needed to describe this 3-dimensional distribution, we can simply calculate $p_E = n_S * n_A * (n_E-1) = 2 * 3 * 1 = 6$. 
+
+Moving on to `O` and `R`. Both of these need 2 parameters ($p_O = p_r = 2$) because of their two-dimensional distributions being made up of two levels of education and two levels occupation and residency respectively ($2 * (2-1) = 2$). 
+
+Lastly, we arrive at `T` which we need 8 parameters for ($p_T = 8$). Holy smokes. Why? Basically, this is a repeat of what we did for `E`. We have a three-dimensional distribution with three levels in T-Space, two levels in-space, and two more levels in O-Space. To arrive at the number of parameters we simply do $p_T = (n_T-1) * n_o * n_R = 2 * 2 * 2 = 8$.
+
+#### Part 3. 
+> Compute the number of parameters of the global distribution.
+
+We can sum all of the local parameters up to arrive at $p_{total} = p_A + p_S + p_E + p_O + p_R + p_T = 2+1+6+2+2+8 = 21$.
+
+And in `R`:
+```{r}
+# define DAG structure
+dag <- model2network("[A][S][E|A:S][O|E][R|E][T|O:R]")
+# define local distributions
+A.prob <- array(c(0.30, 0.50, 0.20), dim = 3, dimnames = list(A = A.lv))
+S.prob <- array(c(0.60, 0.40), dim = 2, dimnames = list(S = S.lv))
+E.prob <- array(c(0.75, 0.25, 0.72, 0.28, 0.88, 0.12, 0.64, 0.36, 0.70,
+                  0.30, 0.90, 0.10), dim = c(2, 3, 2),
+            dimnames = list(E = E.lv, A = A.lv, S = S.lv))
+O.prob <- array(c(0.96, 0.04, 0.92, 0.08), dim = c(2, 2),
+            dimnames = list(O = O.lv, E = E.lv))
+R.prob <- array(c(0.25, 0.75, 0.20, 0.80), dim = c(2, 2),
+            dimnames = list(R = R.lv, E = E.lv))
+T.prob <- array(c(0.48, 0.42, 0.10, 0.56, 0.36, 0.08, 0.58, 0.24, 0.18,
+                  0.70, 0.21, 0.09), dim = c(3, 2, 2),
+            dimnames = list(T = T.lv, O = O.lv, R = R.lv))
+# define set of local distributions
+cpt <- list(A = A.prob, S = S.prob, E = E.prob, O = O.prob, 
+            R = R.prob, T = T.prob) 
+# create BN
+bn <- custom.fit(dag, cpt)
+# obtain parameters
+nparams(bn)
+```
+
+Note that I pulled the probabilities for the distributions from the book and their values are irrelevant to the number of parameters.
+
+#### Part 4. 
+> Add an arc from Education to Travel. Recompute the factorisation into local distributions shown in Equation (1.1). How does the number of parameters of each local distribution change?
+
+Adding E → T to Equation (1.1) results in:
+$$P(A, S, E, O, R, T) = P(A) P(S) P(E | A, S) P(O | E) P(R | E) P(T | E, O, R)$$
+
+Now that `T` is dependant on `E` as well as the previous parents, the number of free parameters of the local distribution of `T` increases
+to 16 ($p_E = 16$). This is because our local distribution of `T` is now four-dimensional resulting in $p_T = (n_T-1) * n_o * n_R * n_E = 2 * 2 * 2 * 2 = 16$.
+
+All other local distributions remain the same.
+
+### Scutari 1.3 
+> Consider again the DAG for the survey.
+
+#### Part 1. 
+> Create an object of class `bn` for the DAG.
+
+Here's the simplest way of doing this by specifying the model string:
+
+```{r}
+# define DAG structure
+bn <- model2network("[A][S][E|A:S][O|E][R|E][T|O:R]")
+```
+
+#### Part 2. 
+> Use the functions in `bnlearn` and the R object created in the previous point to extract the nodes and the arcs of the DAG. Also extract the parents and the children of each node.
+
+Here we go:
+```{r}
+nodes(bn)
+arcs(bn)
+sapply(X = nodes(bn), FUN = bnlearn::parents, x = bn)
+sapply(X = nodes(bn), FUN = bnlearn::children, x = bn)
+```
+
+#### Part 3. 
+> Print the model formula from `bn`.
+
+```{r}
+modelstring(bn)
+```
+
+#### Part 4. 
+> Fit the parameters of the network from the data stored in survey.txt using their Bayesian estimators and save the result into an object of class `bn.fit`.
+
+```{r}
+bn_full <- bn.fit(bn, data = survey, method = "bayes", iss = 10)
+class(bn_full)
+```
+
+#### Part 5. 
+> Remove the arc from Education to Occupation.
+
+```{r}
+bn_sparse <- drop.arc(bn, from = "E", to = "O")
+```
+
+#### Part 6. 
+> Fit the parameters of the modified network. Which local distributions change, and how?
+
+```{r}
+bn_sparse <- bn.fit(bn_sparse, data = survey, method = "bayes", iss = 10)
+```
+
+We already now that the only local distribution which should change is that of `O`. Let's check that:
+
+```{r}
+dim(coef(bn_full$O))
+dim(coef(bn_sparse$O))
+```
+Quite evidently, the local distribution of `O` has become much simpler in our sparse Bayesian Network. Why? Because it has no parent node now which would parse additional information and complexity onto it.
+
+### Scutari 1.4 
+> Re-create the `bn.mle` object used in Section 1.4.
+
+```{r}
+bn.mle <- bn.fit(dag, data = survey, method = "mle")
+```
+
+#### Part 1. 
+> Compare the distribution of Occupation conditional on Age with the corresponding marginal distribution using `querygrain`.
+
+```{r}
+## creating object ready for gRain functions
+junction <- compile(as.grain(bn.mle))
+## Overall query
+query_over <- querygrain(junction, nodes = "O")$O
+## Marginal query when A is young
+jage <- setEvidence(junction, "A", states = "young")
+query_young <- querygrain(jage, nodes = "O")$O
+## Marginal query when A is adult
+jage <- setEvidence(junction, "A", states = "adult")
+query_adult <- querygrain(jage, nodes = "O")$O
+## Marginal query when A is old
+jage <- setEvidence(junction, "A", states = "old")
+query_old <- querygrain(jage, nodes = "O")$O
+## Combining queries
+queries_df <- rbind(query_over, query_young, query_adult, query_old)
+rownames(queries_df) <- c("Overall", "Young", "Adult", "Old")
+queries_df
+```
+
+As we can see, conditioning on `A` does not influence the distribution of `O` that much.
+
+#### Part 2. 
+> How many random observations are needed for `cpquery` to produce estimates of the parameters of these two distributions with a precision of ±0.01?
+
+I find this question to be difficult to understand. What I assume I am tasked with is to compare the distribution of Occupation conditional on Age (`query_over`: `r round(as.numeric(query_over), 2)`) with the estimates produced by `cpquery` given some evidence (i.e. parental node configuration). This would mean comparing each query EXCEPT for query_over to it's counterpart with `cpquery()`. That's a tad excessive, and so I only compare `query_young` (`r round(as.numeric(query_young), 2)`) from above with the results obtained by `cpquery()`. What I am looking at is: "How high do my sample sizes have to be in `cpquery()` to be within a ±0.01 margin of `query_young`.
+
+Luckily, `query_young` only has two values and so I can tell `cpquery()` to only compute one of them as the other follows logically by subtracting the former from 1.
+
+Here, I want to test this for likelihood weighting (`lw`) and logic sampling (`ls`):
+```{r}
+# create test list and test sequence
+precis_ls <- as.list(c(0, 0))
+names(precis_ls) <- c("LW", "LS")
+n_seq <- as.integer(seq(from = 1e2, to = 1e5, length.out = 1e2))
+# iterate over our sample sizes
+for(i in n_seq){
+  precis_ls$LW <- c(precis_ls$LW, 
+                    cpquery(bn.mle, event = (O == "emp"), evidence = list(A = "young"), method = "lw", n = i)
+                    )
+  precis_ls$LS <- c(precis_ls$LS, 
+                    cpquery(bn.mle, event = (O == "emp"), evidence = (A == "young"), method = "ls", n = i)
+                    )
+}
+# remove first positions which were blanks
+precis_ls$LW <- precis_ls$LW[-1] 
+precis_ls$LS <- precis_ls$LS[-1]
+# plotting the results
+plot_df <- data.frame(N = c(n_seq, n_seq),
+                      Precision = c(query_young[1] - precis_ls$LW, 
+                                    query_young[1] - precis_ls$LS), 
+                      Method = rep(c("Likelihood Weighting", "Logical Sampling"),  each = length(n_seq))
+                      )
+ggplot(data = plot_df, aes(x = N, y = Precision, col = Method)) +
+  geom_line(size = 1.5) + 
+  geom_hline(yintercept = 0.01) + 
+  geom_hline(yintercept = -0.01) + 
+  theme_bw()
+```
+
+As is evident from this plot, we do not need much in terms of sample to arrive at highly precise results using `cpquery()` with either method. Still, to be safe, I would probably always run with `n = 1e3` at least.
+
+#### Part 3. 
+> Use the functions in `bnlearn` to extract the DAG from `bn.mle`.
+
+```{r}
+dag <- bn.net(bn.mle)
+dag
+```
+
+#### Part 4. 
+> Which nodes d-separate Age and Occupation?
+
+```{r}
+sapply(nodes(dag), function(z) dsep(dag, "A", "O", z))
+```
+
+### Scutari 1.5 
+> Implement an R function for BN inference via rejection sampling using the description provided in Section 1.4 as a reference.
+
+From the book:
+
+> "In rejection sampling, we generate random independent observations from the BN. Then we count how many match the evidence we are conditioning on and how many of those observations also match the event whose probability we are computing; the estimated conditional probability is the ratio between the latter and the former."
+
+```{r}
+rejection.sampling <- function(bn, nsim, event.node, event.value, evidence.node, evidence.value){
+  sims <- rbn(x = bn, n = nsim) # random samples for each node from a Bayesian network
+  m1 <- sims[sims[, evidence.node] == evidence.value, ] # retain only those samples where our evidence node matches the evidence condition 
+  m2 <- m1[m1[, event.node] == event.value, ] # retain only those samples where our event node matches the event condition 
+  return(nrow(m2)/nrow(m1)) # how many percent of the evidence samples also return the event state?
+  }
+rejection.sampling(bn = bn.mle, nsim = 10^4, 
+                   event.node = "O", event.value = "emp", 
+                   evidence.node = "A", evidence.value = "young")
+```
+
+### Scutari 1.6 
+> Using the `dag` and `bn` objects from Sections 1.2 and 1.3:
+
+The DAG in question is the same as `dag` in these solutions. The BN is the same as `bn.mle` or `bn_full`. Since I do this for the Bayesian part of Bayesian networks, I use the latter.
+
+#### Part 1. 
+> Plot the DAG using `graphviz.plot`.
+
+Easy enough:
+```{r}
+graphviz.plot(dag)
+```
+
+#### Part 2. 
+> Plot the DAG again, highlighting the nodes and the arcs that are part of one or more v-structures.
+
+A bit meaningless of a plot because all of these nodes are involved in v-structures. However, the paths E → O, and E → R are not highlighted as v-structures. Why? Because they are sequential paths rather than convergent or divergent.
+```{r}
+vs <- vstructs(dag, arcs = TRUE)
+hl <- list(nodes = unique(as.character(vs)), arcs = vs)
+graphviz.plot(dag, highlight = hl)
+```
+
+#### Part 3. 
+> Plot the DAG one more time, highlighting the path leading from Age to Occupation.
+
+All we need to do is highlight the paths A → E and E → O:
+```{r}
+hl <- matrix(c("A", "E", "E", "O"), nc = 2, byrow = TRUE)
+graphviz.plot(bn.mle, highlight = list(arcs = hl))  
+```
+
+#### Part 4. 
+> Plot the conditional probability table of Education.
+
+There is a ready-made function for that!
+```{r}
+bn.fit.barchart(bn_full$E)
+```
+Across all age ranges, women are much higher educated (on average) than men.
+
+#### Part 5. 
+> Compare graphically the distributions of Education for male and female interviewees.
+
+Here, we simply need to extract the relevant proportions and need them into a barchart.
+```{r}
+junction <- compile(as.grain(bn.mle))
+jmale <- setEvidence(junction, "S", states = "M")
+jfemale <- setEvidence(junction, "S", states = "F")
+p1 <- barchart(querygrain(jmale, nodes = "E")$E, main = "Male", xlim = c(0, 1))
+p2 <- barchart(querygrain(jfemale, nodes = "E")$E, main = "Female", xlim = c(0, 1))
+grid.arrange(p1, p2, ncol = 2)
+```
+
+## Session Info
+```{r}
+sessionInfo()
+```

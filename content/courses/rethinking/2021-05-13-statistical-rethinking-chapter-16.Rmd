@@ -1,0 +1,1132 @@
+---
+title: Chapter 16
+author: Erik Kusch
+date: '2021-05-13'
+slug: chapter-16
+categories:
+  - Statistical Rethinking
+tags:
+  - Statistics
+  - Bayes
+  - Bayesian Statistics
+  - AU Bayes Study Group
+subtitle: "Generalised Linear Madness"
+summary: 'Answers and solutions to the exercises belonging to chapter 16 in [Satistical Rethinking 2](https://xcelab.net/rm/statistical-rethinking/) by Richard McElreath.'
+authors: []
+lastmod: '2021-05-13T18:00:00+01:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: [aubayes]
+output:
+  blogdown::html_page:
+    keep_md: true
+#     toc: true
+#     toc_depth: 1
+#     number_sections: false
+# header-includes:
+#   <script src = "https://polyfill.io/v3/polyfill.min.js?features = es6"></script>
+#   <script id = "MathJax-script" async src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+links:
+- icon: file-powerpoint
+  icon_pack: fas
+  name: Slides - Chapter 16
+  url: /post/rethinking/19__14-05-2021_SUMMARY_-GLM.html
+math: true
+type: docs
+toc: true 
+menu:
+  Rethinking:
+    parent: Seminars
+    weight: 16
+weight: 16
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, tidy = 'styler', tidy.opts = list(strict = TRUE), fig.width = 15, fig.height = 8)
+options(width = 200)
+```
+
+# Generalised Linear Madness
+
+## Material
+
+- [Slides Chapter 16](/post/rethinking/19__14-05-2021_SUMMARY_-GLM.html)  
+
+## Introduction 
+These are answers and solutions to the exercises at the end of chapter 15 in [Satistical Rethinking 2](https://xcelab.net/rm/statistical-rethinking/) by Richard McElreath. I have created these notes as a part of my ongoing involvement in the [AU Bayes Study Group](/project/aubayes/). Much of my inspiration for these solutions, where necessary, has been obtained from 
+<!-- [Taras Svirskyi](https://github.com/jffist/statistical-rethinking-solutions/blob/master/ch10_hw.R), [William Wolf](https://github.com/cavaunpeu/statistical-rethinking/blob/master/chapter-10/homework.R), and [Corrie Bartelheimer](https://www.samples-of-thoughts.com/projects/statistical-rethinking/chapter_10/chp10-ex/) as well as  -->
+the solutions provided to instructors by Richard McElreath himself.
+
+## `R` Environment
+For today's exercise, I load the following packages:
+```{r}
+library(rethinking)
+library(ggplot2)
+```
+
+## Easy Exercises
+
+Unfortunately, the PDF version of [Satistical Rethinking 2](https://xcelab.net/rm/statistical-rethinking/), I am working with does not list any easy practice exercises for this chapter.
+
+## Medium Exercises
+### Practice M1
+**Question:**  Modify the cylinder height model, `m16.1`, so that the exponent 3 on height is instead a free parameter. Do you recover the value of 3 or not? Plot the posterior predictions for the new model. How do they differ from those of `m16.1`?
+
+**Answer:** Before we move on, let me just remind all of us of the model itself:  
+
+$W_i ∼ Log-Normal(µ_i, σ)$ [Distribution for weight]   
+$exp(µ_i) = kπp^2h^3_i$ [expected median of weight]  
+$k ∼ Beta(2, 18)$ [prior relation between weight and volume]  
+$p ∼ Exponential(0.5)$ [prior proportionality of radius to height]  
+$σ ∼ Exponential(1)$ [our old friend, sigma]  
+
+As for the exercise, I start by loading the data and rescaling the `weight` and `height` variables as was done in the chapter:
+```{r}
+data("Howell1")
+d <- Howell1
+d$w <- d$weight/mean(d$weight)
+d$h <- d$height/mean(d$height)
+```
+
+Now that the data is prepared, we can run the model. Before we run the model that we are asked for, however, I want to run the model from the chapter for later comparison:
+
+```{r echo = FALSE}
+if(!file.exists(file.path(getwd(), "m16_1.RData"))){
+  m16.1 <- ulam( 
+  alist(
+    w ~ dlnorm(mu, sigma), 
+    exp(mu) <- 3.141593 * k * p^2 * h^3, 
+    p ~ beta(2, 18), 
+    k ~ exponential(0.5), 
+    sigma ~ exponential(1)
+    ), data = d, chains = 4, cores = 4, log_lik = TRUE)
+  save(m16.1, file=file.path(getwd(), "m16_1.RData"))
+}else{
+  load(file = file.path(getwd(), "m16_1.RData"))
+}
+```
+
+
+```{r eval = FALSE}
+m16.1 <- ulam( 
+  alist(
+    w ~ dlnorm(mu, sigma), 
+    exp(mu) <- 3.141593 * k * p^2 * h^3, 
+    p ~ beta(2, 18), 
+    k ~ exponential(0.5), 
+    sigma ~ exponential(1)
+    ), data = d, chains = 4, cores = 4, log_lik = TRUE)
+```
+I run this model as well as the subsequent one with `log_lik = TRUE` to allow for model comparison with WAIC.
+
+To assign a free parameter to the exponent 3 of the chapter, I simply substitute the value 3 in the model code with a letter (`e`) to indicate a parameter. I also have to define a prior (I reckon the exponent should definitely be positive) for this new parameter, of course:
+
+```{r echo = FALSE}
+if(!file.exists(file.path(getwd(), "m_M1.RData"))){
+m_M1 <- ulam(
+    alist(
+        w ~ dlnorm(mu, sigma),
+        exp(mu) <- 3.141593 * k * p^2 * h^e,
+        p ~ beta(2, 18),
+        k ~ exponential(0.5),
+        sigma ~ exponential(1),
+        e ~ exponential(1)
+   ), data = d, chains = 4, cores = 4, log_lik = TRUE)
+  save(m_M1, file=file.path(getwd(), "m_M1.RData"))
+}else{
+  load(file.path(getwd(), "m_M1.RData"))
+}
+```
+
+```{r eval = FALSE}
+m_M1 <- ulam(
+    alist(
+        w ~ dlnorm(mu, sigma),
+        exp(mu) <- 3.141593 * k * p^2 * h^e,
+        p ~ beta(2, 18),
+        k ~ exponential(0.5),
+        sigma ~ exponential(1),
+        e ~ exponential(1)
+   ), data = d, chains = 4, cores = 4, log_lik = TRUE)
+```
+```{r}
+precis(m_M1)
+```
+With the new model, we obtain an estimates of `r round(precis(m_M1)[4,1], 2)` for the exponent rather than the value of 3 that was assumed in the chapter.
+
+So let's get started with model comparison:
+```{r}
+compare(m16.1, m_M1)
+```
+
+Seems like model comparison strongly favours our new model `m_M1`. What brings this difference about? Let's look at the posterior predictions for the answer:
+
+```{r}
+## Getting the data
+h_seq <- seq(from = 0, to = max(d$h), length.out = nrow(d))
+# m_M1
+w_sim <- sim(m_M1, data = list(h = h_seq))
+m1_mean <- apply(w_sim, 2, mean)
+m1_CI <- apply(w_sim, 2, PI)
+# m16.1
+w_sim <- sim(m16.1, data = list(h = h_seq))
+m16.1_mean <- apply(w_sim, 2, mean)
+m16.1_CI <- apply(w_sim, 2, PI)
+## Making a data frame for plotting
+plot_df <- data.frame(seq = rep(h_seq, 2), 
+                      mean = c(m1_mean, m16.1_mean),
+                      CI_l = c(m1_CI[1,], m16.1_CI[1,]),
+                      CI_U = c(m1_CI[2,], m16.1_CI[2,]),
+                      y = rep(d$w, 2),
+                      x = rep(d$h, 2),
+                      model = rep(c("m_M1", "m16.1"), each = length(h_seq))
+           )
+## Plotting posterior
+ggplot(plot_df, aes(x = x, y = y)) + 
+  geom_point(col = "blue") + 
+  geom_line(aes(x = seq, y = mean)) + 
+  geom_ribbon(aes(x = seq, ymin = CI_l, ymax = CI_U), alpha = 0.2) + 
+  labs(x = "height (scaled)", y = "weight (scaled)") +
+  facet_wrap(~model) +
+  theme_bw()
+```
+
+Compared to the original model `m16.1`, the new model `m_M1` fits shorter individuals much better than the original model which comes at the detriment of fitting taller individuals correctly. Overall, the posterior uncertainty is tighter for our new model `m_M1`.
+
+### Practice M2
+**Question:** Conduct a prior predictive simulation for the cylinder height model. Begin with the priors in the chapter. Do these produce reasonable prior height distributions? If not, which modifications do you suggest? 
+
+**Answer:** Remember our priors from the chapter:
+
+```{r echo = FALSE}
+#Sys.sleep(10)
+#gc()
+```
+
+$$p ∼ Beta(2, 18)$$
+$$k ∼ Exponential(0.5)$$
+$$\sigma \sim Exponential(1)$$
+Now let's simulate priors for a number of `N` cases:
+```{r}
+N <- 1e2
+p <- rbeta(N, 2, 18)  # p ∼ Beta(2, 18)
+k <- rexp(N, 0.5) # k ∼ Exponential(0.5)
+sigma <- rexp(N, 1) 
+prior <- list(p=p, k=k, sigma=sigma)
+```
+
+The priors are all compiled into one list, now all we have to do is run the prior predictive check:
+```{r}
+## Making a data frame for plotting
+plot_df <- with(prior, 3.141593 * k[1] * p[1]^2 * d$h^3)
+for(i in 2:N){
+  plot_df <- c(plot_df, with(prior, 3.141593 * k[i] * p[i]^2 * d$h^3))
+}
+plot_df <- data.frame(w = plot_df, 
+                      seq = rep(d$h, N),
+                      prior = rep(1:N, each = nrow(d))
+                      )
+## Plotting 
+ggplot() + 
+  geom_point(data = d, aes(x = h, y = w), col = "blue") + 
+  geom_line(data = plot_df, aes(x = seq, y = w, group = prior)) + 
+  labs(x = "height (scaled)", y = "weight (scaled)") +
+  theme_bw()
+```
+
+The combination of these priors seems to be too flat - weight is not increasing fast enough with height. Either $p$ or $k$ need to be larger on average:
+
+```{r}
+## New priors
+p <- rbeta(N, 4, 18)
+k <- rexp(N, 1/4)
+sigma <- rexp(N, 1)
+prior <- list(p=p, k=k, sigma=sigma)
+## Making a data frame for plotting
+plot_df <- with(prior, 3.141593 * k[1] * p[1]^2 * d$h^3)
+for(i in 2:N){
+  plot_df <- c(plot_df, with(prior, 3.141593 * k[i] * p[i]^2 * d$h^3))
+}
+plot_df <- data.frame(w = plot_df, 
+                      seq = rep(d$h, N),
+                      prior = rep(1:N, each = nrow(d))
+                      )
+## Plotting 
+ggplot() + 
+  geom_point(data = d, aes(x = h, y = w), col = "blue") + 
+  geom_line(data = plot_df, aes(x = seq, y = w, group = prior)) + 
+  labs(x = "height (scaled)", y = "weight (scaled)") +
+  theme_bw()
+```
+There are some prior combinations here that are definitely way too extreme, but most priors still bunch up too much along the x-axis. Let's alter the prior for $k$ (the density) some more by making it log-Normal:
+
+```{r}
+## New priors
+N <- 1e2
+p <- rbeta(N, 4, 18)
+k <- rlnorm(N, log(7), 0.2) # median of log(7)
+sigma <- rexp(N, 1)
+prior <- list(p=p, k=k, sigma=sigma)
+## Making a data frame for plotting
+plot_df <- with(prior, 3.141593 * k[1] * p[1]^2 * d$h^3)
+for(i in 2:N){
+  plot_df <- c(plot_df, with(prior, 3.141593 * k[i] * p[i]^2 * d$h^3))
+}
+plot_df <- data.frame(w = plot_df, 
+                      seq = rep(d$h, N),
+                      prior = rep(1:N, each = nrow(d))
+                      )
+## Plotting 
+ggplot() + 
+  geom_point(data = d, aes(x = h, y = w), col = "blue") + 
+  geom_line(data = plot_df, aes(x = seq, y = w, group = prior)) + 
+  labs(x = "height (scaled)", y = "weight (scaled)") +
+  theme_bw()
+```
+
+This is much better! Remember - priors are not about fitting the data exactly but informing the model about plausibility.
+
+### Practice M3
+**Question:**  Use prior predictive simulations to investigate the Lynx-hare model. Begin with the priors in the chapter. Which population dynamics do these produce? Can you suggest any improvements to the priors, on the basis of your simulations?
+
+**Answer:** Again, let me remind us of the model in the chapter:
+
+$h_t ∼ LogNormal(log(p_HH_t), σ_H)$ [Probability of observed hare pelts]  
+$ℓ_t ∼ LogNormal(log(p_LL_t), σ_L)$ [Probability observed lynx pelts]  
+$H_1 ∼ LogNormal(log(10), 1)$ [Prior for initial hare population]  
+$L_1 ∼ LogNormal(log(10), 1)$ [Prior for initial lynx population]  
+$H_{T>1} = H_1 + \int_1^TH_t(b_H −m_HL_t)d_t$ [Model for hare population]   
+$L_{T>1} = L_1 + \int_1^T L_t(b_LH_t −m_L)d_t$ [Model for lynx population]  
+$σ_H ∼ Exponential(1)$ [Prior for measurement dispersion]   
+$σ_L ∼ Exponential(1)$ [Prior for measurement dispersion]   
+$p_H ∼ Beta(α_H, β_H)$ [Prior for hare trap probability]   
+$p_L ∼ Beta(α_L, β_L)$ [Prior for lynx trap probability]   
+$b_H ∼ HalfNormal(1, 0.5)$ [Prior hare birth rate]   
+$b_L ∼ HalfNormal(0.05, 0.05)$ [Prior lynx birth rate]  
+$m_H ∼ HalfNormal(0.05, 0.05)$ [Prior hare mortality rate]  
+$m_L ∼ HalfNormal(1, 0.5)$ [Prior lynx mortality rate]  
+
+Let's get started on our exercise now by loading the data and preparing our priors. Here, we simply just draw theta parameters (these define halfnormal distributions) from normal distributions as defined above:
+
+```{r echo = FALSE}
+#Sys.sleep(10)
+#gc()
+```
+
+```{r}
+data(Lynx_Hare)
+N <- 12
+theta <- matrix(NA, nrow=N, ncol=4)
+theta[,1] <- rnorm(N, 1, 0.5) # b_H
+theta[,2] <- rnorm(N, 0.05, 0.05) # b_L
+theta[,3] <- rnorm(N, 1, 0.5) # m_L
+theta[,4] <- rnorm(N, 0.05, 0.05) # m_H
+```
+
+We can now use these priors in combination with the `sim_lynx_hare()` function from the book:
+```{r}
+sim_lynx_hare <- function(n_steps, init, theta, dt=0.002){
+    L <- rep(NA,n_steps)
+    H <- rep(NA,n_steps)
+    L[1] <- init[1]
+    H[1] <- init[2]
+    for (i in 2:n_steps){
+        H[i] <- H[i-1] + dt*H[i-1]*(theta[1] - theta[2]*L[i-1])
+        L[i] <- L[i-1] + dt*L[i-1]*(theta[3]*H[i-1] - theta[4])
+    }
+    return(cbind(L,H))
+}
+```
+
+With the above function registered in our `R` environment, we are ready to simulate with our priors and produce some plots:
+
+```{r}
+## Simulate for first prior
+plot_df <- sim_lynx_hare(1e4, as.numeric(Lynx_Hare[1,2:3]), theta[1,])
+plot_df <- data.frame(plot_df)
+plot_df$prior <- rep(1, 1e4)
+## simulate for all other priors
+for(i in 2:N){
+    z <- sim_lynx_hare(1e4, as.numeric(Lynx_Hare[1,2:3]), theta[i,])
+    z <- data.frame(z)
+    z$prior <- rep(i, 1e4)
+    plot_df <- rbind(plot_df, z)
+}
+plot_df$seq <- rep(1:1e4, N)
+## Plotting
+ggplot(plot_df, aes(x = seq)) + 
+  geom_line(aes(y = L), col = "brown") + 
+  geom_line(aes(y = H), col = "blue") + 
+  facet_wrap(~prior, scales = "free") + 
+  theme_bw() + 
+  labs(x = "Time", y = "Population") + 
+  theme(axis.text.y = element_blank())
+```
+
+Hare population estimates are shown in blue while Lynx population estimates are portrayed in brown. Nevermind that, however, these priors are clearly not good as far as building biological plausibility into our model. Why? There is no cycling in the blue trends depending on the brown trends (lynx eat hares and are thus coupled to them). In addition to that, although I have hidden the actual population estimates, I think it is evident from these plots that some of the prior estimates are just outlandish in terms of population size.
+
+Let's see if we can do better. How would we do that? By making our priors more informative, of course. We should probably take this step-by-step:
+
+1. *Hare birth rate* - $b_H$:  
+
+I want to make this more conservative by lowering the expected birth rate of hares. To do so, the theta parameter for my halfnormal distribution will now be drawn from $Normal(0.5, 0.1)$ as opposed to the previous $Normal(1, 0.5)$.
+
+$$b_H ∼ HalfNormal(0.5, 0.1)$$
+
+2. *Lynx birth rate* - $b_L$:  
+
+This one, I keep as it was previously. I strongly suspect that the base birth rate of lynx should be much smaller than that of hares. The new prior reflects that:
+
+$$b_L ∼ HalfNormal(0.05, 0.05)$$
+
+3. *Lynx mortality rate* - $m_L$:  
+
+I want to drastically decrease the estimated lynx mortality rate since lynx don't die as much as hares do (longer life, no predators, etc.):
+
+$$m_H ∼ HalfNormal(0.025, 0.05)$$
+
+4. *Hare mortality rate* - $m_H$:  
+
+I increase the mortality rate of hares to reflect that they die much more frequently than lynx do for the aforementioned reasons:
+
+$$m_L ∼ HalfNormal(0.5, 0.1)$$
+
+Let's simulate with these priors
+
+```{r}
+## New priors
+N <- 12
+theta <- matrix(NA, nrow=N, ncol=4)
+theta[,1] <- rnorm(N, 0.5, 0.1) # b_H
+theta[,2] <- rnorm(N, 0.05, 0.05) # b_L
+theta[,3] <- rnorm(N, 0.025, 0.05) # m_L
+theta[,4] <- rnorm(N, 0.5, 0.1) # m_H
+## Simulate for first prior
+plot_df <- sim_lynx_hare(1e4, as.numeric(Lynx_Hare[1,2:3]), theta[1,])
+plot_df <- data.frame(plot_df)
+plot_df$prior <- rep(1, 1e4)
+## simulate for all other priors
+for(i in 2:N){
+    z <- sim_lynx_hare(1e4, as.numeric(Lynx_Hare[1,2:3]), theta[i,])
+    z <- data.frame(z)
+    z$prior <- rep(i, 1e4)
+    plot_df <- rbind(plot_df, z)
+}
+plot_df$seq <- rep(1:1e4, N)
+## Plotting
+ggplot(plot_df, aes(x = seq)) + 
+  geom_line(aes(y = L), col = "brown") + 
+  geom_line(aes(y = H), col = "blue") + 
+  facet_wrap(~prior, scales = "free") + 
+  theme_bw() + 
+  labs(x = "Time", y = "Population") + 
+  theme(axis.text.y = element_blank())
+```
+
+Still, there are some populations here that experience explosive growth, but at least we now have properly cycling population trends for both species!
+
+## Hard Exercises
+
+### Practice H1
+**Question:**  Modify the Panda nut opening model so that male and female chimpanzees have different maximum adult body mass. The `sex` variable in `data(Panda_nuts)` provides the information you need. Be sure to incorporate the fact that you know, prior to seeing the data, that males are on average larger than females at maturity.
+
+**Answer:** Once more, let me include the model specification from the chapter:
+
+$$n_i ∼ Poisson(λ_i)$$ 
+$$λ_i = d_iϕ(1 − exp(−kt_i))^θ$$
+$$ϕ ∼ LogNormal(log(1), 0.1)$$ 
+$$k ∼ LogNormal(log(2), 0.25)$$ 
+$$θ ∼ LogNormal(log(5), 0.25)$$
+
+Once more, we move on to loading the data as was done in the chapter and creating an index variable for male individuals:
+
+```{r echo = FALSE}
+#Sys.sleep(10)
+#gc()
+```
+
+```{r}
+data(Panda_nuts)
+dat_list <- list(
+    n = as.integer(Panda_nuts$nuts_opened),
+    age = Panda_nuts$age / max(Panda_nuts$age),
+    seconds = Panda_nuts$seconds)
+dat_list$male_id <- ifelse(Panda_nuts$sex=="m", 1L, 0L)
+```
+
+We need to alter the model above to allow for the effect of sex to take hold. How do we go about this? Well, the exercise states that the effect of sex is supposed to come about through the effect of body mass which, in turn, is included in the model through $\phi$ which handles the conversion of body mass into strength. We can add the effect of sex to the model as such:
+
+$$n_i ∼ Poisson(λ_i)$$ 
+$$λ_i = d_i*p_mS*ϕ(1 − exp(−kt_i))^θ$$
+$$p_m ∼ Exponential(2)$$ 
+$$ϕ ∼ LogNormal(log(1), 0.1)$$ 
+$$k ∼ LogNormal(log(2), 0.25)$$ 
+$$θ ∼ LogNormal(log(5), 0.25)$$
+
+where $S$ stands for the maleness indicator we built above:
+
+```{r echo = FALSE}
+if(!file.exists(file.path(getwd(), "m_H1.RData"))){
+m_H1 <- ulam(
+    alist(
+        n ~ poisson(lambda),
+        lambda <- seconds*(1+pm*male_id)*phi*(1-exp(-k*age))^theta, # 1+ addedd for baseline of effect of sex
+        phi ~ lognormal(log(1), 0.1),
+        pm ~ exponential(2),
+        k ~ lognormal(log(2), 0.25),
+        theta ~ lognormal(log(5), 0.25)
+   ), data=dat_list, chains=4, cores = 4)
+  save(m_H1, file=file.path(getwd(), "m_H1.RData"))
+}else{
+  load(file.path(getwd(), "m_H1.RData"))
+}
+```
+
+```{r eval = FALSE}
+m_H1 <- ulam(
+    alist(
+        n ~ poisson(lambda),
+        lambda <- seconds*(1+pm*male_id)*phi*(1-exp(-k*age))^theta, # 1+ addedd for baseline of effect of sex
+        phi ~ lognormal(log(1), 0.1),
+        pm ~ exponential(2),
+        k ~ lognormal(log(2), 0.25),
+        theta ~ lognormal(log(5), 0.25)
+   ), data=dat_list, chains=4, cores = 4)
+```
+```{r}
+precis(m_H1)
+```
+
+Due to how we built our model, the interpretation of $p_m$ is as follows: "Males are `r round(precis(m_H1)[2,1], 2)` times stronger than their female counterparts at maximum."
+
+How does this look when we plot it? I use the plotting scheme outlined by Richard McElreath in the chapter and modified in his solutions:
+```{r}
+post <- extract.samples(m_H1)
+plot(NULL, xlim = c(0, 1), ylim = c(0, 1.5), xlab = "age", ylab = "nuts per second", xaxt = "n")
+at <- c(0,0.25,0.5,0.75,1,1.25,1.5)
+axis(1, at = at, labels = round(at*max(Panda_nuts$age)))
+pts <- dat_list$n/dat_list$seconds
+point_size <- normalize(dat_list$seconds)
+points(jitter(dat_list$age), pts, lwd = 2, cex = point_size*3,
+       col = ifelse(dat_list$male_id == 1, "black", "red"))
+# 10 female curves
+for (i in 1:10) with(post,
+    curve(phi[i]*(1-exp(-k[i]*x))^theta[i], add=TRUE, col="red"))
+# 10 male curves
+for (i in 1:10) with(post,
+    curve((1+pm[i])*phi[i]*(1-exp(-k[i]*x))^theta[i], add=TRUE, col=grau()))
+```
+
+There is clearly quite the difference between males (black) and females (red) here. Males benefit more from age in opening nuts most likely due to their higher strength at maximum body mass. It is also worth pointing out that females have not been observed often or for long in this study as is apparent by the few, small circles in red.
+
+### Practice H2
+**Question:**  Now return to the Panda nut model and try to incorporate individual differences. There are two parameters, $ϕ$ and $k$, which plausibly vary by individual. Pick one of these, allow it to vary by individual, and use partial pooling to avoid overfitting. The variable chimpanzee in `data(Panda_nuts)` tells you which observations belong to which individuals.
+
+**Answer:** This works off of the same model as we just used: 
+
+$$n_i ∼ Poisson(λ_i)$$ 
+$$λ_i = d_iϕ(1 − exp(−kt_i))^θ$$
+$$ϕ ∼ LogNormal(log(1), 0.1)$$ 
+$$k ∼ LogNormal(log(2), 0.25)$$ 
+$$θ ∼ LogNormal(log(5), 0.25)$$
+
+To incorporate individual effects here, we need to add our data about individuals into our data list:
+
+```{r echo = FALSE}
+#Sys.sleep(10)
+#gc()
+```
+
+```{r}
+dat_list$id <- Panda_nuts$chimpanzee
+```
+
+To incorporate this ID variable into our model, we want to create a different mass-strength conversion parameter $\phi$ for each individual. Importantly, the average expected rate of opened nuts ($\lambda$) has to stay positive for each individual - otherwise, Poisson will fail us. For this reason, we will want to use a distribution for our individual, varying intercepts that is constrained to be positive. Here, I settle on the exponential. Consequently, I envision to alter the model like this:
+
+$$n_i ∼ Poisson(λ_i)$$ 
+$$λ_i = d_i*(ϕz_{ID}*\tau)*(1 − exp(−kt_i))^θ$$
+$$z_{ID} ~ Exponential(1)$$
+$$\tau ~ Exponential(1)$$
+$$ϕ ∼ LogNormal(log(1), 0.1)$$ 
+$$k ∼ LogNormal(log(2), 0.25)$$ 
+$$θ ∼ LogNormal(log(5), 0.25)$$
+
+Given our linear model and our constraint for positive values of $z_{ID}$ with a mean of 1, each value of $z_{ID}$ is a multiplicative effect with $\phi$. Due to the mean of 1, we expect on average no effect of individuals. The data may tell us otherwise.
+
+The model below bears two more important oddities:  
+- It is parametrised in a **non-centred** form to allow for more effective sampling of the posterior.  
+- The `gq>` part rescales our non-centred estimates of `z` and `tau` back to our scale of origin for better interpretation  
+
+Let's run this model:
+
+```{r echo = FALSE}
+if(!file.exists(file.path(getwd(), "m_H2.RData"))){
+m_H2 <- ulam(
+    alist(
+        n ~ poisson(lambda),
+        lambda <- seconds*(phi*z[id]*tau)*(1-exp(-k*age))^theta,
+        phi ~ lognormal(log(1), 0.1),
+        z[id] ~ exponential(1),
+        tau ~ exponential(1),
+        k ~ lognormal(log(2), 0.25),
+        theta ~ lognormal(log(5), 0.25),
+        gq> vector[id]:zz <<- z*tau # rescaled
+   ), data=dat_list, chains=4, cores=4,
+    control=list(adapt_delta=0.99), iter=4000)
+  save(m_H2, file=file.path(getwd(), "m_H2.RData"))
+}else{
+  load(file.path(getwd(), "m_H2.RData"))
+}
+```
+
+```{r eval = FALSE}
+m_H2 <- ulam(
+    alist(
+        n ~ poisson(lambda),
+        lambda <- seconds*(phi*z[id]*tau)*(1-exp(-k*age))^theta,
+        phi ~ lognormal(log(1), 0.1),
+        z[id] ~ exponential(1),
+        tau ~ exponential(1),
+        k ~ lognormal(log(2), 0.25),
+        theta ~ lognormal(log(5), 0.25),
+        gq> vector[id]:zz <<- z*tau # rescaled
+   ), data=dat_list, chains=4, cores=4,
+    control=list(adapt_delta=0.99), iter=4000)
+```
+```{r}
+precis(m_H2)
+```
+
+`tau` tells us whether there are individual differences or not and it firmly identifies that there are some. To understand these effects, it is easiest to use our rescaled estimates stored in `zz`:
+```{r}
+plot(precis(m_H2, 2, pars="zz"))
+abline(v=1, lty=2)
+```
+Above, we see the proportion of $\phi$ for each individual. Average values are found at 1. Values above 1 indicate stronger-than-average individuals.
+
+
+### Practice H3
+**Question:**  The chapter asserts that a typical, geocentric time series model might be one that uses lag variables. Here you’ll fit such a model and compare it to ODE model in the chapter. An autoregressive time series uses earlier values of the state variables to predict new values of the same variables. These earlier values are called *lag variables*. You can construct the lag variables here with:
+
+```{r echo = FALSE}
+#Sys.sleep(10)
+#gc()
+```
+
+```{r}
+data(Lynx_Hare) 
+dat_ar1 <- list(
+  L = Lynx_Hare$Lynx[2:21], 
+  L_lag1 = Lynx_Hare$Lynx[1:20], 
+  H = Lynx_Hare$Hare[2:21], 
+  H_lag1 = Lynx_Hare$Hare[1:20]
+ )
+```
+
+Now you can use `L_lag1` and `H_lag1` as predictors of the outcomes `L` and `H`. Like this: 
+
+$$L_t ∼ LogNormal(log (µ_{L,t}), σ_L)$$
+$$µ_{L,t} = α_L + β_{LL}L_{t−1} + β_{LH}H_{t−1}$$ 
+$$H_t ∼ LogNormal(log(µ_{H,t}), σ_H)$$ 
+$$µ_{H,t} = α_H + β_{HH}H_{t−1} + β_{HL}L_{t−1}$$
+
+where $L_{t−1}$ and $H_{t−1}$ are the lag variables. Use `ulam()` to fit this model. Be careful of the priors of the $α$ and $β$ parameters. Compare the posterior predictions of the autoregressive model to the ODE model in the chapter. How do the predictions differ? Can you explain why, using the structures of the models?
+
+**Answer:** Let's quickly complete the model above in mathematical notation before we code it:
+
+$$H_t ∼ LogNormal(log(µ_{H,t}), σ_H)$$ 
+$$L_t ∼ LogNormal(log (µ_{L,t}), σ_L)$$
+$$µ_{H,t} = α_H + β_{HH}H_{t−1} + β_{HL}L_{t−1}$$
+$$µ_{L,t} = α_L + β_{LL}L_{t−1} + β_{LH}H_{t−1}$$ 
+
+
+$$H_{T>1} = H_1 + \int_1^TH_t(b_H −m_HL_t)d_t$$
+$$L_{T>1} = L_1 + \int_1^T L_t(b_LH_t −m_L)d_t$$
+
+Now on to the priors:  
+
+1. *Mean population size of hares* - $\alpha_H$. I don't have any strong idea about this one except for the fact that it has to be positive:  
+$$\alpha_H ∼ Exponential(1)$$
+
+2. *Mean population size of lynx* - $\alpha_L$. Same as above - must be positive:  
+
+$$\alpha_L ∼ Exponential(1)$$
+
+3. *Effect of hares on hares through lag* - $\beta_{HH}$. This one is probably rather positive than negative, but negative values are thinkable:  
+
+$$\beta_{HH} \sim Normal(1, 0.5)$$
+
+4. *Effect of lynx on hares* - $\beta_{HL}$. Lynx eat hares, therefore I assume lynx have a negative effect on hare populations:  
+
+$$\beta_{HL} \sim Normal(-1, 0.5)$$
+
+5. *Effect of lynx on lynx through lag* - $\beta_{LL}$. This one is probably rather positive than negative, but negative values are thinkable:  
+
+$$\beta_{LL} \sim Normal(1, 0.5)$$
+
+6. *Effect of hares on lynx* - $\beta_{HL}$. Lynx eat hares, therefore I assume lynx populations grow when hares are abundant:  
+
+$$\beta_{LH} \sim Normal(1, 0.5)$$
+
+Let's put this all into effect in a model:
+
+```{r echo = FALSE}
+if(!file.exists(file.path(getwd(), "m_H3A.RData"))){
+m_H3_A <- ulam(
+    alist(
+        H ~ lognormal(log(muh), sigmah),
+        L ~ lognormal(log(mul), sigmal),
+        muh <- ah + b_hh*H_lag1 + b_hl*L_lag1,
+        mul <- al + b_ll*L_lag1 + b_lh*H_lag1,
+        c(ah,al) ~ normal(0,1),
+        b_hh ~ normal(1,0.5),
+        b_hl ~ normal(-1,0.5),
+        b_ll ~ normal(1,0.5),
+        b_lh ~ normal(1,0.5),
+        c(sigmah,sigmal) ~ exponential(1)
+   ), data=dat_ar1, chains=4, cores=4)
+  save(m_H3_A, file=file.path(getwd(), "m_H3A.RData"))
+}else{
+  load(file.path(getwd(), "m_H3A.RData"))
+}
+```
+
+```{r eval = FALSE}
+m_H3_A <- ulam(
+    alist(
+        H ~ lognormal(log(muh), sigmah),
+        L ~ lognormal(log(mul), sigmal),
+        muh <- ah + b_hh*H_lag1 + b_hl*L_lag1,
+        mul <- al + b_ll*L_lag1 + b_lh*H_lag1,
+        c(ah,al) ~ normal(0,1),
+        b_hh ~ normal(1,0.5),
+        b_hl ~ normal(-1,0.5),
+        b_ll ~ normal(1,0.5),
+        b_lh ~ normal(1,0.5),
+        c(sigmah,sigmal) ~ exponential(1)
+   ), data=dat_ar1, chains=4, cores=4)
+```
+```{r}
+precis(m_H3_A)
+```
+
+Turns out, the data agree with my prior intuition here. The implied time-series looks like this:
+```{r}
+post <- extract.samples(m_H3_A)
+plot(dat_ar1$H, pch=16, xlab="Year", ylab="pelts (thousands)", ylim=c(0,100))
+points(dat_ar1$L, pch=16, col=rangi2)
+mu <- link(m_H3_A)
+for(s in 1:21){
+    lines(1:20, mu$muh[s,], col=col.alpha("black",0.2), lwd=2) # hares
+    lines(1:20, mu$mul[s,], col=col.alpha(rangi2,0.4), lwd=2) # lynx
+}
+```
+
+Lynx are portrayed in blue while hares are shown in black. The model in the chapter clearly does a better job at replicating these time-series, particularly that of lynx. Why is that? For starters, our model fails to appreciate measurement error on reported population sizes. Secondly, the effects are modelled as linear when we know them not to be.
+
+What about a lagged interaction model to resolve the issue of linear effects? Let's try it by modelling as follows:
+
+$$µ_{H,t} = α_H + β_{HH}H_{t−1} + β_{HL}L_{t−1}H_{t−1}$$
+$$µ_{L,t} = α_L + β_{LL}L_{t−1} + β_{LH}H_{t−1}L_{t−1}$$ 
+
+
+```{r echo = FALSE}
+if(!file.exists(file.path(getwd(), "m_H3B.RData"))){
+m_H3_B <- ulam(
+    alist(
+        H ~ lognormal(log(muh), sigmah),
+        L ~ lognormal(log(mul), sigmal),
+        muh <- ah + b_hh*H_lag1 + b_hl*L_lag1*H_lag1, # interaction here
+        mul <- al + b_ll*L_lag1 + b_lh*H_lag1*L_lag1, # interaction here
+        c(ah,al) ~ normal(0,1),
+        b_hh ~ normal(1,0.5),
+        b_hl ~ normal(-1,0.5),
+        b_ll ~ normal(1,0.5),
+        b_lh ~ normal(1,0.5),
+        c(sigmah,sigmal) ~ exponential(1)
+   ), data=dat_ar1, chains=4, cores=4)
+  save(m_H3_B, file=file.path(getwd(), "m_H3B.RData"))
+}else{
+  load(file.path(getwd(), "m_H3B.RData"))
+}
+```
+
+```{r eval = FALSE}
+m_H3_B <- ulam(
+    alist(
+        H ~ lognormal(log(muh), sigmah),
+        L ~ lognormal(log(mul), sigmal),
+        muh <- ah + b_hh*H_lag1 + b_hl*L_lag1*H_lag1, # interaction here
+        mul <- al + b_ll*L_lag1 + b_lh*H_lag1*L_lag1, # interaction here
+        c(ah,al) ~ normal(0,1),
+        b_hh ~ normal(1,0.5),
+        b_hl ~ normal(-1,0.5),
+        b_ll ~ normal(1,0.5),
+        b_lh ~ normal(1,0.5),
+        c(sigmah,sigmal) ~ exponential(1)
+   ), data=dat_ar1, chains=4, cores=4)
+```
+```{r}
+post <- extract.samples(m_H3_B)
+plot(dat_ar1$H, pch=16, xlab="Year", ylab="pelts (thousands)", ylim=c(0,100))
+points(dat_ar1$L, pch=16, col=rangi2)
+mu <- link(m_H3_B)
+for(s in 1:21){
+    lines(1:20, mu$muh[s,], col=col.alpha("black",0.2), lwd=2) # hares
+    lines(1:20, mu$mul[s,], col=col.alpha(rangi2,0.4), lwd=2) # lynx
+}
+```
+
+That's already a lot better, but our lines now overshoot the peaks of lynx populations. I will leave it at that for this exercise although this model is far from perfect. The better model is in the book.
+
+### Practice H4
+**Question:**  Adapt the autoregressive model to use a two-step lag variable. This means that $L_{t−2}$ and $H_{t−2}$, in addition to $L_{t−1}$ and $H_{t−1}$, will appear in the equation for $µ$. This implies that prediction depends upon not only what happened just before now, but also on what happened two time steps ago. How does this model perform, compared to the ODE model?
+
+**Answer:** Let's prepare the data:
+
+```{r echo = FALSE}
+#Sys.sleep(10)
+#gc()
+```
+
+```{r}
+dat_ar2 <- list(
+    L = Lynx_Hare$Lynx[3:21],
+    L_lag1 = Lynx_Hare$Lynx[2:20],
+    L_lag2 = Lynx_Hare$Lynx[1:19],
+    H = Lynx_Hare$Hare[3:21],
+    H_lag1 = Lynx_Hare$Hare[2:20],
+    H_lag2 = Lynx_Hare$Hare[1:19])
+```
+
+Starting off with the basic, linear model we used above: 
+
+```{r echo = FALSE}
+if(!file.exists(file.path(getwd(), "m_H4A.RData"))){
+m_H4_A <- ulam(
+    alist(
+        H ~ lognormal(log(muh), sigmah),
+        L ~ lognormal(log(mul), sigmal),
+        muh <- ah + phi_hh*H_lag1 + phi_hl*L_lag1 +
+                    phi2_hh*H_lag2 + phi2_hl*L_lag2,
+        mul <- al + phi_ll*L_lag1 + phi_lh*H_lag1 +
+                    phi2_ll*L_lag2 + phi2_lh*H_lag2,
+        c(ah,al) ~ normal(0,1),
+        phi_hh ~ normal(1,0.5),
+        phi_hl ~ normal(-1,0.5),
+        phi_ll ~ normal(1,0.5),
+        phi_lh ~ normal(1,0.5),
+        phi2_hh ~ normal(0,0.5),
+        phi2_hl ~ normal(0,0.5),
+        phi2_ll ~ normal(0,0.5),
+        phi2_lh ~ normal(0,0.5),
+        c(sigmah,sigmal) ~ exponential(1)
+   ), data=dat_ar2, chains=4, cores=4)
+  save(m_H4_A, file=file.path(getwd(), "m_H4A.RData"))
+}else{
+  load(file.path(getwd(), "m_H4A.RData"))
+}
+```
+
+```{r eval = FALSE}
+m_H4_A <- ulam(
+    alist(
+        H ~ lognormal(log(muh), sigmah),
+        L ~ lognormal(log(mul), sigmal),
+        muh <- ah + phi_hh*H_lag1 + phi_hl*L_lag1 +
+                    phi2_hh*H_lag2 + phi2_hl*L_lag2,
+        mul <- al + phi_ll*L_lag1 + phi_lh*H_lag1 +
+                    phi2_ll*L_lag2 + phi2_lh*H_lag2,
+        c(ah,al) ~ normal(0,1),
+        phi_hh ~ normal(1,0.5),
+        phi_hl ~ normal(-1,0.5),
+        phi_ll ~ normal(1,0.5),
+        phi_lh ~ normal(1,0.5),
+        phi2_hh ~ normal(0,0.5),
+        phi2_hl ~ normal(0,0.5),
+        phi2_ll ~ normal(0,0.5),
+        phi2_lh ~ normal(0,0.5),
+        c(sigmah,sigmal) ~ exponential(1)
+   ), data=dat_ar2, chains=4, cores=4)
+```
+```{r}
+precis(m_H4_A)
+```
+All of these make sense still. As does the implied time-series:
+```{r}
+plot(dat_ar2$H, pch=16, xlab="Year", ylab="pelts (thousands)", ylim=c(0,100))
+points(dat_ar2$L, pch=16, col=rangi2)
+mu <- link(m_H4_A)
+for(s in 1:21){
+    lines(1:19, mu$muh[s,], col=col.alpha("black",0.2), lwd=2)
+    lines(1:19, mu$mul[s,], col=col.alpha(rangi2,0.4), lwd=2)
+}
+```
+
+This time-series hasn't benefited much from including the second-order time-lag.
+
+```{r echo = FALSE}
+#Sys.sleep(10)
+#gc()
+```
+
+Let's try the interaction effect model with two lags:
+
+```{r echo = FALSE}
+if(!file.exists(file.path(getwd(), "m_H4B.RData"))){
+m_H4_B <- ulam(
+    alist(
+        H ~ lognormal(log(muh), sigmah),
+        L ~ lognormal(log(mul), sigmal),
+        muh <- ah + phi_hh*H_lag1 + phi_hl*L_lag1*H_lag1 +
+                    phi2_hh*H_lag2 + phi2_hl*L_lag2*H_lag2,
+        mul <- al + phi_ll*L_lag1 + phi_lh*H_lag1*L_lag1 +
+                    phi2_ll*L_lag2 + phi2_lh*H_lag2*L_lag2,
+        c(ah,al) ~ normal(0,1),
+        phi_hh ~ normal(1,0.5),
+        phi_hl ~ normal(-1,0.5),
+        phi_ll ~ normal(1,0.5),
+        phi_lh ~ normal(1,0.5),
+        phi2_hh ~ normal(0,0.5),
+        phi2_hl ~ normal(0,0.5),
+        phi2_ll ~ normal(0,0.5),
+        phi2_lh ~ normal(0,0.5),
+        c(sigmah,sigmal) ~ exponential(1)
+   ), data=dat_ar2, chains=4, cores=4)
+  save(m_H4_B, file=file.path(getwd(), "m_H4B.RData"))
+}else{
+  load(file.path(getwd(), "m_H4B.RData"))
+}
+```
+
+```{r eval = FALSE}
+m_H4_B <- ulam(
+    alist(
+        H ~ lognormal(log(muh), sigmah),
+        L ~ lognormal(log(mul), sigmal),
+        muh <- ah + phi_hh*H_lag1 + phi_hl*L_lag1*H_lag1 +
+                    phi2_hh*H_lag2 + phi2_hl*L_lag2*H_lag2,
+        mul <- al + phi_ll*L_lag1 + phi_lh*H_lag1*L_lag1 +
+                    phi2_ll*L_lag2 + phi2_lh*H_lag2*L_lag2,
+        c(ah,al) ~ normal(0,1),
+        phi_hh ~ normal(1,0.5),
+        phi_hl ~ normal(-1,0.5),
+        phi_ll ~ normal(1,0.5),
+        phi_lh ~ normal(1,0.5),
+        phi2_hh ~ normal(0,0.5),
+        phi2_hl ~ normal(0,0.5),
+        phi2_ll ~ normal(0,0.5),
+        phi2_lh ~ normal(0,0.5),
+        c(sigmah,sigmal) ~ exponential(1)
+   ), data=dat_ar2, chains=4, cores=4)
+```
+```{r}
+plot(dat_ar2$H, pch=16, xlab="Year", ylab="pelts (thousands)", ylim=c(0,100))
+points(dat_ar2$L, pch=16, col=rangi2)
+mu <- link(m_H4_B)
+for(s in 1:21){
+    lines(1:19, mu$muh[s,], col=col.alpha("black",0.2), lwd=2)
+    lines(1:19, mu$mul[s,], col=col.alpha(rangi2,0.4), lwd=2)
+}
+```
+
+This time-series also didn't gain anything from adding second-order lag effects, I'm afraid. 
+
+I reckon this exercise was designed to highlight that higher-order lag effects don't have any causal meaning.
+
+### Practice H5
+**Question:**  Population dynamic models are typically very difficult to fit to empirical data. The Lynx-hare example in the chapter was easy, partly because the data are unusually simple and partly because the chapter did the difficult prior selection for you. Here’s another data set that will impress upon you both how hard the task can be and how badly Lotka-Volterra fits empirical data in general. The data in `data(Mites)` are numbers of predator and prey mites living on fruit. Model these data using the same Lotka-Volterra ODE system from the chapter. These data are actual counts of individuals, not just their pelts. You will need to adapt the Stan code in `data(Lynx_Hare_model)`. Note that the priors will need to be rescaled, because the outcome variables are on a different scale. Prior predictive simulation will help. Keep in mind as well that the time variable and the birth and death parameters go together. If you rescale the time dimension, that implies you must also rescale the parameters.
+
+**Answer:** We have not worked with this data set before and so bet practise would have us load and plot it: 
+```{r echo = FALSE}
+#Sys.sleep(10)
+#gc()
+```
+
+```{r}
+data(Mites)
+plot(Mites$day, Mites$prey)
+points(Mites$day, Mites$predator, pch=16)
+```
+Open circles show prey. Closed circles show predators. One could definitely argue that there are cycles here.
+
+Luckily, so the solutions by McElreath tell me, there is no measurement error here. Thank the heavens!
+
+For prior predictive checks of our upcoming model and its priors we will want to repurpose the simulation function from the chapter that I used above:
+```{r}
+sim_mites <- function(n_steps, init, theta, dt=0.002){
+    L <- rep(NA,n_steps)
+    H <- rep(NA,n_steps)
+    L[1] <- init[1]
+    H[1] <- init[2]
+    for (i in 2:n_steps){
+        L[i] <- L[i-1] + dt*L[i-1]*(theta[3]*H[i-1] - theta[4])
+        H[i] <- H[i-1] + dt*H[i-1]*(theta[1] - theta[2]*L[i-1])
+    }
+    return(cbind(L,H))
+}
+```
+
+Now we need to define some priors for:  (1) prey birth rate `theta[1]`, (2) prey mortality rate `theta[2]`, (3) predator mortality rate `theta[3]`, and (4) predator birth rate `theta[4]`. Unfortunately, I lack a good understanding of mites and their prey to build intuitive priors.
+
+Playing around with the code below will lead you to identifying some priors that look right (the code below just report what we settle on for this exercise):
+
+```{r echo = FALSE}
+#Sys.sleep(10)
+#gc()
+```
+
+```{r}
+set.seed(41)
+## Priors
+N <- 16
+theta <- matrix(NA, N, 4)
+theta[,1] <- rnorm(N, 1.5, 1) # prey birth rate
+theta[,2] <- rnorm(N, 0.005, 0.1) # prey mortality rate
+theta[,3] <- rnorm(N, 0.0005, 0.1) # predator mortality rate
+theta[,4] <- rnorm(N, 0.5, 1) # predator birth rate
+## Simulate for first prior
+plot_df <- sim_mites(1e4, as.numeric(Mites[1,3:2]), theta[1, ])
+plot_df <- data.frame(plot_df)
+plot_df$prior <- rep(1, 1e4)
+## simulate for all other priors
+for (i in 2:N) {
+  z <- sim_mites(1e4, as.numeric(Mites[1,3:2]), theta[i, ])
+  z <- data.frame(z)
+  z$prior <- rep(i, 1e4)
+  plot_df <- rbind(plot_df, z)
+}
+plot_df$seq <- rep(1:1e4, N)
+## Plotting
+ggplot(plot_df, aes(x = seq)) +
+  geom_line(aes(y = L), col = "brown") +
+  geom_line(aes(y = H), col = "blue") +
+  facet_wrap(~prior, scales = "free") +
+  theme_bw() +
+  labs(x = "Time", y = "Population") +
+  theme(axis.text.y = element_blank())
+```
+
+These are decent enough, some show nice cycles for a few.
+
+Let's run with these anyways and take them forward to a model. The model below is just a broken-back version of the STAN model in the chapter:
+
+```{r}
+Mites_STAN <- '// Mites model, L is the predator, H is the prey
+functions{
+  real[] dpop_dt(real t,                    // time
+                  real[] pop_init,          // initial state{lynx, hares}
+                  real[] theta,             // parameters
+                  real[] x_r, int[] x_i){   // unused
+    real L = pop_init[1];                   // prey population initialisation
+    real H = pop_init[2];                   // predator population initialisation
+    real bh = theta[1];                     // prey birth rate
+    real mh = theta[2];                     // prey mortality
+    real ml = theta[3];                     // predator mortality
+    real bl = theta[4];                     // predator birth rate
+    // differential equations
+    real dH_dt = (bh - mh * L) * H;
+    real dL_dt = (bl * H - ml) * L;
+    return{ dL_dt, dH_dt };
+  }
+}
+data{
+  int<lower=0> N;            // number of measurement times
+  int<lower=0> mites[N,2];   // measured populations
+  real<lower=0> days[N];     // days from start of experiment
+}
+parameters{
+  real<lower=0> theta[4];     //{ bh, mh, ml, bl }
+  real<lower=0> pop_init[2];  // initial population state
+  real<lower=0> sigma[2];     // measurement errors
+}
+transformed parameters{
+  real pop[N, 2];
+  pop[1,1] = pop_init[1];     // prey population initialisation
+  pop[1,2] = pop_init[2];     // predator population initialisation
+  pop[2:N,1:2] = integrate_ode_rk45(
+    dpop_dt, pop_init, 0, days[2:N], theta,
+    rep_array(0.0, 0), rep_array(0, 0), 1e-5, 1e-3, 5e2);
+}
+model{
+  // priors
+  theta[1] ~ normal(1.5, 1);       // prey birth rate
+  theta[2] ~ normal(0.005, 0.1);     // prey mortality
+  theta[3] ~ normal(0.0005, 0.1);   // predator mortality
+  theta[4] ~ normal(0.5, 1);       // predator birth rate
+  sigma ~ exponential(1);
+  pop_init[1] ~ normal(mites[1,1], 50);
+  pop_init[2] ~ normal(mites[1,2], 50);
+  // observation model
+  // connect latent population state to observed pelts
+  for (t in 1:N)
+    for (k in 1:2)
+      mites[t,k] ~ lognormal(log(pop[t,k]), sigma[k]);
+  }
+generated quantities{
+  real mites_pred[N,2];
+  for (t in 1:N)
+    for (k in 1:2)
+      mites_pred[t,k] = lognormal_rng(log(pop[t,k]), sigma[k]);
+}'
+```
+
+```{r echo = FALSE}
+#Sys.sleep(10)
+#gc()
+```
+
+Preparing the data and running the model is quite straight-forward now:
+
+```{r echo = FALSE}
+dat_mites <- list(
+    N = nrow(Mites),
+    mites = as.matrix(Mites[,3:2]),
+    days = Mites[,1]/7)
+
+if(!file.exists(file.path(getwd(), "m_H5.RData"))){
+  m_H5 <- stan(model_code = Mites_STAN, data=dat_mites, chains=4, cores=4, iter=2000,
+    control=list(adapt_delta=0.99))
+  save(m_H5, file=file.path(getwd(), "m_H5.RData"))
+}else{
+  load(file.path(getwd(), "m_H5.RData"))
+}
+```
+
+
+```{r eval = FALSE}
+dat_mites <- list(
+    N = nrow(Mites),
+    mites = as.matrix(Mites[,3:2]),
+    days = Mites[,1]/7)
+m_H5 <- stan(model_code = Mites_STAN, data=dat_mites, chains=4, cores=4, iter=2000,
+    control=list(adapt_delta=0.99))
+```
+```{r}
+precis(m_H5, 2)
+```
+
+Without trying to interpret the parameters here, let's just jump straight into the posterior predictions:
+```{r}
+post <- extract.samples(m_H5)
+mites <- dat_mites$mites
+plot(dat_mites$days, mites[,2], pch=16, ylim=c(0,3000),
+    xlab="time (week)", ylab="mites")
+points(dat_mites$days, mites[,1], col=rangi2, pch=16)
+for (s in 1:21){
+    lines(dat_mites$days, post$pop[s,,2], col=col.alpha("black",0.2), lwd=2)
+    lines(dat_mites$days, post$pop[s,,1], col=col.alpha(rangi2,0.3), lwd=2)
+}
+```
+
+Yet again, our model struggles to reconstruct the underlying time-series. This is certainly what McElreath referred to in the chapter when he said we would come face-to-face with the limitations of Lotka-Volterra models in the exercises. Why does the model do so baldy then? Well, it assumes equal cycle times which the data does not support. In addition our model is purely deterministic and lacks stochasticity which could help fit closer to the underlying cycles.
+
+I would have loved to end this series of blogposts on a more upbeat note, I must say. If you have found any use out of this series of posts and/or my summary slides linked at the top of these, then I am very happy. I must say I personally enjoyed working through this book a lot and hope my posts will come in handy for others looking to validate their solutions. Take care!
+
+## Session Info 
+```{r}
+sessionInfo()
+```

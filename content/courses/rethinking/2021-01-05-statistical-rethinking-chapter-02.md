@@ -1,0 +1,561 @@
+---
+title: Chapter 02
+author: Erik Kusch
+date: '2021-01-05'
+slug: chapter-02
+categories:
+  - Statistical Rethinking
+tags:
+  - Statistics
+  - Bayes
+  - Bayesian Statistics
+  - AU Bayes Study Group
+subtitle: 'Small Worlds in Large Worlds'
+summary: 'Answers and solutions to the exercises belonging to chapter 2 in [Satistical Rethinking 2](https://xcelab.net/rm/statistical-rethinking/) by Richard McElreath.'
+authors: []
+lastmod: '2021-01-05T16:26:00+01:00'
+featured: no
+# image:
+#   caption: ''
+#   focal_point: ''
+#   preview_only: no
+projects: [aubayes]
+output:
+  blogdown::html_page:
+    keep_md: true
+    # toc: true
+    # toc_depth: 1
+    # number_sections: false
+# header-includes:
+#   <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+#   <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+math: true
+links:
+- icon: file-powerpoint
+  icon_pack: fas
+  name: Slides - Chapter 1
+  url: /post/rethinking/1_11-12-2020_SUMMARY_The-Golem-Of-Prague.html
+- icon: file-powerpoint
+  icon_pack: fas
+  name: Slides - Chapter 2 & 3
+  url: /post/rethinking/2_18-12-2020_SUMMARY_-Basics-of-Bayesian-Inference-and-Counting.html
+type: docs
+toc: true 
+menu:
+  Rethinking:
+    parent: Seminars
+    weight: 2
+weight: 2
+---
+
+
+
+# Small Worlds in Large Worlds
+
+## Material
+
+- [Slides Chapter 1](/post/rethinking/1_11-12-2020_SUMMARY_The-Golem-Of-Prague.html)  
+- [Slides Chapter 2](/post/rethinking/2_18-12-2020_SUMMARY_-Basics-of-Bayesian-Inference-and-Counting.html)  
+
+## Introduction 
+These are answers and solutions to the exercises at the end of chapter 2 in [Satistical Rethinking 2](https://xcelab.net/rm/statistical-rethinking/) by Richard McElreath. I have created these notes as a part of my ongoing involvement in the [AU Bayes Study Group](/project/aubayes/). Much of my inspiration for these solutions, where necessary, has been obtained from [Taras Svirskyi](https://github.com/jffist/statistical-rethinking-solutions) and [Jeffrey Girard](https://jmgirard.com/statistical-rethinking-ch2/).
+
+## Easy Exercises
+### Practice E1
+
+**Question:** Which of the expressions below correspond to the statement: the probability of rain on Monday?  
+1. $Pr(rain)$  
+2. $Pr(rain|Monday)$  
+3. $Pr(Monday|rain)$  
+4. $\frac{Pr(rain,Monday)}{Pr(Monday)}$  
+
+**Answer:**  
+- 2, $Pr(rain|Monday)$ - reads as "the probability of rain, given that it is Monday".   
+- 4, $\frac{Pr(rain|Monday)}{Pr(Monday)}$ - reads as "the probability that is raining and a Monday, divided by the probability of it being a Monday" which is the same as "the probability of rain, given that it is Monday. This is simply just the Bayes theorem in action.  
+
+### Practice E2 
+**Question:** Which of the following statements corresponds to the expression: $Pr(Monday|rain)$?  
+1. The probability of rain on Monday.  
+2. The probability of rain, given that it is Monday.  
+3. The probability that it is Monday, given that it is raining.  
+4. The probability that it is Monday and that it is raining.  
+ 
+**Answer:**  
+- 3, The probability that it is Monday, given that it is raining.  
+
+### Practice E3 
+**Question:** Which of the expressions below correspond to the statement: the probability that it is Monday, given that it is raining?  
+1. $Pr(Monday|rain)$  
+2. $Pr(rain|Monday)$  
+3. $Pr(rain|Monday)Pr(Monday)$  
+4. $\frac{Pr(rain|Monday)Pr(Monday)}{Pr(rain)}$  
+5. $\frac{Pr(Monday|rain)Pr(rain)}{Pr(Monday)}$  
+
+**Answer:**  
+- 1, $Pr(Monday|rain)$  
+- 4, $\frac{Pr(rain|Monday)Pr(Monday)}{Pr(rain)}$  
+
+### Practice E4 
+**Question:** The Bayesian statistician Bruno de Finetti (1906-1985) began his book on probability theory with the declaration: “PROBABILITY DOES NOT EXIST.” The capitals appeared in the original, so I imagine de Finetti wanted us to shout the statement. What he meant is that probability is a device for describing uncertainty from the perspective of an observer with limited knowledge; it has no objective reality. Discuss the globe tossing example from the chapter, in light of this statement. What does it mean to say “the probability of water is 0.7”?  
+
+**Answer:**  
+- Completely uninformed and looking only at random samples, we would come to the conclusion that 70% of the Earth are covered by water. However, this estimate could be heavily biased once confounding factors are taken into account. Factors such as inaccuracy of the globe model we are tossing when compared to the real globe (i.e. the model is perfectly spherical, but the Earth itself is a flattened ellipsoid).
+
+## Medium Exercises
+This is where we get into `R` application of Bayes. Here, I load a few packages to make my outputs a bit nicer to look at:
+
+```r
+rm(list = ls())
+library(ggplot2)
+library(cowplot)
+```
+
+### Practice M1 & M2
+**Question:**  Recall the globe tossing model from the chapter. Compute and plot the grid approximate posterior distribution for each of the following sets of observations. In each case, assume a uniform prior for p.  
+- W,W,W  
+- W,W,W,L  
+- L,W,W,L,W,W,W  
+
+Now assume a prior for p that is equal to zero when p<0.5 and is a positive constant when p≥0.5. Again compute and plot the grid approximate posterior distribution for each of the sets of observations in the problem just above.
+  
+**Answer:**  
+
+```r
+# Register the data we observed
+data1 <- c("W", "W", "W")
+data2 <- c("W", "W", "W", "L")
+data3 <- c("L", "W", "W", "L", "W", "W", "W")
+data_ls <- list(data1, data2, data3)
+names(data_ls) <- c(paste(data1, collapse = ""), paste(data2, collapse = ""), paste(data3, collapse = ""))
+
+# Define grid to sample
+p_grid <- seq(0, 1, length.out = 25)
+ng <- length(p_grid)
+
+# Register the priors
+priors_ls <- list(NA, NA)
+names(priors_ls) <- c("uniform prior (M1)", "disjunct prior (M2)")
+priors_ls[[1]] <- rep(1, ng)
+priors_ls[[2]] <- ifelse(p_grid < 0.5, 0, 1)
+
+# Generate a list within which to store plots for later output all together
+plot_ls <- as.list(rep(NA, length(data_ls) * length(priors_ls)))
+counter <- 1
+
+# Calculate Posteriors
+for (i in 1:length(data_ls)) { # loop over data sets
+  data <- data_ls[[i]] # extract data from list
+  n <- length(data) # number of observations
+  w <- sum(data == "W") # number of observed water
+  for (k in 1:length(priors_ls)) { # loop over priors
+    prior <- priors_ls[[k]] # extract prior
+    likelihood <- dbinom(w, n, p_grid) # calculate likelihood of water in grid
+    posterior <- likelihood * prior # compute posterior
+    posterior <- posterior / sum(posterior) # standardise posterior
+    # save data to data frame for ggplot
+    df <- data.frame(
+      param = p_grid,
+      prob = posterior,
+      ptype = rep("posterior", ng)
+    )
+    # ggplotting to plot list
+    plot_ls[[counter]] <- ggplot(df, aes(x = param, y = prob)) +
+      geom_line() +
+      geom_point() +
+      theme_bw() +
+      labs(title = paste(names(data_ls)[i], names(priors_ls)[k], sep = " "))
+    counter <- counter + 1
+  } # end of priors loop
+} # end of data set loop
+plot_grid(plotlist = plot_ls, ncol = 2, labels = "AUTO")
+```
+
+<img src="2021-01-05-statistical-rethinking-chapter-02_files/figure-html/unnamed-chunk-2-1.png" width="1440" />
+
+### Practice M3
+**Question:** Suppose there are two globes, one for Earth and one for Mars. The Earth globe is 70% covered in water. The Mars globe is 100% land. Further suppose that one of these globes–you don’t know which–was tossed in the air and produces a “land” observation. Assume that each globe was equally likely to be tossed. Show that the posterior probability that the globe was the Earth, conditional on seeing “land” ($Pr(Earth|land)$), is 0.23.  
+
+**Answer:**  
+From the question, we know that:  
+- $P(land|Earth) = 1-0.7 = 0.3$  
+- $P(land|Mars) = 1$  
+- $P(Earth) = P(Mars) = .5$  
+
+According to Bayes' theorem, we know that:  
+$P(Earth|Land) = \frac{P(land|Earth)P(Earth)}{P(land)}$  
+
+Conclusively, we are only missing $P(land)$ which we can calculate from:  
+
+$P(land) = P(land|Earth)P(Earth)+P(land|Mars)Pr(Mars)$  
+$= 0.3*0.5+1*0.5=0.65$
+
+Finally, we plug all these values into the above Bayes' theorem and obtain:
+$P(Earth|Land) = \frac{0.3*0.5}{0.65} = 0.2307692$
+
+In `R`, we can do this:  
+
+```r
+(p_e_l <- (1 - 0.7) * 0.5 / ((1 - 0.7) * 0.5 + 1. * 0.5))
+```
+
+```
+## [1] 0.2307692
+```
+
+### Practice M4
+**Question:** Suppose you have a deck with only three cards. Each card has two sides, and each side is either black or white. One card has two black sides. The second card has one black and one white side. The third card has two white sides. Now suppose all three cards are placed in a bag and shuffled. Someone reaches into the bag and pulls out a card and places it flat on a table. A black side is shown facing up, but you don’t know the colour of the side facing down. Show that the probability that the other side is also black is 2/3. Use the counting method (Section 2 of the chapter) to approach this problem. This means counting up the ways that each card could produce the observed data (a black card facing up on the table).  
+
+**Answer:**  
+I made a small visualisation of this here:
+<img src="/post/rethinking/Ch02_Cards.jpg" width="900"/>
+
+*By Counting:*  
+As you can see, out of all draws that start with a black side facing up on the first draw (3 total paths), only two conclude to the other side also being black. Thus, the probability is two thirds.  
+
+*Bayes' Theorem:*  
+$P(Second = B|First = B) = \frac{P(Second = B, First = B)}{P(First = B)} = \frac{P(BB)}{P(BB)+P(WB)*P(First = B|WB)}$
+$= \frac{1/3}{(1/3 + 1/3 * 1/2)} = 2/3$
+
+*Via *`R`*:*
+
+```r
+bb.ways <- 2
+wb.ways <- 1
+ww.ways <- 0
+likelihood <- c(bb.ways, wb.ways, ww.ways)
+prior <- c(1, 1, 1)
+posterior <- prior * likelihood
+posterior <- posterior / sum(posterior)
+posterior[1] == 2 / 3
+```
+
+```
+## [1] TRUE
+```
+
+### Practice M5
+**Question:** Now suppose there are four cards: BB, BW, WW, and another BB. Again suppose a card is drawn from the bag and a black side appears face up. Again calculate the probability that the other side is black.  
+
+**Answer:**  
+Here's an update of my previous visualisation for this:
+<img src="/post/rethinking/Ch02_Cards2.jpg" width="900"/>
+
+*By Counting:*  
+As you can see, out of all draws that start with a black side facing up on the first draw (5 total paths), four conclude to the other side also being black. Thus, the probability is 4/5 which is 0.8.  
+
+*Bayes' Theorem:*  
+$P(Second = B|First = B) = \frac{P(Second = B, First = B)}{P(First = B)} = \frac{P(BB)}{P(BB)+P(WB)*P(First = B|WB)}$
+$=\frac{1/2}{(1/2 + 1/4 * 1/2)} = 4/5$
+
+*Via *`R`*:*
+
+```r
+bb.ways <- 2
+wb.ways <- 1
+ww.ways <- 0
+likelihood <- c(bb.ways, wb.ways, ww.ways)
+prior <- c(2, 1, 1)
+posterior <- prior * likelihood
+posterior <- posterior / sum(posterior)
+posterior[1] == 4 / 5
+```
+
+```
+## [1] TRUE
+```
+
+### Practice M6
+**Question:** Imagine that black ink is heavy, and so cards with black sides are heavier than cards with white sides. As a result, it’s less likely that a card with black sides is pulled from the bag. So again assume that there are three cards: BB, BW, and WW. After experimenting a number of times, you conclude that for every way to pull the BB card from the bag, there are 2 ways to pull the BW card and 3 ways to pull the WW card. Again suppose that a card is pulled and a black side appears face up. Show that the probability the other side is black is now 0.5. Use the counting method, as before.  
+
+**Answer:**  
+Here's an update of my previous visualisation for this:
+<img src="/post/rethinking/Ch02_Cards3.jpg" width="900"/>
+
+*By Counting:*  
+Out of all draws that start with a black side facing up on the first draw (4 total paths), only 2 now conclude to the other side also being black. Thus, the probability is 1/2 which is 0.5.  
+
+*Bayes' Theorem:*  
+$P(Second = B|First = B) = \frac{P(Second = B, First = B)}{P(First = B)} = \frac{P(BB)}{P(BB)+P(WB)*P(First = B|WB)}$
+$= \frac{1/6}{(1/6 + 2/6 * 1/2)} = 1/2$
+
+*Via *`R`*:*
+
+```r
+bb.ways <- 2
+wb.ways <- 1
+ww.ways <- 0
+likelihood <- c(bb.ways, wb.ways, ww.ways)
+prior <- c(1, 2, 3)
+posterior <- prior * likelihood
+posterior <- posterior / sum(posterior)
+posterior[1] == 0.5
+```
+
+```
+## [1] TRUE
+```
+
+### Practice M7
+**Question:** Assume again the original card problem, with a single card showing a black side face up. Before looking at the other side, we draw another card from the bag and lay it face up on the table. The face that is shown on the new card is white. Show that the probability that the first card, the one showing a black side, has black on its other side is now 0.75. Use the counting method, if you can. Hint: Treat this like the sequence of globe tosses, counting all the ways to see each observation, for each possible first card.  
+
+**Answer:**  
+Here's an update of my previous visualisation for this:
+<img src="/post/rethinking/Ch02_Cards4.jpg" width="900"/>
+
+*By Counting:*  
+Out of all draws that start with a black side facing up on the first draw (12 total paths), 8 now conclude to the next card being places white-side facing up. Thus, the probability is 8/12 which is 0.75.  
+
+*Via *`R`*:*
+
+```r
+card.bb.likelihood <- 2 * 3 # bb pulled first (either side), next card is ww (either side) or wb (white-side up)
+card.wb.likelihood <- 1 * 2 # wb pulled black side up, next card is ww (either side)
+card.ww.likelihood <- 0
+likelihood <- c(card.bb.likelihood, card.wb.likelihood, card.ww.likelihood)
+prior <- c(1, 1, 1)
+posterior <- prior * likelihood
+posterior <- posterior / sum(posterior)
+posterior[1] == 0.75
+```
+
+```
+## [1] TRUE
+```
+
+## Hard Exercises
+### Practice H1
+**Question:** Suppose there are two species of panda bear. Both are equally common in the wild and live in the same place. They look exactly alike and eat the same food, and there is yet no genetic assay capable of telling them apart. They differ however in family sizes. Species A gives birth to twins 10% of the time, otherwise birthing a single infant. Species B births twins 20% of the time, otherwise birthing singleton infants. Assume these numbers are known with certainty, from many years of field research. Now suppose you are managing a captive panda breeding program. You have a new female panda of unknown species, and she has just given birth to twins. What is the probability that her next birth will also be twins?  
+
+**Answer:**  
+*By Hand:*  
+From the question, we know that:  
+- $Pr(twins|A)=0.1$  
+- $Pr(twins|B)=0.2$  
+- $Pr(A)=0.5$  
+- $Pr(B)=0.5$  
+
+We know want to calculate $Pr(twins)$ which is given as:  
+
+$Pr(twins)=Pr(twins|A)Pr(A)+Pr(twins|B)Pr(B)$
+
+For this, however, we need to know the probability of our individual belonging to species A or B, respectively. For this, we will use the Bayes' Theorem:  
+
+$Pr(A|twins)=\frac{Pr(twins|A)Pr(A)}{Pr(twins)}=\frac{0.1*(0.5)}{0.15}=1/3$  
+$Pr(B|twins)=\frac{Pr(twins|B)Pr(B)}{Pr(twins)}=\frac{0.2*(0.5)}{0.15}=2/3$
+
+These values can be used as $Pr(A)$ and $Pr(B)$ respectively in the formula to compute $Pr(twins)$ above as such:  
+
+$Pr(twins) = 0.1*1/3 + 0.2*2/3 = 1/6$
+
+*In* `R`*:*  
+
+```r
+p_twins_A <- 0.1
+p_twins_B <- 0.2
+likelihood <- c(p_twins_A, p_twins_B)
+prior <- c(1, 1)
+posterior <- prior * likelihood
+posterior <- posterior / sum(posterior)
+sum(posterior * likelihood) == 1 / 6
+```
+
+```
+## [1] TRUE
+```
+
+### Practice H2
+**Question:** Recall all the facts from the problem above. Now compute the probability that the panda we have is from species A, assuming we have observed only the first birth and that it was twins.
+
+**Answer:** We already now from our answer above that it is 1/3.  
+*By Hand:*  
+
+$Pr(A|twins)=\frac{Pr(twins|A)Pr(A)}{Pr(twins)}=\frac{0.1*(0.5)}{0.15}=1/3$ 
+
+*In* `R`*:*  
+
+```r
+p_twins_A <- 0.1
+p_twins_B <- 0.2
+likelihood <- c(p_twins_A, p_twins_B)
+prior <- c(1, 1)
+posterior <- prior * likelihood
+posterior <- posterior / sum(posterior)
+posterior[1] # 0.33
+```
+
+```
+## [1] 0.3333333
+```
+
+### Practice H3
+**Question:** Continuing on from the previous problem, suppose the same panda mother has a second birth and that it is not twins, but a singleton infant. Compute the posterior probability that this panda is species A.
+
+**Answer:**  
+*By Hand:*  
+The probability of birthing singleton infants given a certain species-membership is given by:  
+
+$Pr(single|A)=1–Pr(twins|A)=1–0.1=0.9$  
+$Pr(single|B)=1–Pr(twins|B)=1–0.2=0.8$  
+
+We already know species membership probability given the first birth having been a twin-birth:  
+
+$Pr(A)=1/3$  
+$Pr(B)=2/3$  
+
+Next, we require the probability of a singleton birth overall, which we calculate as follows:  
+
+$Pr(single)=Pr(single|A)Pr(A)+Pr(single|B)Pr(B)$  
+$=0.9(1/3)+0.8(2/3)=5/6$
+
+Finally, we are ready to use the Bayes' Theorem:  
+
+$Pr(A|single)=\frac{Pr(single|A)Pr(A)}{Pr(single)}=\frac{0.9(1/3)}{5/6}=0.36$
+
+*In* `R`*:*  
+
+```r
+## TWO STEPS WITH UPDATING
+p_twins_A <- 0.1
+p_twins_B <- 0.2
+# first Bayesian update
+likelihood_twins <- c(p_twins_A, p_twins_B)
+prior <- c(1, 1)
+posterior <- prior * likelihood_twins
+posterior <- posterior / sum(posterior)
+# second Bayesian update
+likelihood_single <- c(1 - p_twins_A, 1 - p_twins_B)
+prior <- posterior
+posterior <- prior * likelihood_single
+posterior <- posterior / sum(posterior)
+posterior[1] == 0.36
+```
+
+```
+## [1] FALSE
+```
+
+```r
+## IN ONE STEP
+p_twins_A <- 0.1
+p_twins_B <- 0.2
+# likelihood of two events (p(twins_step1 & single_step2|species=X))
+likelihood_twins_single <- c(
+  p_twins_A * (1 - p_twins_A),
+  p_twins_B * (1 - p_twins_B)
+)
+prior <- c(1, 1)
+posterior <- prior * likelihood_twins_single
+posterior <- posterior / sum(posterior)
+posterior[1] == 0.36
+```
+
+```
+## [1] TRUE
+```
+
+### Practice H4
+**Question:** A common boast of Bayesian statisticians is that Bayesian inferences makes it easy to use all of the data, even if the data are of different types. So suppose now that a veterinarian comes along who has a new genetic test that she claims can identify the species of our mother panda. But the test, like all tests, is imperfect. This is the information you have about the test:
+
+- The probability it correctly identifies a species A panda is 0.8.  
+- The probability it correctly identifies a species B panda is 0.65.  
+
+The vet administers the test to your panda and tells you that the test is positive for species A. First ignore your previous information from the births and compute the posterior probability that your panda is species A. Then redo your calculation, now using the birth data as well.  
+    
+**Answer:**  
+*By Hand:*  
+Again, the question hands us some information:  
+- $Pr(+A|A)=0.8$  
+- $Pr(+A|B)=1 − 0.65 = 0.35$  
+
+Importantly here, the test was positive for species A. I had previously overlooked this. Thanks to [Aramis Farias](https://fariasaramis.github.io/index.html) for pointing this out to me!
+
+Currently, we have to assume that both species are equally likely here:  
+- $Pr(A)=0.5$  
+- $Pr(B)=0.5$  
+
+Now, to calculate $Pr(A|+)$, we require $Pr(+)$:  
+
+$Pr(+)=Pr(+|A)Pr(A)+Pr(+|B)Pr(B)$  
+$=0.8(0.5)+0.35(0.5)=0.575$
+
+Finally, we calculate $Pr(A|+)$:
+$Pr(A|+)=\frac{Pr(+A|A)Pr(A)}{Pr(+)}=\frac{0.8(0.5)}{0.575}\sim 0.6987$
+
+Taking into account our previous knowledge on births, we have to set:  
+- $Pr(A)=0.36$  
+- $Pr(B)=1-Pr(A)=0.64$  
+
+We plug these values into the formulae above and obtain:  
+
+$Pr(+)=Pr(+|A)Pr(A)+Pr(+|B)Pr(B)$  
+$=0.8(0.36)+0.35(0.64)=0.512$
+
+Finally, we calculate $Pr(A|+)$:
+$Pr(A|+)=\frac{Pr(+A|A)Pr(A)}{Pr(+)}=\frac{0.8(0.36)}{0.512}=0.5625$
+
+Given our test alone, we are probably overestimating assignment to species A, here.
+
+*In* `R`*:*  
+
+```r
+# WITHOUT BIRTH-INFORMATION
+likelihood_test <- c(0.8, 0.35)
+prior <- c(1, 1)
+posterior_vet <- prior * likelihood_test
+posterior_vet <- posterior_vet / sum(posterior_vet)
+posterior_vet[1]
+```
+
+```
+## [1] 0.6956522
+```
+
+```r
+# WITH BIRT-INFORMATION
+p_twins_A <- 0.1
+p_twins_B <- 0.2
+# likelihood of two events (p(twins_step1 & single_step2|species=X))
+likelihood_twins_single <- c(
+  p_twins_A * (1 - p_twins_A),
+  p_twins_B * (1 - p_twins_B)
+)
+prior <- posterior_vet
+posterior <- prior * likelihood_twins_single
+posterior <- posterior / sum(posterior)
+posterior[1]
+```
+
+```
+## [1] 0.5625
+```
+## Session Info
+
+```r
+sessionInfo()
+```
+
+```
+## R version 4.0.5 (2021-03-31)
+## Platform: x86_64-w64-mingw32/x64 (64-bit)
+## Running under: Windows 10 x64 (build 19043)
+## 
+## Matrix products: default
+## 
+## locale:
+## [1] LC_COLLATE=English_United Kingdom.1252  LC_CTYPE=English_United Kingdom.1252    LC_MONETARY=English_United Kingdom.1252 LC_NUMERIC=C                           
+## [5] LC_TIME=English_United Kingdom.1252    
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+## [1] cowplot_1.1.1 ggplot2_3.3.3
+## 
+## loaded via a namespace (and not attached):
+##  [1] highr_0.9         pillar_1.6.0      bslib_0.2.4       compiler_4.0.5    jquerylib_0.1.4   R.methodsS3_1.8.1 R.utils_2.10.1    tools_4.0.5       digest_0.6.27     jsonlite_1.7.2   
+## [11] evaluate_0.14     lifecycle_1.0.0   tibble_3.1.1      gtable_0.3.0      R.cache_0.14.0    pkgconfig_2.0.3   rlang_0.4.11      DBI_1.1.1         yaml_2.2.1        blogdown_1.3     
+## [21] xfun_0.22         withr_2.4.2       dplyr_1.0.5       styler_1.4.1      stringr_1.4.0     knitr_1.33        generics_0.1.0    sass_0.3.1        vctrs_0.3.7       tidyselect_1.1.0 
+## [31] grid_4.0.5        glue_1.4.2        R6_2.5.0          fansi_0.4.2       rmarkdown_2.7     bookdown_0.22     farver_2.1.0      rematch2_2.1.2    purrr_0.3.4       magrittr_2.0.1   
+## [41] backports_1.2.1   scales_1.1.1      ellipsis_0.3.2    htmltools_0.5.1.1 assertthat_0.2.1  colorspace_2.0-0  labeling_0.4.2    utf8_1.2.1        stringi_1.5.3     munsell_0.5.0    
+## [51] crayon_1.4.1      R.oo_1.24.0
+```
