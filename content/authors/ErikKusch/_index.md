@@ -67,4 +67,4 @@ I am currently also working towards publication of manuscripts related to my [Ph
 
 In my free time, I escape to the mountains and engage in landscape and wildlife photography.
 
-{{< icon name="download" pack="fas" >}} Download my {{< staticref "media/CV_ErikKusch.pdf" "newtab" >}}CV{{< /staticref >}} or {{< icon name="envelope" pack="fas" >}} {{< staticref "/about#contact" "newtab" >}}contact me{{< /staticref >}} if you want to know more.
+{{< icon name="download" pack="fas" >}} Download my {{< staticref "https://raw.githubusercontent.com/ErikKusch/Homepage/master/static/media/CV_ErikKusch.pdf" "newtab" >}}CV{{< /staticref >}} or {{< icon name="envelope" pack="fas" >}} {{< staticref "/about#contact" "newtab" >}}contact me{{< /staticref >}} if you want to know more.

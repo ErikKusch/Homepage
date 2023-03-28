@@ -7,10 +7,14 @@ image:
   caption: Vegetation Memory Components
   focal_point: Smart
 links:
-- icon: twitter
-  icon_pack: fab
-  name: Follow
-  url: https://twitter.com/KuschErik
+- icon: file
+  icon_pack: fas
+  name: Kusch & Davy, Seddon, 2022
+  url: publication/vegetation-memory-effects-and-their-association-with-vegetation-resilience-in-global-drylands/
+- icon: file-pdf
+  icon_pack: fas
+  name: Poster
+  url: https://github.com/ErikKusch/Homepage/raw/master/static/talks/2020_ISEC_Poster.pdf
 - icon: github
   icon_pack: fab
   name: GitHub
@@ -29,7 +33,7 @@ tags:
 title: Vegetation Memory across Global Dryland Regions
 url_code: ""
 url_pdf: ""
-url_poster: "/talks/2020_ISEC_Poster.pdf"
+url_poster: ""
 url_slides: ""
 url_video: ""
 ---

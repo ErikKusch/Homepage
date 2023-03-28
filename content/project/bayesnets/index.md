@@ -15,7 +15,7 @@ links:
 #   icon_pack: fab
 #   name: Seminar Recordings
 #   url: https://youtube.com/playlist?list=PLpqqT2K5TtB6p9caQMOPn44tDWEuAoRVr
-- icon: sticky-note
+- icon: pen
   icon_pack: fas
   name: Exercises & Slides
   url: /courses/bayes-nets

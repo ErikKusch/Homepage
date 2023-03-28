@@ -11,15 +11,15 @@ links:
   icon_pack: fab
   name: Follow
   url: https://twitter.com/KuschErik
-- icon: youtube
-  icon_pack: fab
-  name: Seminar Recordings
-  url: https://youtube.com/playlist?list=PLpqqT2K5TtB6p9caQMOPn44tDWEuAoRVr
-- icon: sticky-note
+- icon: pen
   icon_pack: fas
   name: Exercises & Slides
   url: /courses/rethinking
   # url: /category/statistical-rethinking/
+- icon: youtube
+  icon_pack: fab
+  name: Seminar Recordings
+  url: https://youtube.com/playlist?list=PLpqqT2K5TtB6p9caQMOPn44tDWEuAoRVr
 # slides: example
 summary: I have established and run a group-exercise for learning Bayesian Statistics from the ground up with an assortment of colleagues. This group was run through zoom and open to anyone.
 tags:

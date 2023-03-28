@@ -4,17 +4,29 @@ authors:
 - ErikKusch
 external_link: ""
 image:
-  caption: PhD WorkFlow
+  caption: Who interacts with whom and how?
   focal_point: Smart
 links:
-- icon: twitter
-  icon_pack: fab
-  name: Follow
-  url: https://twitter.com/KuschErik
-- icon: github
-  icon_pack: fab
-  name: GitHub
-  url: https://github.com/ErikKusch/PhD-Project
+- icon: file
+  icon_pack: fas
+  name: Kusch & Davy, 2022
+  url: publication/krigr-a-tool-for-statistically-downscaling-climate-reanalysis-data-for-ecological-applications/
+- icon: file
+  icon_pack: fas
+  name: Davy & Kusch, 2021
+  url: /publication/reconciling-high-resolution-climate-datasets-using-krigr/
+- icon: file
+  icon_pack: fas
+  name: Ávila-Thieme* & Kusch* & Corcoran* et. al, 2022
+  url: /publication/networkextinction-an-r-package-to-simulate-extinctions-propagation-and-rewiring-potential-in-ecological-networks/
+- icon: file
+  icon_pack: fas
+  name: Kusch et. al, 2022
+  url: /publication/ecological-network-inference-is-not-consistent-across-sales-or-approaches/
+#- icon: github
+#  icon_pack: fab
+#  name: GitHub
+#  url: https://github.com/ErikKusch/PhD-Project
 - icon: researchgate
   icon_pack: fab
   name: Updates
@@ -23,129 +35,57 @@ links:
 summary: My PhD project and its working packages.
 tags:
 - Biological Networks
+- Macroecology
 - Resilience
 - Climate Data
 - Active
-title: Effects of Biological Extinctions across Scales and Trophic Levels
+title: A Macroecological Perspective to Ecological Networks
+subtitle: Exploring the Impacts of Climate-Driven Biodiversity Change & Contrasting and Benchmarking Network Inference Approaches
 url_code: ""
 url_pdf: ""
 url_slides: ""
 url_video: ""
 ---
 
+My PhD project was a part of the greater [BIORATES](/project/biorates/) project.
 
 # Motivation
-Throughout my PhD project, I aim to understand and predict the consequences of differential extinctions across trophic levels on a global scale. In doing so, I am focusing on drivers of differential extinctions, species-associations, extinction debt, biodiversity changes, shifts in functional communities, as well as ecosystem processes. These are my initial plans which have been set aside in favor of a revised PhD research project with a new set of work packages. My PhD project is a part of the greater [BIORATES](/project/biorates/) project.
 
-# Description
-1. **Co-Occurrences & Species-Interactions**. Firstly, I collect(ed) species range estimates from a variety of data sources and aggregate(d) these to global and local co-occurrence matrices at the species-level. Subsequently, I use additional data such as phylogenies and trait expressions of all species included in my analysis to delineate species-interactions and build global as well as local species-dependce networks.
-2. **Climate Data & Extinction Risks**. My PhD project leverage(s/d) state-of-the art climate reanalysis data which vastly improves on previously utilised legacy data sets of macroecology (see my KrigR project for more information). I use(d) these spatio-temporal data sets to assess local and global risk of extinction for each species contained within my analysis by virtue of safety margins, range shifts/contractions, or IUCN red list status.
-3. **Extinction Debt Effects**. Using the estimates of species extinctions, I perturb(ed) local and global species-dependence networks by removing vertices of species estimated to go extinct. This generates an extinction cascade (also known as extinction debt) which I analyse(d) on three different levels:
-    - Biodiversity – This step look(s/ed) at changes in local species richness and species-dependence network architecture.
-    - Functional Spaces – These are/were assessed by quantifying the changes in local functional trait hyperspaces.
-    - Ecosystem Function – I am currently unsure how to link these up, but am hoping for a viable link to be establishable with my recent vegetation memory work.
+Species rarely occur in isolation. Instead, they assemble into multi-species communities wherein individuals interact within and across species groups. These pairwise species interactions affect responses of biological communities to environmental conditions and perturbations. To understand and forecast changes within the Ecosphere, it is thus vital to quantify such interactions and explore their implications. Changes in pairwise species interactions are largely spurred by processes of the Anthropocene (e.g., changes in temperature, habitat availability). These affect entire ecosystems simultaneously thus necessitating the exploration of biological interactions at macroecological scales. Despite the complexity of biological interactions and the networks they form at macroecological scales, their study can be carried out readily via ecological networks.
+
+Here, I develop methodology and carry out analyses to address (1) the failure of contemporary macroecological research to incorporate state-of-the-art climate data by updating macroecological research practices, (2) the implications of mechanisms of extinction cascades within ecological networks with respect to interaction magnitude and potential/realised interactions thus using ecological networks as forecast tools, and finally (3) the lack of ecological network quantification at macroecological scales by inferring biological interactions from proxies.
 
 # Work Packages
 
-## Updated Plans
-### Work Package 1 - `KrigR`
-- Products:
-    - R Package KrigR + KrigR paper
-    - SDM comparison paper
-- Resources:
-    - Global and local data bases of species presence
-    - ERA5 climate data
-    - HWSD DEM product
-- Deadline: 31/08/21
+## Chapter 1 - Updating Macroecological Research Practices
+Environmental conditions which regulate species distributions determine whether pairwise biological interactions can be realised (i.e., species which do not coincide cannot directly interact). Furthermore, changes in abiotic conditions alter the expression of realised interactions. Therefore, it is crucial to explicitly consider environmental conditions when quantifying and forecasting biological interactions, particularly at macroecological scales which are characterized by prominent environmental heterogeneity (e.g. thermal gradients). However, macroecological research, at present, does not leverage the most recent and accurate climate data products available. Therefore, we require changes to macroecological research practices to integrate state-of-the-art climate data.
 
-Within this work package, I am identifying the best practices of downscaling state-of-the-art climate data to biologically relevant spatial resolutions.
+To resolve this issue, I have developed the `KrigR` `R` package which provides an easy-to-use and highly flexible infrastructure for access, temporal aggregation, spatial limitation, and statistical downloading of state of the art climate data from ECMWF. The resulting data products outperform legacy data products commonly used in macroecological research in (1) temporal resolution, (2) data accuracy, (3) provisioning of climate variables, (4) flexibility, and (5) applicability to specific research requirements.
 
-### Work Package 2 - Cross-Scale
-- Products:
-    - A set of species-networks based on different input data
-    - “Cross-Scale Changes in Association Network Topology” paper
-- Resources:
-    - Global and local data bases of species presence:
-      - PFTC data
-      - sPlot, GFBI
-      - GBIF
-      - SDM outputs (e.g. IUCN, BirdLife, and BIEN)
-    - Global and local data bases of trait expressions:
-      - BirdLife
-      - Phylacine
-      - TRY
-      - BIEN
-    - Species phylogenies
-- Deadline: 30/07/22
+![CH1 - Macroecological Climate Data Practices](1.png)
 
-Within this work package, I am investigating the ups and downs of leveraging different data sources of varying quality and coverage for the purpose of establishing species-networks .
+This work has been published in [Kusch & Davy, 2022](/publication/krigr-a-tool-for-statistically-downscaling-climate-reanalysis-data-for-ecological-applications/) and [Davy & Kusch, 2021](/publication/reconciling-high-resolution-climate-datasets-using-krigr/). Due to the ongoing development of `KrigR`, I have transferred any ongoing work on these issues to the [`KrigR` project](/project/krigr/)
 
-### Work Package 3 - Biodiversity Simplification
-- Products:
-    - Species-vulnerability proxies
-    - “Cross-Scale Effects of Biodiversity Simplification/Reduction on Network Topology” paper
-- Resources:
-    - Outputs of Work Package 1 & 2
-- Deadline: 30/07/22
+## Chapter 2 - Using Ecological Networks as Forecast Tools
+Biological interactions range in identity (i.e, present, absent), sign (i.e., positive and negative), and magnitude which determine the importance of an interaction for the persistence of interacting species and entire communities. This impact manifests especially through extinction cascades which exacerbate the biodiversity loss and change of network topologies spurred by Anthropogenic impacts. Such cascades are characterized by the loss of biological interactions following the extinction of a species leading to additional species extinctions. Thus, to forecast future community structures and quantify risk to ecosystem stability and functioning, it is vital to consider both the potential for and sign as well as magnitude of species interactions. Flexible and easy-to-use methodology for this purpose is currently lacking. Consequently, exploration of extinction cascades has remained simplistic and ought to be updated to facilitate the exploration of realistic future scenarios of the Ecosphere.
 
-Throughout this work package, I am building the synthesis of work packages 1 & 2 by analysing the consequences of simulated extinctions on species-dependence networks given species vulnerability and fine-scale climate projections. This work is carried out within trophic levels (e.g. plants and herbivores separately).
+In addressing this knowledge gap, I have co-developed the `NetworkExtinction` `R` package which enables simulations of extinction cascades within trophic as well as mutualistic networks with varying levels of link-importance and realisation of potential interactions. Using this tool, I subsequently explore network resilience landscapes defined by link-loss sensitivity and rewiring probability thresholds for a collection of empirical mutualistic networks across the Earth.
 
-### Work Package 4 - Cross-Trophic Effects
-- Products:
-    - “Cross-Trophic Effects of Extinction Debt on Network Topology” paper
-- Resources:
-    - Outputs of Work Package 1, 2 & 3
-- Deadline: 31/12/22
+![CH2 - Ecological Networks as Forecasting Tools](2.png)
 
-In this work package, I am investigating the consequences of differential extinctions and extinction debt across trophic levels (e.g. plants and herbivores in one network of species-dependence).
+The `NetworkExtinction` package is currently under review as [Ávila-Thieme & Kusch et. al](/publication/networkextinction-an-r-package-to-simulate-extinctions-propagation-and-rewiring-potential-in-ecological-networks/) while the exploration of mutualistic network resilience landscapes (Kusch & Ordonez) is currently being prepared for submission.
 
-### Work Package 5 - Science Dissemination
-- Products: PhD Diary, Presentations, Posters
-- Resources: Outputs of all other Work Packages, This website
-- Deadline: 15/01/23
+## Chapter 3 - Inferring Biological Interactions from Proxies
+Ecological networks are affected by the scales (e.g., local, regional, and continental) at which they are represented. Thus, locally quantified biological interactions cannot be used reliably to represent macroecological processes. However, sourcing networks at macroecological scales via traditional in-situ observations is prohibitively labour-intensive thus requiring the inference of biological interactions from macroecological proxies. However, the accuracy of already established biological interaction inference approaches remains understudied, calling into question their utility. Therefore, consistency and performance of interaction inference ought to be evaluated for use at macroecological scales.
 
-I have elected to set aside some serious time for science communication throughout my PhD studies. This work package is the catalyst.
+Within this final chapter of my PhD, I assess the consistency of four different interaction inference approaches (COOCCUR, NETASSOC, HMSC, and NDD-RIM) across ecologically relevant skills. Finding little consistency between the inferred ecological networks, I subsequently develop a demographic simulation framework of populations of interactiong species across time and space and establish guidelines for assessment of ecological network inference performance.
 
-----------------------------------------------------------------------
+![CH3 - Ecological Network Inference](3.png)
 
-## Initial Plans
-### WP 1 - Co-Occurrences
-- Products: Global co-occurence matrix, local species-dependency networks
-- Resources: Global and local data bases of species presence
-- Deadline: 13/11/20
+While the study of inference consistency is already submitted for review as [Kusch et. al, 2022](/publication/ecological-network-inference-is-not-consistent-across-sales-or-approaches/), a publication of Kusch & Vinton, Ordonez is to follow presenting the simulation framework.
 
-Within this work package, I am establishing a global understanding of species-dependence on one-another from a data-driven standpoint.
+# Implications
 
-### WP 2 - Prerequisites
-- Products: Downscaling Method for climate data, measures of species vulnerability (i.e. extinction risk)
-- Resources: Global and local data bases of species presence, ERA5 climate data, HWSD DEM product
-- Deadline: 26/02/21
+To ensure ecosystem management and conservation efforts are targeted appropriately under climate change, my work highlights that macroecological research practices ought to undergo a paradigm shift away from one-size-fits-all climate datasets towards reproducible and flexible data workflows for generation of climate datasets with respect to specific study purposes and requirements. Additionally, my explicit integration of ecological network resilience mechanisms towards extinction cascades reveals that contemporary approaches are likely overly optimistic in their projections of biodiversity loss throughout the Anthropocene. Lastly, I caution against naive use of ecological network inference within macroecological research. Instead, to render knowledge of ecological networks at macroecological scales, I argue that extensive assessments of network inference performance are required for which I present important groundwork.
 
-Within this work package, I am identifying the abiotic drivers of species vulnerability and best practices of downscaling those to biologically relevant spatial resolutions.
-
-### WP 3 - Biodiversity
-- Products: Estimate of global change of biodiversity patterns following simulated extinctions
-- Resources: Outputs of Work Package 1 & 2
-- Deadline: 15/05/21
-
-Throughout this work package, I am building the synthesis of work packages 1 & 2 by analysing the consequences of simulated extinctions on species-dependence networks given species vulnerability and fine-scale climate projections.
-
-### WP 4 - Function & Demography
-- Products: Estimate of global changes of functional trait space patterns following simulated extinctions as well as changes in demographies of communities.
-- Resources: Outputs of Work Package 1 & 2, Functional trait data and COM(P)ADRE data
-- Deadline: 28/01/22
-In this work package, I am investigating the consequences of differential extinctions and extinction debt to local expressions within functional trait spaces and along axes of life history variation.
-
-### WP 5 - Ecosystem Functions & Processes
-- Products: Estimate of global changes of ecosystem functioning and processes following simulated extinctions
-- Resources: Outputs of Work Package 1 & 2, Measures of Ecosystem processes/functions
-- Deadline: 14/10/22
-
-This work package is aimed at understanding how extinctions and extinction debt may affect ecosystem services and processes of future biological landscapes.
-
-### WP 6 - Science Dissemination
-- Products: PhD Diary, Presentations, Posters
-- Resources: Outputs of all other Work Packages, This website
-- Deadline: 15/01/23
-
-I have elected to set aside some serious time for science communication throughout my PhD studies. This work package is the catalyst.
+Ultimately, my dissertation represents a key advancement of use-cases of ecological networks at macroecological scales. Thus, adopting the novel methodology I have developed for macroecological use and inference of ecological networks is pressing in order to ensure adequate ecosystem management throughout the Anthropocene. 

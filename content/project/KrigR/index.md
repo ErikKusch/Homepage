@@ -7,18 +7,26 @@ image:
   caption: KrigR Workflow
   focal_point: Smart
 links:
+- icon: file
+  icon_pack: fas
+  name: Kusch & Davy, 2022
+  url: publication/krigr-a-tool-for-statistically-downscaling-climate-reanalysis-data-for-ecological-applications/
+- icon: file
+  icon_pack: fas
+  name: Davy & Kusch, 2021
+  url: /publication/reconciling-high-resolution-climate-datasets-using-krigr/
 - icon: github
   icon_pack: fab
   name: GitHub
   url: https://github.com/ErikKusch/KrigR
-- icon: file-powerpoint
+- icon: file-pdf
   icon_pack: fas
   name: Slides
-  url: /talks/KrigRDemo.pptx
-- icon: file-powerpoint
+  url: https://github.com/ErikKusch/Homepage/raw/master/static/talks/KrigRDemo.pptx
+- icon: file-pdf
   icon_pack: fas
   name: Poster
-  url: /talks/2022_05_Clim4EcolPoster.pdf
+  url: https://github.com/ErikKusch/Homepage/raw/master/static/talks/2022_05_Clim4EcolPoster.pdf
 - icon: researchgate
   icon_pack: fab
   name: Updates
@@ -27,14 +35,14 @@ links:
   icon_pack: fas
   name: Workshop Material
   url: /courses/krigr/
-- icon: youtube
-  icon_pack: fab
-  name: Workshop Recording
-  url: https://www.youtube.com/watch?v=wwb107L4wVw&ab_channel=ErikKusch
+#- icon: youtube
+#  icon_pack: fab
+#  name: Workshop Recording
+#  url: https://www.youtube.com/watch?v=wwb107L4wVw&ab_channel=ErikKusch
 - icon: twitter
   icon_pack: fab
   name: Follow
-  url: https://twitter.com/KuschErik
+  url: https://twitter.com/EraKrigR
 # slides: example
 summary: An `R` package designed for intuitive downloading, aggregating, and statistical downscaling of ERA5(-Land) data.
 tags:
@@ -49,6 +57,10 @@ url_pdf: ""
 url_slides: ""
 url_video: ""
 ---
+
+{{% alert danger %}}
+I am continuing to develop `KrigR`, add to its functionality, and broaden its scope. For any suggestions of development goals, novel functionality as well as any issues you might face with `KrigR`, please register an issue on <a href="https://github.com/ErikKusch/KrigR/issues" target="_blank">GitHub</a>. where I track these issues. Please refrain from inquiries via direct E-mail.
+{{% /alert %}}
 
 
 # Motivation

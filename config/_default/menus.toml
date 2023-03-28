@@ -79,6 +79,6 @@
 # To enable, copy your resume/CV to `static/media/resume.pdf` and uncomment the lines below.
 [[main]]
   name = "CV"
-  url = "https://htmlpreview.github.io/?https://github.com/ErikKusch/Website/blob/master/static/media/CV_ErikKusch.html"
+  url = "https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/media/CV_ErikKusch.html"
   target = "_blank"
   weight = 80

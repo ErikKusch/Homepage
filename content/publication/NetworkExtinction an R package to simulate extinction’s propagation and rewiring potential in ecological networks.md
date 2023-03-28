@@ -3,8 +3,8 @@ title: NetworkExtinction - an R package to simulate extinction’s propagation a
 abstract: M.Isidora Ávila-Thieme, Derek Corcoran and Erik Kusch share joint-first authorship. The abstract will be added after a publication date is communicated.
 authors:
 - M.Isidora Ávila-Thieme
-- Derek Corcoran
 - Erik Kusch
+- Derek Corcoran
 - Simón P. Castillo
 - Fernanda S. Valdovinos
 - Sergio A. Navarrete

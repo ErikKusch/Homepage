@@ -14,7 +14,7 @@ design:
 weight: 1.2
 
 title: Experience
-subtitle: Work placements I have been on or am currently engaged with. You will find a more all-encompassing overview of my qualifications and experiences on my <a href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Website/blob/master/static/media/CV_ErikKusch.html" target="_blank">CV</a>.
+subtitle: Work placements I have been on or am currently engaged with. You will find a more all-encompassing overview of my qualifications and experiences on my <a href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/media/CV_ErikKusch.html" target="_blank">CV</a>.
 
 # Date format for experience
 #   Refer to https://wowchemy.com/docs/customization/#date-format
