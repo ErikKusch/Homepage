@@ -78,7 +78,7 @@ item:
   organization: International Society for Ecological Modelling
   organization_url: https://www.isemworld.org/
   title: "Best Poster: Student and Early Career Researcher"
-  url: https://www.lter-europe.net/events/isem-2019
+  #url: https://www.lter-europe.net/events/isem-2019
 
 - certificate_url: 
   date_end: ""
@@ -87,6 +87,6 @@ item:
   organization: International Society for Ecological Modelling
   organization_url: https://www.isemworld.org/
   title: "Modeler's Choice: Poster Award"
-  url: https://www.lter-europe.net/events/isem-2019
+  #url: https://www.lter-europe.net/events/isem-2019
   
 ---

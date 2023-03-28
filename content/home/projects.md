@@ -39,6 +39,8 @@ content:
     tag: Resilience
   - name: Climate Data
     tag: Climate Data
+  - name: PhD Research
+    tag: PhD
 
 design:
   # Choose how many columns the section has. Valid values: '1' or '2'.

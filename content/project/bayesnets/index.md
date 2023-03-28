@@ -38,8 +38,9 @@ title: Bayesian Networks Study Group
 # url_video: ""
 ---
 
-# Disclaimer
-This study group is currently active. We are now coordinating through Slack to get our fix of all things Bayes. Our Slack Workspace is open to anyone who wants to join us. To do so, simply let me know by [contacting me](/contact) and shortly introduce yourself. 
+{{% alert success %}}
+This study group has come to an end. All information about it can still be found below. We are now coordinating through Slack to get our fix of all things Bayes. Our Slack Workspace is open to anyone who wants to join us. To do so, simply let me know by [contacting me](/about#contact) and shortly introduce yourself. 
+{{% /alert %}}
 
 # Motivation
 Building on the success of the [Bayes Study Group](/project/aubayes/) I ran two years ago, I have decided to create another study group this time focusing on explicit inference and analysis of Bayesian Networks which I believe are a neat tool for hypothesis testing.
@@ -52,12 +53,11 @@ That being said, I realise that what I propose is quite a big-time commitment â€
 ## Meetings:
 -	Scheduling:  
     - Tuesday 1500-1700 CEST (sessions end earlier if we are done earlier, of course)  
-    - Weekly (see Proposed [Timeline](/project/bayesnets/Schedule.pdf))  
--	Location: Zoom (meetings were recorded to make sure everyone can stay up-to-date even if they miss one or more sessions or are unable to join on-time, or stay for the entire duration).  
+    - Weekly for 8 sessions 
 
 ## Contents
 - We follow the material noted further down under Group Material  
-- We prepare ourselves by working through the material noted for each session in the Preparation Column in Proposed [Timeline](/project/bayesnets/Schedule.pdf)  
+- We prepare ourselves by working through the material noted for each session the proposed [schedule](/project/bayesnets/Schedule.pdf)  
 - At the start of each session, either me or a volunteer quickly presents a summary of the preparation material. This does not mean a presenter should have mastered the material at all â€“ simply be able to provide a red-thread through the contents and get a discussion going. We then go into questions/challenges concerning the material, practical examples, and personal implementations.  
 
 ## Material

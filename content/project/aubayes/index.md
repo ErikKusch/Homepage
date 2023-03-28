@@ -4,7 +4,7 @@ authors:
 - ErikKusch
 external_link: ""
 image:
-  caption: https://xkcd.com/1132/
+  #caption: https://xkcd.com/1132/
   focal_point: Smart
 links:
 - icon: twitter
@@ -35,8 +35,9 @@ title: Bayes Study Group
 # url_video: ""
 ---
 
-# Disclaimer
-This study group has come to an end. All information about it can still be found below. We are now coordinating through Slack to get our fix of all things Bayes. Our Slack Workspace is open to anyone who wants to join us. To do so, simply let me know by [contacting me](/contact) and shortly introduce yourself. 
+{{% alert success %}}
+This study group has come to an end. All information about it can still be found below. We are now coordinating through Slack to get our fix of all things Bayes. Our Slack Workspace is open to anyone who wants to join us. To do so, simply let me know by [contacting me](/about#contact) and shortly introduce yourself. 
+{{% /alert %}}
 
 # Motivation
 Have you ever read a paper and thought: “Wow, this is really cool”, then read on only to find the word “Bayesian” in the analysis specification and promptly get lost at the terminology and approach to statistics?
@@ -51,12 +52,11 @@ That being said, I realise that what I propose is quite a big-time commitment �
 ## Meetings:
 -	Scheduling:  
     - Friday 1300-1600 GMT+1 (sessions end earlier if we are done earlier, of course)  
-    - Weekly (see Proposed [Timeline](/project/aubayes/Schedule.pdf))  
--	Location: Zoom @ https://aarhusuniversity.zoom.us/j/65455334420 (meetings will be recorded to make sure everyone can stay up-to-date even if they miss one or more sessions or are unable to join on-time, or stay for the entire duration).  
+    - Weekly for 20 sessions including 4 input talks by practicioneers of Bayesian analyses
 
 ## Contents
 - We follow the material noted further down under Group Material  
-- We prepare ourselves by working through the material noted for each session in the Preparation Column in Proposed [Timeline](/project/aubayes/Schedule.pdf)  
+- We prepare ourselves by working through the material noted for each session
 - At the start of each session, either me or a volunteer quickly presents a summary of the preparation material. This does not mean a presenter should have mastered the material at all – simply be able to provide a red-thread through the contents and get a discussion going. We then go into questions/challenges concerning the material, practical examples, and personal implementations.  
 
 ## Material

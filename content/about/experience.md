@@ -14,7 +14,7 @@ design:
 weight: 1.2
 
 title: Experience
-subtitle: Work placements I have been on or am currently engaged with. You will find a more all-encompassing overview of my qualifications and experiences on my [CV](https://htmlpreview.github.io/?https://github.com/ErikKusch/Website/blob/master/static/media/CV_ErikKusch.html).
+subtitle: Work placements I have been on or am currently engaged with. You will find a more all-encompassing overview of my qualifications and experiences on my <a href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Website/blob/master/static/media/CV_ErikKusch.html" target="_blank">CV</a>.
 
 # Date format for experience
 #   Refer to https://wowchemy.com/docs/customization/#date-format
@@ -26,6 +26,7 @@ date_format: Jan 2006
 #   Leave `date_end` empty if it's your current employer.
 #   Begin multi-line descriptions with YAML's `|2-` multi-line prefix.
 experience:
+  
   - title: Senior Engineer
     company: Natural History Museum, University of Oslo
     company_url: https://www.nhm.uio.no/english/
@@ -36,6 +37,17 @@ experience:
         Responsibilities include:
         * Lead of task 4.2 of the BioDT project (Gathering, translating and combining European and global biodiversity data)
         * Statistical consultant/advisor for BioDT use cases
+        * Statistical education and lecturing
+        
+  - title: Research Affiliate 
+    company: SalGo-Team, Oxford University
+    company_url: https://www.salgo.ox.ac.uk/
+    location: 11a Mansfield Rd, Oxford OX1 3SZ
+    date_start: '2020-01-15'
+    date_end: ''
+    description: |2-
+        Responsibilities include:
+        * Statistical consultant/advisor
         * Statistical education and lecturing
         
   - title: Research Station Co-Manager

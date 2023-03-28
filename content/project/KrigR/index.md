@@ -41,6 +41,7 @@ tags:
 - Climate Data
 - Statistical Downscaling
 - KrigR
+- PhD
 - Active
 title: KrigR - Downloading and Downscaling of ERA5(-Land) data using R
 url_code: ""
@@ -51,7 +52,7 @@ url_video: ""
 
 
 # Motivation
-
+ 
 Contemporary studies of remote sensing and macroecology largely rely on legacy climate data which is surpassed by state-of-the-art climate reanalysis data sets such as the European Centre for Medium-range Weather Forecasts ReAnalysis 5 (ERA5) data catalogue which represents the forefront of advances in data assimilation and climate modelling.
 
 Using these data sets within `R` – the most prominent statistical software in macroecology – is a complicated task that involves downloading of data via shell scripts, reformatting of coordinate system, and might even require rescaling of the climate data.
