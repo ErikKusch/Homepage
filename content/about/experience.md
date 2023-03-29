@@ -35,7 +35,10 @@ experience:
     date_end: ''
     description: |2-
         Responsibilities include:
-        * Lead of task 4.2 of the BioDT project (Gathering, translating and combining European and global biodiversity data)
+        * Lead of task 4.3 of the BioDT project (facilitation and coordination of collaboration between European Rsearch Infrastructure nodes):  
+          
+          - Capacity and awareness building among RI nodes and European data publishers to deliver the new data streams
+          - Network creation for Biodiversity informatics expertise
         * Statistical consultant/advisor for BioDT use cases
         * Statistical education and lecturing
         
