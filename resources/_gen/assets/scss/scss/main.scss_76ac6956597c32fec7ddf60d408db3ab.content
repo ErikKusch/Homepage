@@ -8858,7 +8858,7 @@ ul.ul-edu li .description p.institution {
  *  Documentation layout
  **************************************************/
 .docs-article-container {
-  max-width: 760px; }
+  max-width: none; }
 
 /* Documentation: article footer. */
 .docs .body-footer {
