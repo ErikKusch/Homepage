@@ -36,7 +36,7 @@ options(width = 200)
 ## Theory 
 These are exercises and solutions meant as a compendium to my talk on Model Selection and Model Building.  
 
-I have prepared some {{< staticref "courses/excursions-into-biostatistics/Regressions---Correlations-for-the-Advanced.html" "newtab" >}} Lecture Slides {{< /staticref >}} for this session.
+I have prepared some {{< staticref "https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/Excursions-into-Biostatistics/Regressions---Correlations-for-the-Advanced.html" "newtab" >}} Lecture Slides {{< /staticref >}} for this session.
 
 ## Our Resarch Project
 
@@ -44,7 +44,7 @@ Today, we are looking at a big (and entirely fictional) data base of the common 
 
 ### The Data
 
-I have created a large data set for this exercise which is available {{< staticref "courses/excursions-into-biostatistics/Data.rar" "newtab" >}} here{{< /staticref >}} and we previously cleaned up so that is now usable {{< staticref "courses/excursions-into-biostatistics/data-handling-and-data-assumptions/" "newtab" >}} here{{< /staticref >}}.
+I have created a large data set for this exercise which is available {{< staticref "https://github.com/ErikKusch/Homepage/raw/master/content/courses/excursions-into-biostatistics/Data.rar" "newtab" >}} here{{< /staticref >}} and we previously cleaned up so that is now usable {{< staticref "/courses/excursions-into-biostatistics/data-handling-and-data-assumptions/" "newtab" >}} here{{< /staticref >}}.
 
 ### Reading the Data into `R`
 

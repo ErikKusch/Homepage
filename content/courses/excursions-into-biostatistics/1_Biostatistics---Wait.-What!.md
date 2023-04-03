@@ -12,4 +12,4 @@ type: docs
 weight: 1
 ---
 
-I have prepared some {{< staticref "courses/excursions-into-biostatistics/Biostatistics---Wait.-What!.html" "newtab" >}} Lecture Slides {{< /staticref >}} for this session.
+I have prepared some {{< staticref "https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/Excursions-into-Biostatistics/Biostatistics---Wait.-What!.html" "newtab" >}} Lecture Slides {{< /staticref >}} for this session.

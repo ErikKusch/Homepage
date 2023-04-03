@@ -32,10 +32,10 @@ weight: 5
 ## Theory
 These are exercises and solutions meant as a compendium to my talk on Model Selection and Model Building.  
 
-I have prepared some {{< staticref "courses/excursions-into-biostatistics/Data-Handling-and-Assumptions---Making-the-Most-of-Your-Data.html" "newtab" >}} Lecture Slides {{< /staticref >}} for this session.
+I have prepared some {{< staticref "https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/Excursions-into-Biostatistics/Data-Handling-and-Assumptions---Making-the-Most-of-Your-Data.html" "newtab" >}} Lecture Slides {{< /staticref >}} for this session.
 
 ## Exercise
-First, imagine we have been out and about collecting samples for our sparrow populations. You can find the data came home with after our field work season {{< staticref "courses/excursions-into-biostatistics/Data.rar" "newtab" >}} here{{< /staticref >}}. This data set contains errors/mis-specified data entry and other slip-ups that can happen as a part of data collection exercises. We need to fix that.
+First, imagine we have been out and about collecting samples for our sparrow populations. You can find the data came home with after our field work season {{< staticref "https://github.com/ErikKusch/Homepage/raw/master/content/courses/excursions-into-biostatistics/Data.rar" "newtab" >}} here{{< /staticref >}}. This data set contains errors/mis-specified data entry and other slip-ups that can happen as a part of data collection exercises. We need to fix that.
 
 ### Preparing Our Procedure 
 The following three sections are what I consider to be *essential* parts of the preamble to any `R`-based analysis. I highly recommend clearly indicating these bits in your code. 
@@ -102,7 +102,7 @@ Once the data is loaded into `R`, you *need to inspect* it to make sure it is re
 ### Assessing A Data Frame in `R` 
 Most, if not all, data you will ever load into `R` will be stored as a `data.frame` within `R`. Some of the most important functions for inspecting data frames ("df" in the following) in base `R` are the following four:
 
-- `dim(df)` returns the dimensions (Rows $\times$ Columns)of the data frame
+- `dim(df)` returns the dimensions (Rows x Columns)of the data frame
 - `head(df)` returns the first 6 rows of the data frame by default (here changed to 4)
 - `tail(df)` returns the last 6 rows of the data frame by default (here changed to 4)
 - `View(df)` opens nearly any `R` object in a separate tab for further inspection. Since we are dealing with an enormous data set here, I will exclude this function for now to save you from printing unnecessary pages.
@@ -1196,26 +1196,26 @@ sessionInfo()
 ```
 
 ```
-## R version 4.0.5 (2021-03-31)
-## Platform: x86_64-w64-mingw32/x64 (64-bit)
-## Running under: Windows 10 x64 (build 19043)
+## R version 4.2.3 (2023-03-15)
+## Platform: x86_64-apple-darwin17.0 (64-bit)
+## Running under: macOS Big Sur ... 10.16
 ## 
 ## Matrix products: default
+## BLAS:   /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRlapack.dylib
 ## 
 ## locale:
-## [1] LC_COLLATE=English_United Kingdom.1252  LC_CTYPE=English_United Kingdom.1252    LC_MONETARY=English_United Kingdom.1252 LC_NUMERIC=C                           
-## [5] LC_TIME=English_United Kingdom.1252    
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 ## 
 ## attached base packages:
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] dplyr_1.0.5
+## [1] dplyr_1.1.0
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] highr_0.9         pillar_1.6.0      bslib_0.2.4       compiler_4.0.5    jquerylib_0.1.4   R.methodsS3_1.8.1 R.utils_2.10.1    tools_4.0.5       digest_0.6.27     jsonlite_1.7.2   
-## [11] evaluate_0.14     lifecycle_1.0.0   tibble_3.1.1      R.cache_0.14.0    pkgconfig_2.0.3   rlang_0.4.11      DBI_1.1.1         yaml_2.2.1        blogdown_1.3      xfun_0.22        
-## [21] styler_1.4.1      stringr_1.4.0     knitr_1.33        generics_0.1.0    sass_0.3.1        vctrs_0.3.7       tidyselect_1.1.0  glue_1.4.2        R6_2.5.0          fansi_0.4.2      
-## [31] rmarkdown_2.7     bookdown_0.22     purrr_0.3.4       magrittr_2.0.1    rematch2_2.1.2    backports_1.2.1   ellipsis_0.3.2    htmltools_0.5.1.1 assertthat_0.2.1  utf8_1.2.1       
-## [41] stringi_1.5.3     crayon_1.4.1      R.oo_1.24.0
+##  [1] bslib_0.4.2       compiler_4.2.3    pillar_1.8.1      jquerylib_0.1.4   highr_0.10        R.methodsS3_1.8.2 R.utils_2.12.2    tools_4.2.3       digest_0.6.31     jsonlite_1.8.4   
+## [11] evaluate_0.20     lifecycle_1.0.3   tibble_3.2.0      R.cache_0.16.0    pkgconfig_2.0.3   rlang_1.0.6       cli_3.6.0         rstudioapi_0.14   yaml_2.3.7        blogdown_1.16    
+## [21] xfun_0.37         fastmap_1.1.1     styler_1.9.1      knitr_1.42        generics_0.1.3    vctrs_0.5.2       sass_0.4.5        tidyselect_1.2.0  glue_1.6.2        R6_2.5.1         
+## [31] fansi_1.0.4       rmarkdown_2.20    bookdown_0.33     purrr_1.0.1       magrittr_2.0.3    htmltools_0.5.4   utf8_1.2.3        cachem_1.0.7      R.oo_1.25.0
 ```

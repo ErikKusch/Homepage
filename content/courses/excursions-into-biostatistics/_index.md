@@ -18,7 +18,7 @@ weight: 1
 You can also find all of this on [GitHub](https://github.com/ErikKusch/Excursions-into-Biostatistics).
 
 
-If you find any typos in my material, are unhappy with some of what or how I am presenting or simply unclear about anything thing, do not hesitate to [contact me](/contact/).
+If you find any typos in my material, are unhappy with some of what or how I am presenting or simply unclear about anything thing, do not hesitate to [contact me](/about/#contact).
 
 All the best,
 Erik

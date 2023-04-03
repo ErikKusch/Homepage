@@ -35,7 +35,7 @@ Here (and over the next few exercises in this "course"), we are looking at a big
 
 ### The Data
 
-I have created a large data set for this exercise which is available in a cleaned and properly handled version {{< staticref "courses/excursions-into-biostatistics/Data.rar" "newtab" >}} here{{< /staticref >}}.
+I have created a large data set for this exercise which is available in a cleaned and properly handled version {{< staticref "https://github.com/ErikKusch/Homepage/raw/master/content/courses/excursions-into-biostatistics/Data.rar" "newtab" >}} here{{< /staticref >}}.
 
 #### Reading the Data into `R`
 
@@ -100,8 +100,8 @@ m
 ```
 
 ```{=html}
-<div id="htmlwidget-8f3b8c0967de5bc085f4" style="width:1440px;height:768px;" class="leaflet html-widget"></div>
-<script type="application/json" data-for="htmlwidget-8f3b8c0967de5bc085f4">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addMarkers","args":[[60,54,-25,-21.1,70,55,31,17.25,4,10.5,-51.75],[100,-2,135,55.6,-90,-97,-92,-88.75,-53,-67,-59.17],null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},["Native;Continental","Native;Coastal","Introduced;Continental","Introduced;Coastal","Introduced;Coastal","Introduced;Semi-Coastal","Introduced;Coastal","Introduced;Coastal","Introduced;Coastal","Introduced;Coastal","Introduced;Coastal"],null,null,null,["SI","UK","AU","RE","NU","MA","LO","BE","FG","SA","FI"],{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[-51.75,70],"lng":[-97,135]}},"evals":[],"jsHooks":[]}</script>
+<div class="leaflet html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-198293ac646900c5a74e" style="width:1440px;height:768px;"></div>
+<script type="application/json" data-for="htmlwidget-198293ac646900c5a74e">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addMarkers","args":[[60,54,-25,-21.1,70,55,31,17.25,4,10.5,-51.75],[100,-2,135,55.6,-90,-97,-92,-88.75,-53,-67,-59.17],null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},["Native;Continental","Native;Coastal","Introduced;Continental","Introduced;Coastal","Introduced;Coastal","Introduced;Semi-Coastal","Introduced;Coastal","Introduced;Coastal","Introduced;Coastal","Introduced;Coastal","Introduced;Coastal"],null,null,null,["SI","UK","AU","RE","NU","MA","LO","BE","FG","SA","FI"],{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[-51.75,70],"lng":[-97,135]}},"evals":[],"jsHooks":[]}</script>
 ```
 
 Note that you can zoom and drag the above map as well as click the station markers for some additional information.
@@ -190,30 +190,32 @@ sessionInfo()
 ```
 
 ```
-## R version 4.0.5 (2021-03-31)
-## Platform: x86_64-w64-mingw32/x64 (64-bit)
-## Running under: Windows 10 x64 (build 19043)
+## R version 4.2.3 (2023-03-15)
+## Platform: x86_64-apple-darwin17.0 (64-bit)
+## Running under: macOS Big Sur ... 10.16
 ## 
 ## Matrix products: default
+## BLAS:   /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRlapack.dylib
 ## 
 ## locale:
-## [1] LC_COLLATE=English_United Kingdom.1252  LC_CTYPE=English_United Kingdom.1252    LC_MONETARY=English_United Kingdom.1252 LC_NUMERIC=C                           
-## [5] LC_TIME=English_United Kingdom.1252    
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 ## 
 ## attached base packages:
 ## [1] parallel  stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] KrigR_0.1.2       httr_1.4.2        stars_0.5-3       abind_1.4-5       fasterize_1.0.3   sf_1.0-0          lubridate_1.7.10  automap_1.0-14    doSNOW_1.0.19     snow_0.4-3       
-## [11] doParallel_1.0.16 iterators_1.0.13  foreach_1.5.1     rgdal_1.5-23      raster_3.4-13     sp_1.4-5          stringr_1.4.0     keyring_1.2.0     ecmwfr_1.3.0      ncdf4_1.17       
-## [21] leaflet_2.0.4.1  
+##  [1] KrigR_0.1.2       terra_1.7-21      httr_1.4.5        stars_0.6-0       abind_1.4-5       fasterize_1.0.4   sf_1.0-12         lubridate_1.9.2   automap_1.1-9     doSNOW_1.0.20    
+## [11] snow_0.4-4        doParallel_1.0.17 iterators_1.0.14  foreach_1.5.2     rgdal_1.6-5       raster_3.6-20     sp_1.6-0          stringr_1.5.0     keyring_1.3.1     ecmwfr_1.5.0     
+## [21] ncdf4_1.21        leaflet_2.1.2    
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] sass_0.3.1         jsonlite_1.7.2     R.utils_2.10.1     bslib_0.2.4        assertthat_0.2.1   yaml_2.2.1         pillar_1.6.0       backports_1.2.1    lattice_0.20-41    glue_1.4.2        
-## [11] digest_0.6.27      htmltools_0.5.1.1  R.oo_1.24.0        plyr_1.8.6         pkgconfig_2.0.3    bookdown_0.22      purrr_0.3.4        intervals_0.15.2   gstat_2.0-7        tibble_3.1.1      
-## [21] proxy_0.4-25       styler_1.4.1       generics_0.1.0     ellipsis_0.3.2     cachem_1.0.4       magrittr_2.0.1     crayon_1.4.1       memoise_2.0.0      evaluate_0.14      R.methodsS3_1.8.1 
-## [31] fansi_0.4.2        R.cache_0.14.0     lwgeom_0.2-6       xts_0.12.1         class_7.3-18       FNN_1.1.3          blogdown_1.3       tools_4.0.5        lifecycle_1.0.0    compiler_4.0.5    
-## [41] jquerylib_0.1.4    e1071_1.7-6        spacetime_1.2-4    rlang_0.4.11       classInt_0.4-3     units_0.7-2        grid_4.0.5         htmlwidgets_1.5.3  crosstalk_1.1.1    rmarkdown_2.7     
-## [51] codetools_0.2-18   DBI_1.1.1          reshape_0.8.8      rematch2_2.1.2     R6_2.5.0           zoo_1.8-9          knitr_1.33         dplyr_1.0.5        fastmap_1.1.0      utf8_1.2.1        
-## [61] KernSmooth_2.23-18 stringi_1.5.3      Rcpp_1.0.7         vctrs_0.3.7        tidyselect_1.1.0   xfun_0.22
+##  [1] xts_0.13.0         R.cache_0.16.0     tools_4.2.3        bslib_0.4.2        utf8_1.2.3         R6_2.5.1           KernSmooth_2.23-20 DBI_1.1.3          colorspace_2.1-0   tidyselect_1.2.0  
+## [11] compiler_4.2.3     cli_3.6.0          gstat_2.1-0        bookdown_0.33      sass_0.4.5         scales_1.2.1       classInt_0.4-9     proxy_0.4-27       digest_0.6.31      rmarkdown_2.20    
+## [21] R.utils_2.12.2     pkgconfig_2.0.3    htmltools_0.5.4    styler_1.9.1       fastmap_1.1.1      htmlwidgets_1.6.1  rlang_1.0.6        rstudioapi_0.14    FNN_1.1.3.2        jquerylib_0.1.4   
+## [31] generics_0.1.3     zoo_1.8-11         jsonlite_1.8.4     crosstalk_1.2.0    dplyr_1.1.0        R.oo_1.25.0        magrittr_2.0.3     Rcpp_1.0.10        munsell_0.5.0      fansi_1.0.4       
+## [41] lifecycle_1.0.3    R.methodsS3_1.8.2  stringi_1.7.12     yaml_2.3.7         plyr_1.8.8         grid_4.2.3         lattice_0.20-45    knitr_1.42         pillar_1.8.1       spacetime_1.2-8   
+## [51] codetools_0.2-19   glue_1.6.2         evaluate_0.20      blogdown_1.16      vctrs_0.5.2        gtable_0.3.1       purrr_1.0.1        reshape_0.8.9      assertthat_0.2.1   cachem_1.0.7      
+## [61] ggplot2_3.4.1      xfun_0.37          lwgeom_0.2-11      e1071_1.7-13       class_7.3-21       tibble_3.2.0       intervals_0.15.3   memoise_2.0.1      units_0.8-1        timechange_0.2.0  
+## [71] ellipsis_0.3.2
 ```

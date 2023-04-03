@@ -32,15 +32,15 @@ weight: 6
 ## Theory
 These are exercises and solutions meant as a compendium to my talk on Model Selection and Model Building.  
 
-I have prepared some {{< staticref "courses/excursions-into-biostatistics/Classifications---Order-from-Chaos.html" "newtab" >}} Lecture Slides {{< /staticref >}} for this session.
+I have prepared some {{< staticref "https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/Excursions-into-Biostatistics/Classifications---Order-from-Chaos.html" "newtab" >}} Lecture Slides {{< /staticref >}} for this session.
 
 ## Our Resarch Project
 
-Today, we are looking at a big (and entirely fictional) data base of the common house sparrow (*Passer domesticus*). In particular, we are interested in the **Evolution of *Passer domesticus* in Response to Climate Change** which was previously explained {{< staticref "courses/excursions-into-biostatistics/research-project/" "newtab" >}} here{{< /staticref >}}.
+Today, we are looking at a big (and entirely fictional) data base of the common house sparrow (*Passer domesticus*). In particular, we are interested in the **Evolution of *Passer domesticus* in Response to Climate Change** which was previously explained {{< staticref "/courses/excursions-into-biostatistics/research-project/" "newtab" >}} here{{< /staticref >}}.
 
 ### The Data
 
-I have created a large data set for this exercise which is available {{< staticref "courses/excursions-into-biostatistics/Data.rar" "newtab" >}} here{{< /staticref >}} and we previously cleaned up so that is now usable {{< staticref "courses/excursions-into-biostatistics/data-handling-and-data-assumptions/" "newtab" >}} here{{< /staticref >}}.
+I have created a large data set for this exercise which is available {{< staticref "https://github.com/ErikKusch/Homepage/raw/master/content/courses/excursions-into-biostatistics/Data.rar" "newtab" >}} here{{< /staticref >}} and we previously cleaned up so that is now usable {{< staticref "/courses/excursions-into-biostatistics/data-handling-and-data-assumptions/" "newtab" >}} here{{< /staticref >}}.
 
 ### Reading the Data into `R`
 
@@ -176,7 +176,7 @@ vif(H2_LogReg_mod)
 
 ```
 ##      Weight      Height  Wing.Chord 
-##    9.409985 6550.394447 6342.683547
+##    9.409985 6550.394451 6342.683550
 ```
 
 A Variance Inflation Factor (VIF) value of $\geq5-10$ is seen as identifying problematic collinearity. Quite obviously, this is the case. We need to throw away some predictors. I only want to keep `Weight`.
@@ -305,11 +305,11 @@ summary_table
 
 ```
 ##                   Value Std. Error      t value p value
-## Weight       -0.4595713 0.09750017    -4.713544   2e-06
-## Height       25.0804875 0.19522593   128.469037   0e+00
-## Wing.Chord -164.1081894 0.51246105  -320.235438   0e+00
-## 0|1        -788.2027631 0.11008584 -7159.892373   0e+00
-## 1|2        -786.7913024 0.18747881 -4196.694599   0e+00
+## Weight       -0.4595719 0.09750018    -4.713549   2e-06
+## Height       25.0808034 0.19522606   128.470573   0e+00
+## Wing.Chord -164.1103857 0.51246129  -320.239573   0e+00
+## 0|1        -788.2133893 0.11008589 -7159.985419   0e+00
+## 1|2        -786.8019284 0.18747890 -4196.749302   0e+00
 ```
 Well... a lot here is significant. We identified **multicollinearity** as a problem earlier. Let's investigate that again:
 
@@ -318,8 +318,8 @@ vif(H2_LogReg_mod)
 ```
 
 ```
-##       Weight       Height   Wing.Chord 
-## 1.205383e+13 3.563792e+15 3.782106e+15
+##     Weight     Height Wing.Chord 
+##   431.6796   294.6353   536.5452
 ```
 Horrible!. A Variance Inflation Factor (VIF) value of $\geq5-10$ is seen as identifying problematic collinearity. Quite obviously, this is the case. We need to throw away some predictors. I only want to keep `Weight`.
 
@@ -819,30 +819,29 @@ sessionInfo()
 ```
 
 ```
-## R version 4.0.5 (2021-03-31)
-## Platform: x86_64-w64-mingw32/x64 (64-bit)
-## Running under: Windows 10 x64 (build 19043)
+## R version 4.2.3 (2023-03-15)
+## Platform: x86_64-apple-darwin17.0 (64-bit)
+## Running under: macOS Big Sur ... 10.16
 ## 
 ## Matrix products: default
+## BLAS:   /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRlapack.dylib
 ## 
 ## locale:
-## [1] LC_COLLATE=English_United Kingdom.1252  LC_CTYPE=English_United Kingdom.1252    LC_MONETARY=English_United Kingdom.1252 LC_NUMERIC=C                           
-## [5] LC_TIME=English_United Kingdom.1252    
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 ## 
 ## attached base packages:
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] MASS_7.3-53.1       car_3.0-10          carData_3.0-4       randomForest_4.6-14 rpart.plot_3.0.9    rpart_4.1-15        vegan_2.5-7         lattice_0.20-41     permute_0.9-5      
-## [10] mclust_5.4.7        ggplot2_3.3.3      
+##  [1] MASS_7.3-58.2        car_3.1-1            carData_3.0-5        randomForest_4.7-1.1 rpart.plot_3.1.1     rpart_4.1.19         vegan_2.6-4          lattice_0.20-45      permute_0.9-7       
+## [10] mclust_6.0.0         ggplot2_3.4.1       
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] Rcpp_1.0.7        assertthat_0.2.1  digest_0.6.27     utf8_1.2.1        cellranger_1.1.0  R6_2.5.0          backports_1.2.1   evaluate_0.14     highr_0.9         blogdown_1.3     
-## [11] pillar_1.6.0      rlang_0.4.11      readxl_1.3.1      curl_4.3.2        data.table_1.14.0 jquerylib_0.1.4   R.utils_2.10.1    R.oo_1.24.0       Matrix_1.3-2      rmarkdown_2.7    
-## [21] styler_1.4.1      labeling_0.4.2    splines_4.0.5     stringr_1.4.0     foreign_0.8-81    munsell_0.5.0     compiler_4.0.5    xfun_0.22         pkgconfig_2.0.3   mgcv_1.8-34      
-## [31] htmltools_0.5.1.1 tidyselect_1.1.0  tibble_3.1.1      bookdown_0.22     rio_0.5.26        fansi_0.4.2       crayon_1.4.1      dplyr_1.0.5       withr_2.4.2       R.methodsS3_1.8.1
-## [41] grid_4.0.5        nlme_3.1-152      jsonlite_1.7.2    gtable_0.3.0      lifecycle_1.0.0   DBI_1.1.1         magrittr_2.0.1    scales_1.1.1      zip_2.1.1         stringi_1.5.3    
-## [51] farver_2.1.0      bslib_0.2.4       ellipsis_0.3.2    generics_0.1.0    vctrs_0.3.7       openxlsx_4.2.3    rematch2_2.1.2    tools_4.0.5       forcats_0.5.1     R.cache_0.14.0   
-## [61] glue_1.4.2        purrr_0.3.4       hms_1.0.0         abind_1.4-5       parallel_4.0.5    yaml_2.2.1        colorspace_2.0-0  cluster_2.1.1     knitr_1.33        haven_2.4.1      
-## [71] sass_0.3.1
+##  [1] styler_1.9.1      tidyselect_1.2.0  xfun_0.37         bslib_0.4.2       purrr_1.0.1       splines_4.2.3     colorspace_2.1-0  vctrs_0.5.2       generics_0.1.3    htmltools_0.5.4  
+## [11] yaml_2.3.7        mgcv_1.8-42       utf8_1.2.3        rlang_1.0.6       R.oo_1.25.0       jquerylib_0.1.4   pillar_1.8.1      glue_1.6.2        withr_2.5.0       R.utils_2.12.2   
+## [21] R.cache_0.16.0    lifecycle_1.0.3   munsell_0.5.0     blogdown_1.16     gtable_0.3.1      R.methodsS3_1.8.2 evaluate_0.20     labeling_0.4.2    knitr_1.42        fastmap_1.1.1    
+## [31] parallel_4.2.3    fansi_1.0.4       highr_0.10        scales_1.2.1      cachem_1.0.7      jsonlite_1.8.4    abind_1.4-5       farver_2.1.1      digest_0.6.31     bookdown_0.33    
+## [41] dplyr_1.1.0       grid_4.2.3        cli_3.6.0         tools_4.2.3       magrittr_2.0.3    sass_0.4.5        tibble_3.2.0      cluster_2.1.4     pkgconfig_2.0.3   Matrix_1.5-3     
+## [51] rmarkdown_2.20    rstudioapi_0.14   R6_2.5.1          nlme_3.1-162      compiler_4.2.3
 ```

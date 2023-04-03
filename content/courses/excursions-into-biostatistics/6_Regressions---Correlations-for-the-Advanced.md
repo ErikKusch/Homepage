@@ -32,7 +32,7 @@ weight: 7
 ## Theory 
 These are exercises and solutions meant as a compendium to my talk on Model Selection and Model Building.  
 
-I have prepared some {{< staticref "courses/excursions-into-biostatistics/Regressions---Correlations-for-the-Advanced.html" "newtab" >}} Lecture Slides {{< /staticref >}} for this session.
+I have prepared some {{< staticref "https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/Excursions-into-Biostatistics/Regressions---Correlations-for-the-Advanced.html" "newtab" >}} Lecture Slides {{< /staticref >}} for this session.
 
 ## Our Resarch Project
 
@@ -40,7 +40,7 @@ Today, we are looking at a big (and entirely fictional) data base of the common 
 
 ### The Data
 
-I have created a large data set for this exercise which is available {{< staticref "courses/excursions-into-biostatistics/Data.rar" "newtab" >}} here{{< /staticref >}} and we previously cleaned up so that is now usable {{< staticref "courses/excursions-into-biostatistics/data-handling-and-data-assumptions/" "newtab" >}} here{{< /staticref >}}.
+I have created a large data set for this exercise which is available {{< staticref "https://github.com/ErikKusch/Homepage/raw/master/content/courses/excursions-into-biostatistics/Data.rar" "newtab" >}} here{{< /staticref >}} and we previously cleaned up so that is now usable {{< staticref "/courses/excursions-into-biostatistics/data-handling-and-data-assumptions/" "newtab" >}} here{{< /staticref >}}.
 
 ### Reading the Data into `R`
 
@@ -1057,28 +1057,29 @@ sessionInfo()
 ```
 
 ```
-## R version 4.0.5 (2021-03-31)
-## Platform: x86_64-w64-mingw32/x64 (64-bit)
-## Running under: Windows 10 x64 (build 19043)
+## R version 4.2.3 (2023-03-15)
+## Platform: x86_64-apple-darwin17.0 (64-bit)
+## Running under: macOS Big Sur ... 10.16
 ## 
 ## Matrix products: default
+## BLAS:   /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRlapack.dylib
 ## 
 ## locale:
-## [1] LC_COLLATE=English_United Kingdom.1252  LC_CTYPE=English_United Kingdom.1252    LC_MONETARY=English_United Kingdom.1252 LC_NUMERIC=C                           
-## [5] LC_TIME=English_United Kingdom.1252    
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 ## 
 ## attached base packages:
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] HLMdiag_0.5.0 nlme_3.1-152  ggplot2_3.3.3
+## [1] HLMdiag_0.5.0 nlme_3.1-162  ggplot2_3.4.1
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] styler_1.4.1      tidyselect_1.1.0  xfun_0.22         bslib_0.2.4       janitor_2.1.0     rematch2_2.1.2    reshape2_1.4.4    purrr_0.3.4       splines_4.0.5     lattice_0.20-41  
-## [11] snakecase_0.11.0  colorspace_2.0-0  vctrs_0.3.7       generics_0.1.0    htmltools_0.5.1.1 yaml_2.2.1        mgcv_1.8-34       utf8_1.2.1        rlang_0.4.11      R.oo_1.24.0      
-## [21] jquerylib_0.1.4   pillar_1.6.0      glue_1.4.2        withr_2.4.2       DBI_1.1.1         R.utils_2.10.1    plyr_1.8.6        R.cache_0.14.0    lifecycle_1.0.0   stringr_1.4.0    
-## [31] munsell_0.5.0     blogdown_1.3      gtable_0.3.0      R.methodsS3_1.8.1 diagonals_6.0.0   evaluate_0.14     labeling_0.4.2    knitr_1.33        fansi_0.4.2       highr_0.9        
-## [41] Rcpp_1.0.7        scales_1.1.1      backports_1.2.1   jsonlite_1.7.2    farver_2.1.0      digest_0.6.27     stringi_1.5.3     bookdown_0.22     dplyr_1.0.5       grid_4.0.5       
-## [51] tools_4.0.5       magrittr_2.0.1    sass_0.3.1        tibble_3.1.1      crayon_1.4.1      pkgconfig_2.0.3   ellipsis_0.3.2    MASS_7.3-53.1     Matrix_1.3-2      lubridate_1.7.10 
-## [61] assertthat_0.2.1  rmarkdown_2.7     R6_2.5.0          compiler_4.0.5
+##  [1] styler_1.9.1      tidyselect_1.2.0  xfun_0.37         bslib_0.4.2       janitor_2.2.0     reshape2_1.4.4    purrr_1.0.1       splines_4.2.3     lattice_0.20-45   snakecase_0.11.0 
+## [11] colorspace_2.1-0  vctrs_0.5.2       generics_0.1.3    htmltools_0.5.4   mgcv_1.8-42       yaml_2.3.7        utf8_1.2.3        rlang_1.0.6       R.oo_1.25.0       jquerylib_0.1.4  
+## [21] pillar_1.8.1      glue_1.6.2        withr_2.5.0       R.utils_2.12.2    plyr_1.8.8        R.cache_0.16.0    lifecycle_1.0.3   stringr_1.5.0     munsell_0.5.0     blogdown_1.16    
+## [31] gtable_0.3.1      R.methodsS3_1.8.2 diagonals_6.4.0   evaluate_0.20     labeling_0.4.2    knitr_1.42        fastmap_1.1.1     fansi_1.0.4       highr_0.10        Rcpp_1.0.10      
+## [41] scales_1.2.1      cachem_1.0.7      jsonlite_1.8.4    farver_2.1.1      digest_0.6.31     stringi_1.7.12    bookdown_0.33     dplyr_1.1.0       grid_4.2.3        cli_3.6.0        
+## [51] tools_4.2.3       magrittr_2.0.3    sass_0.4.5        tibble_3.2.0      pkgconfig_2.0.3   MASS_7.3-58.2     Matrix_1.5-3      lubridate_1.9.2   timechange_0.2.0  rmarkdown_2.20   
+## [61] rstudioapi_0.14   R6_2.5.1          compiler_4.2.3
 ```

@@ -40,7 +40,7 @@ Here (and over the next few exercises in this "course"), we are looking at a big
 
 ### The Data
 
-I have created a large data set for this exercise which is available in a cleaned and properly handled version {{< staticref "courses/excursions-into-biostatistics/Data.rar" "newtab" >}} here{{< /staticref >}}.
+I have created a large data set for this exercise which is available in a cleaned and properly handled version {{< staticref "https://github.com/ErikKusch/Homepage/raw/master/content/courses/excursions-into-biostatistics/Data.rar" "newtab" >}} here{{< /staticref >}}.
 
 #### Reading the Data into `R`
 
@@ -151,7 +151,7 @@ We have now effectively added two more variables to the data set:
 19. `TAvg` [*Numeric*] - Average air temperature for a 30-year time-period    
 20. `TSD` [*Numeric*] - Standard deviation of mean monthly air temperature for a 30-year time-period     
 
-Now we have the data set we will look at for the rest of the exercises in this seminar series. But how did we get here? Find the answer {{< staticref "courses/excursions-into-biostatistics/data-handling-and-data-assumptions/" "newtab" >}} here{{< /staticref >}}.
+Now we have the data set we will look at for the rest of the exercises in this seminar series. But how did we get here? Find the answer [here](/courses/excursions-into-biostatistics/data-handling-and-data-assumptions/).
 
 
 ### Hypotheses 

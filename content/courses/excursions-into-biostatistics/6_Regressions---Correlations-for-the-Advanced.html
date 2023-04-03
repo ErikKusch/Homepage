@@ -27,7 +27,6 @@ type: docs
 weight: 7
 ---
 
-<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 <div id="TOC">
 
@@ -36,14 +35,14 @@ weight: 7
 <div id="theory" class="section level2">
 <h2>Theory</h2>
 <p>These are exercises and solutions meant as a compendium to my talk on Model Selection and Model Building.</p>
-<p>I have prepared some {{&lt; staticref “courses/excursions-into-biostatistics/Regressions—Correlations-for-the-Advanced.html” “newtab” &gt;}} Lecture Slides {{&lt; /staticref &gt;}} for this session.</p>
+<p>I have prepared some {{&lt; staticref “<a href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/Excursions-into-Biostatistics/Regressions---Correlations-for-the-Advanced.html" class="uri">https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/Excursions-into-Biostatistics/Regressions---Correlations-for-the-Advanced.html</a>” “newtab” &gt;}} Lecture Slides {{&lt; /staticref &gt;}} for this session.</p>
 </div>
 <div id="our-resarch-project" class="section level2">
 <h2>Our Resarch Project</h2>
 <p>Today, we are looking at a big (and entirely fictional) data base of the common house sparrow (<em>Passer domesticus</em>). In particular, we are interested in the <strong>Evolution of <em>Passer domesticus</em> in Response to Climate Change</strong> which was previously explained {{&lt; staticref “courses/excursions-into-biostatistics/research-project/” “newtab” &gt;}} here{{&lt; /staticref &gt;}}.</p>
 <div id="the-data" class="section level3">
 <h3>The Data</h3>
-<p>I have created a large data set for this exercise which is available {{&lt; staticref “courses/excursions-into-biostatistics/Data.rar” “newtab” &gt;}} here{{&lt; /staticref &gt;}} and we previously cleaned up so that is now usable {{&lt; staticref “courses/excursions-into-biostatistics/data-handling-and-data-assumptions/” “newtab” &gt;}} here{{&lt; /staticref &gt;}}.</p>
+<p>I have created a large data set for this exercise which is available {{&lt; staticref “<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/excursions-into-biostatistics/Data.rar" class="uri">https://github.com/ErikKusch/Homepage/raw/master/content/courses/excursions-into-biostatistics/Data.rar</a>” “newtab” &gt;}} here{{&lt; /staticref &gt;}} and we previously cleaned up so that is now usable {{&lt; staticref “/courses/excursions-into-biostatistics/data-handling-and-data-assumptions/” “newtab” &gt;}} here{{&lt; /staticref &gt;}}.</p>
 </div>
 <div id="reading-the-data-into-r" class="section level3">
 <h3>Reading the Data into <code>R</code></h3>
@@ -162,7 +161,7 @@ This looks sensible to me! The scatterplot shows that sparrows are lighter in wa
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
 ## Residual standard error: 1.404 on 248 degrees of freedom
-## Multiple R-squared:  0.2373, Adjusted R-squared:  0.2343 
+## Multiple R-squared:  0.2373,	Adjusted R-squared:  0.2343 
 ## F-statistic: 77.18 on 1 and 248 DF,  p-value: 2.633e-16</code></pre>
 <p>Our model estimates show the same pattern.</p>
 </div>
@@ -199,7 +198,7 @@ plot(H1_ClimateTSD)</code></pre>
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
 ## Residual standard error: 1.319 on 248 degrees of freedom
-## Multiple R-squared:  0.3263, Adjusted R-squared:  0.3236 
+## Multiple R-squared:  0.3263,	Adjusted R-squared:  0.3236 
 ## F-statistic: 120.1 on 1 and 248 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>Again all assumptions are met and the model itself is very intuitive: The more variable the climate, the heavier the sparrows.</p>
 </div>
@@ -232,7 +231,7 @@ plot(H1_ClimateCont)</code></pre>
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
 ## Residual standard error: 1.302 on 247 degrees of freedom
-## Multiple R-squared:  0.3467, Adjusted R-squared:  0.3414 
+## Multiple R-squared:  0.3467,	Adjusted R-squared:  0.3414 
 ## F-statistic: 65.54 on 2 and 247 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>Interestingly, average temperature has a different (and weaker) effect now than when investigated in isolation. Variability of temperature has become even more important (i.e. stronger effect). So which model should we use? That’s exactly what we’ll investigate in our session on {{&lt; staticref “courses/excursions-into-biostatistics/excursion-into-biostatistics/” “newtab” &gt;}} Model Selection and Validation{{&lt; /staticref &gt;}}!</p>
 </div>
@@ -289,7 +288,7 @@ plot(H1_CompetitionFS)</code></pre>
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
 ## Residual standard error: 1.893 on 1064 degrees of freedom
-## Multiple R-squared:  0.7838, Adjusted R-squared:  0.7836 
+## Multiple R-squared:  0.7838,	Adjusted R-squared:  0.7836 
 ## F-statistic:  3857 on 1 and 1064 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>Now that’s a neat model! Not only do the diagnostics plot look spot-on (not showing these here), the relationship is strong and clear to see - the bigger the flock, the lighter the sparrow.</p>
 </div>
@@ -325,7 +324,7 @@ plot(H1_CompetitionFULL)</code></pre>
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
 ## Residual standard error: 1.8 on 1060 degrees of freedom
-## Multiple R-squared:  0.8051, Adjusted R-squared:  0.8042 
+## Multiple R-squared:  0.8051,	Adjusted R-squared:  0.8042 
 ## F-statistic:   876 on 5 and 1060 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>We see that our model is unsure of what to do with the home ranges when it comes to medium-sized ranges. The scatterplot shows that is is probably due to us not having a lot of samples for medium-sized home-ranges. Aside from that, our model meets all assumptions and produces quite intuitive parameter estimates.</p>
 </div>
@@ -368,7 +367,7 @@ plot(H1_PredationPresence)</code></pre>
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
 ## Residual standard error: 1.577 on 248 degrees of freedom
-## Multiple R-squared:  0.03711,    Adjusted R-squared:  0.03323 
+## Multiple R-squared:  0.03711,	Adjusted R-squared:  0.03323 
 ## F-statistic: 9.557 on 1 and 248 DF,  p-value: 0.002219</code></pre>
 <p>According to our model, sparrows under pressure of predation are lighter than those which aren’t. Does that make sense? Intuitively, yes, but I would argue that there are too many confounding variable here to be sure.</p>
 </div>
@@ -400,7 +399,7 @@ plot(H1_PredationType)</code></pre>
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
 ## Residual standard error: 1.302 on 247 degrees of freedom
-## Multiple R-squared:  0.3467, Adjusted R-squared:  0.3414 
+## Multiple R-squared:  0.3467,	Adjusted R-squared:  0.3414 
 ## F-statistic: 65.54 on 2 and 247 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>OK. This clearly shows that there are either some confounds present or that our data shows something very counter-intuitive. Sparrows under nor predation are lighter than sparrows under non-avian predation? That makes no sense to me.</p>
 </div>
@@ -433,7 +432,7 @@ plot(H1_PredationFULL)</code></pre>
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
 ## Residual standard error: 3.431 on 1063 degrees of freedom
-## Multiple R-squared:  0.2901, Adjusted R-squared:  0.2888 
+## Multiple R-squared:  0.2901,	Adjusted R-squared:  0.2888 
 ## F-statistic: 217.2 on 2 and 1063 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>Those residuals don’t look good, but that’s not what I am after with this model. Immediately, we should notice that our model returns <code>NA</code> for the parameter estimate of <code>Predator.TypeNone</code>. Why does that happen? Because <code>Predator.TypeNone</code> coincides with <code>Predator.PresenceNo</code> (the <code>Intercept</code>) of this model and so does not provide any additional information. In fact, <code>Predator.Type</code> offers all the information of <code>Predator.Presence</code> and then some! Consequently, including both in a model does not make sense and we can immediately disqualify this model.</p>
 </div>
@@ -476,7 +475,7 @@ plot(H1_FULL_Sparrows)</code></pre>
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
 ## Residual standard error: 1.605 on 1054 degrees of freedom
-## Multiple R-squared:  0.846,  Adjusted R-squared:  0.8444 
+## Multiple R-squared:  0.846,	Adjusted R-squared:  0.8444 
 ## F-statistic: 526.6 on 11 and 1054 DF,  p-value: &lt; 2.2e-16</code></pre>
 <p>Already at this point, it is interesting to point out how some previously non-significant effects drop out while other become significant due to the inclusion of all parameters in one model.</p>
 <p>Now we also need a full model for our Central-/North-America data:</p>
@@ -510,7 +509,7 @@ plot(H1_FULL_CNA)</code></pre>
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
 ## Residual standard error: 1.285 on 242 degrees of freedom
-## Multiple R-squared:  0.3765, Adjusted R-squared:  0.3585 
+## Multiple R-squared:  0.3765,	Adjusted R-squared:  0.3585 
 ## F-statistic: 20.88 on 7 and 242 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 <div id="summary-of-linear-regression" class="section level3">
@@ -826,28 +825,29 @@ We fixed it! Now just for the parameter estimates:</p>
 <div id="sessioninfo" class="section level2">
 <h2>SessionInfo</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 4.0.5 (2021-03-31)
-## Platform: x86_64-w64-mingw32/x64 (64-bit)
-## Running under: Windows 10 x64 (build 19043)
+<pre><code>## R version 4.2.3 (2023-03-15)
+## Platform: x86_64-apple-darwin17.0 (64-bit)
+## Running under: macOS Big Sur ... 10.16
 ## 
 ## Matrix products: default
+## BLAS:   /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRlapack.dylib
 ## 
 ## locale:
-## [1] LC_COLLATE=English_United Kingdom.1252  LC_CTYPE=English_United Kingdom.1252    LC_MONETARY=English_United Kingdom.1252 LC_NUMERIC=C                           
-## [5] LC_TIME=English_United Kingdom.1252    
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 ## 
 ## attached base packages:
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] HLMdiag_0.5.0 nlme_3.1-152  ggplot2_3.3.3
+## [1] HLMdiag_0.5.0 nlme_3.1-162  ggplot2_3.4.1
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] styler_1.4.1      tidyselect_1.1.0  xfun_0.22         bslib_0.2.4       janitor_2.1.0     rematch2_2.1.2    reshape2_1.4.4    purrr_0.3.4       splines_4.0.5     lattice_0.20-41  
-## [11] snakecase_0.11.0  colorspace_2.0-0  vctrs_0.3.7       generics_0.1.0    htmltools_0.5.1.1 yaml_2.2.1        mgcv_1.8-34       utf8_1.2.1        rlang_0.4.11      R.oo_1.24.0      
-## [21] jquerylib_0.1.4   pillar_1.6.0      glue_1.4.2        withr_2.4.2       DBI_1.1.1         R.utils_2.10.1    plyr_1.8.6        R.cache_0.14.0    lifecycle_1.0.0   stringr_1.4.0    
-## [31] munsell_0.5.0     blogdown_1.3      gtable_0.3.0      R.methodsS3_1.8.1 diagonals_6.0.0   evaluate_0.14     labeling_0.4.2    knitr_1.33        fansi_0.4.2       highr_0.9        
-## [41] Rcpp_1.0.7        scales_1.1.1      backports_1.2.1   jsonlite_1.7.2    farver_2.1.0      digest_0.6.27     stringi_1.5.3     bookdown_0.22     dplyr_1.0.5       grid_4.0.5       
-## [51] tools_4.0.5       magrittr_2.0.1    sass_0.3.1        tibble_3.1.1      crayon_1.4.1      pkgconfig_2.0.3   ellipsis_0.3.2    MASS_7.3-53.1     Matrix_1.3-2      lubridate_1.7.10 
-## [61] assertthat_0.2.1  rmarkdown_2.7     R6_2.5.0          compiler_4.0.5</code></pre>
+##  [1] styler_1.9.1      tidyselect_1.2.0  xfun_0.37         bslib_0.4.2       janitor_2.2.0     reshape2_1.4.4    purrr_1.0.1       splines_4.2.3     lattice_0.20-45   snakecase_0.11.0 
+## [11] colorspace_2.1-0  vctrs_0.5.2       generics_0.1.3    htmltools_0.5.4   mgcv_1.8-42       yaml_2.3.7        utf8_1.2.3        rlang_1.0.6       R.oo_1.25.0       jquerylib_0.1.4  
+## [21] pillar_1.8.1      glue_1.6.2        withr_2.5.0       R.utils_2.12.2    plyr_1.8.8        R.cache_0.16.0    lifecycle_1.0.3   stringr_1.5.0     munsell_0.5.0     blogdown_1.16    
+## [31] gtable_0.3.1      R.methodsS3_1.8.2 diagonals_6.4.0   evaluate_0.20     labeling_0.4.2    knitr_1.42        fastmap_1.1.1     fansi_1.0.4       highr_0.10        Rcpp_1.0.10      
+## [41] scales_1.2.1      cachem_1.0.7      jsonlite_1.8.4    farver_2.1.1      digest_0.6.31     stringi_1.7.12    bookdown_0.33     dplyr_1.1.0       grid_4.2.3        cli_3.6.0        
+## [51] tools_4.2.3       magrittr_2.0.3    sass_0.4.5        tibble_3.2.0      pkgconfig_2.0.3   MASS_7.3-58.2     Matrix_1.5-3      lubridate_1.9.2   timechange_0.2.0  rmarkdown_2.20   
+## [61] rstudioapi_0.14   R6_2.5.1          compiler_4.2.3</code></pre>
 </div>

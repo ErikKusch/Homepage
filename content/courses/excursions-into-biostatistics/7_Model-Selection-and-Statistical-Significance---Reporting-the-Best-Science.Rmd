@@ -41,7 +41,7 @@ source("PersonalSettings.R") # I do this here to specify number of cores and API
 ## Theory
 These are exercises and solutions meant as a compendium to my talk on Model Selection and Model Building.  
 
-I have prepared some I have prepared some {{< staticref "courses/excursions-into-biostatistics/Model-Selection-and-Statistical-Significance---Reporting-the-Best-Science.html" "newtab" >}} Lecture Slides {{< /staticref >}} for this session. For a more mathematical look at these concepts, I cannot recommend enough [Eduardo García Portugués' blog](https://bookdown.org/egarpor/PM-UC3M/lm-ii-modsel.html).
+I have prepared some I have prepared some {{< staticref "https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/Excursions-into-Biostatistics/Model-Selection-and-Statistical-Significance---Reporting-the-Best-Science.html" "newtab" >}} Lecture Slides {{< /staticref >}} for this session. For a more mathematical look at these concepts, I cannot recommend enough [Eduardo García Portugués' blog](https://bookdown.org/egarpor/PM-UC3M/lm-ii-modsel.html).
 
 ## `R` Environment
 
@@ -80,7 +80,7 @@ Today, we are looking at a big (and entirely fictional) data base of the common 
 
 ### The Data
 
-I have created a large data set for this exercise which is available {{< staticref "courses/excursions-into-biostatistics/Data.rar" "newtab" >}} here{{< /staticref >}} and we previously cleaned up so that is now usable {{< staticref "courses/excursions-into-biostatistics/data-handling-and-data-assumptions/" "newtab" >}} here{{< /staticref >}}.
+I have created a large data set for this exercise which is available {{< staticref "https://github.com/ErikKusch/Homepage/raw/master/content/courses/excursions-into-biostatistics/Data.rar" "newtab" >}} here{{< /staticref >}} and we previously cleaned up so that is now usable {{< staticref "courses/excursions-into-biostatistics/data-handling-and-data-assumptions/" "newtab" >}} here{{< /staticref >}}.
 
 ### Reading the Data into `R`
 
@@ -422,7 +422,7 @@ The full model is still doing great, of course.
 But what about our mixed effect model? Luckily, there is a function that can do bootstrapping for us on our `lme` objects:
 ```{r}
 ## Bootstrap mixed model
-Mixed_boot <- lmeresampler::bootstrap(H1_Model_ls[[length(H1_Model_ls)]], .f=fixef, type="parametric",B=5e3)
+Mixed_boot <- lmeresampler::bootstrap(H1_Model_ls[[length(H1_Model_ls)]], .f=fixef, type="parametric", B=3e3)
 Mixed_boot
 ```
 With this, we are getting into the heart of the bootstrap. Distributions of our parameter estimates. These give us an amazing understanding of just which parameter values our model sees as plausible given our data:
@@ -461,7 +461,7 @@ for(Model_Iter in 1:(length(H1_Model_ls)-1)){ # loop over all models except the 
      coef(lm(as.formula(paste("Weight ~", Terms)), data = data, subset = index))
   }
   ## Bootstrapping
-  Boot_test <- boot(data = Sparrows_df, statistic = model_coef, R = 1e4)
+  Boot_test <- boot(data = Sparrows_df, statistic = model_coef, R = 3e3)
   ## set column names of estimates to coefficients
   colnames(Boot_test[["t"]]) <- names(H1_Model_ls[[Model_Iter]][["coefficients"]])
   ## make data frame of estimates

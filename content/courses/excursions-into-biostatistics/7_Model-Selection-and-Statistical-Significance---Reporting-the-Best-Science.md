@@ -36,7 +36,7 @@ header-includes:
 ## Theory
 These are exercises and solutions meant as a compendium to my talk on Model Selection and Model Building.  
 
-I have prepared some I have prepared some {{< staticref "courses/excursions-into-biostatistics/Model-Selection-and-Statistical-Significance---Reporting-the-Best-Science.html" "newtab" >}} Lecture Slides {{< /staticref >}} for this session. For a more mathematical look at these concepts, I cannot recommend enough [Eduardo García Portugués' blog](https://bookdown.org/egarpor/PM-UC3M/lm-ii-modsel.html).
+I have prepared some I have prepared some {{< staticref "https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/Excursions-into-Biostatistics/Model-Selection-and-Statistical-Significance---Reporting-the-Best-Science.html" "newtab" >}} Lecture Slides {{< /staticref >}} for this session. For a more mathematical look at these concepts, I cannot recommend enough [Eduardo García Portugués' blog](https://bookdown.org/egarpor/PM-UC3M/lm-ii-modsel.html).
 
 ## `R` Environment
 
@@ -84,7 +84,7 @@ Today, we are looking at a big (and entirely fictional) data base of the common 
 
 ### The Data
 
-I have created a large data set for this exercise which is available {{< staticref "courses/excursions-into-biostatistics/Data.rar" "newtab" >}} here{{< /staticref >}} and we previously cleaned up so that is now usable {{< staticref "courses/excursions-into-biostatistics/data-handling-and-data-assumptions/" "newtab" >}} here{{< /staticref >}}.
+I have created a large data set for this exercise which is available {{< staticref "https://github.com/ErikKusch/Homepage/raw/master/content/courses/excursions-into-biostatistics/Data.rar" "newtab" >}} here{{< /staticref >}} and we previously cleaned up so that is now usable {{< staticref "courses/excursions-into-biostatistics/data-handling-and-data-assumptions/" "newtab" >}} here{{< /staticref >}}.
 
 ### Reading the Data into `R`
 
@@ -581,7 +581,7 @@ End - Begin
 ```
 
 ```
-## Time difference of 25.02714 secs
+## Time difference of 9.41841 secs
 ```
 
 ```r
@@ -638,7 +638,7 @@ End - Begin
 ```
 
 ```
-## Time difference of 3.183102 secs
+## Time difference of 0.3413441 secs
 ```
 
 ```r
@@ -681,7 +681,7 @@ End - Begin
 ```
 
 ```
-## Time difference of 7.069887 secs
+## Time difference of 1.308739 secs
 ```
 
 ```r
@@ -703,34 +703,28 @@ But what about our mixed effect model? Luckily, there is a function that can do 
 
 ```r
 ## Bootstrap mixed model
-Mixed_boot <- lmeresampler::bootstrap(H1_Model_ls[[length(H1_Model_ls)]], .f = fixef, type = "parametric", B = 5e3)
+Mixed_boot <- lmeresampler::bootstrap(H1_Model_ls[[length(H1_Model_ls)]], .f = fixef, type = "parametric", B = 3e3)
 Mixed_boot
 ```
 
 ```
 ## Bootstrap type: parametric 
 ## 
-## Number of resamples: 5000 
+## Number of resamples: 3000 
 ## 
-##                           term      observed     rep.mean          se          bias
-## 1                  (Intercept)  2.212717e+01 22.100033718 2.857455369 -2.713863e-02
-## 2       Predator.TypeNon-Avian  6.626664e-01  0.659594259 0.162145437 -3.072116e-03
-## 3            Predator.TypeNone  2.694373e-02  0.024167976 0.153223591 -2.775754e-03
-## 4                   Flock.Size  1.497092e-05  0.000155763 0.019233205  1.407921e-04
-## 5             Home.RangeMedium  1.261878e+00  1.265700088 0.880654705  3.821775e-03
-## 6              Home.RangeSmall  3.049068e+00  3.048900401 0.419089398 -1.673221e-04
-## 7                         TAvg  3.015153e-02  0.030242017 0.009928069  9.048261e-05
-## 8                          TSD  1.983744e-01  0.198364577 0.021245676 -9.773015e-06
-## 9  Flock.Size:Home.RangeMedium -1.208598e-01 -0.121279419 0.057966442 -4.196006e-04
-## 10  Flock.Size:Home.RangeSmall -2.110972e-01 -0.211294946 0.019856298 -1.977150e-04
+##                           term      observed      rep.mean          se          bias
+## 1                  (Intercept)  2.212717e+01 22.0672111291 2.853845096 -0.0599612233
+## 2       Predator.TypeNon-Avian  6.626664e-01  0.6580310750 0.161081567 -0.0046353000
+## 3            Predator.TypeNone  2.694373e-02  0.0212966961 0.152739708 -0.0056470340
+## 4                   Flock.Size  1.497092e-05  0.0005839265 0.019216411  0.0005689556
+## 5             Home.RangeMedium  1.261878e+00  1.2675791500 0.881426872  0.0057008365
+## 6              Home.RangeSmall  3.049068e+00  3.0583903125 0.417796779  0.0093225898
+## 7                         TAvg  3.015153e-02  0.0303345903 0.009892483  0.0001830556
+## 8                          TSD  1.983744e-01  0.1984962823 0.021196164  0.0001219321
+## 9  Flock.Size:Home.RangeMedium -1.208598e-01 -0.1213017777 0.057929474 -0.0004419594
+## 10  Flock.Size:Home.RangeSmall -2.110972e-01 -0.2117971129 0.019731749 -0.0006998822
 ## 
 ## There were 0 messages, 0 warnings, and 0 errors.
-## 
-## The most commonly occurring message was: NULL
-## 
-## The most commonly occurring warning was: NULL
-## 
-## The most commonly occurring error was: NULL
 ```
 With this, we are getting into the heart of the bootstrap. Distributions of our parameter estimates. These give us an amazing understanding of just which parameter values our model sees as plausible given our data:
 
@@ -773,7 +767,7 @@ for (Model_Iter in 1:(length(H1_Model_ls) - 1)) { # loop over all models except 
     coef(lm(as.formula(paste("Weight ~", Terms)), data = data, subset = index))
   }
   ## Bootstrapping
-  Boot_test <- boot(data = Sparrows_df, statistic = model_coef, R = 1e4)
+  Boot_test <- boot(data = Sparrows_df, statistic = model_coef, R = 3e3)
   ## set column names of estimates to coefficients
   colnames(Boot_test[["t"]]) <- names(H1_Model_ls[[Model_Iter]][["coefficients"]])
   ## make data frame of estimates

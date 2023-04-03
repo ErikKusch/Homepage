@@ -14,4 +14,4 @@ tags:
 title: Excursions into Biostatistics
 ---
 
-If you are seeing this page, something went awry in the build of the website. Please find the first course material for this course [here](/courses/excursions-into-biostatistics/1_biostatistics-wait.-what/). 
+If you are seeing this page, something went awry in the build of the website. Please find the first course material for this course [here](/courses/excursions-into-biostatistics/1_biostatistics-wait.-what/).  

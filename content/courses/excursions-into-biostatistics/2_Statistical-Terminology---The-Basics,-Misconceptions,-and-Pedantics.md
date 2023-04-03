@@ -12,4 +12,4 @@ type: docs
 weight: 2
 ---
 
-I have prepared some {{< staticref "courses/excursions-into-biostatistics/Statistical-Terminology---The-Basics,-Misconceptions,-and-Pedantics.html" "newtab" >}} Lecture Slides {{< /staticref >}} for this session.
+I have prepared some {{< staticref "https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/Excursions-into-Biostatistics/Statistical-Terminology---The-Basics,-Misconceptions,-and-Pedantics.html" "newtab" >}} Lecture Slides {{< /staticref >}} for this session.
