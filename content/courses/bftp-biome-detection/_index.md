@@ -35,7 +35,9 @@ A few challenges to overcome include:
 
 
 ## Disclaimer
-If you find any typos in my material, are unhappy with some of what or how I am presenting or simply unclear about thing, do not hesitate to [contact me](/contact/).
+This work was inspired heavily by my work on [Remote Sensing And Predicting Shifts In Biome Distribution And Resilience Using NDVI Data](/publication/b.sc._inferring-vegetation-memory-from-remote/) for my B.Sc. thesis.
+
+If you find any typos in my material, are unhappy with some of what or how I am presenting or simply unclear about thing, do not hesitate to [contact me](/about/#contact).
 
 All the best,
 Erik

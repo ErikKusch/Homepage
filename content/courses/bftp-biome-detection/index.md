@@ -13,4 +13,4 @@ tags:
 title: BFTP - Biome Detection through Remote Sensing
 ---
 
-If you are seeing this page, something went awry in the build of the website. Please find the first course material for this course [here](/courses/bftp-biome-detection/data-allocation/). 
+If you are seeing this page, something went awry in the build of the website. Please find the first course material for this course [here](/courses/bftp-biome-detection/data-allocation/).
