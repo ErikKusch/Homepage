@@ -52,7 +52,7 @@ Throughout this workshop, you will learn how to:
 
 ## Disclaimer
 
-If you find any typos in my material, are unhappy with some of what or how I am presenting or simply unclear about thing, do not hesitate to [contact me](/contact/).
+If you find any typos in my material, are unhappy with some of what or how I am presenting or simply unclear about thing, do not hesitate to [contact me](/about/#contact).
 
 All the best,  
 Erik

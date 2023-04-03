@@ -1,5 +1,5 @@
 ---
-title: Chapter 02
+title: Chapter 01 & 02
 author: Erik Kusch
 date: '2021-01-05'
 slug: chapter-02
@@ -34,11 +34,11 @@ links:
 - icon: file-powerpoint
   icon_pack: fas
   name: Slides - Chapter 1
-  url: /post/rethinking/1_11-12-2020_SUMMARY_The-Golem-Of-Prague.html
+  url: https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/rethinking/1_11-12-2020_SUMMARY_The-Golem-Of-Prague.html
 - icon: file-powerpoint
   icon_pack: fas
   name: Slides - Chapter 2 & 3
-  url: /post/rethinking/2_18-12-2020_SUMMARY_-Basics-of-Bayesian-Inference-and-Counting.html
+  url: https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/rethinking/2_18-12-2020_SUMMARY_-Basics-of-Bayesian-Inference-and-Counting.html
 type: docs
 toc: true 
 menu:
@@ -54,8 +54,8 @@ weight: 2
 
 ## Material
 
-- [Slides Chapter 1](/post/rethinking/1_11-12-2020_SUMMARY_The-Golem-Of-Prague.html)  
-- [Slides Chapter 2](/post/rethinking/2_18-12-2020_SUMMARY_-Basics-of-Bayesian-Inference-and-Counting.html)  
+- [Slides Chapter 1](https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/rethinking/1_11-12-2020_SUMMARY_The-Golem-Of-Prague.html)  
+- [Slides Chapter 2](https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/rethinking/2_18-12-2020_SUMMARY_-Basics-of-Bayesian-Inference-and-Counting.html)  
 
 ## Introduction 
 These are answers and solutions to the exercises at the end of chapter 2 in [Satistical Rethinking 2](https://xcelab.net/rm/statistical-rethinking/) by Richard McElreath. I have created these notes as a part of my ongoing involvement in the [AU Bayes Study Group](/project/aubayes/). Much of my inspiration for these solutions, where necessary, has been obtained from [Taras Svirskyi](https://github.com/jffist/statistical-rethinking-solutions) and [Jeffrey Girard](https://jmgirard.com/statistical-rethinking-ch2/).
@@ -207,7 +207,7 @@ In `R`, we can do this:
 
 **Answer:**  
 I made a small visualisation of this here:
-<img src="/post/rethinking/Ch02_Cards.jpg" width="900"/>
+<img src="/courses/rethinking/Ch02_Cards.jpg" width="900"/>
 
 *By Counting:*  
 As you can see, out of all draws that start with a black side facing up on the first draw (3 total paths), only two conclude to the other side also being black. Thus, the probability is two thirds.  
@@ -238,7 +238,7 @@ posterior[1] == 2 / 3
 
 **Answer:**  
 Here's an update of my previous visualisation for this:
-<img src="/post/rethinking/Ch02_Cards2.jpg" width="900"/>
+<img src="/courses/rethinking/Ch02_Cards2.jpg" width="900"/>
 
 *By Counting:*  
 As you can see, out of all draws that start with a black side facing up on the first draw (5 total paths), four conclude to the other side also being black. Thus, the probability is 4/5 which is 0.8.  
@@ -269,7 +269,7 @@ posterior[1] == 4 / 5
 
 **Answer:**  
 Here's an update of my previous visualisation for this:
-<img src="/post/rethinking/Ch02_Cards3.jpg" width="900"/>
+<img src="/courses/rethinking/Ch02_Cards3.jpg" width="900"/>
 
 *By Counting:*  
 Out of all draws that start with a black side facing up on the first draw (4 total paths), only 2 now conclude to the other side also being black. Thus, the probability is 1/2 which is 0.5.  
@@ -300,7 +300,7 @@ posterior[1] == 0.5
 
 **Answer:**  
 Here's an update of my previous visualisation for this:
-<img src="/post/rethinking/Ch02_Cards4.jpg" width="900"/>
+<img src="/courses/rethinking/Ch02_Cards4.jpg" width="900"/>
 
 *By Counting:*  
 Out of all draws that start with a black side facing up on the first draw (12 total paths), 8 now conclude to the next card being places white-side facing up. Thus, the probability is 8/12 which is 0.75.  
@@ -535,27 +535,27 @@ sessionInfo()
 ```
 
 ```
-## R version 4.0.5 (2021-03-31)
-## Platform: x86_64-w64-mingw32/x64 (64-bit)
-## Running under: Windows 10 x64 (build 19043)
+## R version 4.2.3 (2023-03-15)
+## Platform: x86_64-apple-darwin17.0 (64-bit)
+## Running under: macOS Big Sur ... 10.16
 ## 
 ## Matrix products: default
+## BLAS:   /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRlapack.dylib
 ## 
 ## locale:
-## [1] LC_COLLATE=English_United Kingdom.1252  LC_CTYPE=English_United Kingdom.1252    LC_MONETARY=English_United Kingdom.1252 LC_NUMERIC=C                           
-## [5] LC_TIME=English_United Kingdom.1252    
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 ## 
 ## attached base packages:
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] cowplot_1.1.1 ggplot2_3.3.3
+## [1] cowplot_1.1.1 ggplot2_3.4.1
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] highr_0.9         pillar_1.6.0      bslib_0.2.4       compiler_4.0.5    jquerylib_0.1.4   R.methodsS3_1.8.1 R.utils_2.10.1    tools_4.0.5       digest_0.6.27     jsonlite_1.7.2   
-## [11] evaluate_0.14     lifecycle_1.0.0   tibble_3.1.1      gtable_0.3.0      R.cache_0.14.0    pkgconfig_2.0.3   rlang_0.4.11      DBI_1.1.1         yaml_2.2.1        blogdown_1.3     
-## [21] xfun_0.22         withr_2.4.2       dplyr_1.0.5       styler_1.4.1      stringr_1.4.0     knitr_1.33        generics_0.1.0    sass_0.3.1        vctrs_0.3.7       tidyselect_1.1.0 
-## [31] grid_4.0.5        glue_1.4.2        R6_2.5.0          fansi_0.4.2       rmarkdown_2.7     bookdown_0.22     farver_2.1.0      rematch2_2.1.2    purrr_0.3.4       magrittr_2.0.1   
-## [41] backports_1.2.1   scales_1.1.1      ellipsis_0.3.2    htmltools_0.5.1.1 assertthat_0.2.1  colorspace_2.0-0  labeling_0.4.2    utf8_1.2.1        stringi_1.5.3     munsell_0.5.0    
-## [51] crayon_1.4.1      R.oo_1.24.0
+##  [1] highr_0.10        bslib_0.4.2       compiler_4.2.3    pillar_1.8.1      jquerylib_0.1.4   R.methodsS3_1.8.2 R.utils_2.12.2    tools_4.2.3       digest_0.6.31     jsonlite_1.8.4   
+## [11] evaluate_0.20     lifecycle_1.0.3   tibble_3.2.1      gtable_0.3.1      R.cache_0.16.0    pkgconfig_2.0.3   rlang_1.1.0       cli_3.6.0         rstudioapi_0.14   yaml_2.3.7       
+## [21] blogdown_1.16     xfun_0.37         fastmap_1.1.1     withr_2.5.0       dplyr_1.1.0       styler_1.9.1      knitr_1.42        generics_0.1.3    vctrs_0.6.1       sass_0.4.5       
+## [31] tidyselect_1.2.0  grid_4.2.3        glue_1.6.2        R6_2.5.1          fansi_1.0.4       rmarkdown_2.20    bookdown_0.33     farver_2.1.1      purrr_1.0.1       magrittr_2.0.3   
+## [41] scales_1.2.1      htmltools_0.5.4   colorspace_2.1-0  labeling_0.4.2    utf8_1.2.3        munsell_0.5.0     cachem_1.0.7      R.oo_1.25.0
 ```

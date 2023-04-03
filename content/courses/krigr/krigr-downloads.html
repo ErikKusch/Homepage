@@ -39,38 +39,37 @@ menu:
 weight: 10
 ---
 
-<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 <div id="TOC">
 
 </div>
 
-<p>{{% hint danger %}}
+<p>{{% alert danger %}}
 This part of the workshop is dependant on set-up and preparation done previously <a href="/courses/krigr/prep/">here</a>.
-{{% /hint %}}</p>
+{{% /alert %}}</p>
 <p>First, we load <code>KrigR</code>:</p>
 <pre class="r"><code>library(KrigR)</code></pre>
-<p>{{% hint info %}}
+<p>{{% alert info %}}
 Downloads and data processing with <code>KrigR</code> are staged and executed with the <code>download_ERA()</code>function.
-{{% /hint %}}</p>
+{{% /alert %}}</p>
 <p><code>download_ERA()</code> is a very versatile function and I will show you it’s capabilities throughout this material.</p>
-<p>{{% hint warning %}}
+<p>{{% alert warning %}}
 We will start with a <strong>simple calls</strong> to <code>KrigR</code> and subsequently make them <strong>more sophisticated</strong> during this workshop.
-{{% /hint %}}</p>
+{{% /alert %}}</p>
 <div id="downloading-climate-data" class="section level2">
 <h2>Downloading Climate Data</h2>
 <p>Let’s start with a very basic call to <code>download_ERA()</code>.</p>
-<p>For this part of the workshop, we download air temperature for my birth month (January 1995) using the extent of our <a href="/courses/prep/#our-workshop-target-region">target region</a>.</p>
+<p>For this part of the workshop, we download air temperature for my birth month (January 1995) using the extent of our <a href="/courses/krigr/prep/#our-workshop-target-region">target region</a>.</p>
 <p>See the code chunk below for explanations on each function argument. If you want to know about the defaults for any argument in <code>download_ERA()</code> simply run <code>?download_ERA()</code>. Doing so should make it obvious why we specify the function as we do below.</p>
-<p>{{% hint %}}
+<p>{{% alert %}}
 Notice that the downloading of ERA-family reanalysis data may take a short while to start as the download request gets queued with the CDS of the ECMWF before it is executed.
-{{% /hint %}}</p>
+{{% /alert %}}</p>
 <details>
 <summary>
 Click here for file if download takes too long:
 </summary>
 Download
-<a href="/courses/krigr/Data/FirstDL.nc">FirstDL.nc</a> and place it into your data directory.
+<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/krigr/Data/FirstDL.nc">FirstDL.nc</a> and place it into your data directory.
 </details>
 <pre class="r"><code>FirstDL &lt;- download_ERA(
     Variable = &quot;2m_temperature&quot;, # the variable we want to obtain data for
@@ -89,33 +88,50 @@ Download
 <pre><code>## 0001_FirstDL.nc download queried</code></pre>
 <pre><code>## Requesting data to the cds service with username 39340</code></pre>
 <pre><code>## - staging data transfer at url endpoint or request id:</code></pre>
-<pre><code>##   d19d450c-2a1a-4974-9da4-c022a4db654f</code></pre>
+<pre><code>##   e48f036d-0979-4db4-bc4e-9d08be01c9d6</code></pre>
 <pre><code>## - timeout set to 10.0 hours</code></pre>
-<pre><code>## - polling server for a data transfer \ polling server for a data transfer | polling
-## server for a data transfer / polling server for a data transfer - polling server for a
-## data transfer \ polling server for a data transfer | polling server for a data transfer /
-## polling server for a data transfer - polling server for a data transfer \ polling server
-## for a data transfer | polling server for a data transfer / polling server for a data
-## transfer - polling server for a data transfer \ polling server for a data transfer |
-## polling server for a data transfer / polling server for a data transfer - polling server
-## for a data transfer \ polling server for a data transfer | polling server for a data
-## transfer / polling server for a data transfer - polling server for a data transfer \
-## polling server for a data transfer | polling server for a data transfer / polling server
-## for a data transfer - polling server for a data transfer</code></pre>
+<pre><code>## - polling server for a data transfer
+\ polling server for a data transfer
+| polling server for a data transfer
+/ polling server for a data transfer
+- polling server for a data transfer
+\ polling server for a data transfer
+| polling server for a data transfer
+/ polling server for a data transfer
+- polling server for a data transfer
+\ polling server for a data transfer
+| polling server for a data transfer
+/ polling server for a data transfer
+- polling server for a data transfer
+\ polling server for a data transfer
+| polling server for a data transfer
+/ polling server for a data transfer
+- polling server for a data transfer
+\ polling server for a data transfer
+| polling server for a data transfer
+/ polling server for a data transfer
+- polling server for a data transfer
+\ polling server for a data transfer
+| polling server for a data transfer
+/ polling server for a data transfer
+- polling server for a data transfer
+## Downloading file</code></pre>
 <pre><code>## 
   |                                                                                      
   |                                                                                |   0%
   |                                                                                      
   |================================================================================| 100%</code></pre>
-<pre><code>## - moved temporary file to -&gt; C:/Users/erike/Documents/Website/content/courses/krigr/Data/0001_FirstDL.nc
-## - request purged from queue!
+<pre><code>## - moved temporary file to -&gt; /Users/erikkus/Documents/HomePage/content/courses/krigr/Data/0001_FirstDL.nc
+## - Delete data from queue for url endpoint or request id:
+##   https://cds.climate.copernicus.eu/api/v2/tasks/e48f036d-0979-4db4-bc4e-9d08be01c9d6
+## 
 ## Checking for known data issues.
 ## Loading downloaded data for masking and aggregation.
 ## Aggregating to temporal resolution of choice</code></pre>
 <p>As you can see the <code>download_ERA()</code> function updates you on what it is currently working on at each major step. I implemented this to make sure people don’t get too anxious staring at an empty console in <code>R</code>. If this feature is not appealing to you, you can turn this progress tracking off by setting <code>verbose = FALSE</code> in the function call to <code>download_ERA()</code>.</p>
-<p>{{% hint warning %}}
+<p>{{% alert warning %}}
 For the rest of this workshop, I suppress messages from <code>download_ERA()</code> via other means so that when you execute, you get progress tracking.
-{{% /hint %}}</p>
+{{% /alert %}}</p>
 <p>I will make exceptions to this rule when there are special things I want to demonstrate.</p>
 <p>Now, let’s look at the raster that was produced:</p>
 <pre class="r"><code>FirstDL</code></pre>
@@ -124,27 +140,25 @@ For the rest of this workshop, I suppress messages from <code>download_ERA()</co
 ## resolution : 0.09999999, 0.09999998  (x, y)
 ## extent     : 9.72, 15.12, 49.74, 53.14  (xmin, xmax, ymin, ymax)
 ## crs        : +proj=longlat +datum=WGS84 +no_defs 
-## names      :       X1 
-## min values : 268.8695 
-## max values : 274.6665</code></pre>
+## names      : X1995.01.01</code></pre>
 <p>One layer (i.e., one month) worth of data. That seems to have worked. If you are keen-eyed, you will notice that the extent on this object does not align with the extent we supplied with <code>Extent_ext</code>. The reason? To download the data, we need to snap to the nearest full cell in the data set from which we query our downloads. <code>KrigR</code> always ends up widening the extent to ensure all the data you desire will be downloaded.</p>
 <p>Finally, let’s visualise our downloaded data with one of our <a href="/courses/krigr/prep/#visualising-our-study-setting">user-defined plotting functions</a>:</p>
 <pre class="r"><code>Plot_Raw(FirstDL, Dates = &quot;01-1995&quot;)</code></pre>
 <p><img src="/courses/krigr/krigr-downloads_files/figure-html/FirstDLVis-1.png" width="1440" /></p>
 <p>That is all there is to downloading ERA5(-Land) data with <code>KrigR</code>. You can already see how, even at the relatively course resolution of ERA5-Land, the mountain ridges along the German-Czech border are showing up. This will become a lot clearer of a pattern once we <a href="/courses/krigr/kriging/">downscale our data</a>.</p>
-<p>{{% hint info %}}
+<p>{{% alert info %}}
 <code>download_ERA()</code> provides you with a lot more functionality than <em>just</em> access to the ERA5(-Land) data sets.
-{{% /hint %}}</p>
-<p>{{% hint %}}
+{{% /alert %}}</p>
+<p>{{% alert %}}
 With <code>download_ERA()</code>, you can also carry out processing of the downloaded data. Data processing with <code>download_ERA()</code> includes:<br />
 1. <em>Spatial Limitation</em> to cut down on the data that is stored on your end.<br />
 2. <em>Temporal Aggregation</em> to establish data at the temporal resolution you desire.<br />
-{{% /hint %}}</p>
+{{% /alert %}}</p>
 </div>
 <div id="spatial-limitation" class="section level2">
 <h2>Spatial Limitation</h2>
 <p>Let’s start with spatial limitation. As discussed <a href="/courses/krigr/prep/#spatial-preferences-in-krigr">previously</a>, <code>download_ERA()</code> can handle a variety of inputs describing spatial preferences.</p>
-<p>{{% hint %}}
+<p>{{% alert %}}
 <code>KrigR</code> is capable of learning about your spatial preferences in three ways:</p>
 <ol style="list-style-type: decimal">
 <li>As an <code>extent</code> input (a rectangular box).<br />
@@ -154,12 +168,12 @@ With <code>download_ERA()</code>, you can also carry out processing of the downl
 <li>As a set of locations stored in a <code>data.frame</code>.</li>
 </ol>
 <p>These spatial preferences are registered in <code>KrigR</code> functions using the <code>Extent</code> argument.
-{{% /hint %}}</p>
+{{% /alert %}}</p>
 <p>You might now ask yourself: How does <code>KrigR</code> achieve spatial limitation of the data? Couldn’t we just simply download only the data we are interested in?</p>
 <p>The ECMWF CDS gives us tremendous capability of retrieving only the data we want. However, the CDS only recognises rectangular boxes (i.e., <code>extent</code>s) for spatial limitation. Consequently, we always have to download data corresponding to a rectangular box in space. When informing <code>KrigR</code> of your spatial preferences using a <code>data.frame</code> or <code>SpatialPolygons</code>, <code>download_ERA()</code> automatically (1) identifies the smallest <code>extent</code> required by your input, (2) downloads data corresponding to this <code>extent</code>, and (3) masks our any data not queried by you.</p>
-<p>{{% hint info %}}
+<p>{{% alert info %}}
 Using <code>KrigR</code>’s spatial limitation features ensures faster computation and smaller file sizes (depending on file type).
-{{% /hint %}}</p>
+{{% /alert %}}</p>
 <p>In the following, I demonstrate how to use the <code>Extent</code> argument in <code>download_ERA()</code>.</p>
 <div id="shape-spatialpolygons" class="section level3">
 <h3>Shape (<code>SpatialPolygons</code>)</h3>
@@ -169,7 +183,7 @@ Using <code>KrigR</code>’s spatial limitation features ensures faster computat
 Click here for file if download takes too long:
 </summary>
 Download
-<a href="/courses/krigr/Data/SpatialPolygons_DL.nc">SpatialPolygons_DL.nc</a> and place it into your data directory.
+<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/krigr/Data/SpatialPolygons_DL.nc">SpatialPolygons_DL.nc</a> and place it into your data directory.
 </details>
 <pre class="r"><code>SpatialPolygons_DL &lt;- download_ERA(
   Variable = &quot;2m_temperature&quot;,
@@ -185,30 +199,30 @@ Download
 Plot_Raw(SpatialPolygons_DL, Dates = &quot;01-1995&quot;, Shp = Shape_shp)</code></pre>
 <p><img src="/courses/krigr/krigr-downloads_files/figure-html/unnamed-chunk-3-1.png" width="1440" /></p>
 <p>You will find that the data retained with the spatial limitation in <code>download_ERA()</code> contains all raster cells of which even a fraction falls within the bounds of the <code>SpatialPolygons</code> you supplied. This is different from standard <code>raster</code> masking through which only cells whose centroids fall within the <code>SpatialPolygons</code> are retained.</p>
-<p>{{% hint info %}}
+<p>{{% alert info %}}
 <code>raster</code> masking in <code>KrigR</code> always ensures that the entire area of your spatial preferences are retained.
-{{% /hint %}}</p>
+{{% /alert %}}</p>
 </div>
 <div id="points-data.frame" class="section level3">
 <h3>Points (<code>data.frame</code>)</h3>
 <p>Now we move on to point-locations. Often times, we are researching very specific sets of coordinates, rather than entire regions. <code>download_ERA()</code> is capable of limiting data to only small areas (of a size of your choosing) around your point-locations. For our purposes here, we make use of a set of mountain-top coordinates throughout our study region. Remember that these coordinates (stored in a <code>data.frame</code>) originate <a href="/courses/krigr/prep/#points-of-interest-dataframe">here</a>.</p>
 <p>This time around, we need to tell <code>download_ERA()</code> about not just the <code>Extent</code>, but also specify how much of a buffer (<code>Buffer</code> in <span class="math inline">\(°\)</span>) to retain data for around each individual (<code>ID</code>) location.</p>
-<p>{{% hint %}}
+<p>{{% alert %}}
 The <code>data.frame</code> input to the <code>Extent</code> must contain a column called <code>Lat</code> and a column called <code>Lon</code>:</p>
 <p>In addition, one must also specify:<br />
 1. A <code>Buffer</code> in <span class="math inline">\(°\)</span> to be drawn around each location.<br />
 2. The name of the <code>ID</code> column in your <code>data.frame</code> which indexes each individual location.<br />
-{{% /hint %}}</p>
-<p>{{% hint %}}
-Our <a href="/courses/outlook/">development goals</a> include support for a broader range of point-location specifications.
-{{% /hint %}}</p>
+{{% /alert %}}</p>
+<p>{{% alert %}}
+Our <a href="/courses/krigr/outlook/">development goals</a> include support for a broader range of point-location specifications.
+{{% /alert %}}</p>
 <p>Let’s stage such a download:</p>
 <details>
 <summary>
 Click here for file if download takes too long:
 </summary>
 Download
-<a href="/courses/krigr/Data/points_DL.nc">points_DL.nc</a> and place it into your data directory.
+<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/krigr/Data/points_DL.nc">points_DL.nc</a> and place it into your data directory.
 </details>
 <pre class="r"><code>points_DL &lt;- download_ERA(
   Variable = &quot;2m_temperature&quot;,
@@ -224,7 +238,7 @@ Download
   API_Key = API_Key
 )
 Plot_Raw(points_DL, Dates = &quot;01-1995&quot;) + 
-  geom_point(aes(x = Lon, y = Lat), data = data.frame(Mountains_sp), 
+  geom_point(aes(x = Lon, y = Lat), data = Mountains_df, 
              colour = &quot;green&quot;, size = 10, pch = 14)</code></pre>
 <p><img src="/courses/krigr/krigr-downloads_files/figure-html/unnamed-chunk-5-1.png" width="1440" /></p>
 <p>Above you can see how the mountain tops we are interested in lie exactly at the centre of the retained data. As we will see later, such spatial limitation greatly reduces computation cost of statistical downscaling procedures.</p>
@@ -233,29 +247,29 @@ Plot_Raw(points_DL, Dates = &quot;01-1995&quot;) +
 <div id="temporal-aggregation" class="section level2">
 <h2>Temporal Aggregation</h2>
 <p>So far, we have downloaded a single layer of data (i.e., one monthly average layer) from the CDS. However, ERA5(-Land) products come at <strong>hourly temporal resolutions</strong> from which we can generate climate data at almost any temporal resolution we may require. This is what <strong>temporal aggregation</strong> in <code>download_ERA()</code> is for.</p>
-<p>{{% hint info %}}
+<p>{{% alert info %}}
 With <strong>temporal aggregation</strong> in <code>download_ERA()</code> you can achieve almost any temporal resolution and aggregate metric you may desire.
-{{% /hint %}}</p>
-<p>{{% hint %}}
+{{% /alert %}}</p>
+<p>{{% alert %}}
 Temporal aggregation with <code>download_ERA()</code> uses the arguments:<br />
 - <code>TResolution</code> and <code>TStep</code> to achieve desired temporal resolutions<br />
 - <code>FUN</code> to calculate desired aggregate metrics<br />
-{{% /hint %}}</p>
+{{% /alert %}}</p>
 <div id="temporal-resolution-tresolution-and-tstep" class="section level3">
 <h3>Temporal Resolution (<code>TResolution</code> and <code>TStep</code>)</h3>
 <p>Let’s start by querying data at non-CDS temporal resolutions.</p>
-<p>{{% hint %}}
+<p>{{% alert %}}
 The <code>download_ERA()</code> function in the <code>KrigR</code> package accepts the following arguments which you can use to control the temporal resolution of your climate data:<br />
 - <code>TResolution</code> controls the time-line that <code>TStep</code> indexes. You can specify anything from the following: <code>'hour'</code>, <code>'day'</code>, <code>'month'</code>, or <code>'year'</code>. The default is <code>'month'</code>.<br />
 - <code>TStep</code> controls how many time-steps to aggregate into one layer of data each. Aggregation is done via taking the mean per cell in each raster comprising time steps that go into the final, aggregated time-step. The default is <code>1</code>.<br />
-{{% /hint %}}</p>
+{{% /alert %}}</p>
 <p>For now, let’s download hourly data from the CDS (this achieved by specifying a <code>TResolution</code> of <code>"hour"</code> or <code>"day"</code>) and aggregate these to 1-day intervals. To make the result easier to visualise, we focus only on the first four days of January 1995:</p>
 <details>
 <summary>
 Click here for file if download takes too long:
 </summary>
 Download
-<a href="/courses/krigr/Data/TimeSeries.nc">TimeSeries.nc</a> and place it into your data directory.
+<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/krigr/Data/TimeSeries.nc">TimeSeries.nc</a> and place it into your data directory.
 </details>
 <pre class="r"><code>TimeSeries &lt;- download_ERA(
   Variable = &quot;2m_temperature&quot;,
@@ -275,9 +289,9 @@ Plot_Raw(TimeSeries, Dates = c(&quot;01-1995&quot;, &quot;02-1995&quot;,
          Shp = Shape_shp)</code></pre>
 <p><img src="/courses/krigr/krigr-downloads_files/figure-html/unnamed-chunk-7-1.png" width="1440" />
 Looks like a cold front rolled over my home area at the beginning of 1995.</p>
-<p>{{% hint info %}}
+<p>{{% alert info %}}
 <code>KrigR</code> automatically identifies which data set to download from given your temporal aggregation specification.
-{{% /hint %}}</p>
+{{% /alert %}}</p>
 <p>As soon as <code>TResolution</code> is set to <code>'month'</code> or <code>'year'</code>, the package automatically downloads monthly mean data from the CDS. We do this to make the temporal aggregation calculation more light-weight on your computing units and to make downloads less heavy.</p>
 <p>Let’s run through a few examples to make clear how desired temporal resolution of data can be achieved using the <code>KrigR</code> package:</p>
 <table>
@@ -403,25 +417,25 @@ year
 </td>
 </tr>
 </table>
-<p>{{% hint warning %}}
+<p>{{% alert warning %}}
 Specifying <code>TResolution</code> of <code>'month'</code> will result in the download of full month aggregates for every month included in your time series.
-{{% /hint %}}</p>
+{{% /alert %}}</p>
 <p>For example, <code>DateStart = "2000-01-20"</code>, <code>DateStop = "2000-02-20"</code> with <code>TResolution = 'month'</code>, and <code>TStep = 1</code> <strong>does not</strong> result in the mean aggregate for the month between the 20/01/200 and the 20/02/2000, but <strong>does result</strong> in the monthly aggregates for January and February 2000. If you desire the former, you would need to specify <code>DateStart = "2000-01-20"</code>, <code>DateStop = "2000-02-20"</code> with <code>TResolution = 'day'</code>, and <code>TStep = 32</code> (the number of days between the two dates).</p>
 </div>
 <div id="aggregate-metrics-fun" class="section level3">
 <h3>Aggregate Metrics (<code>FUN</code>)</h3>
 <p>Aggregate metrics can be particularly useful for certain study settings when climate variability or exposure to extreme events are sought after.</p>
-<p>{{% hint %}}
+<p>{{% alert %}}
 The <code>FUN</code> argument in <code>download_ERA()</code> controls which values to calculate for the temporal aggregates, e.g.: <code>'min'</code>, <code>'max'</code>, or <code>'mean'</code> (default).</p>
 <p>Any function which returns a single value when fed a vector of values is supported.
-{{% /hint %}}</p>
+{{% /alert %}}</p>
 <p>Let’s say we are interested in the variability of temperature across our study region in daily intervals. Again, we shorten our time-series to just four days:</p>
 <details>
 <summary>
 Click here for file if download takes too long:
 </summary>
 Download
-<a href="/courses/krigr/Data/TimeSeriesSD.nc">TimeSeriesSD.nc</a> and place it into your data directory.
+<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/krigr/Data/TimeSeriesSD.nc">TimeSeriesSD.nc</a> and place it into your data directory.
 </details>
 <pre class="r"><code>TimeSeriesSD &lt;- download_ERA(
   Variable = &quot;2m_temperature&quot;,
@@ -442,9 +456,9 @@ Plot_Raw(TimeSeriesSD, Dates = c(&quot;01-1995&quot;, &quot;02-1995&quot;,
          Shp = Shape_shp)</code></pre>
 <p><img src="/courses/krigr/krigr-downloads_files/figure-html/unnamed-chunk-9-1.png" width="1440" />
 Seems like the temperatures fluctuated most on the third and fourth of January, but the area of temperature fluctuations changed location between those two days.</p>
-<p>{{% hint info %}}
+<p>{{% alert info %}}
 You should now be able to query data for any location you study and achieve temporal resolutions and aggregate metrics which your study requires.
-{{% /hint %}}</p>
+{{% /alert %}}</p>
 </div>
 </div>
 <div id="dynamical-data-uncertainty" class="section level2">
@@ -456,7 +470,7 @@ You should now be able to query data for any location you study and achieve temp
 Click here for file if download takes too long:
 </summary>
 Download
-<a href="/courses/krigr/Data/SpatialPolygonsEns_DL.nc">SpatialPolygonsEns_DL.nc</a> and place it into your data directory.
+<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/krigr/Data/SpatialPolygons_DL.nc">SpatialPolygonsEns_DL.nc</a> and place it into your data directory.
 </details>
 <pre class="r"><code>SpatialPolygonsEns_DL &lt;- download_ERA(
     Variable = &quot;2m_temperature&quot;,
@@ -483,9 +497,9 @@ Plot_Raw(SpatialPolygonsEns, Dates = c(&quot;01-1995&quot;, &quot;02-1995&quot;)
 <p>Now that we know how to use spatial limitation and temporal aggregation with <code>download_ERA()</code> it is time to generate the data products we will use for the rest of this workshop material.</p>
 <div id="climate-data" class="section level3">
 <h3>Climate Data</h3>
-<p>{{% hint info %}}
+<p>{{% alert info %}}
 To streamline this workshop material, I will focus on just three short-time series of data with different spatial limitations. I visualise them all side-by-side further down.
-{{% /hint %}}</p>
+{{% /alert %}}</p>
 <details>
 <summary>
 Click here for download calls
@@ -497,7 +511,7 @@ Click here for download calls
 Click here for file if download takes too long:
 </summary>
 Download
-<a href="/courses/krigr/Data/ExtentRaw.nc">ExtentRaw.nc</a> and place it into your data directory.
+<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/krigr/Data/ExtentRaw.nc">ExtentRaw.nc</a> and place it into your data directory.
 </details>
 <pre class="r"><code>Extent_Raw &lt;- download_ERA(
   Variable = &quot;2m_temperature&quot;,
@@ -520,13 +534,13 @@ Download
 Click here for file if download takes too long:
 </summary>
 Download
-<a href="/courses/krigr/Data/SpatialPolygonsRaw.nc">SpatialPolygonsRaw.nc</a> and place it into your data directory.
+<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/krigr/Data/SpatialPolygonsRaw.nc">SpatialPolygonsRaw.nc</a> and place it into your data directory.
 </details>
-<pre class="r"><code>SpatialPolygons_Raw &lt;- download_ERA(
+<pre class="r"><code>SpatialPolygonsRaw &lt;- download_ERA(
   Variable = &quot;2m_temperature&quot;,
   DataSet = &quot;era5-land&quot;,
-  DateStart = &quot;1995-01-03&quot;,
-  DateStop = &quot;1995-01-03&quot;,
+  DateStart = &quot;1995-01-01&quot;,
+  DateStop = &quot;1995-01-04&quot;,
   TResolution = &quot;day&quot;,
   TStep = 1,
   Extent = Shape_shp,
@@ -543,7 +557,7 @@ Download
 Click here for file if download takes too long:
 </summary>
 Download
-<a href="/courses/krigr/Data/PointsRaw.nc">PointsRaw.nc</a> and place it into your data directory.
+<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/krigr/Data/PointsRaw.nc">PointsRaw.nc</a> and place it into your data directory.
 </details>
 <pre class="r"><code>Points_Raw &lt;- download_ERA(
   Variable = &quot;2m_temperature&quot;,
@@ -563,7 +577,7 @@ Download
 </details>
 <p>Now let’s visualise these data for a better understanding of what they contain:</p>
 <pre class="r"><code>Extent_gg &lt;- Plot_Raw(Extent_Raw[[1]], Dates = &quot;Extent&quot;)
-SP_gg &lt;- Plot_Raw(SpatialPolygons_Raw[[1]], Dates = &quot;SpatialPolygons&quot;)
+SP_gg &lt;- Plot_Raw(SpatialPolygonsRaw[[1]], Dates = &quot;SpatialPolygons&quot;)
 Points_gg &lt;- Plot_Raw(Points_Raw[[1]], Dates = &quot;SpatialPolygons&quot;)
 plot_grid(Extent_gg, SP_gg, Points_gg, ncol = 3)</code></pre>
 <p><img src="/courses/krigr/krigr-downloads_files/figure-html/dataviz-1.png" width="1440" /></p>
@@ -571,9 +585,9 @@ plot_grid(Extent_gg, SP_gg, Points_gg, ncol = 3)</code></pre>
 </div>
 <div id="dynamical-data-uncertainty-1" class="section level3">
 <h3>Dynamical Data Uncertainty</h3>
-<p>{{% hint info %}}
+<p>{{% alert info %}}
 For an aggregate understanding of data uncertainty, we also obtain dynamical uncertainty for our target region and time frame. For simplicity, we do so only for the <code>SpatialPolygons</code> specification.
-{{% /hint %}}</p>
+{{% /alert %}}</p>
 <details>
 <summary>
 Click here for download call
@@ -583,7 +597,7 @@ Click here for download call
 Click here for file if download takes too long:
 </summary>
 Download
-<a href="/courses/krigr/Data/SpatialPolygonsEns.nc">SpatialPolygonsEns.nc</a> and place it into your data directory.
+<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/krigr/Data/SpatialPolygonsEns.nc">SpatialPolygonsEns.nc</a> and place it into your data directory.
 </details>
 <pre class="r"><code>SpatialPolygonsEns &lt;- download_ERA(
     Variable = &quot;2m_temperature&quot;,
@@ -614,58 +628,58 @@ Download
 <div id="effeciency" class="section level3">
 <h3>Effeciency</h3>
 <p>Download speeds with <code>download_ERA()</code> are largely tied to CDS queue time, but there are some things worth considering when querying downloads of time-series data.</p>
-<p>{{% hint warning %}}
+<p>{{% alert warning %}}
 The <code>download_ERA()</code> function automatically breaks down download requests into monthly intervals thus circumventing the danger of running into making a download request that is too big for the CDS.
-{{% /hint %}}</p>
+{{% /alert %}}</p>
 <p>For example, <code>DateStart = "2000-01-20"</code>, <code>DateStop = "2000-02-20"</code> with <code>TResolution = 'day'</code>, and <code>TStep = 8</code> will lead to two download requests to the CDS: (1) hourly data in the range 20/01/2000 00:00 to 31/01/2000 23:00, and (2) hourly data in the range 01/02/2000 00:00 to 20/02/2000 23:00. These data sets are subsequently fused in <code>R</code>, aggregated to daily aggregates, and finally, aggregated to four big aggregates.<br />
 This gives you a lot of flexibility, but always keep in mind that third-party data sets might not account for leap-years so make sure the dates of third-party data (should you chose to use some) lines up with the ones as specified by your calls to the functions of the <code>KrigR</code> package.</p>
 <div id="singulardl" class="section level4">
 <h4><code>SingularDL</code></h4>
 <p>ECMWF CDS downloads come with a hard limit of 100,000 layers worth of data. This corresponds to more than 1 month worth of data. As a matter of fact, even ar hourly time-scales, you could theoretically download ~11 years worth of data without hitting this limit. In this particular case, <code>download_ERA()</code> stages, by default, 132 individual downloads (1 per month) when the CDS would be just fine accepting the download request for all the data in one download call.</p>
 <p>Is there any way to bypass the monthly downloads in <code>download_ERA()</code>? Yes, there is. With the <code>SingularDL</code> argument.</p>
-<p>{{% hint info %}}
+<p>{{% alert info %}}
 Setting <code>SingularDL = TRUE</code> in <code>download_ERA()</code> bypasses the automatic month-wise download staging. A pre-staging check breaks the operation if you query more than the CDS hard limit on data.
-{{% /hint %}}</p>
-<p>{{% hint %}}
-Our <a href="/courses/outlook/">development goals</a> include changing month-wise default downloads to downloads of 100,000 layers at a time.
-{{% /hint %}}</p>
+{{% /alert %}}</p>
+<p>{{% alert %}}
+Our <a href="/courses/krigr/outlook/">development goals</a> include changing month-wise default downloads to downloads of 100,000 layers at a time.
+{{% /alert %}}</p>
 </div>
 <div id="cores" class="section level4">
 <h4><code>Cores</code></h4>
 <p>Continuing on from the previous point, let’s consider you want to obtain more than 100,000 layers worth of data for your analysis and thus can’t make use of the <code>SingularDL</code> argument.
 By default <code>download_ERA()</code> stages downloads sequentially. Most modern PCs come with multiple cores each of which could theoretically stage it’s own download in parallel. Couldn’t we make use of this for more efficient download staging? Yes, we can with the <code>Cores</code> argument.</p>
-<p>{{% hint info %}}
+<p>{{% alert info %}}
 Using the <code>Cores</code> argument in <code>download_ERA()</code> you can specify how many downloads to stage in parallel rather than sequentially.
-{{% /hint %}}</p>
+{{% /alert %}}</p>
 </div>
 <div id="disk-space" class="section level4">
 <h4>Disk Space</h4>
 <p><code>KrigR</code> uses NETCDF (.nc) files as they represent the standard in climate science. NETCDF file size is not connected to data content in the raster but number of cells. Other formats, such as GeoTiff (.tif) do however scale in file size with non-NA cell number in the saved rasters.</p>
-<p>{{% hint %}}
-Our <a href="/courses/outlook/">development goals</a> include giving the user control over the file type as which <code>KrigR</code>-derived products are saved.
-{{% /hint %}}</p>
+<p>{{% alert %}}
+Our <a href="/courses/krigr/outlook/">development goals</a> include giving the user control over the file type as which <code>KrigR</code>-derived products are saved.
+{{% /alert %}}</p>
 <p>For example, the file size of the above <code>FirstDL</code> raster is 7kb while the <code>SpatialPolygons</code> and <code>data.frame</code> driven data is saved as GeoTiffs of 4kb and 3kb, respectively.</p>
-<p>{{% hint %}}
+<p>{{% alert %}}
 If you need to optimise storage space, particularly when using <a href="/courses/krigr/download/#spatial-limitation">spatial limitation</a> with <code>KrigR</code>, I can thus recommend re-saving <code>KrigR</code> outputs as GeoTiffs.
-{{% /hint %}}</p>
+{{% /alert %}}</p>
 </div>
 </div>
 <div id="cummulative-variables-precipfix" class="section level3">
 <h3>Cummulative Variables (<code>PrecipFix</code>)</h3>
-<p>{{% hint danger %}}
+<p>{{% alert danger %}}
 Some variables in the ERA5(-Land) data sets are stored as cumulative records for pre-set time-windows, but temporal aggregation in <code>download-ERA()</code> cannot handle such data.
-{{% /hint %}}</p>
+{{% /alert %}}</p>
 <p>Consequently, cumulative records need to be transformed into single-time-step records with respect to their base temporal resolution and cumulative aggregation interval like so:</p>
-<p><img src="/post/krigr-mats/PrecipFix.jpg" width="900"/></p>
-<p>{{% hint %}}
+<p><img src="/courses/krigr/PrecipFix.jpg" width="900"/></p>
+<p>{{% alert %}}
 To make cumulatively stored variables compatible with temporal aggregation in <code>download_ERA()</code> simple toggle <code>PrecipFix = TRUE</code> in the function call.
-{{% /hint %}}</p>
-<p>{{% hint info %}}
+{{% /alert %}}</p>
+<p>{{% alert info %}}
 To identify which variables are stored cumulatively, we recommend searching for variables listed as “This variable is accumulated from the beginning of the forecast time to the end of the forecast step.” on the data set documentation page (e.g., <a href="https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-land?tab=overview">ERA5-Land</a>).
-{{% /hint %}}</p>
-<p>{{% hint %}}
-Our <a href="/courses/outlook/">development goals</a> include an error check for specification of <code>PrecipFix = TRUE</code> on non-cumulatively stored variables.
-{{% /hint %}}</p>
+{{% /alert %}}</p>
+<p>{{% alert %}}
+Our <a href="/courses/krigr/outlook/">development goals</a> include an error check for specification of <code>PrecipFix = TRUE</code> on non-cumulatively stored variables.
+{{% /alert %}}</p>
 </div>
 <div id="stability" class="section level3">
 <h3>Stability</h3>
@@ -683,59 +697,60 @@ Our <a href="/courses/outlook/">development goals</a> include an error check for
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 4.0.5 (2021-03-31)
-## Platform: x86_64-w64-mingw32/x64 (64-bit)
-## Running under: Windows 10 x64 (build 19043)
+<pre><code>## R version 4.2.3 (2023-03-15)
+## Platform: x86_64-apple-darwin17.0 (64-bit)
+## Running under: macOS Big Sur ... 10.16
 ## 
 ## Matrix products: default
+## BLAS:   /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRlapack.dylib
 ## 
 ## locale:
-## [1] LC_COLLATE=English_United Kingdom.1252  LC_CTYPE=English_United Kingdom.1252   
-## [3] LC_MONETARY=English_United Kingdom.1252 LC_NUMERIC=C                           
-## [5] LC_TIME=English_United Kingdom.1252    
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 ## 
 ## attached base packages:
 ## [1] parallel  stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] mapview_2.10.2          rnaturalearthdata_0.1.0 rnaturalearth_0.1.0    
-##  [4] gimms_1.2.0             ggmap_3.0.0             cowplot_1.1.1          
-##  [7] viridis_0.6.0           viridisLite_0.4.0       ggplot2_3.3.6          
-## [10] tidyr_1.1.3             KrigR_0.1.2             httr_1.4.2             
-## [13] stars_0.5-3             abind_1.4-5             fasterize_1.0.3        
-## [16] sf_1.0-0                lubridate_1.7.10        automap_1.0-14         
-## [19] doSNOW_1.0.19           snow_0.4-3              doParallel_1.0.16      
-## [22] iterators_1.0.13        foreach_1.5.1           rgdal_1.5-23           
-## [25] raster_3.4-13           sp_1.4-5                stringr_1.4.0          
-## [28] keyring_1.2.0           ecmwfr_1.3.0            ncdf4_1.17             
+##  [1] mapview_2.11.0          rnaturalearthdata_0.1.0 rnaturalearth_0.3.2    
+##  [4] gimms_1.2.1             ggmap_3.0.2             cowplot_1.1.1          
+##  [7] viridis_0.6.2           viridisLite_0.4.1       ggplot2_3.4.1          
+## [10] tidyr_1.3.0             KrigR_0.1.2             terra_1.7-21           
+## [13] httr_1.4.5              stars_0.6-0             abind_1.4-5            
+## [16] fasterize_1.0.4         sf_1.0-12               lubridate_1.9.2        
+## [19] automap_1.1-9           doSNOW_1.0.20           snow_0.4-4             
+## [22] doParallel_1.0.17       iterators_1.0.14        foreach_1.5.2          
+## [25] rgdal_1.6-5             raster_3.6-20           sp_1.6-0               
+## [28] stringr_1.5.0           keyring_1.3.1           ecmwfr_1.5.0           
+## [31] ncdf4_1.21             
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] bitops_1.0-7             satellite_1.0.2          xts_0.12.1              
-##  [4] webshot_0.5.2            tools_4.0.5              bslib_0.2.4             
-##  [7] utf8_1.2.1               R6_2.5.0                 zyp_0.10-1.1            
-## [10] KernSmooth_2.23-18       DBI_1.1.1                colorspace_2.0-0        
-## [13] withr_2.4.2              tidyselect_1.1.0         gridExtra_2.3           
-## [16] leaflet_2.0.4.1          curl_4.3.2               compiler_4.0.5          
-## [19] leafem_0.1.3             gstat_2.0-7              labeling_0.4.2          
-## [22] bookdown_0.22            sass_0.3.1               scales_1.1.1            
-## [25] classInt_0.4-3           proxy_0.4-25             digest_0.6.27           
-## [28] rmarkdown_2.7            base64enc_0.1-3          jpeg_0.1-8.1            
-## [31] pkgconfig_2.0.3          htmltools_0.5.1.1        highr_0.9               
-## [34] fastmap_1.1.0            htmlwidgets_1.5.3        rlang_0.4.11            
-## [37] FNN_1.1.3                farver_2.1.0             jquerylib_0.1.4         
-## [40] generics_0.1.0           zoo_1.8-9                jsonlite_1.7.2          
-## [43] crosstalk_1.1.1          dplyr_1.0.5              magrittr_2.0.1          
-## [46] Rcpp_1.0.7               munsell_0.5.0            fansi_0.4.2             
-## [49] lifecycle_1.0.0          stringi_1.5.3            yaml_2.2.1              
-## [52] plyr_1.8.6               grid_4.0.5               crayon_1.4.1            
-## [55] lattice_0.20-41          knitr_1.33               pillar_1.6.0            
-## [58] boot_1.3-27              rjson_0.2.20             spacetime_1.2-4         
-## [61] stats4_4.0.5             codetools_0.2-18         glue_1.4.2              
-## [64] evaluate_0.14            blogdown_1.3             vctrs_0.3.7             
-## [67] png_0.1-7                RgoogleMaps_1.4.5.3      gtable_0.3.0            
-## [70] purrr_0.3.4              reshape_0.8.8            assertthat_0.2.1        
-## [73] cachem_1.0.4             xfun_0.22                lwgeom_0.2-6            
-## [76] e1071_1.7-6              rnaturalearthhires_0.2.0 class_7.3-18            
-## [79] Kendall_2.2              tibble_3.1.1             intervals_0.15.2        
-## [82] memoise_2.0.0            units_0.7-2              ellipsis_0.3.2</code></pre>
+##  [1] leafem_0.2.0             colorspace_2.1-0         class_7.3-21            
+##  [4] leaflet_2.1.2            satellite_1.0.4          base64enc_0.1-3         
+##  [7] rstudioapi_0.14          proxy_0.4-27             farver_2.1.1            
+## [10] fansi_1.0.4              codetools_0.2-19         cachem_1.0.7            
+## [13] knitr_1.42               jsonlite_1.8.4           png_0.1-8               
+## [16] Kendall_2.2.1            compiler_4.2.3           assertthat_0.2.1        
+## [19] fastmap_1.1.1            cli_3.6.0                htmltools_0.5.4         
+## [22] tools_4.2.3              gtable_0.3.1             glue_1.6.2              
+## [25] dplyr_1.1.0              Rcpp_1.0.10              jquerylib_0.1.4         
+## [28] vctrs_0.6.1              blogdown_1.16            crosstalk_1.2.0         
+## [31] lwgeom_0.2-11            xfun_0.37                timechange_0.2.0        
+## [34] lifecycle_1.0.3          rnaturalearthhires_0.2.1 zoo_1.8-11              
+## [37] scales_1.2.1             gstat_2.1-0              yaml_2.3.7              
+## [40] curl_5.0.0               memoise_2.0.1            gridExtra_2.3           
+## [43] sass_0.4.5               reshape_0.8.9            stringi_1.7.12          
+## [46] highr_0.10               e1071_1.7-13             boot_1.3-28.1           
+## [49] intervals_0.15.3         RgoogleMaps_1.4.5.3      rlang_1.1.0             
+## [52] pkgconfig_2.0.3          bitops_1.0-7             evaluate_0.20           
+## [55] lattice_0.20-45          purrr_1.0.1              htmlwidgets_1.6.1       
+## [58] labeling_0.4.2           tidyselect_1.2.0         plyr_1.8.8              
+## [61] magrittr_2.0.3           bookdown_0.33            R6_2.5.1                
+## [64] generics_0.1.3           DBI_1.1.3                pillar_1.8.1            
+## [67] withr_2.5.0              units_0.8-1              xts_0.13.0              
+## [70] tibble_3.2.1             spacetime_1.2-8          KernSmooth_2.23-20      
+## [73] utf8_1.2.3               rmarkdown_2.20           jpeg_0.1-10             
+## [76] grid_4.2.3               zyp_0.11-1               FNN_1.1.3.2             
+## [79] digest_0.6.31            classInt_0.4-9           webshot_0.5.4           
+## [82] stats4_4.2.3             munsell_0.5.0            bslib_0.4.2</code></pre>
 </div>

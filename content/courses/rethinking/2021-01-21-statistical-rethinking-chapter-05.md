@@ -33,7 +33,7 @@ output:
 # - icon: file-powerpoint
 #   icon_pack: fas
 #   name: Slides - Chapter 5
-#   url: /post/rethinking/5__22-01-2021_SUMMARY_-Multiple-Regression.html
+#   url: https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/rethinking/5__22-01-2021_SUMMARY_-Multiple-Regression.html
 math: true
 type: docs
 toc: true 
@@ -50,7 +50,7 @@ weight: 6
 
 ## Material
 
-- [Slides Chapter 5](/post/rethinking/5__22-01-2021_SUMMARY_-Multiple-Regression.html)  
+- [Slides Chapter 5](https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/rethinking/5__22-01-2021_SUMMARY_-Multiple-Regression.html)  
 
 ## Introduction
 These are answers and solutions to the exercises at the end of chapter 5 in [Satistical Rethinking 2](https://xcelab.net/rm/statistical-rethinking/) by Richard McElreath. I have created these notes as a part of my ongoing involvement in the [AU Bayes Study Group](/project/aubayes/). Much of my inspiration for these solutions, where necessary, has been obtained from [Jeffrey Girard](https://jmgirard.com/statistical-rethinking-ch5/), and This [GitHub Repository](https://github.com/jffist/statistical-rethinking-solutions/blob/master/ch05_hw.R).

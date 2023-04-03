@@ -39,23 +39,22 @@ menu:
 weight: 15
 ---
 
-<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 <div id="TOC">
 
 </div>
 
-<p>{{% hint danger %}}
+<p>{{% alert danger %}}
 This part of the workshop is dependant on set-up and preparation done previously <a href="/courses/krigr/prep/">here</a>.
-{{% /hint %}}</p>
+{{% /alert %}}</p>
 <p>First, we load <code>KrigR</code>:</p>
 <pre class="r"><code>library(KrigR)</code></pre>
-<p>{{% hint info %}}
+<p>{{% alert info %}}
 Statistical downscaling with <code>KrigR</code> is handled via the <code>krigR()</code> function and requires a set of spatial covariates.
-{{% /hint %}}</p>
-<p>{{% hint warning %}}
+{{% /alert %}}</p>
+<p>{{% alert warning %}}
 For an introduction to the statistical downscaling process, I will first walk you through the <code>SpatialPolygons</code> spatial preference.
-{{% /hint %}}</p>
+{{% /alert %}}</p>
 <p>First, we load the data we wish to statistically downscale. We established these data <a href="/courses/krigr/download//#climate-data">here</a>.</p>
 <pre class="r"><code>SpatialPolygonsRaw &lt;- stack(file.path(Dir.Data, &quot;SpatialPolygonsRaw.nc&quot;))</code></pre>
 <p>We are now ready to begin our journey to high-spatial resolution data products!</p>
@@ -92,12 +91,12 @@ For an introduction to the statistical downscaling process, I will first walk yo
 ## crs        : +proj=longlat +datum=WGS84 +no_defs 
 ## source     : memory
 ## names      : DEM 
-## values     : 15.75, 1173  (min, max)</code></pre>
+## values     : 15.75, 1128  (min, max)</code></pre>
 <p>You will find that the target resolution covariate data comes at a resolution of 0.017 instead of the 0.02 resolution we specified. This happens because <code>download_DEM()</code> calls upon the <code>raster::aggregate()</code> function when aggregating the high-resolution covariate data to your desired target resolution and is thus only capable of creating target-resolution covariates in multiples of the base resolution of the GMTED 2010 DEM we are using as our default covariate. This happens only when the <code>Target_res</code> argument is specified to be a number.</p>
-<p>{{% hint warning %}}
+<p>{{% alert warning %}}
 Specifying the <code>Target_res</code> argument as a number will lead to best approximation of the desired resolution due to usage of the <code>raster::aggregate()</code> within <code>download_DEM()</code>. If you need an exact resolution to match pre-existing data, please refer to <a href="/courses/krigr/third-party/#matching-third-party-data">this part of the workshop</a>.
-{{% /hint %}}</p>
-<p>Notice that despite the covariate rasters (and input rasters, for that matter) containing 1836 and 6.6096^{4} for training and target resolution respectively, we only obtain data for 938 and 30167 cells respectively due to our specification of <code>SpatialPolygons</code>. This will come in handy when doing the statistical interpolation (see <a href="/courses/krigr/kriging/#spatial-limitation">this section</a> for details).</p>
+{{% /alert %}}</p>
+<p>Notice that despite the covariate rasters (and input rasters, for that matter) containing 1836 and 6.6096^{4} for training and target resolution respectively, we only obtain data for 826 and 26247 cells respectively due to our specification of <code>SpatialPolygons</code>. This will come in handy when doing the statistical interpolation (see <a href="/courses/krigr/kriging/#spatial-limitation">this section</a> for details).</p>
 <p>Before moving on, let’s visualise the covariate data:</p>
 <pre class="r"><code>Plot_Covs(Covs_ls, Shape_shp)</code></pre>
 <p><img src="/courses/krigr/krigr-downscaling_files/figure-html/unnamed-chunk-3-1.png" width="1440" /></p>
@@ -107,45 +106,45 @@ Specifying the <code>Target_res</code> argument as a number will lead to best ap
 <div id="target_res" class="section level4">
 <h4><code>Target_res</code></h4>
 <p>Alternatively to specifying a target resolution, you can specify a different raster which should be matched in all attributes by the raster at target resolution. We get to this again when discussing <a href="/courses/krigr/third-party/#matching-third-party-data">third-party</a> data usage.</p>
-<p>{{% hint %}}
+<p>{{% alert %}}
 <code>Target_res</code> can be used for a numeric input or to match a pre-existing <code>raster</code> object.
-{{% /hint %}}</p>
+{{% /alert %}}</p>
 </div>
 <div id="shape" class="section level4">
 <h4><code>Shape</code></h4>
 <p>Spatial preferences with <code>download_DEM()</code> are specified slightly differently when compared to <code>download_ERA()</code>. Whereas <code>download_ERA()</code> uses the <code>Extent</code> argument, <code>download_DEM()</code> uses the <code>Shape</code> argument. The reason? <code>download_DEM()</code> automatically reads out the extent of the input raster and carries out <code>extent</code> limitation according to this. <code>SpatialPolygons</code> and <code>data.frame</code> inputs are supported. For clarity, we simply recognise them with the <code>Shape</code> argument to avoid confusion and unnecessary <code>extent</code> inputs.</p>
-<p>{{% hint %}}
+<p>{{% alert %}}
 Spatial preferences are handed to <code>download_DEM()</code> using the <code>Shape</code> argument.
-{{% /hint %}}</p>
+{{% /alert %}}</p>
 </div>
 <div id="keep_temporary" class="section level4">
 <h4><code>Keep_Temporary</code></h4>
 <p>By default, this argument is set to <code>FALSE</code> and raw, global DEM data will be deleted when the covariates you queried have been established. Setting this argument to <code>TRUE</code> will retain the raw data and make it so you do not have to re-download the DEM data for later use.</p>
-<p>{{% hint %}}
+<p>{{% alert %}}
 Setting <code>Keep_Temporary = TRUE</code> will retain global DEM data on your hard drive.
-{{% /hint %}}</p>
+{{% /alert %}}</p>
 </div>
 <div id="source" class="section level4">
 <h4><code>Source</code></h4>
 <p>This argument specifies where to download the DEM data from. By default, we query the data from the official USGS website. However, this website has given some users issues with connection instabilities. Consequently, the raw DEM data is also available from a dropbox which you can query download from by setting <code>Source = "Drive"</code>.</p>
-<p>{{% hint %}}
+<p>{{% alert %}}
 When experiencing connection issues with the USGS servers, we recommend setting <code>Source = "Drive"</code> to obtain covariate data.
-{{% /hint %}}</p>
+{{% /alert %}}</p>
 </div>
 </div>
 </div>
 <div id="kriging" class="section level2">
 <h2>Kriging</h2>
-<p>{{% hint danger %}}
+<p>{{% alert danger %}}
 Kriging can be a very <strong>computationally expensive</strong> exercise.
-{{% /hint %}}</p>
+{{% /alert %}}</p>
 <p>The expense of kriging is largely determined by three factors:<br />
 1. Change in spatial resolution.<br />
 2. Number of cells containing data; i.e. <a href="/courses/krigr/kriging/#spatial-limitation">Spatial Limitation</a>.<br />
 3. Localisation of Kriging; i.e. <a href="/courses/krigr/kriging/#spatial-limitation">Localisation of Results</a>.</p>
-<p>{{% hint warning %}}
+<p>{{% alert warning %}}
 We explore two of these further down in this workshop material. For more information, please consult <a href="https://iopscience.iop.org/article/10.1088/1748-9326/ac39bf">this publication (Figure 4)</a>.
-{{% /hint %}}</p>
+{{% /alert %}}</p>
 <p>Finally, we are ready to interpolate our input data given our covariates with the <code>krigR()</code> function:</p>
 <pre class="r"><code>SpatialPolygonsKrig &lt;- krigR(Data = SpatialPolygonsRaw, # data we want to krig as a raster object
       Covariates_coarse = Covs_ls[[1]], # training covariate as a raster object
@@ -156,7 +155,7 @@ We explore two of these further down in this workshop material. For more informa
       Dir = Dir.Exports # which directory to save our final input in
       )</code></pre>
 <pre><code>## Commencing Kriging</code></pre>
-<pre><code>## Kriging of remaining 3 data layers should finish around: 2022-06-07 14:00:30</code></pre>
+<pre><code>## Kriging of remaining 3 data layers should finish around: 2023-04-03 16:35:08</code></pre>
 <pre><code>## 
   |                                                                                      
   |                                                                                |   0%
@@ -169,46 +168,46 @@ We explore two of these further down in this workshop material. For more informa
   |                                                                                      
   |================================================================================| 100%</code></pre>
 <p>Just like with the <code>download_ERA()</code> function, <code>krigR()</code> updates you on what it is currently working on. Again, I implemented this to make sure people don’t get too anxious staring at an empty console in <code>R</code>. If this feature is not appealing to you, you can turn this progress tracking off by setting <code>verbose = FALSE</code> in the function call to <code>krigR()</code>.</p>
-<p>{{% hint warning %}}
+<p>{{% alert warning %}}
 For the rest of this workshop, I suppress messages from <code>krigR()</code> via other means so that when you execute, you get progress tracking.
-{{% /hint %}}</p>
+{{% /alert %}}</p>
 <p>There we go. As output of the <code>krigR()</code> function, we obtain a list of downscaled data as the first element and downscaling standard errors as the second list element. Let’s look at that:</p>
 <pre class="r"><code>SpatialPolygonsKrig[-3] # we will talk later about the third element</code></pre>
 <pre><code>## $Kriging_Output
 ## class      : RasterBrick 
-## dimensions : 191, 309, 59019, 4  (nrow, ncol, ncell, nlayers)
+## dimensions : 175, 309, 54075, 4  (nrow, ncol, ncell, nlayers)
 ## resolution : 0.01666667, 0.01666667  (x, y)
-## extent     : 9.87486, 15.02486, 49.88319, 53.06653  (xmin, xmax, ymin, ymax)
+## extent     : 9.87486, 15.02486, 50.14986, 53.06653  (xmin, xmax, ymin, ymax)
 ## crs        : +proj=longlat +datum=WGS84 +no_defs 
 ## source     : memory
 ## names      : var1.pred.1, var1.pred.2, var1.pred.3, var1.pred.4 
-## min values :    269.5768,    266.5758,    265.7707,    261.4294 
-## max values :    275.0120,    273.3299,    272.1343,    270.0602 
+## min values :    269.3269,    266.6584,    265.8426,    261.2555 
+## max values :    275.0150,    273.3421,    272.1410,    270.0713 
 ## 
 ## 
 ## $Kriging_SE
 ## class      : RasterBrick 
-## dimensions : 191, 309, 59019, 4  (nrow, ncol, ncell, nlayers)
+## dimensions : 175, 309, 54075, 4  (nrow, ncol, ncell, nlayers)
 ## resolution : 0.01666667, 0.01666667  (x, y)
-## extent     : 9.87486, 15.02486, 49.88319, 53.06653  (xmin, xmax, ymin, ymax)
+## extent     : 9.87486, 15.02486, 50.14986, 53.06653  (xmin, xmax, ymin, ymax)
 ## crs        : +proj=longlat +datum=WGS84 +no_defs 
 ## source     : memory
 ## names      : var1.stdev.1, var1.stdev.2, var1.stdev.3, var1.stdev.4 
-## min values :    0.1251704,    0.1585938,    0.1427118,    0.1373274 
-## max values :    0.1435884,    0.1745415,    0.1761995,    0.2816519</code></pre>
+## min values :    0.1184605,    0.1265206,    0.1142046,    0.1283697 
+## max values :    0.1308865,    0.1426154,    0.1535409,    0.2638671</code></pre>
 <p>All the data has been downscaled and we do have uncertainties recorded for all of our outputs. Let’s visualise the data:</p>
 <pre class="r"><code>Plot_Krigs(SpatialPolygonsKrig, 
            Shp = Shape_shp,
            Dates = c(&quot;01-1995&quot;, &quot;02-1995&quot;, &quot;03-1995&quot;, &quot;04-1995&quot;)
            )</code></pre>
 <p><img src="/courses/krigr/krigr-downscaling_files/figure-html/KrigPlot-1.png" width="1440" /></p>
-<p>As you can see, the elevation patterns show up clearly in our kriged air temperature output. Furthermore, you can see that our certainty of Kriging predictions drops on the 04/01/1995 in comparison to the preceding days. However, do keep in mind that a maximum standard error of 0.144, 0.175, 0.176, 0.282 (for each layer of our output respectively) on a total range of data of 5.435, 6.754, 6.364, 8.631 (again, for each layer in the output respectively) is evident of a downscaling result we can be confident in. We also demonstrated reliability of kriging in <a href="https://iopscience.iop.org/article/10.1088/1748-9326/ac39bf">this publication (Figure 3)</a>.</p>
-<p>Finally, this <code>SpatialPolygons</code>-informed downscaling took roughly 4 minutes on my machine (this may vary drastically on other devices).</p>
+<p>As you can see, the elevation patterns show up clearly in our kriged air temperature output. Furthermore, you can see that our certainty of Kriging predictions drops on the 04/01/1995 in comparison to the preceding days. However, do keep in mind that a maximum standard error of 0.131, 0.143, 0.154, 0.264 (for each layer of our output respectively) on a total range of data of 5.688, 6.684, 6.298, 8.816 (again, for each layer in the output respectively) is evident of a downscaling result we can be confident in. We also demonstrated reliability of kriging in <a href="https://iopscience.iop.org/article/10.1088/1748-9326/ac39bf">this publication (Figure 3)</a>.</p>
+<p>Finally, this <code>SpatialPolygons</code>-informed downscaling took roughly 57 minutes on my machine (this may vary drastically on other devices).</p>
 <div id="spatial-limitation" class="section level3">
 <h3>Spatial Limitation</h3>
-<p>{{% hint info %}}
+<p>{{% alert info %}}
 Kriging can be sped up tremendously by limiting downscaling efforts to smaller regions.
-{{% /hint %}}</p>
+{{% /alert %}}</p>
 <p>To demonstrate how spatial limitation affects computational time, we downscale all of our remaining <a href="/courses/krigr/download//#climate-data">target data</a> (i.e., <code>extent</code> and <code>data.frame</code> time-series specifications).</p>
 <details>
 <summary>
@@ -280,20 +279,20 @@ Click here for data extraction and plotting
 </details>
 <p><img src="/courses/krigr/krigr-downscaling_files/figure-html/unnamed-chunk-12-1.png" width="1440" /></p>
 <p>As you can see, the differences between the different data sets at our points of interest are noticeable and often times not negligible (as far as statistical interpolation uncertainty, i.e., error bars) are concerned.</p>
-<p>{{% hint danger %}}
+<p>{{% alert danger %}}
 When statistically downscaling data products it is <strong>vital you inspect the output data</strong> for inconsistencies or other issues.</p>
 <p><strong>Kriging is not a one-size-fits all solution to spatial resolution needs!</strong>
-{{% /hint %}}</p>
+{{% /alert %}}</p>
 </div>
 </div>
 <div id="localisation-of-results" class="section level3">
 <h3>Localisation of Results</h3>
-<p>{{% hint warning %}}
+<p>{{% alert warning %}}
 By default Kriging of the <code>krigR()</code> function uses all cells in a spatial product to downscale individual cells of rasters.
-{{% /hint %}}</p>
-<p>{{% hint info %}}
+{{% /alert %}}</p>
+<p>{{% alert info %}}
 The <code>nmax</code> argument can circumvent this.
-{{% /hint %}}</p>
+{{% /alert %}}</p>
 <p>Let’s build further on our above example by adding the <code>nmax</code> argument (passed on to <code>gstat::krige()</code>) to our <code>krigR()</code> function call. This argument controls how many of the closest cells the Kriging algorithm should consider in the downscaling of individual coarse, training cells.</p>
 <p>First, we need to re-establish our covariate data:</p>
 <pre class="r"><code>Covs_ls &lt;- download_DEM(Train_ras = SpatialPolygonsRaw,
@@ -317,19 +316,19 @@ Plot_Krigs(SpatialPolygonsLocalKrig,
            )</code></pre>
 <p><img src="/courses/krigr/krigr-downscaling_files/figure-html/KrigShpLocal-1.png" width="1440" /></p>
 <p>The air temperature prediction/downscaling results look just like the ones that we obtained above (we will investigate this claim in a second here). However, we seriously improved our localised understanding of Kriging uncertainties (i.e., we see much more localised patterns of Kriging standard error). In the case of our study region, uncertainties seem to be highest for areas where the landscape is dominated by large, abrupt changes in elevation (e.g. around the mountainous areas) and water-dominated areas such as streams and lakes (e.g. the lakes around Leipzig in the North of Saxony).</p>
-<p>{{% hint info %}}
+<p>{{% alert info %}}
 Using the <code>nmax</code> argument helps to identify highly localised patterns in the Kriging uncertainty as well as predictions!
-{{% /hint %}}</p>
+{{% /alert %}}</p>
 <p>Now let’s investigate how much of a difference there is between our two predictions of statistically downscaled air temperature when using locally weighted kriging or domain-average kriging as before:</p>
 <pre class="r"><code>Plot_Raw(SpatialPolygonsLocalKrig[[1]]-SpatialPolygonsKrig[[1]], 
          Shp = Shape_shp,
          Dates = c(&quot;01-1995&quot;, &quot;02-1995&quot;, &quot;03-1995&quot;, &quot;04-1995&quot;))</code></pre>
 <p><img src="/courses/krigr/krigr-downscaling_files/figure-html/KrigShpLocalDiff-1.png" width="1440" /></p>
 <p>Again, limiting the number of data points that the Kriging algorithm has access to changes the data we obtain. Therefore, let me reiterate:</p>
-<p>{{% hint danger %}}
+<p>{{% alert danger %}}
 When statistically downscaling data products it is <strong>vital you inspect the output data</strong> for inconsistencies or other issues.</p>
 <p><strong>Kriging is not a one-size-fits all solution to spatial resolution needs!</strong>
-{{% /hint %}}</p>
+{{% /alert %}}</p>
 </div>
 <div id="considerations-for-krigr" class="section level3">
 <h3>Considerations for <code>krigR()</code></h3>
@@ -337,16 +336,16 @@ When statistically downscaling data products it is <strong>vital you inspect the
 <div id="cores" class="section level4">
 <h4><code>Cores</code></h4>
 <p>Kriging is computationally expensive and can be a time-consuming exercise first and foremost. However, the <code>gstat::krige()</code> function which <code>krigR()</code> makes calls to, and which carries out the kriging itself, does not support multi-core processing. Conclusively, we can hand separate kriging jobs to separate cores in our machines and drastically reduce computation time. We do so via the <code>Cores</code> argument.</p>
-<p>{{% hint %}}
+<p>{{% alert %}}
 Using the <code>Cores</code> argument, <code>krigR()</code> carries out parallel kriging of multi-layer rasters.
-{{% /hint %}}</p>
+{{% /alert %}}</p>
 </div>
 <div id="nmax-and-maxdist" class="section level4">
 <h4><code>nmax</code> and <code>maxdist</code></h4>
 <p>Localised kriging is achieved through either <code>nmax</code> or <code>maxdist</code>.</p>
-<p>{{% hint warning %}}
+<p>{{% alert warning %}}
 When using <code>nmax</code> or <code>maxdist</code>, we recommend you ensure that the distance represented by these arguments approximates the area of typical weather system (around 150km).
-{{% /hint %}}</p>
+{{% /alert %}}</p>
 <p>For the purpose of showing clear patterns in the localisation of uncertainty patterns, we did not to so in the above.</p>
 </div>
 <div id="keep_temporary-1" class="section level4">
@@ -356,20 +355,20 @@ When using <code>nmax</code> or <code>maxdist</code>, we recommend you ensure th
 <div id="krigingequation" class="section level4">
 <h4><code>KrigingEquation</code></h4>
 <p><code>krigR()</code> can accommodate any covariate pair (training and target resolution) you supply. However, when using <a href="/courses/krigr/third-party/#third-party-data-covariates">third-party covariates</a> in non-linear combinations, you will need to use the <code>KrigingEquation</code> argument to do so.</p>
-<p>{{% hint %}}
+<p>{{% alert %}}
 With the <code>KrigingEquation</code> argument, you may specify non-linear combinations of covariates for your call to <code>krigR()</code>.
-{{% /hint %}}</p>
+{{% /alert %}}</p>
 </div>
 <div id="kriging-reliability" class="section level4">
 <h4>Kriging Reliability</h4>
 <p>Kriging reliability and robustness is largely dependant on the statistical link between your target variable and covariates of your choice.</p>
-<p>{{% hint danger %}}
+<p>{{% alert danger %}}
 <strong>Elevation will not be a useful covariate for all climate variables!</strong>
-{{% /hint %}}</p>
+{{% /alert %}}</p>
 <p>We demonstrate that Kriging is a reliable interpolation method when carefully choosing covariates in <a href="https://iopscience.iop.org/article/10.1088/1748-9326/ac39bf">this publication (Figure 3)</a>. One large factor in reliability of kriging is the change in resolution between training and target resolutions - as a rule of thumb, we do not recommend downscaling representing more than roughly one order of magnitude. If you attempt to do so <code>krigR()</code> will throw a warning message, but proceed regardless.</p>
-<p>{{% hint warning %}}
+<p>{{% alert warning %}}
 Kriging is a very flexible tool for statistical interpolation. Consider your choice of covariates and change in resolutions carefully. <strong>Always inspect your data</strong>.
-{{% /hint %}}</p>
+{{% /alert %}}</p>
 </div>
 <div id="call-list" class="section level4">
 <h4>Call List</h4>
@@ -404,7 +403,26 @@ Click here for call list query and output
 ## ymax       : 53.15 
 ## 
 ## $Data$CRS
-## CRS arguments: +proj=longlat +datum=WGS84 +no_defs 
+## Coordinate Reference System:
+## Deprecated Proj.4 representation: +proj=longlat +datum=WGS84 +no_defs 
+## WKT2 2019 representation:
+## GEOGCRS[&quot;unknown&quot;,
+##     DATUM[&quot;World Geodetic System 1984&quot;,
+##         ELLIPSOID[&quot;WGS 84&quot;,6378137,298.257223563,
+##             LENGTHUNIT[&quot;metre&quot;,1]],
+##         ID[&quot;EPSG&quot;,6326]],
+##     PRIMEM[&quot;Greenwich&quot;,0,
+##         ANGLEUNIT[&quot;degree&quot;,0.0174532925199433],
+##         ID[&quot;EPSG&quot;,8901]],
+##     CS[ellipsoidal,2],
+##         AXIS[&quot;longitude&quot;,east,
+##             ORDER[1],
+##             ANGLEUNIT[&quot;degree&quot;,0.0174532925199433,
+##                 ID[&quot;EPSG&quot;,9122]]],
+##         AXIS[&quot;latitude&quot;,north,
+##             ORDER[2],
+##             ANGLEUNIT[&quot;degree&quot;,0.0174532925199433,
+##                 ID[&quot;EPSG&quot;,9122]]]] 
 ## 
 ## $Data$layers
 ## [1] &quot;X1&quot; &quot;X2&quot; &quot;X3&quot; &quot;X4&quot;
@@ -435,7 +453,26 @@ Click here for call list query and output
 ## ymax       : 53.15 
 ## 
 ## $Covariates_coarse$CRS
-## CRS arguments: +proj=longlat +datum=WGS84 +no_defs 
+## Coordinate Reference System:
+## Deprecated Proj.4 representation: +proj=longlat +datum=WGS84 +no_defs 
+## WKT2 2019 representation:
+## GEOGCRS[&quot;unknown&quot;,
+##     DATUM[&quot;World Geodetic System 1984&quot;,
+##         ELLIPSOID[&quot;WGS 84&quot;,6378137,298.257223563,
+##             LENGTHUNIT[&quot;metre&quot;,1]],
+##         ID[&quot;EPSG&quot;,6326]],
+##     PRIMEM[&quot;Greenwich&quot;,0,
+##         ANGLEUNIT[&quot;degree&quot;,0.0174532925199433],
+##         ID[&quot;EPSG&quot;,8901]],
+##     CS[ellipsoidal,2],
+##         AXIS[&quot;longitude&quot;,east,
+##             ORDER[1],
+##             ANGLEUNIT[&quot;degree&quot;,0.0174532925199433,
+##                 ID[&quot;EPSG&quot;,9122]]],
+##         AXIS[&quot;latitude&quot;,north,
+##             ORDER[2],
+##             ANGLEUNIT[&quot;degree&quot;,0.0174532925199433,
+##                 ID[&quot;EPSG&quot;,9122]]]] 
 ## 
 ## $Covariates_coarse$layers
 ## [1] &quot;DEM&quot;
@@ -466,7 +503,26 @@ Click here for call list query and output
 ## ymax       : 53.14986 
 ## 
 ## $Covariates_fine$CRS
-## CRS arguments: +proj=longlat +datum=WGS84 +no_defs 
+## Coordinate Reference System:
+## Deprecated Proj.4 representation: +proj=longlat +datum=WGS84 +no_defs 
+## WKT2 2019 representation:
+## GEOGCRS[&quot;unknown&quot;,
+##     DATUM[&quot;World Geodetic System 1984&quot;,
+##         ELLIPSOID[&quot;WGS 84&quot;,6378137,298.257223563,
+##             LENGTHUNIT[&quot;metre&quot;,1]],
+##         ID[&quot;EPSG&quot;,6326]],
+##     PRIMEM[&quot;Greenwich&quot;,0,
+##         ANGLEUNIT[&quot;degree&quot;,0.0174532925199433],
+##         ID[&quot;EPSG&quot;,8901]],
+##     CS[ellipsoidal,2],
+##         AXIS[&quot;longitude&quot;,east,
+##             ORDER[1],
+##             ANGLEUNIT[&quot;degree&quot;,0.0174532925199433,
+##                 ID[&quot;EPSG&quot;,9122]]],
+##         AXIS[&quot;latitude&quot;,north,
+##             ORDER[2],
+##             ANGLEUNIT[&quot;degree&quot;,0.0174532925199433,
+##                 ID[&quot;EPSG&quot;,9122]]]] 
 ## 
 ## $Covariates_fine$layers
 ## [1] &quot;DEM&quot;
@@ -474,7 +530,7 @@ Click here for call list query and output
 ## 
 ## $KrigingEquation
 ## ERA ~ DEM
-## &lt;environment: 0x0000000038f701e8&gt;
+## &lt;environment: 0x7fee0d4450e8&gt;
 ## 
 ## $Cores
 ## [1] 1
@@ -497,12 +553,12 @@ Click here for call list query and output
 </div>
 <div id="aggregate-uncertainty" class="section level2">
 <h2>Aggregate Uncertainty</h2>
-<p>{{% hint danger %}}
+<p>{{% alert danger %}}
 Every climate data product is subject to an error-rate / range of data uncertainty. Unfortunately, <strong>almost none</strong> of the established climate data products <strong>communicate associated uncertainties</strong>. This leads to a dangerous <strong>overestimation of data credibility</strong>.
-{{% /hint %}}</p>
-<p>{{% hint info %}}
+{{% /alert %}}</p>
+<p>{{% alert info %}}
 With the <code>KrigR</code> workflow, it is trivial to obtain uncertainty flags for all of your data - no matter the spatial or temporal resolution.
-{{% /hint %}}</p>
+{{% /alert %}}</p>
 <p>To understand the full certainty of our data obtained via the <code>KrigR</code> workflow, we should combine <a href="/courses/krigr/download/#dynamical-data-uncertainty">dynamical uncertainty</a> with the statistical uncertainty we obtained from the <code>krigR()</code> function call above.</p>
 <p>To do so, we require two data sets:<br />
 - <code>SpatialPoylgonsKrig</code> - <a href="/courses/krigr/kriging/#kriging">created above</a> containing statistical uncertainty in the second list position<br />
@@ -527,59 +583,60 @@ DynUnc &lt;- resample(EnsDisagg, KrigUnc)</code></pre>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>## R version 4.0.5 (2021-03-31)
-## Platform: x86_64-w64-mingw32/x64 (64-bit)
-## Running under: Windows 10 x64 (build 19043)
+<pre><code>## R version 4.2.3 (2023-03-15)
+## Platform: x86_64-apple-darwin17.0 (64-bit)
+## Running under: macOS Big Sur ... 10.16
 ## 
 ## Matrix products: default
+## BLAS:   /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRlapack.dylib
 ## 
 ## locale:
-## [1] LC_COLLATE=English_United Kingdom.1252  LC_CTYPE=English_United Kingdom.1252   
-## [3] LC_MONETARY=English_United Kingdom.1252 LC_NUMERIC=C                           
-## [5] LC_TIME=English_United Kingdom.1252    
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 ## 
 ## attached base packages:
 ## [1] parallel  stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] mapview_2.10.2          rnaturalearthdata_0.1.0 rnaturalearth_0.1.0    
-##  [4] gimms_1.2.0             ggmap_3.0.0             cowplot_1.1.1          
-##  [7] viridis_0.6.0           viridisLite_0.4.0       ggplot2_3.3.6          
-## [10] tidyr_1.1.3             KrigR_0.1.2             httr_1.4.2             
-## [13] stars_0.5-3             abind_1.4-5             fasterize_1.0.3        
-## [16] sf_1.0-0                lubridate_1.7.10        automap_1.0-14         
-## [19] doSNOW_1.0.19           snow_0.4-3              doParallel_1.0.16      
-## [22] iterators_1.0.13        foreach_1.5.1           rgdal_1.5-23           
-## [25] raster_3.4-13           sp_1.4-5                stringr_1.4.0          
-## [28] keyring_1.2.0           ecmwfr_1.3.0            ncdf4_1.17             
+##  [1] mapview_2.11.0          rnaturalearthdata_0.1.0 rnaturalearth_0.3.2    
+##  [4] gimms_1.2.1             ggmap_3.0.2             cowplot_1.1.1          
+##  [7] viridis_0.6.2           viridisLite_0.4.1       ggplot2_3.4.1          
+## [10] tidyr_1.3.0             KrigR_0.1.2             terra_1.7-21           
+## [13] httr_1.4.5              stars_0.6-0             abind_1.4-5            
+## [16] fasterize_1.0.4         sf_1.0-12               lubridate_1.9.2        
+## [19] automap_1.1-9           doSNOW_1.0.20           snow_0.4-4             
+## [22] doParallel_1.0.17       iterators_1.0.14        foreach_1.5.2          
+## [25] rgdal_1.6-5             raster_3.6-20           sp_1.6-0               
+## [28] stringr_1.5.0           keyring_1.3.1           ecmwfr_1.5.0           
+## [31] ncdf4_1.21             
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] bitops_1.0-7             satellite_1.0.2          xts_0.12.1              
-##  [4] webshot_0.5.2            tools_4.0.5              bslib_0.3.1             
-##  [7] utf8_1.2.1               R6_2.5.0                 zyp_0.10-1.1            
-## [10] KernSmooth_2.23-18       DBI_1.1.1                colorspace_2.0-0        
-## [13] withr_2.4.2              tidyselect_1.1.0         gridExtra_2.3           
-## [16] leaflet_2.0.4.1          curl_4.3.2               compiler_4.0.5          
-## [19] leafem_0.1.3             gstat_2.0-7              labeling_0.4.2          
-## [22] bookdown_0.22            sass_0.4.1               scales_1.1.1            
-## [25] classInt_0.4-3           proxy_0.4-25             digest_0.6.27           
-## [28] rmarkdown_2.14           base64enc_0.1-3          jpeg_0.1-8.1            
-## [31] pkgconfig_2.0.3          htmltools_0.5.2          highr_0.9               
-## [34] fastmap_1.1.0            htmlwidgets_1.5.3        rlang_0.4.11            
-## [37] FNN_1.1.3                farver_2.1.0             jquerylib_0.1.4         
-## [40] generics_0.1.0           zoo_1.8-9                jsonlite_1.7.2          
-## [43] crosstalk_1.1.1          dplyr_1.0.5              magrittr_2.0.1          
-## [46] Rcpp_1.0.7               munsell_0.5.0            fansi_0.4.2             
-## [49] lifecycle_1.0.0          stringi_1.5.3            yaml_2.2.1              
-## [52] plyr_1.8.6               grid_4.0.5               crayon_1.4.1            
-## [55] lattice_0.20-41          knitr_1.33               pillar_1.6.0            
-## [58] boot_1.3-27              rjson_0.2.20             spacetime_1.2-4         
-## [61] stats4_4.0.5             codetools_0.2-18         glue_1.4.2              
-## [64] evaluate_0.14            blogdown_1.3             vctrs_0.3.7             
-## [67] png_0.1-7                RgoogleMaps_1.4.5.3      gtable_0.3.0            
-## [70] purrr_0.3.4              reshape_0.8.8            assertthat_0.2.1        
-## [73] cachem_1.0.4             xfun_0.31                lwgeom_0.2-6            
-## [76] e1071_1.7-6              rnaturalearthhires_0.2.0 class_7.3-18            
-## [79] Kendall_2.2              tibble_3.1.1             intervals_0.15.2        
-## [82] memoise_2.0.0            units_0.7-2              ellipsis_0.3.2</code></pre>
+##  [1] leafem_0.2.0             colorspace_2.1-0         class_7.3-21            
+##  [4] leaflet_2.1.2            satellite_1.0.4          base64enc_0.1-3         
+##  [7] rstudioapi_0.14          proxy_0.4-27             farver_2.1.1            
+## [10] fansi_1.0.4              codetools_0.2-19         cachem_1.0.7            
+## [13] knitr_1.42               jsonlite_1.8.4           png_0.1-8               
+## [16] Kendall_2.2.1            compiler_4.2.3           assertthat_0.2.1        
+## [19] fastmap_1.1.1            cli_3.6.0                htmltools_0.5.4         
+## [22] tools_4.2.3              gtable_0.3.1             glue_1.6.2              
+## [25] dplyr_1.1.0              Rcpp_1.0.10              jquerylib_0.1.4         
+## [28] vctrs_0.6.1              blogdown_1.16            crosstalk_1.2.0         
+## [31] lwgeom_0.2-11            xfun_0.37                timechange_0.2.0        
+## [34] lifecycle_1.0.3          rnaturalearthhires_0.2.1 zoo_1.8-11              
+## [37] scales_1.2.1             gstat_2.1-0              yaml_2.3.7              
+## [40] curl_5.0.0               memoise_2.0.1            gridExtra_2.3           
+## [43] sass_0.4.5               reshape_0.8.9            stringi_1.7.12          
+## [46] highr_0.10               e1071_1.7-13             boot_1.3-28.1           
+## [49] intervals_0.15.3         RgoogleMaps_1.4.5.3      rlang_1.1.0             
+## [52] pkgconfig_2.0.3          bitops_1.0-7             evaluate_0.20           
+## [55] lattice_0.20-45          purrr_1.0.1              htmlwidgets_1.6.1       
+## [58] labeling_0.4.2           tidyselect_1.2.0         plyr_1.8.8              
+## [61] magrittr_2.0.3           bookdown_0.33            R6_2.5.1                
+## [64] generics_0.1.3           DBI_1.1.3                pillar_1.8.1            
+## [67] withr_2.5.0              units_0.8-1              xts_0.13.0              
+## [70] tibble_3.2.1             spacetime_1.2-8          KernSmooth_2.23-20      
+## [73] utf8_1.2.3               rmarkdown_2.20           jpeg_0.1-10             
+## [76] grid_4.2.3               zyp_0.11-1               FNN_1.1.3.2             
+## [79] digest_0.6.31            classInt_0.4-9           webshot_0.5.4           
+## [82] stats4_4.2.3             munsell_0.5.0            bslib_0.4.2</code></pre>
 </div>

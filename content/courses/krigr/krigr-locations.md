@@ -95,7 +95,7 @@ Dirs <- sapply(c(Dir.Data, Dir.Covariates, Dir.Exports),
 
 ## Visualiation Functions 
 
-In order to easily visualise our Kriging procedure including (1) inputs, (2) covariates, and (3) outputs without repeating too much of the same code, we have prepared some plotting functions which you can download as [FUN_Plotting.R](/courses/krigr/FUN_Plotting.R).
+In order to easily visualise our Kriging procedure including (1) inputs, (2) covariates, and (3) outputs without repeating too much of the same code, we have prepared some plotting functions which you can download as [FUN_Plotting.R](https://raw.githubusercontent.com/ErikKusch/Homepage/master/content/courses/krigr/FUN_Plotting.R).
 
 With the `FUN_Plotting.R` file placed in the project directory of your workshop material (i.e., the directory returned by `Dir.Base`), running the following will register the three plotting functions in your `R` environment.
 
@@ -110,9 +110,9 @@ The plotting functions you have just loaded are called:
 - `Plot_Covs()` - this function will help us visualise the covariates we use for statistical interpolation  
 - `Plot_Krigs()` - kriged products and their associated uncertainty will be visualised using this function  
 
-{{% hint normal %}}
+{{% alert normal %}}
 Don’t worry about understanding how these functions work off the bat here. Kriging and the package `KrigR` are what we want to demonstrate here - not visualisation strategies. 
-{{% /hint %}}
+{{% /alert %}}
 
 ## Locations of Interest
 
@@ -126,25 +126,25 @@ The locations we focus on for this workshop are situated throughout eastern Germ
 2. *Geographic Scale* - the area we are selecting here hits a certain sweet-spot for our purposes as its size makes it so that all `KrigR` functions run to completion in a relatively short time.  
 3. *Familiarity* - I was born and grew up in this region and have fond memories of the place. Please excuse my indulging in a bit of nostalgia.  
 
-{{% hint danger %}}
+{{% alert danger %}}
 Change the locations of interest at your own risk.
-{{% /hint %}}
+{{% /alert %}}
 
 Using a different set of locations than the ones we specify here will change computational load and time as well as disk space required when working through the workshop material.
 
-{{% hint info %}}
+{{% alert info %}}
 `KrigR` will be able to get you the data you want for the locations you desire, but computational requirements will vary.
-{{% /hint %}}
+{{% /alert %}}
 
 ### Spatial Preferences in `KrigR`
 
-{{% hint info %}}
+{{% alert info %}}
 `KrigR` is capable of learning about your spatial preferences in three ways:  
 
 1. As an `extent` input (a rectangular box).  
 2. As a `SpatialPolygons` input (a polygon or set of polygons).  
 3. As a set of locations stored in a `data.frame`.  
-{{% /hint %}}
+{{% /alert %}}
 
 To demonstrate the range of specifications permitted in `KrigR`, we make use of all three specifications. As we will see in this tutorial, masking out unnecessary areas from our analyses speeds up Kriging tremendously hence why we strongly suggest you make use of `SpatialPolygons` or `data.frames` whenever possible.
 
@@ -168,9 +168,9 @@ Shape_shp <- Shape_shp[Shape_shp$name_en %in% c("Saxony", "Saxony-Anhalt", "Thur
                                                 "Ústí nad Labem Region", "Karlovy Vary Region"), ]
 ```
 
-{{% hint warning %}}
+{{% alert warning %}}
 The above requires the `naturalhighres` package which can give some users troubles.
-{{% /hint %}}
+{{% /alert %}}
 
 Here's a workaround if `naturalhighres` does not work for you:
 
@@ -186,7 +186,7 @@ Shape_shp <- Shape_shp[Shape_shp$name_en %in% c("Saxony", "Saxony-Anhalt", "Thur
 
 #### Points of Interest (`data.frame`)
 
-Finally, to represent specific points of interest, I have prepared a small data set of mountains for each state in the shapefile above. You can download this file here: [Mountains_df.RData](/courses/krigr/Data/Mountains_df.RData). Simply place this file into your data directory and continue the workshop.
+Finally, to represent specific points of interest, I have prepared a small data set of mountains for each state in the shapefile above. You can download this file here: [Mountains_df.RData](https://github.com/ErikKusch/Homepage/raw/master/content/courses/krigr/Data/Mountains_df.RData). Simply place this file into your data directory and continue the workshop.
 
 
 
@@ -207,9 +207,9 @@ Mountains_df
 ## 5       Milešovka 13.93153 50.55523
 ```
 
-{{% hint normal %}}
+{{% alert normal %}}
 We now have all of our objects for spatial preferences ready for the workshop.
-{{% /hint %}}
+{{% /alert %}}
 
 ### Visualising our Study Setting
 
@@ -246,9 +246,9 @@ ggmap(back_gg, extent = "device") + # plot the extent area
 In the above figure, the map area designates the `extent` specifications while the grey overlay display the `SpatialPolygons` preference and points of interest (form our `data.frame` input) are highlighted with red plotting symbols.
 
 
-{{% hint normal %}}
+{{% alert normal %}}
 We are now ready to start the `KrigR` portion of the workshop!
-{{% /hint %}}
+{{% /alert %}}
 
 ## Session Info
 

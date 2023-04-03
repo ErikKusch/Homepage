@@ -33,7 +33,7 @@ links:
 - icon: file-powerpoint
   icon_pack: fas
   name: Slides - Chapter 9
-  url: /post/rethinking/10__26-02-2021_SUMMARY_-MCMC.pptx.html
+  url: https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/rethinking/10__26-02-2021_SUMMARY_-MCMC.pptx.html
 math: true
 type: docs
 toc: true 
@@ -50,7 +50,7 @@ weight: 10
 
 ## Material
 
-- [Slides Chapter 9](/post/rethinking/10__26-02-2021_SUMMARY_-MCMC.pptx.html)  
+- [Slides Chapter 9](https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/rethinking/10__26-02-2021_SUMMARY_-MCMC.pptx.html)  
 
 ## Introduction
 These are answers and solutions to the exercises at the end of chapter 9 in [Satistical Rethinking 2](https://xcelab.net/rm/statistical-rethinking/) by Richard McElreath. I have created these notes as a part of my ongoing involvement in the [AU Bayes Study Group](/project/aubayes/). Much of my inspiration for these solutions, where necessary, has been obtained from [Taras Svirskyi](https://github.com/jffist/statistical-rethinking-solutions/blob/master/ch08_hw.R), [William Wolf](https://github.com/cavaunpeu/statistical-rethinking/blob/master/chapter-8/homework.R), and [Corrie Bartelheimer](https://www.samples-of-thoughts.com/projects/statistical-rethinking/chapter_8/chp8-ex/) as well as the solutions provided to instructors by Richard McElreath himself.

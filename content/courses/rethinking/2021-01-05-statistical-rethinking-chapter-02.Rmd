@@ -1,5 +1,5 @@
 ---
-title: Chapter 02
+title: Chapter 01 & 02
 author: Erik Kusch
 date: '2021-01-05'
 slug: chapter-02
@@ -34,11 +34,11 @@ links:
 - icon: file-powerpoint
   icon_pack: fas
   name: Slides - Chapter 1
-  url: /post/rethinking/1_11-12-2020_SUMMARY_The-Golem-Of-Prague.html
+  url: https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/rethinking/1_11-12-2020_SUMMARY_The-Golem-Of-Prague.html
 - icon: file-powerpoint
   icon_pack: fas
   name: Slides - Chapter 2 & 3
-  url: /post/rethinking/2_18-12-2020_SUMMARY_-Basics-of-Bayesian-Inference-and-Counting.html
+  url: https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/rethinking/2_18-12-2020_SUMMARY_-Basics-of-Bayesian-Inference-and-Counting.html
 type: docs
 toc: true 
 menu:
@@ -57,8 +57,8 @@ options(width = 200)
 
 ## Material
 
-- [Slides Chapter 1](/post/rethinking/1_11-12-2020_SUMMARY_The-Golem-Of-Prague.html)  
-- [Slides Chapter 2](/post/rethinking/2_18-12-2020_SUMMARY_-Basics-of-Bayesian-Inference-and-Counting.html)  
+- [Slides Chapter 1](https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/rethinking/1_11-12-2020_SUMMARY_The-Golem-Of-Prague.html)  
+- [Slides Chapter 2](https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/rethinking/2_18-12-2020_SUMMARY_-Basics-of-Bayesian-Inference-and-Counting.html)  
 
 ## Introduction 
 These are answers and solutions to the exercises at the end of chapter 2 in [Satistical Rethinking 2](https://xcelab.net/rm/statistical-rethinking/) by Richard McElreath. I have created these notes as a part of my ongoing involvement in the [AU Bayes Study Group](/project/aubayes/). Much of my inspiration for these solutions, where necessary, has been obtained from [Taras Svirskyi](https://github.com/jffist/statistical-rethinking-solutions) and [Jeffrey Girard](https://jmgirard.com/statistical-rethinking-ch2/).
@@ -198,7 +198,7 @@ In `R`, we can do this:
 
 **Answer:**  
 I made a small visualisation of this here:
-<img src="/post/rethinking/Ch02_Cards.jpg" width="900"/>
+<img src="/courses/rethinking/Ch02_Cards.jpg" width="900"/>
 
 *By Counting:*  
 As you can see, out of all draws that start with a black side facing up on the first draw (3 total paths), only two conclude to the other side also being black. Thus, the probability is two thirds.  
@@ -224,7 +224,7 @@ posterior[1] == 2/3
 
 **Answer:**  
 Here's an update of my previous visualisation for this:
-<img src="/post/rethinking/Ch02_Cards2.jpg" width="900"/>
+<img src="/courses/rethinking/Ch02_Cards2.jpg" width="900"/>
 
 *By Counting:*  
 As you can see, out of all draws that start with a black side facing up on the first draw (5 total paths), four conclude to the other side also being black. Thus, the probability is 4/5 which is 0.8.  
@@ -250,7 +250,7 @@ posterior[1] == 4/5
 
 **Answer:**  
 Here's an update of my previous visualisation for this:
-<img src="/post/rethinking/Ch02_Cards3.jpg" width="900"/>
+<img src="/courses/rethinking/Ch02_Cards3.jpg" width="900"/>
 
 *By Counting:*  
 Out of all draws that start with a black side facing up on the first draw (4 total paths), only 2 now conclude to the other side also being black. Thus, the probability is 1/2 which is 0.5.  
@@ -276,7 +276,7 @@ posterior[1] == 0.5
 
 **Answer:**  
 Here's an update of my previous visualisation for this:
-<img src="/post/rethinking/Ch02_Cards4.jpg" width="900"/>
+<img src="/courses/rethinking/Ch02_Cards4.jpg" width="900"/>
 
 *By Counting:*  
 Out of all draws that start with a black side facing up on the first draw (12 total paths), 8 now conclude to the next card being places white-side facing up. Thus, the probability is 8/12 which is 0.75.  

@@ -45,21 +45,21 @@ weight: 1
 ## Installing `KrigR`
 First of all, we need to install `KrigR`. 
 
-{{% hint warning %}}
+{{% alert warning %}}
 Until we have implemented our [development ideas and goals](/courses//krigr/outlook/), `KrigR` will not be submitted to [CRAN](https://cran.r-project.org/) to avoid the hassle of updating an already accepted package.
-{{% /hint %}}
+{{% /alert %}}
 
-{{% hint info %}}
+{{% alert info %}}
 For the time being, `KrigR` is only available through the associated [GitHub](https://github.com/ErikKusch/KrigR) repository.
-{{% /hint %}}
+{{% /alert %}}
 
-<!-- {{% hint danger %}} -->
+<!-- {{% alert danger %}} -->
 <!-- Example text that *may* contain **markdown** `markup`. -->
-<!-- {{% /hint %}} -->
+<!-- {{% /alert %}} -->
 
-<!-- {{% hint normal %}} -->
+<!-- {{% alert normal %}} -->
 <!-- Example text that *may* contain **markdown** `markup`. -->
-<!-- {{% /hint %}} -->
+<!-- {{% /alert %}} -->
 
 Here, we use the `devtools` package within `R` to get access to the `install_github()` function. For this to run, we need to tell `R` to not stop the installation from GitHub as soon as a warning is produced. This would stop the installation process as early as one of the `KrigR` dependencies hits a warning as benign as `Package XYZ was built under R Version X.X.X` which can usually be ignored safely. 
 
@@ -84,13 +84,13 @@ API_User <- 12345
 API_Key <- "YourApiKeyGoesHereAsACharacterString"
 ```
 
-{{% hint warning %}}
+{{% alert warning %}}
 Don't forget to sign the [terms and conditions](https://cds.climate.copernicus.eu/cdsapp/#!/terms/licence-to-use-copernicus-products) of the CDS!
-{{% /hint %}}
+{{% /alert %}}
 
-{{% hint normal %}}
+{{% alert normal %}}
 You are now **ready** for `KrigR`.
-{{% /hint %}}
+{{% /alert %}}
 
 If this is your **first contact** with `KrigR`, we recommend strongly you **follow the workshop material in order**. If you **return to** `KrigR` with specific questions or ideas, we recommend you make use of the **search function** at the top left of this page. If you are short on time, the [quick start](/courses/krigr/quickstart/) guide will be useful to you.
 

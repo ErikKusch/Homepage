@@ -44,9 +44,9 @@ weight: 25
 
 
 
-{{% hint danger %}}
+{{% alert danger %}}
 This part of the workshop is dependant on set-up and preparation done previously [here](/courses/krigr/prep/).
-{{% /hint %}}
+{{% /alert %}}
 
 First, we load `KrigR`:
 
@@ -59,9 +59,9 @@ library(KrigR)
 
 I expect that you won't want to downscale to specific resolutions most of the time, but rather, match an already existing spatial data set in terms of spatial resolution and extent. Again, the `KrigR` package got you covered!
 
-{{% hint warning %}}
+{{% alert warning %}}
 Usually, you probably want to downscale data to match a certain pre-existing data set rather than a certain resolution.
-{{% /hint %}}
+{{% /alert %}}
 
 Here, we illustrate this with an NDVI-based example. The NDVI is a satellite-derived vegetation index which tells us how green the Earth is. It comes in bi-weekly intervals and at a spatial resolution of `.08333` (roughly 9km). Here, we download all NDVI data for the year 2015 and then create the annual mean. This time, we do so for all of Germany because of its size and topographical variety.
 
@@ -133,9 +133,9 @@ As stated above, we want to match this with our output.
 
 We could do this whole analysis in our three steps as outlined above, but why bother when the [pipeline](/courses/krigr/quickstart/#the-pipeline) gets the job done just as well?
 
-{{% hint info %}}
+{{% alert info %}}
 Matching Kriging outputs with a pre-existing data set is as easy as plugging the pre-existing raster into the `Target_res` argument of the `krigR()` or the `download_DEM()` function.
-{{% /hint %}}
+{{% /alert %}}
 
 This time we want to downscale from ERA5 resolution (roughly 30km) because the ERA5-Land data already matches the NDVI resolution (roughly 9km). Here's how we do this:
 
@@ -192,7 +192,7 @@ NDVI_Krig <- krigR(
 ```
 
 ```
-##   850485ad-d5f1-43f5-94e8-e238c5ec9593
+##   4d24fc1f-2be1-4b65-b588-be3ba2b5938b
 ```
 
 ```
@@ -200,17 +200,32 @@ NDVI_Krig <- krigR(
 ```
 
 ```
-## - polling server for a data transfer \ polling server for a data transfer | polling
-## server for a data transfer / polling server for a data transfer - polling server for a
-## data transfer \ polling server for a data transfer | polling server for a data transfer /
-## polling server for a data transfer - polling server for a data transfer \ polling server
-## for a data transfer | polling server for a data transfer / polling server for a data
-## transfer - polling server for a data transfer \ polling server for a data transfer |
-## polling server for a data transfer / polling server for a data transfer - polling server
-## for a data transfer \ polling server for a data transfer | polling server for a data
-## transfer / polling server for a data transfer - polling server for a data transfer \
-## polling server for a data transfer | polling server for a data transfer / polling server
-## for a data transfer - polling server for a data transfer
+## - polling server for a data transfer
+\ polling server for a data transfer
+| polling server for a data transfer
+/ polling server for a data transfer
+- polling server for a data transfer
+\ polling server for a data transfer
+| polling server for a data transfer
+/ polling server for a data transfer
+- polling server for a data transfer
+\ polling server for a data transfer
+| polling server for a data transfer
+/ polling server for a data transfer
+- polling server for a data transfer
+\ polling server for a data transfer
+| polling server for a data transfer
+/ polling server for a data transfer
+- polling server for a data transfer
+\ polling server for a data transfer
+| polling server for a data transfer
+/ polling server for a data transfer
+- polling server for a data transfer
+\ polling server for a data transfer
+| polling server for a data transfer
+/ polling server for a data transfer
+- polling server for a data transfer
+## Downloading file
 ```
 
 ```
@@ -218,14 +233,14 @@ NDVI_Krig <- krigR(
   |                                                                                      
   |                                                                                |   0%
   |                                                                                      
-  |=============================================================                   |  76%
-  |                                                                                      
   |================================================================================| 100%
 ```
 
 ```
-## - moved temporary file to -> C:/Users/erike/Documents/Website/content/courses/krigr/Exports/0001_2m_temperature_2015-01-01_2015-12-31_year.nc
-## - request purged from queue!
+## - moved temporary file to -> /Users/erikkus/Documents/HomePage/content/courses/krigr/Exports/0001_2m_temperature_2015-01-01_2015-12-31_year.nc
+## - Delete data from queue for url endpoint or request id:
+##   https://cds.climate.copernicus.eu/api/v2/tasks/4d24fc1f-2be1-4b65-b588-be3ba2b5938b
+## 
 ## Checking for known data issues.
 ## Loading downloaded data for masking and aggregation.
 ## Masking according to shape/buffer polygon
@@ -247,6 +262,7 @@ NDVI_Krig <- krigR(
 
 ```
 ## Commencing Kriging
+## Kriging of remaining 0 data layers should finish around: 2023-04-03 16:54:51
 ```
 
 ```
@@ -352,15 +368,15 @@ Looks like NDVI increases as mean annual temperatures rise, but reaches a peak a
 
 ## Using Third-Party Data
 
-{{% hint danger %}}
+{{% alert danger %}}
 **ATTENTION:** Kriging only works on **square-cell spatial products**!
-{{% /hint %}}
+{{% /alert %}}
 
 The `krigR()` function is designed to work with non-ERA5(-Land) data as well as non-GMTED2010 covariate data. To downscale your own spatial products using different covariate data than the GMTED2010 DEM we use as a default, you need to step into the three-step workflow. 
 
-{{% hint warning %}}
+{{% alert warning %}}
 Most spatial products won't be reliably downscaled using only elevation covariate data.
-{{% /hint %}}
+{{% /alert %}}
 
 `krigR()` supports any combination of ERA5-family reanalysis, GMTED2010, third-party climate data, and third-party covariate data. Here, we just demonstrate the use of other covariates than the GMTED2010 used by `KrigR` by default.  
 
@@ -373,7 +389,7 @@ The reason we focus on soil moisture for this exercise? In [this publication (Fi
 <details>
   <summary>Click here for file:</summary>
       Download 
-<a href="/courses/krigr/Data/Qsoil_BC.nc">Qsoil_BC.nc</a> and place it into your data directory.
+<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/krigr/Data/Qsoil_BC.nc">Qsoil_BC.nc</a> and place it into your data directory.
 </details> 
 
 
@@ -390,8 +406,10 @@ Below, you will find the code needed to obtain the data of global coverage at ro
 <details>
   <summary>Click here for the covariate file to save yourself downloading and processing of global data:</summary>
       Download 
-<a href="/courses/krigr/Covariates/SoilCovs.nc">SoilCovs.nc</a> and place it into your covariates directory.
+<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/krigr/Covariates/SoilCovs.nc">SoilCovs.nc</a> and place it into your covariates directory.
 </details> 
+
+
 
 
 ```r
@@ -479,21 +497,21 @@ Plot_Covs(Covs = Covs_ls, Shape_shp)
 
 <img src="krigr-third-party_files/figure-html/SoilCovs-1.png" width="1440" />
 
-{{% hint %}}
-Our [development goals](/courses/outlook/) include creating a function that automatically carries out all of the above for you with a specification alike to `download_DEM()`.
-{{% /hint %}}
+{{% alert %}}
+Our [development goals](/courses/krigr/outlook/) include creating a function that automatically carries out all of the above for you with a specification alike to `download_DEM()`.
+{{% /alert %}}
 
 ### Kriging Third-Party Data
 
 Finally, we can statistically downscale our soil moisture data using the soil property covariates. For this, we need to specify a new `KrigingEquation`. 
 
-{{% hint %}}
+{{% alert %}}
 With the `KrigingEquation` argument, you may specify non-linear combinations of covariates for your call to `krigR()`.
-{{% /hint %}}
+{{% /alert %}}
 
-{{% hint info %}}
+{{% alert info %}}
 If you don't specify a `KrigingEquation` in `krigR()` and your covariates do not contain a layer called `"DEM"`, `krigR()` will notify you that its default formula cannot be executed and will attempt to build an additive formula from the data it can find. `krigr()` will inform you of this and ask for your approval before proceeding.
-{{% /hint %}}
+{{% /alert %}}
 
 This auto-generated formula would be the same as the one we specify here - an additive combination of all covariates found both at coarse and fine resolutions. Of course, this formula can also be specified to reflect interactive effects.
 
@@ -523,18 +541,36 @@ BC_Water_Krig  <- krigR(Data = BCq_ras[[12:19]],
 )
 ```
 
+```
+## Warning: [writeCDF] for better results use file extension '.nc' or '.cdf'
+## see: https://stackoverflow.com/a/65398262/635245
+```
+
+```
+## Warning: [rast] unknown extent
+```
+
+```
+## Warning: [writeCDF] for better results use file extension '.nc' or '.cdf'
+## see: https://stackoverflow.com/a/65398262/635245
+```
+
+```
+## Warning: [rast] unknown extent
+```
+
 #### BIO12 - Annual Mean Soil Moisture
 
-{{% hint normal %}}
+{{% alert normal %}}
 Interpolating this data is just like statistically downscaling any other soil moisture product and can be done without any problems.
-{{% /hint %}}
+{{% /alert %}}
 
 <details>
   <summary>Click here for plotting call and plot:</summary>
   
-{{% hint normal %}}
+{{% alert normal %}}
 Look at how well the river Elbe sows up in this!
-{{% /hint %}}
+{{% /alert %}}
 
 ```r
 Plot_Krigs(lapply(BC_Water_Krig[-3], "[[", 1), 
@@ -547,9 +583,9 @@ Plot_Krigs(lapply(BC_Water_Krig[-3], "[[", 1),
 
 #### BIO13 - Soil Moisture of Wettest Month
 
-{{% hint normal %}}
+{{% alert normal %}}
 Interpolating this data is just like statistically downscaling any other soil moisture product and can be done without any problems.
-{{% /hint %}}
+{{% /alert %}}
 
 <details>
   <summary>Click here for plotting call and plot:</summary>
@@ -566,9 +602,9 @@ Plot_Krigs(lapply(BC_Water_Krig[-3], "[[", 2),
 
 #### BIO14 - Soil Moisture of Driest Month
 
-{{% hint normal %}}
+{{% alert normal %}}
 Interpolating this data is just like statistically downscaling any other soil moisture product and can be done without any problems.
-{{% /hint %}}
+{{% /alert %}}
 
 <details>
   <summary>Click here for plotting call and plot:</summary>
@@ -585,9 +621,9 @@ Plot_Krigs(lapply(BC_Water_Krig[-3], "[[", 3),
 
 #### BIO15 - Soil Moisture Seasonality
 
-{{% hint warning %}}
+{{% alert warning %}}
 This data product is calculated using the standard deviation of mean values throughout our time frame. Conclusively, it would be interpolated better by first statistically downscaling the underlying data rather than the final bioclimatic variable.
-{{% /hint %}}
+{{% /alert %}}
 
 <details>
   <summary>Click here for plotting call and plot:</summary>
@@ -604,9 +640,9 @@ Plot_Krigs(lapply(BC_Water_Krig[-3], "[[", 4),
 
 #### BIO16 & BIO17 - Soil Moisture of Wettest and Driest Quarter
 
-{{% hint danger %}}
+{{% alert danger %}}
 **I do not recommend you use these kriging outputs!** They rely on mean quarterly soil moisture data which is not being interpolated here. Subsequently, the patchiness of the underlying data is lost and with it: information.
-{{% /hint %}}
+{{% /alert %}}
 
 <details>
   <summary>Click here for plotting call and plot:</summary>
@@ -625,9 +661,9 @@ Plot_Krigs(lapply(BC_Water_Krig[-3], "[[", 5:6),
 
 #### BIO18 & BIO19 - Precipitation of Warmest and Coldest Quarter
 
-{{% hint danger %}}
+{{% alert danger %}}
 **I do not recommend you use these kriging outputs!** They rely on mean quarterly temperature data which is not being interpolated here. Subsequently, the patchiness of the underlying data is lost and with it: information.
-{{% /hint %}}
+{{% /alert %}}
 
 <details>
   <summary>Click here for plotting call and plot:</summary>
@@ -652,59 +688,60 @@ sessionInfo()
 ```
 
 ```
-## R version 4.0.5 (2021-03-31)
-## Platform: x86_64-w64-mingw32/x64 (64-bit)
-## Running under: Windows 10 x64 (build 19043)
+## R version 4.2.3 (2023-03-15)
+## Platform: x86_64-apple-darwin17.0 (64-bit)
+## Running under: macOS Big Sur ... 10.16
 ## 
 ## Matrix products: default
+## BLAS:   /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRlapack.dylib
 ## 
 ## locale:
-## [1] LC_COLLATE=English_United Kingdom.1252  LC_CTYPE=English_United Kingdom.1252   
-## [3] LC_MONETARY=English_United Kingdom.1252 LC_NUMERIC=C                           
-## [5] LC_TIME=English_United Kingdom.1252    
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 ## 
 ## attached base packages:
 ## [1] parallel  stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] mapview_2.10.2          rnaturalearthdata_0.1.0 rnaturalearth_0.1.0    
-##  [4] gimms_1.2.0             ggmap_3.0.0             cowplot_1.1.1          
-##  [7] viridis_0.6.0           viridisLite_0.4.0       ggplot2_3.3.6          
-## [10] tidyr_1.1.3             KrigR_0.1.2             httr_1.4.2             
-## [13] stars_0.5-3             abind_1.4-5             fasterize_1.0.3        
-## [16] sf_1.0-0                lubridate_1.7.10        automap_1.0-14         
-## [19] doSNOW_1.0.19           snow_0.4-3              doParallel_1.0.16      
-## [22] iterators_1.0.13        foreach_1.5.1           rgdal_1.5-23           
-## [25] raster_3.4-13           sp_1.4-5                stringr_1.4.0          
-## [28] keyring_1.2.0           ecmwfr_1.3.0            ncdf4_1.17             
+##  [1] mapview_2.11.0          rnaturalearthdata_0.1.0 rnaturalearth_0.3.2    
+##  [4] gimms_1.2.1             ggmap_3.0.2             cowplot_1.1.1          
+##  [7] viridis_0.6.2           viridisLite_0.4.1       ggplot2_3.4.1          
+## [10] tidyr_1.3.0             KrigR_0.1.2             terra_1.7-21           
+## [13] httr_1.4.5              stars_0.6-0             abind_1.4-5            
+## [16] fasterize_1.0.4         sf_1.0-12               lubridate_1.9.2        
+## [19] automap_1.1-9           doSNOW_1.0.20           snow_0.4-4             
+## [22] doParallel_1.0.17       iterators_1.0.14        foreach_1.5.2          
+## [25] rgdal_1.6-5             raster_3.6-20           sp_1.6-0               
+## [28] stringr_1.5.0           keyring_1.3.1           ecmwfr_1.5.0           
+## [31] ncdf4_1.21             
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] bitops_1.0-7             satellite_1.0.2          xts_0.12.1              
-##  [4] webshot_0.5.2            tools_4.0.5              bslib_0.3.1             
-##  [7] utf8_1.2.1               R6_2.5.0                 zyp_0.10-1.1            
-## [10] KernSmooth_2.23-18       DBI_1.1.1                colorspace_2.0-0        
-## [13] withr_2.4.2              tidyselect_1.1.0         gridExtra_2.3           
-## [16] leaflet_2.0.4.1          curl_4.3.2               compiler_4.0.5          
-## [19] leafem_0.1.3             gstat_2.0-7              labeling_0.4.2          
-## [22] bookdown_0.22            sass_0.4.1               scales_1.1.1            
-## [25] classInt_0.4-3           proxy_0.4-25             digest_0.6.27           
-## [28] rmarkdown_2.14           base64enc_0.1-3          jpeg_0.1-8.1            
-## [31] pkgconfig_2.0.3          htmltools_0.5.2          highr_0.9               
-## [34] fastmap_1.1.0            htmlwidgets_1.5.3        rlang_0.4.11            
-## [37] FNN_1.1.3                farver_2.1.0             jquerylib_0.1.4         
-## [40] generics_0.1.0           zoo_1.8-9                jsonlite_1.7.2          
-## [43] crosstalk_1.1.1          dplyr_1.0.5              magrittr_2.0.1          
-## [46] Rcpp_1.0.7               munsell_0.5.0            fansi_0.4.2             
-## [49] lifecycle_1.0.0          stringi_1.5.3            yaml_2.2.1              
-## [52] plyr_1.8.6               grid_4.0.5               crayon_1.4.1            
-## [55] lattice_0.20-41          knitr_1.33               pillar_1.6.0            
-## [58] boot_1.3-27              rjson_0.2.20             spacetime_1.2-4         
-## [61] stats4_4.0.5             codetools_0.2-18         glue_1.4.2              
-## [64] evaluate_0.14            blogdown_1.3             vctrs_0.3.7             
-## [67] png_0.1-7                RgoogleMaps_1.4.5.3      gtable_0.3.0            
-## [70] purrr_0.3.4              reshape_0.8.8            assertthat_0.2.1        
-## [73] cachem_1.0.4             xfun_0.31                lwgeom_0.2-6            
-## [76] e1071_1.7-6              rnaturalearthhires_0.2.0 class_7.3-18            
-## [79] Kendall_2.2              tibble_3.1.1             intervals_0.15.2        
-## [82] memoise_2.0.0            units_0.7-2              ellipsis_0.3.2
+##  [1] leafem_0.2.0             colorspace_2.1-0         class_7.3-21            
+##  [4] leaflet_2.1.2            satellite_1.0.4          base64enc_0.1-3         
+##  [7] rstudioapi_0.14          proxy_0.4-27             farver_2.1.1            
+## [10] fansi_1.0.4              codetools_0.2-19         cachem_1.0.7            
+## [13] knitr_1.42               jsonlite_1.8.4           png_0.1-8               
+## [16] Kendall_2.2.1            compiler_4.2.3           assertthat_0.2.1        
+## [19] fastmap_1.1.1            cli_3.6.0                htmltools_0.5.4         
+## [22] tools_4.2.3              gtable_0.3.1             glue_1.6.2              
+## [25] dplyr_1.1.0              Rcpp_1.0.10              jquerylib_0.1.4         
+## [28] vctrs_0.6.1              blogdown_1.16            crosstalk_1.2.0         
+## [31] lwgeom_0.2-11            xfun_0.37                timechange_0.2.0        
+## [34] lifecycle_1.0.3          rnaturalearthhires_0.2.1 zoo_1.8-11              
+## [37] scales_1.2.1             gstat_2.1-0              yaml_2.3.7              
+## [40] curl_5.0.0               memoise_2.0.1            gridExtra_2.3           
+## [43] sass_0.4.5               reshape_0.8.9            stringi_1.7.12          
+## [46] highr_0.10               e1071_1.7-13             boot_1.3-28.1           
+## [49] intervals_0.15.3         RgoogleMaps_1.4.5.3      rlang_1.1.0             
+## [52] pkgconfig_2.0.3          bitops_1.0-7             evaluate_0.20           
+## [55] lattice_0.20-45          purrr_1.0.1              htmlwidgets_1.6.1       
+## [58] labeling_0.4.2           tidyselect_1.2.0         plyr_1.8.8              
+## [61] magrittr_2.0.3           bookdown_0.33            R6_2.5.1                
+## [64] generics_0.1.3           DBI_1.1.3                pillar_1.8.1            
+## [67] withr_2.5.0              units_0.8-1              xts_0.13.0              
+## [70] tibble_3.2.1             spacetime_1.2-8          KernSmooth_2.23-20      
+## [73] utf8_1.2.3               rmarkdown_2.20           jpeg_0.1-10             
+## [76] grid_4.2.3               zyp_0.11-1               FNN_1.1.3.2             
+## [79] digest_0.6.31            classInt_0.4-9           webshot_0.5.4           
+## [82] stats4_4.2.3             munsell_0.5.0            bslib_0.4.2
 ```

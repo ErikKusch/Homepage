@@ -30,7 +30,7 @@ links:
 - icon: file-powerpoint
   icon_pack: fas
   name: Slides - Chapter 15
-  url: /post/rethinking/18__07-05-2021_SUMMARY_-Measurement-Error-and-Missing-Data.html
+  url: https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/rethinking/18__07-05-2021_SUMMARY_-Measurement-Error-and-Missing-Data.html
 # header-includes:
 #   <script src = "https://polyfill.io/v3/polyfill.min.js?features = es6"></script>
 #   <script id = "MathJax-script" async src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -53,7 +53,7 @@ options(width = 200)
 
 ## Material
 
-- [Slides Chapter 15](/post/rethinking/18__07-05-2021_SUMMARY_-Measurement-Error-and-Missing-Data.html)  
+- [Slides Chapter 15](https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/rethinking/18__07-05-2021_SUMMARY_-Measurement-Error-and-Missing-Data.html)  
 
 
 ## Introduction 
@@ -72,21 +72,29 @@ library(gtools)
 ### Practice E1
 **Question:**  Rewrite the Oceanic tools model (from Chapter 11) below so that it assumes measured error on the log population sizes of each society. You don’t need to fit the model to data. Just modify the mathematical formula below.
 $$T_i ∼ Poisson(µ_i)$$
-$$log(µ_i) = α + β*log(P_i)$$ 
+$$log(µ_i) = α + β*log(P_i)$$
 $$α ∼ Normal(0, 1.5)$$ 
 $$β ∼ Normal(0, 1)$$
 
-**Answer:** The population variable ($P_i$) is a predictor in this model. In order to estimate/account for measurement error in a predictor variable, all we need to do is add a distribution to the observed values ($P^*_i$) with a given error ($σ_P$):
+**Answer:** The population variable ($P_i$) is a predictor in this model. In order to estimate/account for measurement error in a predictor variable, all we need to do is add a distribution to the observed values ($P^\star_i$) with a given error ($σ_P$):
 
-$$log(P_i) ∼ Normal(P^*_i, σ_P)$$
-The final model specification combines the above line with the previous model specification and substitutes $P^*_i$ in place of $P_i$:
+$$log(P_i) ∼ Normal(P^\star_i, σ_P)$$
+
+The final model specification combines the above line with the previous model specification and substitutes $P^\star_i$ in place of $P_i$: 
 
 $$T_i ∼ Poisson(µ_i)$$
-$$log(µ_i) = α + β*P^*_i$$ 
-$$log(P_i) ∼ Normal(P^*_i, σ_P)$$
-$$α ∼ Normal(0, 1.5)$$ 
+
+$$log(µ_i) = α + β* P^\star_i $$
+
+$$log(P_i) ∼ Normal(P^\star_i, σ_P)$$
+
+$$α ∼ Normal(0, 1.5)$$
+
 $$β ∼ Normal(0, 1)$$
+
 $$σ_P \sim Exponential(1)$$
+
+
 Of course, we also need a prior for $σ_P$. I don't know enough about the data to take a good educated guess for this parameter and so I just run the usual prior for standard deviations used in the book.
 
 ### Practice E2
@@ -94,17 +102,18 @@ Of course, we also need a prior for $σ_P$. I don't know enough about the data t
 
 **Answer:** Imputation comes into play when measurement error is so intense that we have missing data - "missing data is grown-up measurement error". The trick with missing data is to establish adaptive priors for the missing data which is informed by the observations for which we do have data:
 
-$$T_i ∼ Poisson(µ_i)$$
-$$log(µ_i) = α + β*P^*_i$$ 
+$$T_i ∼ Poisson(µ_i)$$ 
 
-$$P^*_i ∼ Normal(\overline{P^*}, σ_P)$$
+$$log(µ_i) = α + β * P^\star_i$$ 
+
+$$P^\star_i ∼ Normal(\overline{ P^\star }, σ_P)$$ 
 
 $$α ∼ Normal(0, 1.5)$$ 
 $$β ∼ Normal(0, 1)$$
-$$P^* \sim Normal(0, 1)$$
+$$P^\star \sim Normal(0, 1)$$
 $$σ_P \sim Exponential(1)$$
 
-With the new specification, values of $P^*_i$ (observed log-populations) are either assumed to be data or parameters according to whether data is present for observation $i$ or not.
+With the new specification, values of $P^\star_i$ (observed log-populations) are either assumed to be data or parameters according to whether data is present for observation $i$ or not.
 
 ## Medium Exercises
 ### Practice M1
@@ -113,7 +122,7 @@ With the new specification, values of $P^*_i$ (observed log-populations) are eit
 **Answer:** As a reminder, the mathematical form of the imputation model in the chapter is as follows:
 
 $$K_i ∼ Normal(µ_i, σ)$$
-$$µ_i = α + β_BB_i + β_M*log(M_i)$$
+$$µ_i = α + β_BB_i + β_M * log(M_i)$$
 $$B_i ∼ Normal(ν, σ_B)$$
 $$α ∼ Normal(0, 0.5)$$ 
 $$β_B ∼ Normal(0, 0.5)$$

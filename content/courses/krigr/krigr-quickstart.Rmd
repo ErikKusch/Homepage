@@ -65,14 +65,14 @@ source("PersonalSettings.R") # I do this here to specify number of cores and API
 <!-- # ``` -->
 
 
-{{% hint danger %}}
+{{% alert danger %}}
 This part of the workshop is meant to give a **very brief** introduction to `KrigR` and I highly recommend you peruse the rest of the content, too.
-{{% /hint %}}
+{{% /alert %}}
 
 
-<!-- {{% hint danger %}} -->
+<!-- {{% alert danger %}} -->
 <!-- This part of the workshop is dependant on set-up and preparation done previously [here](/courses/krigr/prep/). -->
-<!-- {{% /hint %}} -->
+<!-- {{% /alert %}} -->
 
 ## Pre-`KrigR` Housekeeping
 Before we can commence the quick start guide, I want to set up a directory structure and prepare some plotting functions to make the rest of the guide run more smoothly.
@@ -96,7 +96,7 @@ Dirs <- sapply(c(Dir.Data, Dir.Covariates, Dir.Exports),
 
 ### Visualiation Functions 
 
-In order to easily visualise our Kriging procedure including (1) inputs, (2) covariates, and (3) outputs without repeating too much of the same code, I have prepared some plotting functions which you can download as [FUN_Plotting.R](/courses/krigr/FUN_Plotting.R).
+In order to easily visualise our Kriging procedure including (1) inputs, (2) covariates, and (3) outputs without repeating too much of the same code, I have prepared some plotting functions which you can download as [FUN_Plotting.R](https://raw.githubusercontent.com/ErikKusch/Homepage/master/content/courses/krigr/FUN_Plotting.R).
 
 With the `FUN_Plotting.R` file placed in the project directory of your workshop material (i.e., the directory returned by `Dir.Base`), running the following will register the three plotting functions in your `R` environment.
 
@@ -122,17 +122,17 @@ library(KrigR)
 
 `KrigR` can be used in one of two ways. 
 
-{{% hint %}}
+{{% alert %}}
 I strongly recommend you use **The Three Steps** as **The Pipeline** is only applicable for a fringe of use-cases.
-{{% /hint %}}
+{{% /alert %}}
 
 
 ### The Three Steps
 Using `KrigR` in this way, you use the three core functions `download_ERA()`, `download_DEM()`, and `krigR()`. 
 
-{{% hint info %}}
+{{% alert info %}}
 Running these functions individually gives you the most control and oversight of the `KrigR` workflow.
-{{% /hint %}}
+{{% /alert %}}
 
 The most simple way in which you can run the functions of the `KrigR` package is by specifying a rectangular bounding box (i.e., an `extent`) to specify your study region(s). 
 
@@ -148,14 +148,14 @@ Extent_ext
 
 For this part of the tutorial, we download air temperature for a three-day interval around my birthday (03-01-1995) using the extent highlighted above.
 
-{{% hint %}}
+{{% alert %}}
 Notice that the downloading of ERA-family reanalysis data may take a short while to start as the download request gets queued with the CDS of the ECMWF before it is executed.
-{{% /hint %}}
+{{% /alert %}}
 
 <details>
   <summary>Click here for file if download takes too long:</summary>
     Download 
-<a href="/courses/krigr/Data/QS_Raw.nc">QS_Raw.nc</a> and place it into your data directory.
+<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/krigr/Data/QS_Raw.nc">QS_Raw.nc</a> and place it into your data directory.
 </details> 
 
 ```{r ClimExt, results = 'hide', fig.keep = 'all', fig.height = 6, message = FALSE, warning = FALSE}
@@ -183,13 +183,13 @@ QS_Raw
 
 As you can see, we obtained a `r class(QS_Raw)` object with `r nlayers(QS_Raw)` layers of data (one for each day we are interested in). Notice that extent of our downloaded data set does not fit the extent we set earlier manually. This is a precaution we have taken within `KrigR` to make sure that all data cells you are interested in are covered.
 
-{{% hint info %}}
+{{% alert info %}}
 `KrigR` widens the spatial extent that is specified to ensure full coverage of the respective ERA5(-Land) raster cells. Global downloads are not affected by this and work just as you'd expect.
-{{% /hint %}}
+{{% /alert %}}
 
-{{% hint %}}
+{{% alert %}}
 More detailed instructions on how to make the most effective use of the `download_ERA()` function and ensure you receive the data you require can be found [here](/courses/krigr/download/).
-{{% /hint %}}
+{{% /alert %}}
 
 Keep in mind that every function within the `KrigR` package produces NetCDF (.nc) files in the specified directory (`Dir` argument in the function call) to allow for further manipulation outside of `R` if necessary (for example, using Panoply).
 
@@ -209,9 +209,9 @@ Covs_ls <- download_DEM(Train_ras = QS_Raw,
 Plot_Covs(Covs_ls)
 ```
 
-{{% hint %}}
+{{% alert %}}
 Alternatively to specifying a target resolution, you can specify a different raster which should be matched in all attributes by the raster at target resolution. This is explained more in-depth in [this part of the workshop](/courses/krigr/third-party).  
-{{% /hint %}}
+{{% /alert %}}
 
 For now, let's simply inspect our list of covariate rasters:
 ```{r CovExtOutput}
@@ -255,16 +255,16 @@ QS_Krig[-3] # we will talk later about why we leave out the third list element p
 
 As output of the `krigR()` function, we obtain a list of downscaled data as the first element and downscaling standard errors as the second list element.
 
-{{% hint %}}
+{{% alert %}}
 More detailed instructions on how to make the most effective use of the `krigR()` function can be found [here](/courses/krigr/kriging/).
-{{% /hint %}}
+{{% /alert %}}
 
 ### The Pipeline
 Now that we've seen how you can execute the `KrigR` workflow using three separate functions, it is time that we show you the most simplified function call to obtain some downscaled products: the **pipeline**.
 
-{{% hint danger %}}
+{{% alert danger %}}
 Using `KrigR` through the pipeline approach limits you to the default covariate data and takes away control from you. Use this only if you know exactly what you are doing.
-{{% /hint %}}
+{{% /alert %}}
 
 We have coded the `krigR()` function in such a way that it can either be addressed at already present spatial products within your `R` environment, or handle all the downloading and resampling of input data and covariates for you from scratch. To run the exact same Kriging approach as within our extent-example, we can specify the `krigR()` function as such:
 
@@ -294,9 +294,9 @@ all.equal(QS_Krig[[1]], Pipe_Krig[[1]])
 
 Surprise! There is no difference.
 
-{{% hint warning %}}
+{{% alert warning %}}
 This concludes the quick start tutorial for `KrigR`. For more effective use of the `KrigR` toolbox, I suggest you peruse the rest of the workshop material or use the search function if you have specific queries.
-{{% /hint %}}
+{{% /alert %}}
 
 For a use-case of the pipeline see [this part](/courses/krigr/third-party/#krigr-workflow) of our workshop.
 

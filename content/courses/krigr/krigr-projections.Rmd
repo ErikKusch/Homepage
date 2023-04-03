@@ -66,9 +66,9 @@ source_rmd("krigr-locations.Rmd")
 ```
 
 
-{{% hint danger %}}
+{{% alert danger %}}
 This part of the workshop is dependant on set-up and preparation done previously [here](/courses/krigr/prep/).
-{{% /hint %}}
+{{% /alert %}}
 
 First, we load `KrigR`:
 
@@ -78,9 +78,9 @@ library(KrigR)
 
 I expect that you will often be interested not just in past and current climatic conditions, but also in future projections of climate data at high spatial resolutions.
 
-{{% hint info %}}
+{{% alert info %}}
 The `KrigR` workflow can be used to establish high-resolution, bias-corrected climate projection products.
-{{% /hint %}}
+{{% /alert %}}
 
 This time, we run our exercise for all of Germany because of its size and topographical variety.
 
@@ -107,7 +107,7 @@ Now, let's obtain the historical baseline from ERA5-Land for the same time-perio
 <details>
   <summary>Click here for file if download takes too long:</summary>
     Download 
-<a href="/courses/krigr/Data/Germany_Hist_ERA.nc">Germany_Hist_ERA.nc</a> and place it into your data directory.
+<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/krigr/Data/Germany_Hist_ERA.nc">Germany_Hist_ERA.nc</a> and place it into your data directory.
 </details> 
 
 ```{r}
@@ -134,16 +134,16 @@ Hist_ERA_ras <- mean(stack(file.path(Dir.Data, "Germany_Hist_ERA.nc")))
 
 Here, we use CMIP6 projection data manually sourced from the [ECMWF CDS distribution](https://cds.climate.copernicus.eu/cdsapp#!/dataset/projections-cmip6?tab=overview).
 
-{{% hint %}}
-Our [development goals](/courses/outlook/) include development of `download_ERA()` to work with other ECWMF CDS data sets aside from ERA5(-Land). This includes this CMIP6 data set.
-{{% /hint %}}
+{{% alert %}}
+Our [development goals](/courses/krigr/outlook/) include development of `download_ERA()` to work with other ECWMF CDS data sets aside from ERA5(-Land). This includes this CMIP6 data set.
+{{% /alert %}}
 
 #### Historical Baseline
 
 <details>
   <summary>Click here for file:</summary>
     Download 
-<a href="/courses/krigr/Data/historical_tas_1981-2000.nc">historical_tas_1981-2000.nc</a> and place it into your data directory.
+<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/krigr/Data/historical_tas_1981-2000.nc">historical_tas_1981-2000.nc</a> and place it into your data directory.
 </details> 
 
 ```{r}
@@ -158,7 +158,7 @@ train_HIST <- mask(train_HIST, train_mask)
 <details>
   <summary>Click here for file:</summary>
     Download 
-<a href="/courses/krigr/Data/ssp585_tas_2041-2060.nc">ssp585_tas_2041-2060.nc</a> and place it into your data directory.
+<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/krigr/Data/ssp585_tas_2041-2060.nc">ssp585_tas_2041-2060.nc</a> and place it into your data directory.
 </details> 
 
 ```{r}
@@ -181,9 +181,9 @@ Already, we can see that quite a bit of warming is projected to happen all acros
 
 For the first time in this workshop material, we will push our spatial resolution to the finest scale supported by our default GMTED 2010 DEM covariate data: 0.008333 / ~1km.
 
-{{% hint warning %}}
+{{% alert warning %}}
 These operations take quite some time - grab a tea or coffee, go for a walk, or stretch a bit.
-{{% /hint %}}
+{{% /alert %}}
 
 The downscaling calls should be familiar by now so I will forego explaining them. In case, the following code snippets do not make sense to you, please consult the portion of this workshop concerned with [statistical downscaling](/courses/krigr/kriging/).
 
@@ -322,31 +322,31 @@ And there we have it - a downscaled, bias-corrected projection of air temperatur
 
 Projection kriging is easily the most flexible exercise you can undertake with `KrigR`. 
 
-{{% hint warning %}}
+{{% alert warning %}}
 I have submitted a research proposal to establish best practice for projection kriging.
-{{% /hint %}}
+{{% /alert %}}
 
 So far, two particular aspects stand out to me and should be considered by you when using `KrigR` to obtain high-resolution projection data.
 
-{{% hint danger %}}
+{{% alert danger %}}
 **Do not statistically downscale precipitation data and do not use products that do so!**
-{{% /hint %}}
+{{% /alert %}}
 
 ### Reliability
 
 Just like with all statistical downscaling exercises, it is pivotal to consider variables interpolated and consistency of statistical relationships with covariates across spatial resolutions.
 
-{{% hint warning %}}
+{{% alert warning %}}
 Kriging is a very flexible tool for statistical interpolation. Consider your choice of covariates and change in resolutions carefully. **Always inspect your data**.
-{{% /hint %}}
+{{% /alert %}}
 
 ### Uncertainty
 
 Integration of multiple kriged data sets with statistical uncertainty and each of which comes with its own underlying dynamical data uncertainty raises the question of how to combine uncertainties for meaningful uncertainty flags.
 
-{{% hint warning %}}
+{{% alert warning %}}
 I have submitted a research proposal to assess best practice for uncertainty integration across data products.
-{{% /hint %}}
+{{% /alert %}}
 
 ## Session Info
 ```{r}

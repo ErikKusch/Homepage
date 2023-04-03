@@ -1,5 +1,5 @@
 ---
-title: Chapter 11
+title: Chapter 10 & 11
 author: Erik Kusch
 date: '2021-03-18'
 slug: chapter-11
@@ -33,11 +33,11 @@ links:
 - icon: file-powerpoint
   icon_pack: fas
   name: Slides - Chapter 10
-  url: /post/rethinking/11__05-03-2021_SUMMARY_-Generalised-Linear-Models.html
+  url: https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/rethinking/11__05-03-2021_SUMMARY_-Generalised-Linear-Models.html
 - icon: file-powerpoint
   icon_pack: fas
   name: Slides - Chapter 11
-  url: /post/rethinking/13__19-03-2021_SUMMARY_-Discrete-Outcomes.html
+  url: https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/rethinking/13__19-03-2021_SUMMARY_-Discrete-Outcomes.html
 math: true
 type: docs
 toc: true 
@@ -54,8 +54,8 @@ weight: 11
 
 ## Material
 
-- [Slides Chapter 10](/post/rethinking/11__05-03-2021_SUMMARY_-Generalised-Linear-Models.html)  
-- [Slides Chapter 11](/post/rethinking/13__19-03-2021_SUMMARY_-Discrete-Outcomes.html)  
+- [Slides Chapter 10](https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/rethinking/11__05-03-2021_SUMMARY_-Generalised-Linear-Models.html)  
+- [Slides Chapter 11](https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/rethinking/13__19-03-2021_SUMMARY_-Discrete-Outcomes.html)  
 
 ## Introduction 
 These are answers and solutions to the exercises at the end of chapter 11 in [Satistical Rethinking 2](https://xcelab.net/rm/statistical-rethinking/) by Richard McElreath. For anyone reading through these in order and wondering why I skipped chapter 10: chapter 10 did not contain any exercises (to my dismay, as you can imagine). I have created these notes as a part of my ongoing involvement in the [AU Bayes Study Group](/project/aubayes/). Much of my inspiration for these solutions, where necessary, has been obtained from [Taras Svirskyi](https://github.com/jffist/statistical-rethinking-solutions/blob/master/ch10_hw.R), [William Wolf](https://github.com/cavaunpeu/statistical-rethinking/blob/master/chapter-10/homework.R), and [Corrie Bartelheimer](https://www.samples-of-thoughts.com/projects/statistical-rethinking/chapter_10/chp10-ex/) as well as the solutions provided to instructors by Richard McElreath himself.
@@ -138,7 +138,7 @@ $$log(λ)=log(period_i)+α+βHive_i$$
 ### Practice M1
 **Question:**  As explained in the chapter, binomial data can be organized in aggregated and disaggregated forms, without any impact on inference. But the likelihood of the data does change when the data are converted between the two formats. Can you explain why?
 
-**Answer:** Think back to the [Card Drawing Example](/post/rethinking/statistical-rethinking-chapter-02/) from chapter 2. We know a certain outcome. Let's assume two black face, and one white face card are drawn. 
+**Answer:** Think back to the [Card Drawing Example](https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/rethinking/statistical-rethinking-chapter-02/) from chapter 2. We know a certain outcome. Let's assume two black face, and one white face card are drawn. 
 
 In the aggregated form of the data, we obtain the probability of our observation as $3p(1-p)$ (a binomial distribution with $3$ trials and a rate of black face cards of $p = \frac{2}{3}$). This tells us how many ways there are to get two black-face cards out of three pulls of cards. The order is irrelevant.
 

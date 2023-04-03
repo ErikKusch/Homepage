@@ -40,13 +40,17 @@ menu:
 
 
 
-{{% hint danger %}}
+{{% alert danger %}}
 The current release of `KrigR` is stable, but it is still undergoing development. Any and all feedback you can give us is more than welcome.
-{{% /hint %}}
+{{% /alert %}}
 
-{{% hint info %}}
-I am currently in the progress of closing out my [PhD Project](/project/phd-packages/) and am thus unable to develop `KrigR` right now. If you, or someone you know, would happen to be interested in hiring me to do so after my PhD, I'd be more than happy for that opportunity.
-{{% /hint %}}
+{{% alert info %}}
+I have taken up a new position at the University of Oslo and hope to continue to continue my development of `KrigR` within the purview of this position. If I can do so, `KrigR` development will be slow but steady.
+{{% /alert %}}
+
+{{% alert warning %}}
+As part of my development of `KrigR`, I plan to soon register these development goals on the `KrigR` [GitHub page](https://github.com/ErikKusch/KrigR). If you have suggestions for additional functionality, please register these as issues there.
+{{% /alert %}}
 
 
 ## Data Objects to be included in `KrigR`:

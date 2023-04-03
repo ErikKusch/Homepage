@@ -71,9 +71,9 @@ Shape_shp <- Shape_shp[Shape_shp$name_en %in% c("Saxony", "Saxony-Anhalt", "Thur
 ```
 
 
-{{% hint danger %}}
+{{% alert danger %}}
 This part of the workshop is dependant on set-up and preparation done previously [here](/courses/krigr/prep/).
-{{% /hint %}}
+{{% /alert %}}
 
 For bioclimatic variable calculation, this workshop makes use of the  `SpatialPolygons` spatial preferences which we set up [here](/courses/krigr/prep/#shape-of-interest-spatialpolygons).
 
@@ -83,15 +83,15 @@ First, we load `KrigR`:
 library(KrigR)
 ```
 
-{{% hint info %}}
+{{% alert info %}}
 To obtain bioclimatic data with `KrigR` we want to use the `BioClim()` function. 
-{{% /hint %}}
+{{% /alert %}}
 
 In the next sections, I will show you how to use it and how the resulting data objects may differ and why.
 
-{{% hint warning %}}
+{{% alert warning %}}
 Bioclimatic variables are often treated as very robust metrics - I do not believe so and hope the following will demonstrate the nuance in bioclimatic metrics.
-{{% /hint %}}
+{{% /alert %}}
 
 ## Our First Bioclimatic Data Set
 Let's start with the most basic of bioclimatic data products. So what are the specifications? Well, we:  
@@ -101,18 +101,18 @@ Let's start with the most basic of bioclimatic data products. So what are the sp
 3. Approximate water availability through precipitation (`Water_Var`) in keeping with typical practices.  
 4. Extreme metrics for temperature minimum and maximum are calculated from daily (`T_res`) aggregates of the underlying hourly temperature data. 
 
-{{% hint warning %}}
+{{% alert warning %}}
 You will see function call to `BioClim()` wrapped in if statements which check for whether the output is already present or not. `BioClim` compilation can take significant time and I do this here to avoid recompilation on changes to the text of the blogpost on my end.
-{{% /hint %}}
+{{% /alert %}}
 
-{{% hint %}}
+{{% alert %}}
 Setting the argument ` Keep_Monthly = TRUE` will prompt the function to retain monthly aggregates of temperature and water availability alongside the final output. When `BioClim()` recognises that any of the underlying data is already present, it will skip the steps necessary to create this data.
-{{% /hint %}}
+{{% /alert %}}
 
 <details>
   <summary>Click here for file if download & processing takes too long:</summary>
     Download 
-<a href="/courses/krigr/Data/Present_BC.nc">Present_BC.nc</a> and place it into your data directory.
+<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/krigr/Data/Present_BC.nc">Present_BC.nc</a> and place it into your data directory.
 </details> 
 
 ```{r BC1, fig.height=50, results = "asis", message = TRUE}
@@ -151,20 +151,20 @@ There's not much commenting on the output above as the output should look famili
 
 ## Time-Frames
 
-{{% hint warning %}}
+{{% alert warning %}}
 Time window of baseline climate data (e.g; climatology time frames) ought to be adjusted to the specific needs of each study. This is true also for bioclimatic data. **Pre-made data sets do not deliver on this need!**
-{{% /hint %}}
+{{% /alert %}}
 
-{{% hint info %}}
+{{% alert info %}}
 With `KrigR`, you can build the bioclimatic data sets you need for your study.
-{{% /hint %}}
+{{% /alert %}}
 
 Let's move on to the first important functionality of the `KrigR::BioClim()` function: **selection of time-frames**. With this, you can obtain bioclimatic data for exactly the duration that your study requires. Here, we query data for the period between 1951 and 1960:
 
 <details>
   <summary>Click here for file if download & processing takes too long:</summary>
     Download 
-<a href="/courses/krigr/Data/Past_BC.nc">Past_BC.nc</a> and place it into your data directory.
+<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/krigr/Data/Past_BC.nc">Past_BC.nc</a> and place it into your data directory.
 </details> 
 
 ```{r BC_Early, fig.height=40}
@@ -193,9 +193,9 @@ if(!file.exists(file.path(Dir.Data, "Past_BC.nc"))){
 
 I will forego plotting the data itself and instead plot the difference between our bioclimatic data of the present which we created prior and the newly created bioclimatic product of the past. Let me walk you through them 1 by 1.
 
-{{% hint warning %}}
+{{% alert warning %}}
 The below plots show the differences in bioclimatic data products of the 2010-2020 and 1951-1960.
-{{% /hint %}}
+{{% /alert %}}
 
 ### Annual Temperature
 As you can see below, the time period of 2010 to 2020 was about 1.5-1.9 Kelvin warmer than the period of 1951 to 1960:
@@ -220,19 +220,19 @@ Clearly, my home area turned much drier with more pronounced seasonality and ext
 
 I hope that the above has clearly demonstrated on thing:
 
-{{% hint warning %}}
+{{% alert warning %}}
 **Appropriate use of bioclimatic variables is largely dependant on data retrieval for relevant time frames.**
-{{% /hint %}}
+{{% /alert %}}
 
 ## Water-Availability Variables
 
-{{% hint warning %}}
+{{% alert warning %}}
 **Precipitation** might not be the most useful or appropriate water availability metric for your study region or requirements.
-{{% /hint %}}
+{{% /alert %}}
 
-{{% hint info %}}
+{{% alert info %}}
 With `KrigR`, you can decide which water availability variable from the ERA5(-Land) catalogue to use for calculation of bioclimatic data sets.
-{{% /hint %}}
+{{% /alert %}}
 
 Contrary to current practices in macroecology, I have gripes with the use of precipitation data in bioclimatic variable computation. Why is that? I strongly believe that other water availability variables are much better suited for our analyses for two reasons:  
 
@@ -248,7 +248,7 @@ Here, I demonstrate the use of the shallowest layer of soil moisture data. As yo
 <details>
   <summary>Click here for file if download & processing takes too long:</summary>
     Download 
-<a href="/courses/krigr/Data/Qsoil_BC.nc">Qsoil_BC.nc</a> and place it into your data directory.
+<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/krigr/Data/Qsoil_BC.nc">Qsoil_BC.nc</a> and place it into your data directory.
 </details> 
 
 ```{r BC_Qsoil}
@@ -285,13 +285,13 @@ As is hardly surprising, there are no differences in annual temperature data or 
 Plot_BC(BC2010_ras-BCq_ras, Shp = Shape_shp, which = 8:9)
 ```
 
-{{% hint warning %}}
+{{% alert warning %}}
 Changing water availability metric in bioclimatic considerations can drastically change even *temperature* metrics.
-{{% /hint %}}
+{{% /alert %}}
 
-{{% hint info %}}
+{{% alert info %}}
 Volumetric soil moisture exhibits more pronounced spatial patterns than precipitation records do thus supplying bioclimatic modelling exercises with more pronounced information.
-{{% /hint %}}
+{{% /alert %}}
 
 ### Water Availability
 Now for the water-related bioclimatic variables. This is where the rubber meets the road! Aside from the quantitative differences in water availability estimates when using soil moisture over precipitation records, please take note of the much more pronounced spatial patterns (particularly along the river throughout Saxony-Anhalt in the north-western region of our study area) when using soil moisture data. This is much more likely to accurately represent bioclimatic envelopes than the smooth patterns you can see for precipitation records.
@@ -301,27 +301,27 @@ Plot_BC(BC2010_ras-BCq_ras, Shp = Shape_shp, which = 12:19)
 
 I hope that the above has clearly demonstrated on thing:
 
-{{% hint warning %}}
+{{% alert warning %}}
 **Choice of water availability variable has strong implications for how we quantify bioclimatic envelopes.**
-{{% /hint %}}
+{{% /alert %}}
 
 ## Extreme Value Calculations
 Lastly, let us concern ourselves with the retrieval of extreme climate metrics which will affect almost all of our temperature-reliant bioclimatic variables. 
 
-{{% hint warning %}}
+{{% alert warning %}}
 Extreme event calculation is highly relevant for our understanding of bioclimatic envelopes and often turns into a blackbox exercise.
-{{% /hint %}}
+{{% /alert %}}
 
-{{% hint info %}}
+{{% alert info %}}
 With `KrigR`, you can decide how to calculate extreme metrics.
-{{% /hint %}}
+{{% /alert %}}
 
 So far, we have calculated monthly minimum and maximum temperatures from daily aggregates. However, with `KrigR::BioClim()` we can also obtain these extremes from hourly records simply by changing `T_res`:
 
 <details>
   <summary>Click here for file if download & processing takes too long:</summary>
     Download 
-<a href="/courses/krigr/Data/Hourly_BC.nc">Hourly_BC.nc</a> and place it into your data directory.
+<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/krigr/Data/Hourly_BC.nc">Hourly_BC.nc</a> and place it into your data directory.
 </details> 
 
 ```{r BC_Hour}
@@ -366,18 +366,18 @@ You will immediately see that all metrics reliant of mean values such as BIO4 an
 Plot_BC(BCq_ras - BCh_ras, Shp = Shape_shp, Water_Var = "Soil Moisture", which = 2:11)
 ```
 
-{{% hint warning %}}
+{{% alert warning %}}
 Extraction of extremes at an hourly resolution amplifies said extremes.
-{{% /hint %}}
+{{% /alert %}}
 
 ### Water Availability
 Unsurprisingly, there are no changes to our quantification of water availability metrics. You may plot this for yourself if you are interested.
 
 I hope that the above has clearly demonstrated on thing:
 
-{{% hint warning %}}
+{{% alert warning %}}
 **Choice of temporal resolution of extreme metrics changes how we quantify bioclimatic envelopes drastically.**
-{{% /hint %}}
+{{% /alert %}}
 
 ## Kriging Bioclimatic Products
 
@@ -417,9 +417,9 @@ Finally, we analyse the outputs of our plotting exercise. I break these up into 
 
 #### BIO1 - Annual Mean Temperature
 
-{{% hint normal %}}
+{{% alert normal %}}
 Interpolating this data is just like statistically downscaling any other temperature product and can be done without any problems.
-{{% /hint %}}
+{{% /alert %}}
 
 
 <details>
@@ -434,16 +434,16 @@ Plot_Krigs(lapply(BC_Temperature_Krig[-3], "[[", 1),
 
 #### BIO2 - Mean Diurnal Range
 
-{{% hint warning %}}
+{{% alert warning %}}
 This data product is calculated from extreme values and would be interpolated better by first statistically downscaling the underlying data rather than the final bioclimatic variable.
-{{% /hint %}}
+{{% /alert %}}
 
 <details>
   <summary>Click here for plotting call and plot:</summary>
 
-{{% hint warning %}}
+{{% alert warning %}}
 The smooth patterns in this plot clearly highlight the issue with using `krigr()` on the final bioclimatic product.
-{{% /hint %}}
+{{% /alert %}}
 ```{r fig.keep = 'all', results = "asis", fig.height = 20}
 Plot_Krigs(lapply(BC_Temperature_Krig[-3], "[[", 2), 
            Shp = Shape_shp,
@@ -454,16 +454,16 @@ Plot_Krigs(lapply(BC_Temperature_Krig[-3], "[[", 2),
 
 #### BIO3 - Isothermality
 
-{{% hint warning %}}
+{{% alert warning %}}
 This data product is calculated from BIO2 and BIO7 and thus relies on extreme values. Conclusively, it would be interpolated better by first statistically downscaling the underlying data rather than the final bioclimatic variable.
-{{% /hint %}}
+{{% /alert %}}
 
 <details>
   <summary>Click here for plotting call and plot:</summary>
   
-{{% hint warning %}}
+{{% alert warning %}}
 The smooth patterns in this plot clearly highlight the issue with using `krigr()` on the final bioclimatic product.
-{{% /hint %}}
+{{% /alert %}}
 ```{r fig.keep = 'all', results = "asis", fig.height = 20}
 Plot_Krigs(lapply(BC_Temperature_Krig[-3], "[[", 3), 
            Shp = Shape_shp,
@@ -474,16 +474,16 @@ Plot_Krigs(lapply(BC_Temperature_Krig[-3], "[[", 3),
 
 #### BIO4 - Temperature Seasonality
 
-{{% hint warning %}}
+{{% alert warning %}}
 This data product is calculated using the standard deviation of mean values throughout our time frame. Conclusively, it would be interpolated better by first statistically downscaling the underlying data rather than the final bioclimatic variable.
-{{% /hint %}}
+{{% /alert %}}
 
 <details>
   <summary>Click here for plotting call and plot:</summary>
   
-{{% hint warning %}}
+{{% alert warning %}}
 The smooth patterns in this plot clearly highlight the issue with using `krigr()` on the final bioclimatic product.
-{{% /hint %}}
+{{% /alert %}}
 ```{r fig.keep = 'all', results = "asis", fig.height = 20}
 Plot_Krigs(lapply(BC_Temperature_Krig[-3], "[[", 4), 
            Shp = Shape_shp,
@@ -494,9 +494,9 @@ Plot_Krigs(lapply(BC_Temperature_Krig[-3], "[[", 4),
 
 #### BIO5 - Max Temperature of Warmest Month
 
-{{% hint normal %}}
+{{% alert normal %}}
 Interpolating this data is just like statistically downscaling any other temperature product and can be done without any problems.
-{{% /hint %}}
+{{% /alert %}}
 
 <details>
   <summary>Click here for plotting call and plot:</summary>
@@ -510,9 +510,9 @@ Plot_Krigs(lapply(BC_Temperature_Krig[-3], "[[", 5),
 
 #### BIO6 - Min Temperature of Coldest Month
 
-{{% hint normal %}}
+{{% alert normal %}}
 Interpolating this data is just like statistically downscaling any other temperature product and can be done without any problems.
-{{% /hint %}}
+{{% /alert %}}
 
 <details>
   <summary>Click here for plotting call and plot:</summary>
@@ -526,16 +526,16 @@ Plot_Krigs(lapply(BC_Temperature_Krig[-3], "[[", 6),
 
 #### BIO7 - Temperature Annual Range (BIO5-BIO6)
 
-{{% hint warning %}}
+{{% alert warning %}}
 This data product is calculated from BIO5 and BIO6 and thus relies on extreme values. Conclusively, it would be interpolated better by first statistically downscaling the underlying data rather than the final bioclimatic variable.
-{{% /hint %}}
+{{% /alert %}}
 
 <details>
   <summary>Click here for plotting call and plot:</summary>
   
-{{% hint warning %}}
+{{% alert warning %}}
 The smooth patterns in this plot clearly highlight the issue with using `krigr()` on the final bioclimatic product.
-{{% /hint %}}
+{{% /alert %}}
 ```{r fig.keep = 'all', results = "asis", fig.height = 20}
 Plot_Krigs(lapply(BC_Temperature_Krig[-3], "[[", 7), 
            Shp = Shape_shp,
@@ -544,13 +544,13 @@ Plot_Krigs(lapply(BC_Temperature_Krig[-3], "[[", 7),
 ```
 </details>
 
-{{% hint info %}}
+{{% alert info %}}
 Since BIO5 and BIO6 can be interpolated well themselves, one may chose to use the downscaled versions of BIO5 and BIO6 to create a downscaled version of BIO7.
-{{% /hint %}}
+{{% /alert %}}
 
-{{% hint warning %}}
+{{% alert warning %}}
 Doing so, however, raises the question of how to integrate the downscaling uncertainty associated with BIO5 and BIO6 into the product for BIO7. I have submitted a research proposal to assess best practice for issues like these.
-{{% /hint %}}
+{{% /alert %}}
 
 <details>
   <summary>Click here for calculation, plotting call, and plot:</summary>
@@ -571,9 +571,9 @@ To be fair, these differences are rather small when compared to the data range i
 
 #### BIO8 & BIO9 - Temperatures of Wettest and Driest Quarter
 
-{{% hint danger %}}
+{{% alert danger %}}
 **I do not recommend you use these kriging outputs!** They rely on water availability data which is not being interpolated here. Subsequently, the patchiness of the underlying data is lost and with it: information.
-{{% /hint %}}
+{{% /alert %}}
 
 <details>
   <summary>Click here for plotting call and plot:</summary>
@@ -588,9 +588,9 @@ Plot_Krigs(lapply(BC_Temperature_Krig[-3], "[[", 8:9),
 
 #### BIO10 & BIO11 - Temperatures of Warmest and Coldest Quarter
 
-{{% hint danger %}}
+{{% alert danger %}}
 **I do not recommend you use these kriging outputs!** They rely on mean quarterly temperature data which is not being interpolated here. Subsequently, the patchiness of the underlying data is lost and with it: information.
-{{% /hint %}}
+{{% /alert %}}
 
 <details>
   <summary>Click here for plotting call and plot:</summary>
@@ -606,13 +606,13 @@ Plot_Krigs(lapply(BC_Temperature_Krig[-3], "[[", 10:11),
 
 ### Water Availability
 
-{{% hint warning %}}
+{{% alert warning %}}
 Statistical downscaling of non-temperature data usually requires more than just elevation covariates.
-{{% /hint %}}
+{{% /alert %}}
 
-{{% hint info %}}
+{{% alert info %}}
 With `KrigR`, you can use different sets of covariates. I demonstrate this in the workshop material regarding [third-party covariates](/courses/krigr/third-party/#third-party-data-covariates).
-{{% /hint %}}
+{{% /alert %}}
 
 ## Session Info
 ```{r}

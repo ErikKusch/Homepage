@@ -65,9 +65,9 @@ source_rmd <- function(file, local = FALSE, ...){
 source_rmd("krigr-locations.Rmd")
 ```
 
-{{% hint danger %}}
+{{% alert danger %}}
 This part of the workshop is dependant on set-up and preparation done previously [here](/courses/krigr/prep/).
-{{% /hint %}}
+{{% /alert %}}
 
 First, we load `KrigR`:
 
@@ -79,9 +79,9 @@ library(KrigR)
 
 I expect that you won't want to downscale to specific resolutions most of the time, but rather, match an already existing spatial data set in terms of spatial resolution and extent. Again, the `KrigR` package got you covered!
 
-{{% hint warning %}}
+{{% alert warning %}}
 Usually, you probably want to downscale data to match a certain pre-existing data set rather than a certain resolution.
-{{% /hint %}}
+{{% /alert %}}
 
 Here, we illustrate this with an NDVI-based example. The NDVI is a satellite-derived vegetation index which tells us how green the Earth is. It comes in bi-weekly intervals and at a spatial resolution of `.08333` (roughly 9km). Here, we download all NDVI data for the year 2015 and then create the annual mean. This time, we do so for all of Germany because of its size and topographical variety.
 
@@ -156,9 +156,9 @@ As stated above, we want to match this with our output.
 
 We could do this whole analysis in our three steps as outlined above, but why bother when the [pipeline](/courses/krigr/quickstart/#the-pipeline) gets the job done just as well?
 
-{{% hint info %}}
+{{% alert info %}}
 Matching Kriging outputs with a pre-existing data set is as easy as plugging the pre-existing raster into the `Target_res` argument of the `krigR()` or the `download_DEM()` function.
-{{% /hint %}}
+{{% /alert %}}
 
 This time we want to downscale from ERA5 resolution (roughly 30km) because the ERA5-Land data already matches the NDVI resolution (roughly 9km). Here's how we do this:
 ```{r era5Pipe, message = TRUE, warning = TRUE}
@@ -262,15 +262,15 @@ Looks like NDVI increases as mean annual temperatures rise, but reaches a peak a
 
 ## Using Third-Party Data
 
-{{% hint danger %}}
+{{% alert danger %}}
 **ATTENTION:** Kriging only works on **square-cell spatial products**!
-{{% /hint %}}
+{{% /alert %}}
 
 The `krigR()` function is designed to work with non-ERA5(-Land) data as well as non-GMTED2010 covariate data. To downscale your own spatial products using different covariate data than the GMTED2010 DEM we use as a default, you need to step into the three-step workflow. 
 
-{{% hint warning %}}
+{{% alert warning %}}
 Most spatial products won't be reliably downscaled using only elevation covariate data.
-{{% /hint %}}
+{{% /alert %}}
 
 `krigR()` supports any combination of ERA5-family reanalysis, GMTED2010, third-party climate data, and third-party covariate data. Here, we just demonstrate the use of other covariates than the GMTED2010 used by `KrigR` by default.  
 
@@ -287,7 +287,7 @@ The reason we focus on soil moisture for this exercise? In [this publication (Fi
 <details>
   <summary>Click here for file:</summary>
       Download 
-<a href="/courses/krigr/Data/Qsoil_BC.nc">Qsoil_BC.nc</a> and place it into your data directory.
+<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/krigr/Data/Qsoil_BC.nc">Qsoil_BC.nc</a> and place it into your data directory.
 </details> 
 
 ```{r}
@@ -303,8 +303,10 @@ Below, you will find the code needed to obtain the data of global coverage at ro
 <details>
   <summary>Click here for the covariate file to save yourself downloading and processing of global data:</summary>
       Download 
-<a href="/courses/krigr/Covariates/SoilCovs.nc">SoilCovs.nc</a> and place it into your covariates directory.
+<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/krigr/Covariates/SoilCovs.nc">SoilCovs.nc</a> and place it into your covariates directory.
 </details> 
+
+
 
 ```{r}
 # documentation of these can be found here http://globalchange.bnu.edu.cn/research/soil4.jsp
@@ -374,21 +376,21 @@ Covs_ls <- list(Coarsecovs, Finecovs)
 Plot_Covs(Covs = Covs_ls, Shape_shp)
 ```
 
-{{% hint %}}
-Our [development goals](/courses/outlook/) include creating a function that automatically carries out all of the above for you with a specification alike to `download_DEM()`.
-{{% /hint %}}
+{{% alert %}}
+Our [development goals](/courses/krigr/outlook/) include creating a function that automatically carries out all of the above for you with a specification alike to `download_DEM()`.
+{{% /alert %}}
 
 ### Kriging Third-Party Data
 
 Finally, we can statistically downscale our soil moisture data using the soil property covariates. For this, we need to specify a new `KrigingEquation`. 
 
-{{% hint %}}
+{{% alert %}}
 With the `KrigingEquation` argument, you may specify non-linear combinations of covariates for your call to `krigR()`.
-{{% /hint %}}
+{{% /alert %}}
 
-{{% hint info %}}
+{{% alert info %}}
 If you don't specify a `KrigingEquation` in `krigR()` and your covariates do not contain a layer called `"DEM"`, `krigR()` will notify you that its default formula cannot be executed and will attempt to build an additive formula from the data it can find. `krigr()` will inform you of this and ask for your approval before proceeding.
-{{% /hint %}}
+{{% /alert %}}
 
 This auto-generated formula would be the same as the one we specify here - an additive combination of all covariates found both at coarse and fine resolutions. Of course, this formula can also be specified to reflect interactive effects.
 
@@ -414,16 +416,16 @@ BC_Water_Krig  <- krigR(Data = BCq_ras[[12:19]],
 
 #### BIO12 - Annual Mean Soil Moisture
 
-{{% hint normal %}}
+{{% alert normal %}}
 Interpolating this data is just like statistically downscaling any other soil moisture product and can be done without any problems.
-{{% /hint %}}
+{{% /alert %}}
 
 <details>
   <summary>Click here for plotting call and plot:</summary>
   
-{{% hint normal %}}
+{{% alert normal %}}
 Look at how well the river Elbe sows up in this!
-{{% /hint %}}
+{{% /alert %}}
 ```{r fig.keep = 'all', results = "asis", fig.height = 20}
 Plot_Krigs(lapply(BC_Water_Krig[-3], "[[", 1), 
            Shp = Shape_shp,
@@ -433,9 +435,9 @@ Plot_Krigs(lapply(BC_Water_Krig[-3], "[[", 1),
 
 #### BIO13 - Soil Moisture of Wettest Month
 
-{{% hint normal %}}
+{{% alert normal %}}
 Interpolating this data is just like statistically downscaling any other soil moisture product and can be done without any problems.
-{{% /hint %}}
+{{% /alert %}}
 
 <details>
   <summary>Click here for plotting call and plot:</summary>
@@ -449,9 +451,9 @@ Plot_Krigs(lapply(BC_Water_Krig[-3], "[[", 2),
 
 #### BIO14 - Soil Moisture of Driest Month
 
-{{% hint normal %}}
+{{% alert normal %}}
 Interpolating this data is just like statistically downscaling any other soil moisture product and can be done without any problems.
-{{% /hint %}}
+{{% /alert %}}
 
 <details>
   <summary>Click here for plotting call and plot:</summary>
@@ -465,9 +467,9 @@ Plot_Krigs(lapply(BC_Water_Krig[-3], "[[", 3),
 
 #### BIO15 - Soil Moisture Seasonality
 
-{{% hint warning %}}
+{{% alert warning %}}
 This data product is calculated using the standard deviation of mean values throughout our time frame. Conclusively, it would be interpolated better by first statistically downscaling the underlying data rather than the final bioclimatic variable.
-{{% /hint %}}
+{{% /alert %}}
 
 <details>
   <summary>Click here for plotting call and plot:</summary>
@@ -481,9 +483,9 @@ Plot_Krigs(lapply(BC_Water_Krig[-3], "[[", 4),
 
 #### BIO16 & BIO17 - Soil Moisture of Wettest and Driest Quarter
 
-{{% hint danger %}}
+{{% alert danger %}}
 **I do not recommend you use these kriging outputs!** They rely on mean quarterly soil moisture data which is not being interpolated here. Subsequently, the patchiness of the underlying data is lost and with it: information.
-{{% /hint %}}
+{{% /alert %}}
 
 <details>
   <summary>Click here for plotting call and plot:</summary>
@@ -499,9 +501,9 @@ Plot_Krigs(lapply(BC_Water_Krig[-3], "[[", 5:6),
 
 #### BIO18 & BIO19 - Precipitation of Warmest and Coldest Quarter
 
-{{% hint danger %}}
+{{% alert danger %}}
 **I do not recommend you use these kriging outputs!** They rely on mean quarterly temperature data which is not being interpolated here. Subsequently, the patchiness of the underlying data is lost and with it: information.
-{{% /hint %}}
+{{% /alert %}}
 
 <details>
   <summary>Click here for plotting call and plot:</summary>

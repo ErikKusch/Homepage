@@ -34,7 +34,7 @@ links:
 - icon: file-powerpoint
   icon_pack: fas
   name: Slides - Chapter 6
-  url: /post/rethinking/6__29-01-2021_SUMMARY_-Confounds.html
+  url: https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/rethinking/6__29-01-2021_SUMMARY_-Confounds.html
 type: docs
 toc: true 
 menu:
@@ -53,7 +53,7 @@ options(width = 200)
 
 ## Material
 
-- [Slides Chapter 6](/post/rethinking/6__29-01-2021_SUMMARY_-Confounds.html)  
+- [Slides Chapter 6](https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/rethinking/6__29-01-2021_SUMMARY_-Confounds.html)  
 
 ## Introduction
 These are answers and solutions to the exercises at the end of chapter 6 in [Satistical Rethinking 2](https://xcelab.net/rm/statistical-rethinking/) by Richard McElreath. I have created these notes as a part of my ongoing involvement in the [AU Bayes Study Group](/project/aubayes/). Much of my inspiration for these solutions, where necessary, has been obtained from [Jake Thompson](https://sr2-solutions.wjakethompson.com/more-linear-models.html). The PDF version of [Satistical Rethinking 2](https://xcelab.net/rm/statistical-rethinking/) is lacking some exercises of the print version, it seems. I do not address these here.

@@ -48,7 +48,7 @@ The material presented here is aimed at providing the reader with:
 
 The material, I have prepared here is now being used for an official [PhD-level course](https://phdcourses.dk/Course/83222).
 
-If you find any typos in my material, are unhappy with some of what or how I am presenting or simply unclear about thing, do not hesitate to [contact me](/contact/).
+If you find any typos in my material, are unhappy with some of what or how I am presenting or simply unclear about thing, do not hesitate to [contact me](/about/#contact).
 
 All the best,
 Erik

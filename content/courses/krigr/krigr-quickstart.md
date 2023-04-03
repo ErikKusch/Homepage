@@ -56,14 +56,14 @@ weight: 3
 <!-- # ``` -->
 
 
-{{% hint danger %}}
+{{% alert danger %}}
 This part of the workshop is meant to give a **very brief** introduction to `KrigR` and I highly recommend you peruse the rest of the content, too.
-{{% /hint %}}
+{{% /alert %}}
 
 
-<!-- {{% hint danger %}} -->
+<!-- {{% alert danger %}} -->
 <!-- This part of the workshop is dependant on set-up and preparation done previously [here](/courses/krigr/prep/). -->
-<!-- {{% /hint %}} -->
+<!-- {{% /alert %}} -->
 
 ## Pre-`KrigR` Housekeeping
 Before we can commence the quick start guide, I want to set up a directory structure and prepare some plotting functions to make the rest of the guide run more smoothly.
@@ -90,7 +90,7 @@ Dirs <- sapply(
 
 ### Visualiation Functions 
 
-In order to easily visualise our Kriging procedure including (1) inputs, (2) covariates, and (3) outputs without repeating too much of the same code, I have prepared some plotting functions which you can download as [FUN_Plotting.R](/courses/krigr/FUN_Plotting.R).
+In order to easily visualise our Kriging procedure including (1) inputs, (2) covariates, and (3) outputs without repeating too much of the same code, I have prepared some plotting functions which you can download as [FUN_Plotting.R](https://raw.githubusercontent.com/ErikKusch/Homepage/master/content/courses/krigr/FUN_Plotting.R).
 
 With the `FUN_Plotting.R` file placed in the project directory of your workshop material (i.e., the directory returned by `Dir.Base`), running the following will register the three plotting functions in your `R` environment.
 
@@ -118,17 +118,17 @@ library(KrigR)
 
 `KrigR` can be used in one of two ways. 
 
-{{% hint %}}
+{{% alert %}}
 I strongly recommend you use **The Three Steps** as **The Pipeline** is only applicable for a fringe of use-cases.
-{{% /hint %}}
+{{% /alert %}}
 
 
 ### The Three Steps
 Using `KrigR` in this way, you use the three core functions `download_ERA()`, `download_DEM()`, and `krigR()`. 
 
-{{% hint info %}}
+{{% alert info %}}
 Running these functions individually gives you the most control and oversight of the `KrigR` workflow.
-{{% /hint %}}
+{{% /alert %}}
 
 The most simple way in which you can run the functions of the `KrigR` package is by specifying a rectangular bounding box (i.e., an `extent`) to specify your study region(s). 
 
@@ -153,14 +153,14 @@ Extent_ext
 
 For this part of the tutorial, we download air temperature for a three-day interval around my birthday (03-01-1995) using the extent highlighted above.
 
-{{% hint %}}
+{{% alert %}}
 Notice that the downloading of ERA-family reanalysis data may take a short while to start as the download request gets queued with the CDS of the ECMWF before it is executed.
-{{% /hint %}}
+{{% /alert %}}
 
 <details>
   <summary>Click here for file if download takes too long:</summary>
     Download 
-<a href="/courses/krigr/Data/QS_Raw.nc">QS_Raw.nc</a> and place it into your data directory.
+<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/krigr/Data/QS_Raw.nc">QS_Raw.nc</a> and place it into your data directory.
 </details> 
 
 
@@ -197,20 +197,18 @@ QS_Raw
 ## resolution : 0.09999999, 0.09999998  (x, y)
 ## extent     : 9.72, 15.12, 49.74, 53.14  (xmin, xmax, ymin, ymax)
 ## crs        : +proj=longlat +datum=WGS84 +no_defs 
-## names      :       X1,       X2,       X3 
-## min values : 268.0212, 266.9561, 262.7402 
-## max values : 273.2443, 272.5641, 270.0796
+## names      : X1, X2, X3
 ```
 
 As you can see, we obtained a RasterStack object with 3 layers of data (one for each day we are interested in). Notice that extent of our downloaded data set does not fit the extent we set earlier manually. This is a precaution we have taken within `KrigR` to make sure that all data cells you are interested in are covered.
 
-{{% hint info %}}
+{{% alert info %}}
 `KrigR` widens the spatial extent that is specified to ensure full coverage of the respective ERA5(-Land) raster cells. Global downloads are not affected by this and work just as you'd expect.
-{{% /hint %}}
+{{% /alert %}}
 
-{{% hint %}}
+{{% alert %}}
 More detailed instructions on how to make the most effective use of the `download_ERA()` function and ensure you receive the data you require can be found [here](/courses/krigr/download/).
-{{% /hint %}}
+{{% /alert %}}
 
 Keep in mind that every function within the `KrigR` package produces NetCDF (.nc) files in the specified directory (`Dir` argument in the function call) to allow for further manipulation outside of `R` if necessary (for example, using Panoply).
 
@@ -235,9 +233,9 @@ Plot_Covs(Covs_ls)
 
 <img src="krigr-quickstart_files/figure-html/CovExt-1.png" width="1440" />
 
-{{% hint %}}
+{{% alert %}}
 Alternatively to specifying a target resolution, you can specify a different raster which should be matched in all attributes by the raster at target resolution. This is explained more in-depth in [this part of the workshop](/courses/krigr/third-party).  
-{{% /hint %}}
+{{% /alert %}}
 
 For now, let's simply inspect our list of covariate rasters:
 
@@ -294,7 +292,7 @@ Plot_Krigs(QS_Krig, Dates = c("02-01-1995", "03-01-1995", "04-01-1995"))
 
 
 
-This operation took 1 seconds on my machine (this may vary drastically on other devices).
+This operation took 32 seconds on my machine (this may vary drastically on other devices).
 
 There we go. All the data has been downscaled and we do have uncertainties recorded for all of our outputs. As you can see, the elevation patterns show up clearly in our kriged air temperature output. Furthermore, you can see that our certainty of Kriging predictions drops on the 04/01/1995 in comparison to the two preceding days. However, do keep in mind that a maximum standard error of 0.22, 0.251, 0.445 (for each layer of our output respectively) on a total range of data of 6.281, 6.511, 8.388 (again, for each layer in the output respectively) is evident of a downscaling result we can be confident in.  
 
@@ -312,9 +310,9 @@ QS_Krig[-3] # we will talk later about why we leave out the third list element p
 ## extent     : 9.716527, 15.11653, 49.74153, 53.14153  (xmin, xmax, ymin, ymax)
 ## crs        : +proj=longlat +datum=WGS84 +no_defs 
 ## source     : memory
-## names      : var1.pred.1, var1.pred.2, var1.pred.3 
-## min values :    266.9992,    266.0957,    261.7828 
-## max values :    273.2800,    272.6068,    270.1708 
+## names      : X0001_data, X0002_data, X0003_data 
+## min values :   266.9992,   266.0957,   261.7828 
+## max values :   273.2800,   272.6068,   270.1708 
 ## 
 ## 
 ## $Kriging_SE
@@ -324,23 +322,23 @@ QS_Krig[-3] # we will talk later about why we leave out the third list element p
 ## extent     : 9.716527, 15.11653, 49.74153, 53.14153  (xmin, xmax, ymin, ymax)
 ## crs        : +proj=longlat +datum=WGS84 +no_defs 
 ## source     : memory
-## names      : var1.stdev.1, var1.stdev.2, var1.stdev.3 
-## min values :   0.11882790,   0.05715606,   0.08283082 
-## max values :    0.2200428,    0.2507924,    0.4449649
+## names      :   X0001_SE,   X0002_SE,   X0003_SE 
+## min values : 0.11882790, 0.05715606, 0.08283082 
+## max values :  0.2200428,  0.2507924,  0.4449649
 ```
 
 As output of the `krigR()` function, we obtain a list of downscaled data as the first element and downscaling standard errors as the second list element.
 
-{{% hint %}}
+{{% alert %}}
 More detailed instructions on how to make the most effective use of the `krigR()` function can be found [here](/courses/krigr/kriging/).
-{{% /hint %}}
+{{% /alert %}}
 
 ### The Pipeline
 Now that we've seen how you can execute the `KrigR` workflow using three separate functions, it is time that we show you the most simplified function call to obtain some downscaled products: the **pipeline**.
 
-{{% hint danger %}}
+{{% alert danger %}}
 Using `KrigR` through the pipeline approach limits you to the default covariate data and takes away control from you. Use this only if you know exactly what you are doing.
-{{% /hint %}}
+{{% /alert %}}
 
 We have coded the `krigR()` function in such a way that it can either be addressed at already present spatial products within your `R` environment, or handle all the downloading and resampling of input data and covariates for you from scratch. To run the exact same Kriging approach as within our extent-example, we can specify the `krigR()` function as such:
 
@@ -380,9 +378,9 @@ all.equal(QS_Krig[[1]], Pipe_Krig[[1]])
 
 Surprise! There is no difference.
 
-{{% hint warning %}}
+{{% alert warning %}}
 This concludes the quick start tutorial for `KrigR`. For more effective use of the `KrigR` toolbox, I suggest you peruse the rest of the workshop material or use the search function if you have specific queries.
-{{% /hint %}}
+{{% /alert %}}
 
 For a use-case of the pipeline see [this part](/courses/krigr/third-party/#krigr-workflow) of our workshop.
 
@@ -393,47 +391,47 @@ sessionInfo()
 ```
 
 ```
-## R version 4.0.5 (2021-03-31)
-## Platform: x86_64-w64-mingw32/x64 (64-bit)
-## Running under: Windows 10 x64 (build 19043)
+## R version 4.2.3 (2023-03-15)
+## Platform: x86_64-apple-darwin17.0 (64-bit)
+## Running under: macOS Big Sur ... 10.16
 ## 
 ## Matrix products: default
+## BLAS:   /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRlapack.dylib
 ## 
 ## locale:
-## [1] LC_COLLATE=English_United Kingdom.1252  LC_CTYPE=English_United Kingdom.1252   
-## [3] LC_MONETARY=English_United Kingdom.1252 LC_NUMERIC=C                           
-## [5] LC_TIME=English_United Kingdom.1252    
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 ## 
 ## attached base packages:
 ## [1] parallel  stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] KrigR_0.1.2       httr_1.4.2        stars_0.5-3       abind_1.4-5      
-##  [5] fasterize_1.0.3   sf_1.0-0          lubridate_1.7.10  automap_1.0-14   
-##  [9] doSNOW_1.0.19     snow_0.4-3        doParallel_1.0.16 iterators_1.0.13 
-## [13] foreach_1.5.1     rgdal_1.5-23      raster_3.4-13     sp_1.4-5         
-## [17] stringr_1.4.0     keyring_1.2.0     ecmwfr_1.3.0      ncdf4_1.17       
-## [21] cowplot_1.1.1     viridis_0.6.0     viridisLite_0.4.0 ggplot2_3.3.6    
-## [25] tidyr_1.1.3      
+##  [1] KrigR_0.1.2       terra_1.7-21      httr_1.4.5        stars_0.6-0      
+##  [5] abind_1.4-5       fasterize_1.0.4   sf_1.0-12         lubridate_1.9.2  
+##  [9] automap_1.1-9     doSNOW_1.0.20     snow_0.4-4        doParallel_1.0.17
+## [13] iterators_1.0.14  foreach_1.5.2     rgdal_1.6-5       raster_3.6-20    
+## [17] sp_1.6-0          stringr_1.5.0     keyring_1.3.1     ecmwfr_1.5.0     
+## [21] ncdf4_1.21        cowplot_1.1.1     viridis_0.6.2     viridisLite_0.4.1
+## [25] ggplot2_3.4.1     tidyr_1.3.0      
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] xts_0.12.1         R.cache_0.14.0     tools_4.0.5        backports_1.2.1   
-##  [5] bslib_0.3.1        utf8_1.2.1         R6_2.5.0           KernSmooth_2.23-18
-##  [9] DBI_1.1.1          colorspace_2.0-0   withr_2.4.2        tidyselect_1.1.0  
-## [13] gridExtra_2.3      curl_4.3.2         compiler_4.0.5     gstat_2.0-7       
-## [17] labeling_0.4.2     bookdown_0.22      sass_0.4.1         scales_1.1.1      
-## [21] classInt_0.4-3     proxy_0.4-25       digest_0.6.27      rmarkdown_2.14    
-## [25] R.utils_2.10.1     pkgconfig_2.0.3    htmltools_0.5.2    styler_1.4.1      
-## [29] highr_0.9          fastmap_1.1.0      rlang_0.4.11       FNN_1.1.3         
-## [33] jquerylib_0.1.4    generics_0.1.0     farver_2.1.0       zoo_1.8-9         
-## [37] jsonlite_1.7.2     dplyr_1.0.5        R.oo_1.24.0        magrittr_2.0.1    
-## [41] Rcpp_1.0.7         munsell_0.5.0      fansi_0.4.2        lifecycle_1.0.0   
-## [45] R.methodsS3_1.8.1  stringi_1.5.3      yaml_2.2.1         plyr_1.8.6        
-## [49] grid_4.0.5         crayon_1.4.1       lattice_0.20-41    knitr_1.33        
-## [53] pillar_1.6.0       spacetime_1.2-4    codetools_0.2-18   glue_1.4.2        
-## [57] evaluate_0.14      blogdown_1.3       vctrs_0.3.7        gtable_0.3.0      
-## [61] purrr_0.3.4        rematch2_2.1.2     reshape_0.8.8      assertthat_0.2.1  
-## [65] cachem_1.0.4       xfun_0.31          lwgeom_0.2-6       e1071_1.7-6       
-## [69] class_7.3-18       tibble_3.1.1       intervals_0.15.2   memoise_2.0.0     
-## [73] units_0.7-2        ellipsis_0.3.2
+##  [1] xts_0.13.0         R.cache_0.16.0     tools_4.2.3        bslib_0.4.2       
+##  [5] utf8_1.2.3         R6_2.5.1           KernSmooth_2.23-20 DBI_1.1.3         
+##  [9] colorspace_2.1-0   withr_2.5.0        tidyselect_1.2.0   gridExtra_2.3     
+## [13] curl_5.0.0         compiler_4.2.3     cli_3.6.0          gstat_2.1-0       
+## [17] labeling_0.4.2     bookdown_0.33      sass_0.4.5         scales_1.2.1      
+## [21] classInt_0.4-9     proxy_0.4-27       digest_0.6.31      rmarkdown_2.20    
+## [25] R.utils_2.12.2     pkgconfig_2.0.3    htmltools_0.5.4    styler_1.9.1      
+## [29] highr_0.10         fastmap_1.1.1      rlang_1.1.0        rstudioapi_0.14   
+## [33] FNN_1.1.3.2        farver_2.1.1       jquerylib_0.1.4    generics_0.1.3    
+## [37] zoo_1.8-11         jsonlite_1.8.4     dplyr_1.1.0        R.oo_1.25.0       
+## [41] magrittr_2.0.3     Rcpp_1.0.10        munsell_0.5.0      fansi_1.0.4       
+## [45] lifecycle_1.0.3    R.methodsS3_1.8.2  stringi_1.7.12     yaml_2.3.7        
+## [49] plyr_1.8.8         grid_4.2.3         lattice_0.20-45    knitr_1.42        
+## [53] pillar_1.8.1       spacetime_1.2-8    codetools_0.2-19   glue_1.6.2        
+## [57] evaluate_0.20      blogdown_1.16      vctrs_0.6.1        gtable_0.3.1      
+## [61] purrr_1.0.1        reshape_0.8.9      assertthat_0.2.1   cachem_1.0.7      
+## [65] xfun_0.37          lwgeom_0.2-11      e1071_1.7-13       class_7.3-21      
+## [69] tibble_3.2.1       intervals_0.15.3   memoise_2.0.1      units_0.8-1       
+## [73] timechange_0.2.0
 ```

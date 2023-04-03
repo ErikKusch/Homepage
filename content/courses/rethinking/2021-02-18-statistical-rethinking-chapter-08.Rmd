@@ -33,7 +33,7 @@ links:
 - icon: file-powerpoint
   icon_pack: fas
   name: Slides - Chapter 8
-  url: /post/rethinking/9__19-02-2021_SUMMARY_-Interactions.html
+  url: https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/rethinking/9__19-02-2021_SUMMARY_-Interactions.html
 math: true
 type: docs
 toc: true 
@@ -53,7 +53,7 @@ options(width = 200)
 
 ## Material
 
-- [Slides Chapter 8](/post/rethinking/9__19-02-2021_SUMMARY_-Interactions.html) 
+- [Slides Chapter 8](https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/rethinking/9__19-02-2021_SUMMARY_-Interactions.html) 
 
 ## Introduction
 These are answers and solutions to the exercises at the end of chapter 8 in [Satistical Rethinking 2](https://xcelab.net/rm/statistical-rethinking/) by Richard McElreath. I have created these notes as a part of my ongoing involvement in the [AU Bayes Study Group](/project/aubayes/). Much of my inspiration for these solutions, where necessary, has been obtained from [Jeffrey Girard](https://jmgirard.com/statistical-rethinking-ch7/).

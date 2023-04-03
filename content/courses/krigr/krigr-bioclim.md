@@ -46,9 +46,9 @@ weight: 20
 
 
 
-{{% hint danger %}}
+{{% alert danger %}}
 This part of the workshop is dependant on set-up and preparation done previously [here](/courses/krigr/prep/).
-{{% /hint %}}
+{{% /alert %}}
 
 For bioclimatic variable calculation, this workshop makes use of the  `SpatialPolygons` spatial preferences which we set up [here](/courses/krigr/prep/#shape-of-interest-spatialpolygons).
 
@@ -59,15 +59,15 @@ First, we load `KrigR`:
 library(KrigR)
 ```
 
-{{% hint info %}}
+{{% alert info %}}
 To obtain bioclimatic data with `KrigR` we want to use the `BioClim()` function. 
-{{% /hint %}}
+{{% /alert %}}
 
 In the next sections, I will show you how to use it and how the resulting data objects may differ and why.
 
-{{% hint warning %}}
+{{% alert warning %}}
 Bioclimatic variables are often treated as very robust metrics - I do not believe so and hope the following will demonstrate the nuance in bioclimatic metrics.
-{{% /hint %}}
+{{% /alert %}}
 
 ## Our First Bioclimatic Data Set
 Let's start with the most basic of bioclimatic data products. So what are the specifications? Well, we:  
@@ -77,18 +77,18 @@ Let's start with the most basic of bioclimatic data products. So what are the sp
 3. Approximate water availability through precipitation (`Water_Var`) in keeping with typical practices.  
 4. Extreme metrics for temperature minimum and maximum are calculated from daily (`T_res`) aggregates of the underlying hourly temperature data. 
 
-{{% hint warning %}}
+{{% alert warning %}}
 You will see function call to `BioClim()` wrapped in if statements which check for whether the output is already present or not. `BioClim` compilation can take significant time and I do this here to avoid recompilation on changes to the text of the blogpost on my end.
-{{% /hint %}}
+{{% /alert %}}
 
-{{% hint %}}
+{{% alert %}}
 Setting the argument ` Keep_Monthly = TRUE` will prompt the function to retain monthly aggregates of temperature and water availability alongside the final output. When `BioClim()` recognises that any of the underlying data is already present, it will skip the steps necessary to create this data.
-{{% /hint %}}
+{{% /alert %}}
 
 <details>
   <summary>Click here for file if download & processing takes too long:</summary>
     Download 
-<a href="/courses/krigr/Data/Present_BC.nc">Present_BC.nc</a> and place it into your data directory.
+<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/krigr/Data/Present_BC.nc">Present_BC.nc</a> and place it into your data directory.
 </details> 
 
 
@@ -131,20 +131,20 @@ There's not much commenting on the output above as the output should look famili
 
 ## Time-Frames
 
-{{% hint warning %}}
+{{% alert warning %}}
 Time window of baseline climate data (e.g; climatology time frames) ought to be adjusted to the specific needs of each study. This is true also for bioclimatic data. **Pre-made data sets do not deliver on this need!**
-{{% /hint %}}
+{{% /alert %}}
 
-{{% hint info %}}
+{{% alert info %}}
 With `KrigR`, you can build the bioclimatic data sets you need for your study.
-{{% /hint %}}
+{{% /alert %}}
 
 Let's move on to the first important functionality of the `KrigR::BioClim()` function: **selection of time-frames**. With this, you can obtain bioclimatic data for exactly the duration that your study requires. Here, we query data for the period between 1951 and 1960:
 
 <details>
   <summary>Click here for file if download & processing takes too long:</summary>
     Download 
-<a href="/courses/krigr/Data/Past_BC.nc">Past_BC.nc</a> and place it into your data directory.
+<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/krigr/Data/Past_BC.nc">Past_BC.nc</a> and place it into your data directory.
 </details> 
 
 
@@ -174,9 +174,9 @@ if(!file.exists(file.path(Dir.Data, "Past_BC.nc"))){
 
 I will forego plotting the data itself and instead plot the difference between our bioclimatic data of the present which we created prior and the newly created bioclimatic product of the past. Let me walk you through them 1 by 1.
 
-{{% hint warning %}}
+{{% alert warning %}}
 The below plots show the differences in bioclimatic data products of the 2010-2020 and 1951-1960.
-{{% /hint %}}
+{{% /alert %}}
 
 ### Annual Temperature
 As you can see below, the time period of 2010 to 2020 was about 1.5-1.9 Kelvin warmer than the period of 1951 to 1960:
@@ -210,19 +210,19 @@ Clearly, my home area turned much drier with more pronounced seasonality and ext
 
 I hope that the above has clearly demonstrated on thing:
 
-{{% hint warning %}}
+{{% alert warning %}}
 **Appropriate use of bioclimatic variables is largely dependant on data retrieval for relevant time frames.**
-{{% /hint %}}
+{{% /alert %}}
 
 ## Water-Availability Variables
 
-{{% hint warning %}}
+{{% alert warning %}}
 **Precipitation** might not be the most useful or appropriate water availability metric for your study region or requirements.
-{{% /hint %}}
+{{% /alert %}}
 
-{{% hint info %}}
+{{% alert info %}}
 With `KrigR`, you can decide which water availability variable from the ERA5(-Land) catalogue to use for calculation of bioclimatic data sets.
-{{% /hint %}}
+{{% /alert %}}
 
 Contrary to current practices in macroecology, I have gripes with the use of precipitation data in bioclimatic variable computation. Why is that? I strongly believe that other water availability variables are much better suited for our analyses for two reasons:  
 
@@ -238,7 +238,7 @@ Here, I demonstrate the use of the shallowest layer of soil moisture data. As yo
 <details>
   <summary>Click here for file if download & processing takes too long:</summary>
     Download 
-<a href="/courses/krigr/Data/Qsoil_BC.nc">Qsoil_BC.nc</a> and place it into your data directory.
+<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/krigr/Data/Qsoil_BC.nc">Qsoil_BC.nc</a> and place it into your data directory.
 </details> 
 
 
@@ -282,13 +282,13 @@ Plot_BC(BC2010_ras-BCq_ras, Shp = Shape_shp, which = 8:9)
 
 <img src="krigr-bioclim_files/figure-html/BC_Q1-1.png" width="1440" />
 
-{{% hint warning %}}
+{{% alert warning %}}
 Changing water availability metric in bioclimatic considerations can drastically change even *temperature* metrics.
-{{% /hint %}}
+{{% /alert %}}
 
-{{% hint info %}}
+{{% alert info %}}
 Volumetric soil moisture exhibits more pronounced spatial patterns than precipitation records do thus supplying bioclimatic modelling exercises with more pronounced information.
-{{% /hint %}}
+{{% /alert %}}
 
 ### Water Availability
 Now for the water-related bioclimatic variables. This is where the rubber meets the road! Aside from the quantitative differences in water availability estimates when using soil moisture over precipitation records, please take note of the much more pronounced spatial patterns (particularly along the river throughout Saxony-Anhalt in the north-western region of our study area) when using soil moisture data. This is much more likely to accurately represent bioclimatic envelopes than the smooth patterns you can see for precipitation records.
@@ -301,27 +301,27 @@ Plot_BC(BC2010_ras-BCq_ras, Shp = Shape_shp, which = 12:19)
 
 I hope that the above has clearly demonstrated on thing:
 
-{{% hint warning %}}
+{{% alert warning %}}
 **Choice of water availability variable has strong implications for how we quantify bioclimatic envelopes.**
-{{% /hint %}}
+{{% /alert %}}
 
 ## Extreme Value Calculations
 Lastly, let us concern ourselves with the retrieval of extreme climate metrics which will affect almost all of our temperature-reliant bioclimatic variables. 
 
-{{% hint warning %}}
+{{% alert warning %}}
 Extreme event calculation is highly relevant for our understanding of bioclimatic envelopes and often turns into a blackbox exercise.
-{{% /hint %}}
+{{% /alert %}}
 
-{{% hint info %}}
+{{% alert info %}}
 With `KrigR`, you can decide how to calculate extreme metrics.
-{{% /hint %}}
+{{% /alert %}}
 
 So far, we have calculated monthly minimum and maximum temperatures from daily aggregates. However, with `KrigR::BioClim()` we can also obtain these extremes from hourly records simply by changing `T_res`:
 
 <details>
   <summary>Click here for file if download & processing takes too long:</summary>
     Download 
-<a href="/courses/krigr/Data/Hourly_BC.nc">Hourly_BC.nc</a> and place it into your data directory.
+<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/krigr/Data/Hourly_BC.nc">Hourly_BC.nc</a> and place it into your data directory.
 </details> 
 
 
@@ -373,18 +373,18 @@ Plot_BC(BCq_ras - BCh_ras, Shp = Shape_shp, Water_Var = "Soil Moisture", which =
 
 <img src="krigr-bioclim_files/figure-html/BC_Diff2-1.png" width="1440" />
 
-{{% hint warning %}}
+{{% alert warning %}}
 Extraction of extremes at an hourly resolution amplifies said extremes.
-{{% /hint %}}
+{{% /alert %}}
 
 ### Water Availability
 Unsurprisingly, there are no changes to our quantification of water availability metrics. You may plot this for yourself if you are interested.
 
 I hope that the above has clearly demonstrated on thing:
 
-{{% hint warning %}}
+{{% alert warning %}}
 **Choice of temporal resolution of extreme metrics changes how we quantify bioclimatic envelopes drastically.**
-{{% /hint %}}
+{{% /alert %}}
 
 ## Kriging Bioclimatic Products
 
@@ -406,372 +406,6 @@ Covs_ls <- download_DEM(Train_ras = BCq_ras,
                         Shape = Shape_shp,
                         Dir = Dir.Covariates,
                         Keep_Temporary = TRUE)
-```
-
-```
-## 
-  |                                                                                      
-  |                                                                                |   0%
-  |                                                                                      
-  |                                                                                |   1%
-  |                                                                                      
-  |=                                                                               |   1%
-  |                                                                                      
-  |=                                                                               |   2%
-  |                                                                                      
-  |==                                                                              |   2%
-  |                                                                                      
-  |==                                                                              |   3%
-  |                                                                                      
-  |===                                                                             |   3%
-  |                                                                                      
-  |===                                                                             |   4%
-  |                                                                                      
-  |====                                                                            |   4%
-  |                                                                                      
-  |====                                                                            |   5%
-  |                                                                                      
-  |====                                                                            |   6%
-  |                                                                                      
-  |=====                                                                           |   6%
-  |                                                                                      
-  |=====                                                                           |   7%
-  |                                                                                      
-  |======                                                                          |   7%
-  |                                                                                      
-  |======                                                                          |   8%
-  |                                                                                      
-  |=======                                                                         |   8%
-  |                                                                                      
-  |=======                                                                         |   9%
-  |                                                                                      
-  |========                                                                        |   9%
-  |                                                                                      
-  |========                                                                        |  10%
-  |                                                                                      
-  |========                                                                        |  11%
-  |                                                                                      
-  |=========                                                                       |  11%
-  |                                                                                      
-  |=========                                                                       |  12%
-  |                                                                                      
-  |==========                                                                      |  12%
-  |                                                                                      
-  |==========                                                                      |  13%
-  |                                                                                      
-  |===========                                                                     |  13%
-  |                                                                                      
-  |===========                                                                     |  14%
-  |                                                                                      
-  |============                                                                    |  14%
-  |                                                                                      
-  |============                                                                    |  15%
-  |                                                                                      
-  |============                                                                    |  16%
-  |                                                                                      
-  |=============                                                                   |  16%
-  |                                                                                      
-  |=============                                                                   |  17%
-  |                                                                                      
-  |==============                                                                  |  17%
-  |                                                                                      
-  |==============                                                                  |  18%
-  |                                                                                      
-  |===============                                                                 |  18%
-  |                                                                                      
-  |===============                                                                 |  19%
-  |                                                                                      
-  |================                                                                |  19%
-  |                                                                                      
-  |================                                                                |  20%
-  |                                                                                      
-  |================                                                                |  21%
-  |                                                                                      
-  |=================                                                               |  21%
-  |                                                                                      
-  |=================                                                               |  22%
-  |                                                                                      
-  |==================                                                              |  22%
-  |                                                                                      
-  |==================                                                              |  23%
-  |                                                                                      
-  |===================                                                             |  23%
-  |                                                                                      
-  |===================                                                             |  24%
-  |                                                                                      
-  |====================                                                            |  24%
-  |                                                                                      
-  |====================                                                            |  25%
-  |                                                                                      
-  |====================                                                            |  26%
-  |                                                                                      
-  |=====================                                                           |  26%
-  |                                                                                      
-  |=====================                                                           |  27%
-  |                                                                                      
-  |======================                                                          |  27%
-  |                                                                                      
-  |======================                                                          |  28%
-  |                                                                                      
-  |=======================                                                         |  28%
-  |                                                                                      
-  |=======================                                                         |  29%
-  |                                                                                      
-  |========================                                                        |  29%
-  |                                                                                      
-  |========================                                                        |  30%
-  |                                                                                      
-  |========================                                                        |  31%
-  |                                                                                      
-  |=========================                                                       |  31%
-  |                                                                                      
-  |=========================                                                       |  32%
-  |                                                                                      
-  |==========================                                                      |  32%
-  |                                                                                      
-  |==========================                                                      |  33%
-  |                                                                                      
-  |===========================                                                     |  33%
-  |                                                                                      
-  |===========================                                                     |  34%
-  |                                                                                      
-  |============================                                                    |  34%
-  |                                                                                      
-  |============================                                                    |  35%
-  |                                                                                      
-  |============================                                                    |  36%
-  |                                                                                      
-  |=============================                                                   |  36%
-  |                                                                                      
-  |=============================                                                   |  37%
-  |                                                                                      
-  |==============================                                                  |  37%
-  |                                                                                      
-  |==============================                                                  |  38%
-  |                                                                                      
-  |===============================                                                 |  38%
-  |                                                                                      
-  |===============================                                                 |  39%
-  |                                                                                      
-  |================================                                                |  39%
-  |                                                                                      
-  |================================                                                |  40%
-  |                                                                                      
-  |================================                                                |  41%
-  |                                                                                      
-  |=================================                                               |  41%
-  |                                                                                      
-  |=================================                                               |  42%
-  |                                                                                      
-  |==================================                                              |  42%
-  |                                                                                      
-  |==================================                                              |  43%
-  |                                                                                      
-  |===================================                                             |  43%
-  |                                                                                      
-  |===================================                                             |  44%
-  |                                                                                      
-  |====================================                                            |  44%
-  |                                                                                      
-  |====================================                                            |  45%
-  |                                                                                      
-  |====================================                                            |  46%
-  |                                                                                      
-  |=====================================                                           |  46%
-  |                                                                                      
-  |=====================================                                           |  47%
-  |                                                                                      
-  |======================================                                          |  47%
-  |                                                                                      
-  |======================================                                          |  48%
-  |                                                                                      
-  |=======================================                                         |  48%
-  |                                                                                      
-  |=======================================                                         |  49%
-  |                                                                                      
-  |========================================                                        |  49%
-  |                                                                                      
-  |========================================                                        |  50%
-  |                                                                                      
-  |========================================                                        |  51%
-  |                                                                                      
-  |=========================================                                       |  51%
-  |                                                                                      
-  |=========================================                                       |  52%
-  |                                                                                      
-  |==========================================                                      |  52%
-  |                                                                                      
-  |==========================================                                      |  53%
-  |                                                                                      
-  |===========================================                                     |  53%
-  |                                                                                      
-  |===========================================                                     |  54%
-  |                                                                                      
-  |============================================                                    |  54%
-  |                                                                                      
-  |============================================                                    |  55%
-  |                                                                                      
-  |============================================                                    |  56%
-  |                                                                                      
-  |=============================================                                   |  56%
-  |                                                                                      
-  |=============================================                                   |  57%
-  |                                                                                      
-  |==============================================                                  |  57%
-  |                                                                                      
-  |==============================================                                  |  58%
-  |                                                                                      
-  |===============================================                                 |  58%
-  |                                                                                      
-  |===============================================                                 |  59%
-  |                                                                                      
-  |================================================                                |  59%
-  |                                                                                      
-  |================================================                                |  60%
-  |                                                                                      
-  |================================================                                |  61%
-  |                                                                                      
-  |=================================================                               |  61%
-  |                                                                                      
-  |=================================================                               |  62%
-  |                                                                                      
-  |==================================================                              |  62%
-  |                                                                                      
-  |==================================================                              |  63%
-  |                                                                                      
-  |===================================================                             |  63%
-  |                                                                                      
-  |===================================================                             |  64%
-  |                                                                                      
-  |====================================================                            |  64%
-  |                                                                                      
-  |====================================================                            |  65%
-  |                                                                                      
-  |====================================================                            |  66%
-  |                                                                                      
-  |=====================================================                           |  66%
-  |                                                                                      
-  |=====================================================                           |  67%
-  |                                                                                      
-  |======================================================                          |  67%
-  |                                                                                      
-  |======================================================                          |  68%
-  |                                                                                      
-  |=======================================================                         |  68%
-  |                                                                                      
-  |=======================================================                         |  69%
-  |                                                                                      
-  |========================================================                        |  69%
-  |                                                                                      
-  |========================================================                        |  70%
-  |                                                                                      
-  |========================================================                        |  71%
-  |                                                                                      
-  |=========================================================                       |  71%
-  |                                                                                      
-  |=========================================================                       |  72%
-  |                                                                                      
-  |==========================================================                      |  72%
-  |                                                                                      
-  |==========================================================                      |  73%
-  |                                                                                      
-  |===========================================================                     |  73%
-  |                                                                                      
-  |===========================================================                     |  74%
-  |                                                                                      
-  |============================================================                    |  74%
-  |                                                                                      
-  |============================================================                    |  75%
-  |                                                                                      
-  |============================================================                    |  76%
-  |                                                                                      
-  |=============================================================                   |  76%
-  |                                                                                      
-  |=============================================================                   |  77%
-  |                                                                                      
-  |==============================================================                  |  77%
-  |                                                                                      
-  |==============================================================                  |  78%
-  |                                                                                      
-  |===============================================================                 |  78%
-  |                                                                                      
-  |===============================================================                 |  79%
-  |                                                                                      
-  |================================================================                |  79%
-  |                                                                                      
-  |================================================================                |  80%
-  |                                                                                      
-  |================================================================                |  81%
-  |                                                                                      
-  |=================================================================               |  81%
-  |                                                                                      
-  |=================================================================               |  82%
-  |                                                                                      
-  |==================================================================              |  82%
-  |                                                                                      
-  |==================================================================              |  83%
-  |                                                                                      
-  |===================================================================             |  83%
-  |                                                                                      
-  |===================================================================             |  84%
-  |                                                                                      
-  |====================================================================            |  84%
-  |                                                                                      
-  |====================================================================            |  85%
-  |                                                                                      
-  |====================================================================            |  86%
-  |                                                                                      
-  |=====================================================================           |  86%
-  |                                                                                      
-  |=====================================================================           |  87%
-  |                                                                                      
-  |======================================================================          |  87%
-  |                                                                                      
-  |======================================================================          |  88%
-  |                                                                                      
-  |=======================================================================         |  88%
-  |                                                                                      
-  |=======================================================================         |  89%
-  |                                                                                      
-  |========================================================================        |  89%
-  |                                                                                      
-  |========================================================================        |  90%
-  |                                                                                      
-  |========================================================================        |  91%
-  |                                                                                      
-  |=========================================================================       |  91%
-  |                                                                                      
-  |=========================================================================       |  92%
-  |                                                                                      
-  |==========================================================================      |  92%
-  |                                                                                      
-  |==========================================================================      |  93%
-  |                                                                                      
-  |===========================================================================     |  93%
-  |                                                                                      
-  |===========================================================================     |  94%
-  |                                                                                      
-  |============================================================================    |  94%
-  |                                                                                      
-  |============================================================================    |  95%
-  |                                                                                      
-  |============================================================================    |  96%
-  |                                                                                      
-  |=============================================================================   |  96%
-  |                                                                                      
-  |=============================================================================   |  97%
-  |                                                                                      
-  |==============================================================================  |  97%
-  |                                                                                      
-  |==============================================================================  |  98%
-  |                                                                                      
-  |=============================================================================== |  98%
-  |                                                                                      
-  |=============================================================================== |  99%
-  |                                                                                      
-  |================================================================================|  99%
-  |                                                                                      
-  |================================================================================| 100%
 ```
 
 Next, we carry out the interpolation. A few things of note here: (1) I only hand the first 11 layers to the kriging call because those are the temperature data, (2) I leave out the `Cores` argument, so that `krigR()` determines how many cores your machine has and uses all of them to speed up the computation of the multi-layer raster, and (3) I set `nmax` to 80 to approximate a typical weather system in size:
@@ -820,13 +454,31 @@ BC_Temperature_Krig <- krigR(Data = BCq_ras[[1:11]],
   |================================================================================| 100%
 ```
 
+```
+## Warning: [writeCDF] for better results use file extension '.nc' or '.cdf'
+## see: https://stackoverflow.com/a/65398262/635245
+```
+
+```
+## Warning: [rast] unknown extent
+```
+
+```
+## Warning: [writeCDF] for better results use file extension '.nc' or '.cdf'
+## see: https://stackoverflow.com/a/65398262/635245
+```
+
+```
+## Warning: [rast] unknown extent
+```
+
 Finally, we analyse the outputs of our plotting exercise. I break these up into smaller chunks for easier digestion.
 
 #### BIO1 - Annual Mean Temperature
 
-{{% hint normal %}}
+{{% alert normal %}}
 Interpolating this data is just like statistically downscaling any other temperature product and can be done without any problems.
-{{% /hint %}}
+{{% /alert %}}
 
 
 <details>
@@ -844,16 +496,16 @@ Plot_Krigs(lapply(BC_Temperature_Krig[-3], "[[", 1),
 
 #### BIO2 - Mean Diurnal Range
 
-{{% hint warning %}}
+{{% alert warning %}}
 This data product is calculated from extreme values and would be interpolated better by first statistically downscaling the underlying data rather than the final bioclimatic variable.
-{{% /hint %}}
+{{% /alert %}}
 
 <details>
   <summary>Click here for plotting call and plot:</summary>
 
-{{% hint warning %}}
+{{% alert warning %}}
 The smooth patterns in this plot clearly highlight the issue with using `krigr()` on the final bioclimatic product.
-{{% /hint %}}
+{{% /alert %}}
 
 ```r
 Plot_Krigs(lapply(BC_Temperature_Krig[-3], "[[", 2), 
@@ -867,16 +519,16 @@ Plot_Krigs(lapply(BC_Temperature_Krig[-3], "[[", 2),
 
 #### BIO3 - Isothermality
 
-{{% hint warning %}}
+{{% alert warning %}}
 This data product is calculated from BIO2 and BIO7 and thus relies on extreme values. Conclusively, it would be interpolated better by first statistically downscaling the underlying data rather than the final bioclimatic variable.
-{{% /hint %}}
+{{% /alert %}}
 
 <details>
   <summary>Click here for plotting call and plot:</summary>
   
-{{% hint warning %}}
+{{% alert warning %}}
 The smooth patterns in this plot clearly highlight the issue with using `krigr()` on the final bioclimatic product.
-{{% /hint %}}
+{{% /alert %}}
 
 ```r
 Plot_Krigs(lapply(BC_Temperature_Krig[-3], "[[", 3), 
@@ -890,16 +542,16 @@ Plot_Krigs(lapply(BC_Temperature_Krig[-3], "[[", 3),
 
 #### BIO4 - Temperature Seasonality
 
-{{% hint warning %}}
+{{% alert warning %}}
 This data product is calculated using the standard deviation of mean values throughout our time frame. Conclusively, it would be interpolated better by first statistically downscaling the underlying data rather than the final bioclimatic variable.
-{{% /hint %}}
+{{% /alert %}}
 
 <details>
   <summary>Click here for plotting call and plot:</summary>
   
-{{% hint warning %}}
+{{% alert warning %}}
 The smooth patterns in this plot clearly highlight the issue with using `krigr()` on the final bioclimatic product.
-{{% /hint %}}
+{{% /alert %}}
 
 ```r
 Plot_Krigs(lapply(BC_Temperature_Krig[-3], "[[", 4), 
@@ -913,9 +565,9 @@ Plot_Krigs(lapply(BC_Temperature_Krig[-3], "[[", 4),
 
 #### BIO5 - Max Temperature of Warmest Month
 
-{{% hint normal %}}
+{{% alert normal %}}
 Interpolating this data is just like statistically downscaling any other temperature product and can be done without any problems.
-{{% /hint %}}
+{{% /alert %}}
 
 <details>
   <summary>Click here for plotting call and plot:</summary>
@@ -932,9 +584,9 @@ Plot_Krigs(lapply(BC_Temperature_Krig[-3], "[[", 5),
 
 #### BIO6 - Min Temperature of Coldest Month
 
-{{% hint normal %}}
+{{% alert normal %}}
 Interpolating this data is just like statistically downscaling any other temperature product and can be done without any problems.
-{{% /hint %}}
+{{% /alert %}}
 
 <details>
   <summary>Click here for plotting call and plot:</summary>
@@ -951,16 +603,16 @@ Plot_Krigs(lapply(BC_Temperature_Krig[-3], "[[", 6),
 
 #### BIO7 - Temperature Annual Range (BIO5-BIO6)
 
-{{% hint warning %}}
+{{% alert warning %}}
 This data product is calculated from BIO5 and BIO6 and thus relies on extreme values. Conclusively, it would be interpolated better by first statistically downscaling the underlying data rather than the final bioclimatic variable.
-{{% /hint %}}
+{{% /alert %}}
 
 <details>
   <summary>Click here for plotting call and plot:</summary>
   
-{{% hint warning %}}
+{{% alert warning %}}
 The smooth patterns in this plot clearly highlight the issue with using `krigr()` on the final bioclimatic product.
-{{% /hint %}}
+{{% /alert %}}
 
 ```r
 Plot_Krigs(lapply(BC_Temperature_Krig[-3], "[[", 7), 
@@ -972,13 +624,13 @@ Plot_Krigs(lapply(BC_Temperature_Krig[-3], "[[", 7),
 <img src="krigr-bioclim_files/figure-html/unnamed-chunk-10-1.png" width="1440" />
 </details>
 
-{{% hint info %}}
+{{% alert info %}}
 Since BIO5 and BIO6 can be interpolated well themselves, one may chose to use the downscaled versions of BIO5 and BIO6 to create a downscaled version of BIO7.
-{{% /hint %}}
+{{% /alert %}}
 
-{{% hint warning %}}
+{{% alert warning %}}
 Doing so, however, raises the question of how to integrate the downscaling uncertainty associated with BIO5 and BIO6 into the product for BIO7. I have submitted a research proposal to assess best practice for issues like these.
-{{% /hint %}}
+{{% /alert %}}
 
 <details>
   <summary>Click here for calculation, plotting call, and plot:</summary>
@@ -1002,9 +654,9 @@ To be fair, these differences are rather small when compared to the data range i
 
 #### BIO8 & BIO9 - Temperatures of Wettest and Driest Quarter
 
-{{% hint danger %}}
+{{% alert danger %}}
 **I do not recommend you use these kriging outputs!** They rely on water availability data which is not being interpolated here. Subsequently, the patchiness of the underlying data is lost and with it: information.
-{{% /hint %}}
+{{% /alert %}}
 
 <details>
   <summary>Click here for plotting call and plot:</summary>
@@ -1022,9 +674,9 @@ Plot_Krigs(lapply(BC_Temperature_Krig[-3], "[[", 8:9),
 
 #### BIO10 & BIO11 - Temperatures of Warmest and Coldest Quarter
 
-{{% hint danger %}}
+{{% alert danger %}}
 **I do not recommend you use these kriging outputs!** They rely on mean quarterly temperature data which is not being interpolated here. Subsequently, the patchiness of the underlying data is lost and with it: information.
-{{% /hint %}}
+{{% /alert %}}
 
 <details>
   <summary>Click here for plotting call and plot:</summary>
@@ -1043,13 +695,13 @@ Plot_Krigs(lapply(BC_Temperature_Krig[-3], "[[", 10:11),
 
 ### Water Availability
 
-{{% hint warning %}}
+{{% alert warning %}}
 Statistical downscaling of non-temperature data usually requires more than just elevation covariates.
-{{% /hint %}}
+{{% /alert %}}
 
-{{% hint info %}}
+{{% alert info %}}
 With `KrigR`, you can use different sets of covariates. I demonstrate this in the workshop material regarding [third-party covariates](/courses/krigr/third-party/#third-party-data-covariates).
-{{% /hint %}}
+{{% /alert %}}
 
 ## Session Info
 
@@ -1058,59 +710,60 @@ sessionInfo()
 ```
 
 ```
-## R version 4.0.5 (2021-03-31)
-## Platform: x86_64-w64-mingw32/x64 (64-bit)
-## Running under: Windows 10 x64 (build 19043)
+## R version 4.2.3 (2023-03-15)
+## Platform: x86_64-apple-darwin17.0 (64-bit)
+## Running under: macOS Big Sur ... 10.16
 ## 
 ## Matrix products: default
+## BLAS:   /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRlapack.dylib
 ## 
 ## locale:
-## [1] LC_COLLATE=English_United Kingdom.1252  LC_CTYPE=English_United Kingdom.1252   
-## [3] LC_MONETARY=English_United Kingdom.1252 LC_NUMERIC=C                           
-## [5] LC_TIME=English_United Kingdom.1252    
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
 ## 
 ## attached base packages:
 ## [1] parallel  stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-##  [1] mapview_2.10.2          rnaturalearthdata_0.1.0 rnaturalearth_0.1.0    
-##  [4] gimms_1.2.0             ggmap_3.0.0             cowplot_1.1.1          
-##  [7] viridis_0.6.0           viridisLite_0.4.0       ggplot2_3.3.6          
-## [10] tidyr_1.1.3             KrigR_0.1.2             httr_1.4.2             
-## [13] stars_0.5-3             abind_1.4-5             fasterize_1.0.3        
-## [16] sf_1.0-0                lubridate_1.7.10        automap_1.0-14         
-## [19] doSNOW_1.0.19           snow_0.4-3              doParallel_1.0.16      
-## [22] iterators_1.0.13        foreach_1.5.1           rgdal_1.5-23           
-## [25] raster_3.4-13           sp_1.4-5                stringr_1.4.0          
-## [28] keyring_1.2.0           ecmwfr_1.3.0            ncdf4_1.17             
+##  [1] mapview_2.11.0          rnaturalearthdata_0.1.0 rnaturalearth_0.3.2    
+##  [4] gimms_1.2.1             ggmap_3.0.2             cowplot_1.1.1          
+##  [7] viridis_0.6.2           viridisLite_0.4.1       ggplot2_3.4.1          
+## [10] tidyr_1.3.0             KrigR_0.1.2             terra_1.7-21           
+## [13] httr_1.4.5              stars_0.6-0             abind_1.4-5            
+## [16] fasterize_1.0.4         sf_1.0-12               lubridate_1.9.2        
+## [19] automap_1.1-9           doSNOW_1.0.20           snow_0.4-4             
+## [22] doParallel_1.0.17       iterators_1.0.14        foreach_1.5.2          
+## [25] rgdal_1.6-5             raster_3.6-20           sp_1.6-0               
+## [28] stringr_1.5.0           keyring_1.3.1           ecmwfr_1.5.0           
+## [31] ncdf4_1.21             
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] bitops_1.0-7             satellite_1.0.2          xts_0.12.1              
-##  [4] webshot_0.5.2            tools_4.0.5              bslib_0.3.1             
-##  [7] utf8_1.2.1               R6_2.5.0                 zyp_0.10-1.1            
-## [10] KernSmooth_2.23-18       DBI_1.1.1                colorspace_2.0-0        
-## [13] withr_2.4.2              tidyselect_1.1.0         gridExtra_2.3           
-## [16] leaflet_2.0.4.1          curl_4.3.2               compiler_4.0.5          
-## [19] leafem_0.1.3             gstat_2.0-7              labeling_0.4.2          
-## [22] bookdown_0.22            sass_0.4.1               scales_1.1.1            
-## [25] classInt_0.4-3           proxy_0.4-25             digest_0.6.27           
-## [28] rmarkdown_2.14           base64enc_0.1-3          jpeg_0.1-8.1            
-## [31] pkgconfig_2.0.3          htmltools_0.5.2          highr_0.9               
-## [34] fastmap_1.1.0            htmlwidgets_1.5.3        rlang_0.4.11            
-## [37] FNN_1.1.3                farver_2.1.0             jquerylib_0.1.4         
-## [40] generics_0.1.0           zoo_1.8-9                jsonlite_1.7.2          
-## [43] crosstalk_1.1.1          dplyr_1.0.5              magrittr_2.0.1          
-## [46] Rcpp_1.0.7               munsell_0.5.0            fansi_0.4.2             
-## [49] lifecycle_1.0.0          stringi_1.5.3            yaml_2.2.1              
-## [52] plyr_1.8.6               grid_4.0.5               crayon_1.4.1            
-## [55] lattice_0.20-41          knitr_1.33               pillar_1.6.0            
-## [58] boot_1.3-27              rjson_0.2.20             spacetime_1.2-4         
-## [61] stats4_4.0.5             codetools_0.2-18         glue_1.4.2              
-## [64] evaluate_0.14            blogdown_1.3             vctrs_0.3.7             
-## [67] png_0.1-7                RgoogleMaps_1.4.5.3      gtable_0.3.0            
-## [70] purrr_0.3.4              reshape_0.8.8            assertthat_0.2.1        
-## [73] cachem_1.0.4             xfun_0.31                lwgeom_0.2-6            
-## [76] e1071_1.7-6              rnaturalearthhires_0.2.0 class_7.3-18            
-## [79] Kendall_2.2              tibble_3.1.1             intervals_0.15.2        
-## [82] memoise_2.0.0            units_0.7-2              ellipsis_0.3.2
+##  [1] leafem_0.2.0             colorspace_2.1-0         class_7.3-21            
+##  [4] leaflet_2.1.2            satellite_1.0.4          base64enc_0.1-3         
+##  [7] rstudioapi_0.14          proxy_0.4-27             farver_2.1.1            
+## [10] fansi_1.0.4              codetools_0.2-19         cachem_1.0.7            
+## [13] knitr_1.42               jsonlite_1.8.4           png_0.1-8               
+## [16] Kendall_2.2.1            compiler_4.2.3           assertthat_0.2.1        
+## [19] fastmap_1.1.1            cli_3.6.0                htmltools_0.5.4         
+## [22] tools_4.2.3              gtable_0.3.1             glue_1.6.2              
+## [25] dplyr_1.1.0              Rcpp_1.0.10              jquerylib_0.1.4         
+## [28] vctrs_0.6.1              blogdown_1.16            crosstalk_1.2.0         
+## [31] lwgeom_0.2-11            xfun_0.37                timechange_0.2.0        
+## [34] lifecycle_1.0.3          rnaturalearthhires_0.2.1 zoo_1.8-11              
+## [37] scales_1.2.1             gstat_2.1-0              yaml_2.3.7              
+## [40] curl_5.0.0               memoise_2.0.1            gridExtra_2.3           
+## [43] sass_0.4.5               reshape_0.8.9            stringi_1.7.12          
+## [46] highr_0.10               e1071_1.7-13             boot_1.3-28.1           
+## [49] intervals_0.15.3         RgoogleMaps_1.4.5.3      rlang_1.1.0             
+## [52] pkgconfig_2.0.3          bitops_1.0-7             evaluate_0.20           
+## [55] lattice_0.20-45          purrr_1.0.1              htmlwidgets_1.6.1       
+## [58] labeling_0.4.2           tidyselect_1.2.0         plyr_1.8.8              
+## [61] magrittr_2.0.3           bookdown_0.33            R6_2.5.1                
+## [64] generics_0.1.3           DBI_1.1.3                pillar_1.8.1            
+## [67] withr_2.5.0              units_0.8-1              xts_0.13.0              
+## [70] tibble_3.2.1             spacetime_1.2-8          KernSmooth_2.23-20      
+## [73] utf8_1.2.3               rmarkdown_2.20           jpeg_0.1-10             
+## [76] grid_4.2.3               zyp_0.11-1               FNN_1.1.3.2             
+## [79] digest_0.6.31            classInt_0.4-9           webshot_0.5.4           
+## [82] stats4_4.2.3             munsell_0.5.0            bslib_0.4.2
 ```

@@ -34,7 +34,7 @@ links:
 - icon: file-powerpoint
   icon_pack: fas
   name: Slides - Chapter 7
-  url: /post/rethinking/7__05-02-2021_SUMMARY_-Model-Evaluation.html
+  url: https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/rethinking/7__05-02-2021_SUMMARY_-Model-Evaluation.html
 type: docs
 toc: true 
 menu:
@@ -50,7 +50,7 @@ weight: 8
 
 ## Material
 
-- [Slides Chapter 7](/post/rethinking/7__05-02-2021_SUMMARY_-Model-Evaluation.html) 
+- [Slides Chapter 7](https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/rethinking/7__05-02-2021_SUMMARY_-Model-Evaluation.html) 
 
 ## Introduction
 These are answers and solutions to the exercises at the end of chapter 7 in [Satistical Rethinking 2](https://xcelab.net/rm/statistical-rethinking/) by Richard McElreath. I have created these notes as a part of my ongoing involvement in the [AU Bayes Study Group](/project/aubayes/). Much of my inspiration for these solutions, where necessary, has been obtained from [Jeffrey Girard](https://jmgirard.com/statistical-rethinking-ch6/).
@@ -167,7 +167,7 @@ As for PSIS, $P_D$ (effective number of parameters) tells us about the flexibili
 
 ## Hard Exercises
 ### Practice H1
-<img src="/post/rethinking/7H1.JPG" align = "right" width = 272/>  **Question:** In 2007, The Wall Street Journal published an editorial (“We’re Number One, Alas”) with a graph of corporate tax rates in 29 countries plotted against tax Revenue. A badly fit curve was drawn in (reconstructed to the right), seemingly by hand, to make the argument that the relationship between tax rate and tax Revenue increases and then declines, such that higher tax rates can actually produce less tax Revenue. I want you to actually fit a curve to these data, found in `data(Laffer)`. Consider models that use tax rate to predict tax Revenue. Compare, using WAIC or PSIS, a straight-line model to any curved models you like. What do you conclude about the relationship between tax rate and tax Revenue? 
+<img src="/courses/rethinking/7H1.JPG" align = "right" width = 272/>  **Question:** In 2007, The Wall Street Journal published an editorial (“We’re Number One, Alas”) with a graph of corporate tax rates in 29 countries plotted against tax Revenue. A badly fit curve was drawn in (reconstructed to the right), seemingly by hand, to make the argument that the relationship between tax rate and tax Revenue increases and then declines, such that higher tax rates can actually produce less tax Revenue. I want you to actually fit a curve to these data, found in `data(Laffer)`. Consider models that use tax rate to predict tax Revenue. Compare, using WAIC or PSIS, a straight-line model to any curved models you like. What do you conclude about the relationship between tax rate and tax Revenue? 
 
 
 **Answer:** First, I begin by loading the data and standardising my variables:
@@ -414,7 +414,7 @@ Removing the outlier definitely made our models perform a lot better across the 
 ### Practice H3
 **Question:** Consider three fictional Polynesian islands. On each there is a Royal Ornithologist charged by the king with surveying the bird population. They have each found the following proportions of 5 important bird species:
 
-<img src="/post/rethinking/7H3.JPG" width="900"/>
+<img src="/courses/rethinking/7H3.JPG" width="900"/>
 
 Notice that each row sums to 1, all the birds. This problem has two parts. It is not computationally complicated. But it is conceptually tricky. First, compute the entropy of each island’s bird distribution. Interpret these entropy values. Second, use each island’s bird distribution to predict the other two. This means to compute the K-L Divergence of each island from the others, treating each island as if it were a statistical model of the other islands. You should end up with 6 different K-L Divergence values. Which island predicts the others best? Why?
 
@@ -661,7 +661,7 @@ plot(compare(b7h5_1, b7h5_2, b7h5_3, b7h5_4, b7h5_5))
 
 However, we can see that models `b7h5_1`, `b7h5_2`, and `b7h5_3` are nearly identical in their out-of-sample deviance, as are models `b7h5_4` and `b7h5_5`. To understand this, we want to look at the DAG that underlies this example:
 
-<img src="/post/rethinking/FoxDAG.png"/>
+<img src="/courses/rethinking/FoxDAG.png"/>
 
 Models `b7h5_1`, `b7h5_2`, and `b7h5_3` all use `groupsize` and one of/both `area` and/or `avgfood`. Consequently, all of these models fair the same in their predictive power because there are no open backdoor paths from either `area` or `avgfood`, as soon as `groupsize` is used in conjunction. In other words, the effect of `area` while adjusting for `groupsize` is the same as the effect of `avgfood` while adjusting for `groupsize`, because the effect of `area` is routed entirely through `avgfood`.
 

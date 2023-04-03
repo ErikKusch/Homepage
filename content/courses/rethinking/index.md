@@ -16,4 +16,4 @@ tags:
 title: Statistical Rethinking
 ---
 
-If you are seeing this page, something went awry in the build of the website. Please find the first course material for this course [here](/courses/rethinking/chapter-02/).
+If you are seeing this page, something went awry in the build of the website. Please find the first course material for this course [here](/courses/rethinking/chapter-02/). 

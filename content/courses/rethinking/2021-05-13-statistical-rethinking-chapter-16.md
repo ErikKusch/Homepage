@@ -33,7 +33,7 @@ links:
 - icon: file-powerpoint
   icon_pack: fas
   name: Slides - Chapter 16
-  url: /post/rethinking/19__14-05-2021_SUMMARY_-GLM.html
+  url: https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/rethinking/19__14-05-2021_SUMMARY_-GLM.html
 math: true
 type: docs
 toc: true 
@@ -50,7 +50,7 @@ weight: 16
 
 ## Material
 
-- [Slides Chapter 16](/post/rethinking/19__14-05-2021_SUMMARY_-GLM.html)  
+- [Slides Chapter 16](https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/rethinking/19__14-05-2021_SUMMARY_-GLM.html)  
 
 ## Introduction 
 These are answers and solutions to the exercises at the end of chapter 15 in [Satistical Rethinking 2](https://xcelab.net/rm/statistical-rethinking/) by Richard McElreath. I have created these notes as a part of my ongoing involvement in the [AU Bayes Study Group](/project/aubayes/). Much of my inspiration for these solutions, where necessary, has been obtained from 
