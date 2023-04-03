@@ -28,7 +28,6 @@ type: docs
 weight: 11
 ---
 
-<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 <div id="TOC">
 
@@ -37,11 +36,11 @@ weight: 11
 <div id="theory" class="section level2">
 <h2>Theory</h2>
 <p>Welcome to our fifth practical experience in R. Throughout the following notes, I will introduce you to a couple statistical approaches for metric or ordinal data when wanting to compare more than two samples/populations that might be useful to you and are, to varying degrees, often used in biology. To do so, I will enlist the sparrow data set we handled in our first exercise.</p>
-<p>I have prepared some {{&lt; staticref "courses/an-introduction-to-biostatistics/11—Ordinal-and-Metric-Test–More-Than-Two-Sample-_Handout.html" “newtab” &gt;}} Lecture Slides {{&lt; /staticref &gt;}} for this session.</p>
+<p>I have prepared some {{&lt; staticref “<a href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/an-introduction-to-biostatistics/11---Ordinal-and-Metric-Test--More-Than-Two-Sample-_Handout.html" class="uri">https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/an-introduction-to-biostatistics/11---Ordinal-and-Metric-Test--More-Than-Two-Sample-_Handout.html</a>” “newtab” &gt;}} Lecture Slides {{&lt; /staticref &gt;}} for this session.</p>
 </div>
 <div id="data" class="section level2">
 <h2>Data</h2>
-<p>Find the data for this exercise {{&lt; staticref “courses/an-introduction-to-biostatistics/Data/1 - Sparrow_Data_READY.rds” “newtab” &gt;}} here{{&lt; /staticref &gt;}}, {{&lt; staticref “courses/an-introduction-to-biostatistics/Data/2a - Sparrow_ResettledSIMA_READY.rds” “newtab” &gt;}} here{{&lt; /staticref &gt;}}, and {{&lt; staticref “courses/an-introduction-to-biostatistics/Data/2b - Sparrow_ResettledSIUK_READY.rds” “newtab” &gt;}} here{{&lt; /staticref &gt;}}.</p>
+<p>Find the data for this exercise {{&lt; staticref “<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/1" class="uri">https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/1</a> - Sparrow_Data_READY.rds” “newtab” &gt;}} here{{&lt; /staticref &gt;}}, {{&lt; staticref “<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/2a" class="uri">https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/2a</a> - Sparrow_ResettledSIMA_READY.rds” “newtab” &gt;}} here{{&lt; /staticref &gt;}}, and {{&lt; staticref “<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/2b" class="uri">https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/2b</a> - Sparrow_ResettledSIUK_READY.rds” “newtab” &gt;}} here{{&lt; /staticref &gt;}}.</p>
 </div>
 <div id="preparing-our-procedure" class="section level2">
 <h2>Preparing Our Procedure</h2>
@@ -99,7 +98,7 @@ Climates &lt;- as.factor(Climates)
 
 kruskal.test(Weights_vec, Climates)</code></pre>
 <pre><code>## 
-##  Kruskal-Wallis rank sum test
+## 	Kruskal-Wallis rank sum test
 ## 
 ## data:  Weights_vec and Climates
 ## Kruskal-Wallis chi-squared = 150.98, df = 2, p-value &lt; 2.2e-16</code></pre>
@@ -125,7 +124,7 @@ Climates &lt;- as.factor(Climates)
 
 kruskal.test(Heights_vec, Climates)</code></pre>
 <pre><code>## 
-##  Kruskal-Wallis rank sum test
+## 	Kruskal-Wallis rank sum test
 ## 
 ## data:  Heights_vec and Climates
 ## Kruskal-Wallis chi-squared = 15.635, df = 2, p-value = 0.0004027</code></pre>
@@ -151,7 +150,7 @@ Climates &lt;- as.factor(Climates)
 
 kruskal.test(Wing.Chords_vec, Climates)</code></pre>
 <pre><code>## 
-##  Kruskal-Wallis rank sum test
+## 	Kruskal-Wallis rank sum test
 ## 
 ## data:  Wing.Chords_vec and Climates
 ## Kruskal-Wallis chi-squared = 41.539, df = 2, p-value = 9.548e-10</code></pre>

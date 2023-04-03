@@ -31,10 +31,10 @@ weight: 12
 ## Theory 
 Welcome to our sixth practical experience in R. Throughout the following notes, I will introduce you to a couple of simple parametric test. Whilst parametric tests are used extremely often in biological statistics, they can be somewhat challenging to fit to your data as you will see soon. To do so, I will enlist the sparrow data set we handled in our first exercise. Additionally, todays seminar is showing plotting via base plot instead of `ggplot2` to highlight the usefulness of base plot and show you the base notation.
 
-I have prepared some {{< staticref "courses/an-introduction-to-biostatistics/12---Simple-Parametric-Tests_Handout.html" "newtab" >}} Lecture Slides {{< /staticref >}} for this session.
+I have prepared some {{< staticref "https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/an-introduction-to-biostatistics/12---Simple-Parametric-Tests_Handout.html" "newtab" >}} Lecture Slides {{< /staticref >}} for this session.
 
 ## Data
-Find the data for this exercise {{< staticref "courses/an-introduction-to-biostatistics/Data/1 - Sparrow_Data_READY.rds" "newtab" >}} here{{< /staticref >}} and {{< staticref "courses/an-introduction-to-biostatistics/Data/2b - Sparrow_ResettledSIUK_READY.rds" "newtab" >}} here{{< /staticref >}}.
+Find the data for this exercise {{< staticref "https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/1 - Sparrow_Data_READY.rds" "newtab" >}} here{{< /staticref >}} and {{< staticref "https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/2b - Sparrow_ResettledSIUK_READY.rds" "newtab" >}} here{{< /staticref >}}.
 
 ## Preparing Our Procedure
 To ensure others can reproduce our analysis we run the following three lines of code at the beginning of our `R` coding file.
@@ -174,7 +174,7 @@ t.test(Data_df$Weight ~ Data_df$Climate, var.equal = TRUE)
 ## 
 ## data:  Data_df$Weight by Data_df$Climate
 ## t = -14.852, df = 381, p-value < 2.2e-16
-## alternative hypothesis: true difference in means is not equal to 0
+## alternative hypothesis: true difference in means between group Coastal and group Continental is not equal to 0
 ## 95 percent confidence interval:
 ##  -2.428439 -1.860640
 ## sample estimates:
@@ -197,7 +197,7 @@ t.test(Data_df$Height ~ Data_df$Climate, var.equal = FALSE)
 ## 
 ## data:  Data_df$Height by Data_df$Climate
 ## t = -0.27916, df = 365.69, p-value = 0.7803
-## alternative hypothesis: true difference in means is not equal to 0
+## alternative hypothesis: true difference in means between group Coastal and group Continental is not equal to 0
 ## 95 percent confidence interval:
 ##  -0.2329126  0.1750052
 ## sample estimates:
@@ -220,7 +220,7 @@ t.test(Data_df$Wing.Chord ~ Data_df$Climate, var.equal = FALSE)
 ## 
 ## data:  Data_df$Wing.Chord by Data_df$Climate
 ## t = -0.12285, df = 370.22, p-value = 0.9023
-## alternative hypothesis: true difference in means is not equal to 0
+## alternative hypothesis: true difference in means between group Coastal and group Continental is not equal to 0
 ## 95 percent confidence interval:
 ##  -0.03985039  0.03516377
 ## sample estimates:
@@ -448,12 +448,12 @@ t.test(DataSI, Data_df_Resettled$Weight, paired = TRUE)
 ## 
 ## data:  DataSI and Data_df_Resettled$Weight
 ## t = 8.4762, df = 65, p-value = 4.17e-12
-## alternative hypothesis: true difference in means is not equal to 0
+## alternative hypothesis: true mean difference is not equal to 0
 ## 95 percent confidence interval:
 ##  1.583629 2.559914
 ## sample estimates:
-## mean of the differences 
-##                2.071771
+## mean difference 
+##        2.071771
 ```
 We were right, individual sparrow weights change significantly after our relocation experiment and we **reject the null hypothesis**. This is in accordance with the results of the Wilcoxon Signed Rank Test as well as the Friedman Test.
 

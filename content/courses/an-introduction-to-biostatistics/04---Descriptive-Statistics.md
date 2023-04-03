@@ -36,7 +36,7 @@ These are the solutions to the exercises contained within the handout to Descrip
 I have prepared some I have prepared some  {{< staticref "https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/an-introduction-to-biostatistics/04---Descriptive-Statistics_Handout.html" "newtab" >}} Lecture Slides {{< /staticref >}} for this session.
 
 ## Data
-Find the data for this exercise {{< staticref "https://github.com/ErikKusch/Homepage/raw/master/static/courses/an-introduction-to-biostatistics/Data/DescriptiveData.csv" "newtab" >}} here{{< /staticref >}}.
+Find the data for this exercise {{< staticref "https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/DescriptiveData.csv" "newtab" >}} here{{< /staticref >}}.
 
 ## Packages
 As you will remember from our lecture slides, the calculation of the mode in `R` can either be achieved through some intense coding or simply by using the `mlv(..., method="mfv")` function contained within the `modeest` package (unfortunately, this package is out of date and can sometimes be challenging to install).  
@@ -94,7 +94,7 @@ Our data is located in the `Data` folder and is called `DescriptiveData.csv`. Si
 # Data_df <- read.csv('Data/DescriptiveData.csv') # load data file from Data
 # folder if you downloaded the data as a .csv alternatively, read the csv
 # directly from the url
-Data_df <- read.csv("https://github.com/ErikKusch/Homepage/raw/master/static/courses/an-introduction-to-biostatistics/Data/DescriptiveData.csv")
+Data_df <- read.csv("https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/DescriptiveData.csv")
 ```
 
 ## What's contained within our data? 

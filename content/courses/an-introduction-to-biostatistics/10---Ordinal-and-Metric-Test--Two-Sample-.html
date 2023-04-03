@@ -28,7 +28,6 @@ type: docs
 weight: 10
 ---
 
-<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 <div id="TOC">
 
@@ -37,11 +36,11 @@ weight: 10
 <div id="theory" class="section level2">
 <h2>Theory</h2>
 <p>Welcome to our fourth practical experience in R. Throughout the following notes, I will introduce you to a couple statistical approaches for metric or ordinal data when wanting to compare two samples/populations that might be useful to you and are, to varying degrees, often used in biology. To do so, I will enlist the sparrow data set we handled in our first exercise.</p>
-<p>I have prepared some {{&lt; staticref "courses/an-introduction-to-biostatistics/10—Ordinal-and-Metric-Test–Two-Sample-_Handout.html" “newtab” &gt;}} Lecture Slides {{&lt; /staticref &gt;}} for this session.</p>
+<p>I have prepared some {{&lt; staticref “<a href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/an-introduction-to-biostatistics/10---Ordinal-and-Metric-Test--Two-Sample-_Handout.html" class="uri">https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/an-introduction-to-biostatistics/10---Ordinal-and-Metric-Test--Two-Sample-_Handout.html</a>” “newtab” &gt;}} Lecture Slides {{&lt; /staticref &gt;}} for this session.</p>
 </div>
 <div id="data" class="section level2">
 <h2>Data</h2>
-<p>Find the data for this exercise {{&lt; staticref “courses/an-introduction-to-biostatistics/Data/2b - Sparrow_ResettledSIUK_READY.rds” “newtab” &gt;}} here{{&lt; /staticref &gt;}}.</p>
+<p>Find the data for this exercise {{&lt; staticref “<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/2b" class="uri">https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/2b</a> - Sparrow_ResettledSIUK_READY.rds” “newtab” &gt;}} here{{&lt; /staticref &gt;}}.</p>
 </div>
 <div id="preparing-our-procedure" class="section level2">
 <h2>Preparing Our Procedure</h2>
@@ -94,7 +93,7 @@ with(Data_df,
                  paired = FALSE)
      )</code></pre>
 <pre><code>## 
-##  Wilcoxon rank sum test with continuity correction
+## 	Wilcoxon rank sum test with continuity correction
 ## 
 ## data:  Weight[Climate == &quot;Continental&quot;] and Weight[Climate != &quot;Continental&quot;]
 ## W = 22104, p-value &lt; 2.2e-16
@@ -114,7 +113,7 @@ with(Data_df,
                  paired = FALSE)
      )</code></pre>
 <pre><code>## 
-##  Wilcoxon rank sum test with continuity correction
+## 	Wilcoxon rank sum test with continuity correction
 ## 
 ## data:  Height[Climate == &quot;Continental&quot;] and Height[Climate != &quot;Continental&quot;]
 ## W = 11498, p-value = 0.1971
@@ -134,7 +133,7 @@ with(Data_df,
                  paired = FALSE)
      )</code></pre>
 <pre><code>## 
-##  Wilcoxon rank sum test with continuity correction
+## 	Wilcoxon rank sum test with continuity correction
 ## 
 ## data:  Wing.Chord[Climate == &quot;Continental&quot;] and Wing.Chord[Climate != &quot;Continental&quot;]
 ## W = 10505, p-value = 0.01213
@@ -161,7 +160,7 @@ median(Data_df$Wing.Chord[which(Data_df$Climate == &quot;Continental&quot;)], na
                  paired = FALSE)
      )</code></pre>
 <pre><code>## 
-##  Wilcoxon rank sum test with continuity correction
+## 	Wilcoxon rank sum test with continuity correction
 ## 
 ## data:  Nesting.Height[Predator.Presence == &quot;Yes&quot;] and Nesting.Height[Predator.Presence != &quot;Yes&quot;]
 ## W = 25420, p-value = 0.0007678
@@ -178,7 +177,7 @@ median(Data_df$Wing.Chord[which(Data_df$Climate == &quot;Continental&quot;)], na
                  paired = FALSE)
      )</code></pre>
 <pre><code>## 
-##  Wilcoxon rank sum test with continuity correction
+## 	Wilcoxon rank sum test with continuity correction
 ## 
 ## data:  Nesting.Height[Predator.Type == &quot;Avian&quot;] and Nesting.Height[Predator.Type != &quot;Avian&quot;]
 ## W = 5228, p-value &lt; 2.2e-16
@@ -211,7 +210,7 @@ with(Data_df,
                  paired = FALSE)
      )</code></pre>
 <pre><code>## 
-##  Wilcoxon rank sum test with continuity correction
+## 	Wilcoxon rank sum test with continuity correction
 ## 
 ## data:  HR_vec[Climate == &quot;Continental&quot;] and HR_vec[Climate != &quot;Continental&quot;]
 ## W = 11897, p-value = 0.3666
@@ -239,7 +238,7 @@ with(Data_df,
                  paired = FALSE)
      )</code></pre>
 <pre><code>## 
-##  Wilcoxon rank sum test with continuity correction
+## 	Wilcoxon rank sum test with continuity correction
 ## 
 ## data:  Weight[Sex == &quot;Male&quot;] and Weight[Sex != &quot;Male&quot;]
 ## W = 187772, p-value &lt; 2.2e-16
@@ -259,7 +258,7 @@ median(Data_df$Weight[which(Data_df$Sex == &quot;Male&quot;)], na.rm = TRUE) &gt
                  paired = FALSE)
      )</code></pre>
 <pre><code>## 
-##  Wilcoxon rank sum test with continuity correction
+## 	Wilcoxon rank sum test with continuity correction
 ## 
 ## data:  Height[Sex == &quot;Male&quot;] and Height[Sex != &quot;Male&quot;]
 ## W = 141956, p-value = 0.9525
@@ -274,10 +273,10 @@ median(Data_df$Weight[which(Data_df$Sex == &quot;Male&quot;)], na.rm = TRUE) &gt
                  paired = FALSE)
      )</code></pre>
 <pre><code>## 
-##  Wilcoxon rank sum test with continuity correction
+## 	Wilcoxon rank sum test with continuity correction
 ## 
 ## data:  Wing.Chord[Sex == &quot;Male&quot;] and Wing.Chord[Sex != &quot;Male&quot;]
-## W = 141637, p-value = 0.9021
+## W = 141636, p-value = 0.9021
 ## alternative hypothesis: true location shift is not equal to 0</code></pre>
 <p>According to our previous analysis within this practical, <code>Climate</code> has been determined to be a major driver wing chords of common house sparrows. With our current analysis in mind, we can conclude that the <code>Sex</code> of any given <em>Passer domesticus</em> individual does not influence the wing chord of said individual (p = <span class="math inline">\(0.9020933\)</span>). Therefore we <strong>accept the null hypothesis</strong> and don’t identify any direction of effects since there is no effect.</p>
 </div>
@@ -305,7 +304,7 @@ To this end, presume we have taken the entire <em>Passer domesticus</em> populat
 <pre class="r"><code>with(Data_df[which(Data_df$Index == &quot;SI&quot;),], 
      wilcox.test(x = Weight, y = Data_df_Resettled$Weight, paired = TRUE))</code></pre>
 <pre><code>## 
-##  Wilcoxon signed rank test with continuity correction
+## 	Wilcoxon signed rank test with continuity correction
 ## 
 ## data:  Weight and Data_df_Resettled$Weight
 ## V = 2044, p-value = 2.073e-09
@@ -326,7 +325,7 @@ median(Data_df$Weight[which(Data_df$Index == &quot;SI&quot;)], na.rm = TRUE) &gt
 <pre><code>## Warning in wilcox.test.default(x = Height, y = Data_df_Resettled$Height, :
 ## cannot compute exact p-value with zeroes</code></pre>
 <pre><code>## 
-##  Wilcoxon signed rank test with continuity correction
+## 	Wilcoxon signed rank test with continuity correction
 ## 
 ## data:  Height and Data_df_Resettled$Height
 ## V = 0, p-value = NA
@@ -345,7 +344,7 @@ median(Data_df$Weight[which(Data_df$Index == &quot;SI&quot;)], na.rm = TRUE) &gt
 <pre><code>## Warning in wilcox.test.default(x = Wing.Chord, y =
 ## Data_df_Resettled$Wing.Chord, : cannot compute exact p-value with zeroes</code></pre>
 <pre><code>## 
-##  Wilcoxon signed rank test with continuity correction
+## 	Wilcoxon signed rank test with continuity correction
 ## 
 ## data:  Wing.Chord and Data_df_Resettled$Wing.Chord
 ## V = 0, p-value = NA
@@ -371,7 +370,7 @@ PP_Sib == PP_UK</code></pre>
                  y = Data_df_Resettled$Nesting.Height, 
                  paired = TRUE))</code></pre>
 <pre><code>## 
-##  Wilcoxon signed rank exact test
+## 	Wilcoxon signed rank exact test
 ## 
 ## data:  Nesting.Height and Data_df_Resettled$Nesting.Height
 ## V = 65, p-value = 7.404e-05
@@ -402,7 +401,7 @@ NH_Sib &lt; NH_UK</code></pre>
                  y = as.numeric(factor(Data_df_Resettled$Home.Range)), 
                  paired = TRUE))</code></pre>
 <pre><code>## 
-##  Wilcoxon signed rank test with continuity correction
+## 	Wilcoxon signed rank test with continuity correction
 ## 
 ## data:  as.numeric(factor(Home.Range)) and as.numeric(factor(Data_df_Resettled$Home.Range))
 ## V = 348.5, p-value = 0.002891

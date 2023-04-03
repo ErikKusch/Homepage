@@ -28,7 +28,6 @@ type: docs
 weight: 12
 ---
 
-<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 <div id="TOC">
 
@@ -37,11 +36,11 @@ weight: 12
 <div id="theory" class="section level2">
 <h2>Theory</h2>
 <p>Welcome to our sixth practical experience in R. Throughout the following notes, I will introduce you to a couple of simple parametric test. Whilst parametric tests are used extremely often in biological statistics, they can be somewhat challenging to fit to your data as you will see soon. To do so, I will enlist the sparrow data set we handled in our first exercise. Additionally, todays seminar is showing plotting via base plot instead of <code>ggplot2</code> to highlight the usefulness of base plot and show you the base notation.</p>
-<p>I have prepared some {{&lt; staticref “courses/an-introduction-to-biostatistics/12—Simple-Parametric-Tests_Handout.html” “newtab” &gt;}} Lecture Slides {{&lt; /staticref &gt;}} for this session.</p>
+<p>I have prepared some {{&lt; staticref “<a href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/an-introduction-to-biostatistics/12---Simple-Parametric-Tests_Handout.html" class="uri">https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/an-introduction-to-biostatistics/12---Simple-Parametric-Tests_Handout.html</a>” “newtab” &gt;}} Lecture Slides {{&lt; /staticref &gt;}} for this session.</p>
 </div>
 <div id="data" class="section level2">
 <h2>Data</h2>
-<p>Find the data for this exercise {{&lt; staticref “courses/an-introduction-to-biostatistics/Data/1 - Sparrow_Data_READY.rds” “newtab” &gt;}} here{{&lt; /staticref &gt;}} and {{&lt; staticref “courses/an-introduction-to-biostatistics/Data/2b - Sparrow_ResettledSIUK_READY.rds” “newtab” &gt;}} here{{&lt; /staticref &gt;}}.</p>
+<p>Find the data for this exercise {{&lt; staticref “<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/1" class="uri">https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/1</a> - Sparrow_Data_READY.rds” “newtab” &gt;}} here{{&lt; /staticref &gt;}} and {{&lt; staticref “<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/2b" class="uri">https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/2b</a> - Sparrow_ResettledSIUK_READY.rds” “newtab” &gt;}} here{{&lt; /staticref &gt;}}.</p>
 </div>
 <div id="preparing-our-procedure" class="section level2">
 <h2>Preparing Our Procedure</h2>
@@ -133,11 +132,11 @@ Data_df$Climate &lt;- droplevels(factor(Data_df$Climate))</code></pre>
 Let’s start with the weight of <em>Passer domesticus</em> individuals as grouped by the climate type present at the site weights have been recorded at:</p>
 <pre class="r"><code>t.test(Data_df$Weight ~ Data_df$Climate, var.equal = TRUE)</code></pre>
 <pre><code>## 
-##  Two Sample t-test
+## 	Two Sample t-test
 ## 
 ## data:  Data_df$Weight by Data_df$Climate
 ## t = -14.852, df = 381, p-value &lt; 2.2e-16
-## alternative hypothesis: true difference in means is not equal to 0
+## alternative hypothesis: true difference in means between group Coastal and group Continental is not equal to 0
 ## 95 percent confidence interval:
 ##  -2.428439 -1.860640
 ## sample estimates:
@@ -148,11 +147,11 @@ Let’s start with the weight of <em>Passer domesticus</em> individuals as group
 Let’s move on to the height of <em>Passer domesticus</em> individuals as grouped by the climate type present at the site weights have been recorded at:</p>
 <pre class="r"><code>t.test(Data_df$Height ~ Data_df$Climate, var.equal = FALSE)</code></pre>
 <pre><code>## 
-##  Welch Two Sample t-test
+## 	Welch Two Sample t-test
 ## 
 ## data:  Data_df$Height by Data_df$Climate
 ## t = -0.27916, df = 365.69, p-value = 0.7803
-## alternative hypothesis: true difference in means is not equal to 0
+## alternative hypothesis: true difference in means between group Coastal and group Continental is not equal to 0
 ## 95 percent confidence interval:
 ##  -0.2329126  0.1750052
 ## sample estimates:
@@ -163,11 +162,11 @@ Let’s move on to the height of <em>Passer domesticus</em> individuals as group
 Lastly, we test the wing chords of <em>Passer domesticus</em> individuals as grouped by the climate type present at the site weights have been recorded at:</p>
 <pre class="r"><code>t.test(Data_df$Wing.Chord ~ Data_df$Climate, var.equal = FALSE)</code></pre>
 <pre><code>## 
-##  Welch Two Sample t-test
+## 	Welch Two Sample t-test
 ## 
 ## data:  Data_df$Wing.Chord by Data_df$Climate
 ## t = -0.12285, df = 370.22, p-value = 0.9023
-## alternative hypothesis: true difference in means is not equal to 0
+## alternative hypothesis: true difference in means between group Coastal and group Continental is not equal to 0
 ## 95 percent confidence interval:
 ##  -0.03985039  0.03516377
 ## sample estimates:
@@ -324,7 +323,7 @@ WeightDiff &lt;- DataSI-Data_df_Resettled$Weight
 # shapiro test
 shapiro.test(WeightDiff)</code></pre>
 <pre><code>## 
-##  Shapiro-Wilk normality test
+## 	Shapiro-Wilk normality test
 ## 
 ## data:  WeightDiff
 ## W = 0.97361, p-value = 0.1716</code></pre>
@@ -340,16 +339,16 @@ qqline(WeightDiff)</code></pre>
 <p>Now let’s go on to test whether sparrow weights change significantly per individual due to our relocation experiment (we expect this from future test in our practicals):</p>
 <pre class="r"><code>t.test(DataSI, Data_df_Resettled$Weight, paired = TRUE)</code></pre>
 <pre><code>## 
-##  Paired t-test
+## 	Paired t-test
 ## 
 ## data:  DataSI and Data_df_Resettled$Weight
 ## t = 8.4762, df = 65, p-value = 4.17e-12
-## alternative hypothesis: true difference in means is not equal to 0
+## alternative hypothesis: true mean difference is not equal to 0
 ## 95 percent confidence interval:
 ##  1.583629 2.559914
 ## sample estimates:
-## mean of the differences 
-##                2.071771</code></pre>
+## mean difference 
+##        2.071771</code></pre>
 <p>We were right, individual sparrow weights change significantly after our relocation experiment and we <strong>reject the null hypothesis</strong>. This is in accordance with the results of the Wilcoxon Signed Rank Test as well as the Friedman Test.</p>
 <p>Let’s go on to visualise our data to make better sense of what is going on here:</p>
 <pre class="r"><code># Select the sparrow weights
@@ -470,7 +469,7 @@ anova(model)</code></pre>
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
 ## Residual standard error: 1.017 on 381 degrees of freedom
-## Multiple R-squared:  0.03666,    Adjusted R-squared:  0.0316 
+## Multiple R-squared:  0.03666,	Adjusted R-squared:  0.0316 
 ## F-statistic: 7.249 on 2 and 381 DF,  p-value: 0.0008129</code></pre>
 <ul>
 <li>The mean sparrow height in coastal climates is 14.0799387cm (this is our <strong>Intercept</strong>/<em>Baseline</em>)<br />
@@ -818,7 +817,7 @@ anova(LM_fit6)</code></pre>
 ## 
 ## Residual standard error: 0.1895 on 465 degrees of freedom
 ##   (590 observations deleted due to missingness)
-## Multiple R-squared:  0.784,  Adjusted R-squared:  0.7789 
+## Multiple R-squared:  0.784,	Adjusted R-squared:  0.7789 
 ## F-statistic: 153.5 on 11 and 465 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 </div>

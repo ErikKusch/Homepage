@@ -34,7 +34,7 @@ Welcome to our first "real" practical experience in `R`. The following notes pre
 I have prepared some {{< staticref "https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/an-introduction-to-biostatistics/07---Data-Handling-and-Data-Mining_Handout.html" "newtab" >}} Lecture Slides {{< /staticref >}} for this session.
 
 ## Data
-Find the data for this exercise {{< staticref "https://github.com/ErikKusch/Homepage/raw/master/static/courses/an-introduction-to-biostatistics/Data/SparrowData.csv" "newtab" >}} here{{< /staticref >}}.
+Find the data for this exercise {{< staticref "https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/SparrowData.csv" "newtab" >}} here{{< /staticref >}}.
 
 ## Preparing Our Procedure 
 The following three sections are what I consider to be *essential* parts of the preamble to any `R`-based analysis. I highly recommend clearly indicating these bits in your code. 
@@ -111,7 +111,7 @@ Loading data is crucial to any analysis in `R`. Period.
 
 ```r
 # Data_df_base <- read.csv(file = paste(Dir.Data, "/SparrowData.csv", sep=""), header = TRUE)
-Data_df_base <- read.csv("https://github.com/ErikKusch/Homepage/raw/master/static/courses/an-introduction-to-biostatistics/Data/SparrowData.csv", 
+Data_df_base <- read.csv("https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/SparrowData.csv", 
                          header = TRUE)
 Data_df <- Data_df_base # duplicate and save initial data on a new object
 ```

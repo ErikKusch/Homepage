@@ -31,10 +31,10 @@ weight: 9
 ## Theory
 Welcome to our third practical experience in R. Throughout the following notes, I will introduce you to a couple statistical correlation approaches that might be useful to you and are, to varying degrees, often used in biology. To do so, I will enlist the sparrow data set we handled in our first exercise.
 
-I have prepared some {{< staticref "courses/an-introduction-to-biostatistics/09---Correlation-Tests_Handout.html" "newtab" >}} Lecture Slides {{< /staticref >}} for this session.
+I have prepared some {{< staticref "https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/an-introduction-to-biostatistics/09---Correlation-Tests_Handout.html" "newtab" >}} Lecture Slides {{< /staticref >}} for this session.
 
 ## Data 
-Find the data for this exercise {{< staticref "courses/an-introduction-to-biostatistics/Data/1 - Sparrow_Data_READY.rds" "newtab" >}} here{{< /staticref >}}.
+Find the data for this exercise {{< staticref "https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/1 - Sparrow_Data_READY.rds" "newtab" >}} here{{< /staticref >}}. 
 
 ## Preparing Our Procedure
 To ensure others can reproduce our analysis we run the following three lines of code at the beginning of our `R` coding file.
@@ -292,7 +292,7 @@ ggplot(data = plot_df, aes(x = RankedWeight, y = RankedEggWeight)) +
 ```
 
 ```
-## `geom_smooth()` using formula 'y ~ x'
+## `geom_smooth()` using formula = 'y ~ x'
 ```
 
 <img src="09---Correlation-Tests_files/figure-html/Kendall.26b-1.png" width="1440" />
@@ -305,7 +305,7 @@ ggplot(data = plot_df, aes(x = RankedWeight, y = RankedEggNumber)) +
 ```
 
 ```
-## `geom_smooth()` using formula 'y ~ x'
+## `geom_smooth()` using formula = 'y ~ x'
 ```
 
 <img src="09---Correlation-Tests_files/figure-html/Kendall.26b-2.png" width="1440" />
@@ -396,7 +396,7 @@ ggplot(data = Data_df, aes(x = abs(Latitude), y = Height)) +
 ```
 
 ```
-## `geom_smooth()` using formula 'y ~ x'
+## `geom_smooth()` using formula = 'y ~ x'
 ```
 
 <img src="09---Correlation-Tests_files/figure-html/Spearman1-1.png" width="1440" />
@@ -437,7 +437,7 @@ ggplot(data = Data_df, aes(x = abs(Latitude), y = Weight)) +
 ```
 
 ```
-## `geom_smooth()` using formula 'y ~ x'
+## `geom_smooth()` using formula = 'y ~ x'
 ```
 
 <img src="09---Correlation-Tests_files/figure-html/Spearman-1.png" width="1440" />
@@ -455,8 +455,8 @@ cor.test(x = abs(Data_df$Latitude), y = Data_df$Wing.Chord,
 ```
 
 ```
-## Warning in cor.test.default(x = abs(Data_df$Latitude), y = Data_df$Wing.Chord, :
-## Cannot compute exact p-value with ties
+## Warning in cor.test.default(x = abs(Data_df$Latitude), y = Data_df$Wing.Chord,
+## : Cannot compute exact p-value with ties
 ```
 
 ```
@@ -478,7 +478,7 @@ ggplot(data = Data_df, aes(x = abs(Latitude), y = Wing.Chord)) +
 ```
 
 ```
-## `geom_smooth()` using formula 'y ~ x'
+## `geom_smooth()` using formula = 'y ~ x'
 ```
 
 <img src="09---Correlation-Tests_files/figure-html/Spearman2-1.png" width="1440" />
@@ -520,15 +520,15 @@ ggplot(data = Data_df, aes(x = abs(Latitude), y = Number.of.Eggs)) +
 ```
 
 ```
-## `geom_smooth()` using formula 'y ~ x'
+## `geom_smooth()` using formula = 'y ~ x'
 ```
 
 ```
-## Warning: Removed 394 rows containing non-finite values (stat_smooth).
+## Warning: Removed 394 rows containing non-finite values (`stat_smooth()`).
 ```
 
 ```
-## Warning: Removed 394 rows containing missing values (geom_point).
+## Warning: Removed 394 rows containing missing values (`geom_point()`).
 ```
 
 <img src="09---Correlation-Tests_files/figure-html/Spearman3-1.png" width="1440" />
@@ -546,8 +546,8 @@ cor.test(x = abs(Data_df$Latitude), y = Data_df$Egg.Weight,
 ```
 
 ```
-## Warning in cor.test.default(x = abs(Data_df$Latitude), y = Data_df$Egg.Weight, :
-## Cannot compute exact p-value with ties
+## Warning in cor.test.default(x = abs(Data_df$Latitude), y = Data_df$Egg.Weight,
+## : Cannot compute exact p-value with ties
 ```
 
 ```
@@ -569,15 +569,15 @@ ggplot(data = Data_df, aes(x = abs(Latitude), y = Egg.Weight)) +
 ```
 
 ```
-## `geom_smooth()` using formula 'y ~ x'
+## `geom_smooth()` using formula = 'y ~ x'
 ```
 
 ```
-## Warning: Removed 395 rows containing non-finite values (stat_smooth).
+## Warning: Removed 395 rows containing non-finite values (`stat_smooth()`).
 ```
 
 ```
-## Warning: Removed 395 rows containing missing values (geom_point).
+## Warning: Removed 395 rows containing missing values (`geom_point()`).
 ```
 
 <img src="09---Correlation-Tests_files/figure-html/Spearman4-1.png" width="1440" />

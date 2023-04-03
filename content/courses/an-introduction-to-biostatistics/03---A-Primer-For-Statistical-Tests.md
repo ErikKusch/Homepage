@@ -36,7 +36,7 @@ These are the solutions to the exercises contained within the handout to A Prime
 I have prepared some I have prepared some  {{< staticref "https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/an-introduction-to-biostatistics/03---A-Primer-For-Statistical-Tests_Handout.html" "newtab" >}} Lecture Slides {{< /staticref >}} for this session.
 
 ## Data
-Find the data for this exercise {{< staticref "https://github.com/ErikKusch/Homepage/raw/master/static/courses/an-introduction-to-biostatistics/Data/Primer.RData" "newtab" >}} here{{< /staticref >}}.
+Find the data for this exercise {{< staticref "https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/Primer.RData" "newtab" >}} here{{< /staticref >}}.
 
 ## Loading the `R` Environment Object 
 
