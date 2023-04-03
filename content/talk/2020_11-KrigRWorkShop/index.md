@@ -19,9 +19,9 @@ slides:
 summary: A web-based workshop to introduce the `R`-Package `KrigR` which introduces intuitive downloading and downscaling methods for ERA5(-Land) climate reanalysis data to `R`-users.
 tags: [Statistical Downscaling, Climate Data, KrigR]
 title: KrigR - Downscaling State-of-the-Art Climate Data for Macroecologists
-url_code: "https://github.com/ErikKusch/KrigR"
-url_pdf: post/krigr-mats/krigrworkshop/
-url_slides: 
+# url_code: "https://github.com/ErikKusch/KrigR"
+# url_slides: /courses/krigr/
+url_pdf: 
 url_video: "https://www.youtube.com/watch?v=wwb107L4wVw&ab_channel=ErikKusch"
 ---
 

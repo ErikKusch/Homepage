@@ -33,7 +33,7 @@ weight: 2
 ## Theory
 These are the solutions to the exercises contained within the handout to Introduction to R which walks you through the basics of the `R` machinery. `R` is a coding language that can be highly individualised and hence there are often multiple solutions to the same problem. Within these solutions, I shall only present you with one solution for every given task. However, do keep in mind that there is probably a myriad of other ways to achieve your goal. 
 
-I have prepared some {{< staticref "courses/an-introduction-to-biostatistics/02---Introduction-to-R_Handout.html" "newtab" >}} Lecture Slides {{< /staticref >}} for this session.
+I have prepared some {{< staticref "https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/an-introduction-to-biostatistics/02---Introduction-to-R_Handout.html" "newtab" >}} Lecture Slides {{< /staticref >}} for this session.
 
 <!-- [Lecture Slides](erikkusch.com/courses/An Introduction to Biostatistics/02---Introduction-to-R_Handout.html) for this session. -->
 

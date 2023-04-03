@@ -19,9 +19,9 @@ slides:
 summary: A poster about my recent vegetation memory in global dryland research I presented and won some awards for at ISEM 2019.
 tags: [Vegetation Memory, Resilience, Statistical Downscaling]
 title: Intrinsic vegetation memory as a proxy of engineering resilience may be an oversimplification.
-url_code: "https://github.com/ErikKusch/Vegetation-Memory"
+# url_code: "https://github.com/ErikKusch/Vegetation-Memory"
 url_pdf: ""
-url_poster: "/talks/2019_ISEM_Poster.pdf"
+url_poster: "https://github.com/ErikKusch/Homepage/raw/master/static/talks/2010_09_ISEM_Poster.pdf"
 url_video: ""
 ---
   

@@ -13,15 +13,15 @@ image:
 links: null
 location: Online Meeting
 math: true
-# projects: [KrigR]
+projects: [KrigR]
 publishDate: "2022-02-24T00:00:00Z"
 # slides: ""
 summary: A comprehensive overview of the `KrigR` package.
-# tags: [Statistical Downscaling, Climate Data, KrigR]
+tags: [Statistical Downscaling, Climate Data, KrigR]
 title: Climate Data Pipelines for the 21st Century - Efficient Data Retrieval and Processing
-url_code: "https://github.com/ErikKusch/KrigR"
+# url_code: "https://github.com/ErikKusch/KrigR"
 # url_pdf: ""
-url_slides: "/talks/KrigRDemo.pptx"
+url_slides: "https://github.com/ErikKusch/Homepage/raw/master/static/talks/KrigRDemo.pptx"
 # url_video: ""
 ---
 

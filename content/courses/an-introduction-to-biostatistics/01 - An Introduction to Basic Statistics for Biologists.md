@@ -12,4 +12,4 @@ type: docs
 weight: 1
 ---
 
-I have prepared some {{< staticref "courses/an-introduction-to-biostatistics/01---An-Introduction-to-Basic-Statistics-for-Biologists_Handout.html" "newtab" >}} Lecture Slides {{< /staticref >}} for this session. 
+I have prepared some {{< staticref "https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/an-introduction-to-biostatistics/01---An-Introduction-to-Basic-Statistics-for-Biologists_Handout.html" "newtab" >}} Lecture Slides {{< /staticref >}} for this session. 

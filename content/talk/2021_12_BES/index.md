@@ -13,15 +13,15 @@ image:
 links: null
 location: Conference
 math: true
-# projects: [phd-packages]
+projects: [phd-packages]
 publishDate: "2021-12-13T00:00:00Z"
 # slides: ""
 summary: A look at initial results of my second PhD chapter.
-# tags: [Biological Networks, Resilience]
+tags: [Biological Networks, Resilience]
 title: Data Simplification  for Ecological Network Inference
 # url_code: "https://github.com/ErikKusch/KrigR"
 # url_pdf: ""
-url_slides: "/talks/13_12_2021 - [BES].pptx"
+url_slides: "https://github.com/ErikKusch/Homepage/raw/master/static/talks/13_12_2021%20-%20%5BBES%5D.pptx"
 # url_video: ""
 ---
 

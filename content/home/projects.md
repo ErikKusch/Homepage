@@ -39,7 +39,7 @@ content:
     tag: Resilience
   - name: Climate Data
     tag: Climate Data
-  - name: PhD Research
+  - name: PhD
     tag: PhD
 
 design:

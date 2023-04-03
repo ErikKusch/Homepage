@@ -19,9 +19,9 @@ slides:
 summary: A short introduction talk to my `R`-Package `KrigR` in its early development.
 tags: [Statistical Downscaling, Climate Data, KrigR]
 title: KrigR - Climate Data for Your Spatial Study
-url_code: "https://github.com/ErikKusch/KrigR"
+# url_code: "https://github.com/ErikKusch/KrigR"
 url_pdf: ""
-url_slides: "/talks/2020_ISEC_KrigR.pdf"
+url_slides: "https://github.com/ErikKusch/Homepage/raw/master/static/talks/2020_ISEC_KrigR.pdf"
 url_video: "https://www.youtube.com/watch?v=ECSZK1J_pno&feature=youtu.be"
 ---
 

@@ -13,14 +13,14 @@ image:
 links: null
 location: Conference
 math: true
-# projects: [KrigR]
+projects: [KrigR]
 publishDate: "2022-02-24T00:00:00Z"
 # slides: ""
 summary: Another comprehensive overview of the `KrigR` package.
-# tags: [Statistical Downscaling, Climate Data, KrigR]
+tags: [Statistical Downscaling, Climate Data, KrigR]
 title: KrigR — A tool for downloading and statistically downscaling climate reanalysis data
-url_code: "https://github.com/ErikKusch/KrigR"
-url_pdf: "/talks/2022_05_Clim4EcolPoster.pdf"
+# url_code: "https://github.com/ErikKusch/KrigR"
+url_pdf: "https://github.com/ErikKusch/Homepage/raw/master/static/talks/2022_05_Clim4EcolPoster.pdf"
 # url_slides: "/talks/2022_05_Clim4EcolPoster.pdf"
 # url_video: ""
 ---

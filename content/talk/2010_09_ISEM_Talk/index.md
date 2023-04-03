@@ -19,9 +19,9 @@ slides:
 summary: A presentation about my recent vegetation memory in global dryland research I presented and won some awards for at ISEM 2019.
 tags: [Vegetation Memory, Resilience, Statistical Downscaling]
 title: Identifying Ecological Memory Patterns in Drylands Using Remote Sensing and State-of-the-art Climate Reanalysis Products
-url_code: "https://github.com/ErikKusch/Vegetation-Memory"
+# url_code: "https://github.com/ErikKusch/Vegetation-Memory"
 url_pdf: ""
-url_poster: "/talks/2010_09_VegMem.pdf"
+url_poster: "https://github.com/ErikKusch/Homepage/raw/master/static/talks/2010_09_VegMem.pdf"
 url_video: ""
 ---
   

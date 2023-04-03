@@ -13,7 +13,7 @@ image:
 links: null
 location: Bergen, Norway
 math: true
-projects: [Vegetation Memory across Global Dryland Regions]
+projects:
 publishDate: "2021-01-01T00:00:00Z"
 slides: 
 summary: The defense of my [B.Sc](/publication/journal-article/b.sc._inferring-vegetation-memory-from-remote/) thesis.
@@ -21,7 +21,7 @@ tags: [Biome Shifts, Resilience, Remote Sensing]
 title:  Remote Sensing And Predicting Shifts In Biome Distribution And Resilience Using NDVI Data
 url_code: "https://github.com/ErikKusch/B.Sc.-Thesis"
 url_pdf: ""
-url_poster: "/talks/2017_B.Sc._Defense.pdf"
+url_poster: "https://github.com/ErikKusch/Homepage/raw/master/static/talks/2017_B.Sc._Defense.pdf"
 url_video: ""
 ---
   

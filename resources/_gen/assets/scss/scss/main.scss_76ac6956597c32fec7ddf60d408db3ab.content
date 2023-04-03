@@ -2998,7 +2998,7 @@ input.btn-block[type="button"] {
   position: relative;
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
+  align-items: enter;
   justify-content: space-between;
   padding: 0.5rem 1rem; }
   .navbar .container,
@@ -7162,7 +7162,7 @@ body {
   line-height: inherit;
   color: inherit;
   background-color: #ece3df;
-  margin-top: 70px;
+  margin-top: 60px;
   /* Offset body content by navbar height. */
   padding-top: 0;
   counter-reset: captions; }
@@ -7761,7 +7761,7 @@ div.alert a {
   height: -webkit-fill-available;
   height: -webkit-stretch;
   height: stretch;
-  max-height: 60px;
+  max-height: 42px;
   max-width: fit-content; }
 
 #navbar-main .main-menu-item ul li .nav-link {

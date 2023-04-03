@@ -17,11 +17,11 @@ math: true
 publishDate: "2021-07-08T00:00:00Z"
 # slides: ""
 summary: Some of my ideas for how to improve coding practices that I presented to the SalGo-Team.
-# tags: []
+tags: [Coding, R]
 title: Coding Practices in R
-url_code: "courses/Excursions-into-Biostatistics/CodinBackBone.R"
+url_code: "https://github.com/ErikKusch/Homepage/raw/master/static/courses/Excursions-into-Biostatistics/CodinBackBone.R"
 # url_pdf: ""
-url_slides: "courses/Excursions-into-Biostatistics/2021-07-08-Coding-Practices_Web.html"
+url_slides: "https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/Excursions-into-Biostatistics/2021-07-08-Coding-Practices_Web.html"
 # url_video: ""
 ---
 

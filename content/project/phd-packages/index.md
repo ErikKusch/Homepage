@@ -39,6 +39,7 @@ tags:
 - Resilience
 - Climate Data
 - Active
+- PhD
 title: A Macroecological Perspective to Ecological Networks
 subtitle: Exploring the Impacts of Climate-Driven Biodiversity Change & Contrasting and Benchmarking Network Inference Approaches
 url_code: ""

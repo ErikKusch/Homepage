@@ -19,7 +19,7 @@ links:
   icon_pack: fab
   name: GitHub
   url: https://github.com/ErikKusch/KrigR
-- icon: file-pdf
+- icon: file-powerpoint
   icon_pack: fas
   name: Slides
   url: https://github.com/ErikKusch/Homepage/raw/master/static/talks/KrigRDemo.pptx

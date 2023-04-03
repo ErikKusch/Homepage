@@ -21,7 +21,7 @@ tags: [Vegetation Memory, Resilience, Statistical Downscaling]
 title:  Inferring Vegetation Memory from Remote Sensing Data using novel Climate Reconstruction Products
 url_code: "https://github.com/ErikKusch/M.Sc.-Thesis"
 url_pdf: ""
-url_poster: "/talks/2019_M.Sc._Defense.pdf"
+url_slides: "https://github.com/ErikKusch/Homepage/raw/master/static/talks/2019_M.Sc._Defense.pdf"
 url_video: ""
 ---
   

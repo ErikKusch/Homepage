@@ -13,14 +13,14 @@ image:
 links: null
 location: Conference
 math: true
-# projects: [KrigR]
+projects: [KrigR]
 publishDate: "2022-02-24T00:00:00Z"
 # slides: ""
 summary: A practical guide to the `KrigR` package.
-# tags: [Statistical Downscaling, Climate Data, KrigR]
+tags: [Statistical Downscaling, Climate Data, KrigR]
 title: KrigR - Climate Data for your Study Needs
-url_code: "/talks/OikosWorkShop.zip"
-url_pdf: "/talks/KrigROikos.html"
-url_slides: "/talks/KrigRDemo.html"
+url_code: "https://github.com/ErikKusch/Homepage/raw/master/static/talks/OikosWorkShop.zip"
+url_pdf: "https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/talks/KrigROikos.html"
+url_slides: "https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/talks/KrigRDemo.html"
 # url_video: ""
 ---

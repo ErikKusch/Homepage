@@ -19,7 +19,7 @@ tags:
 - Drylands
 url_code: https://github.com/ErikKusch/M.Sc.-Thesis
 # url_dataset: ''
-url_pdf: "https://github.com/ErikKusch/M.Sc.-Thesis/blob/master/D0_Manuscript.pdf"
+url_pdf: "https://github.com/ErikKusch/M.Sc.-Thesis/raw/master/D0_Manuscript.pdf"
 # url_poster: ""
 # url_project: ""
 # url_slides: ""

@@ -18,7 +18,7 @@ tags:
 - Remote Sensing
 url_code: https://github.com/ErikKusch/B.Sc.-Thesis
 # url_dataset: ''
-url_pdf: https://github.com/ErikKusch/B.Sc.-Thesis/blob/master/Thesis_BSc_EKGit.pdf
+url_pdf: https://github.com/ErikKusch/B.Sc.-Thesis/raw/master/Thesis_BSc_EKGit.pdf
 # url_poster: ""
 # url_project: ""
 # url_slides: ""

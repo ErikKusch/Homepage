@@ -13,15 +13,15 @@ image:
 links: null
 location: Online Meetings
 math: true
-projects: [biorates, phd-packages]
+projects: [phd-packages]
 publishDate: "2021-01-01T00:00:00Z"
 # slides: ""
 summary: A presentation of my PhD plans to the SalGo-Team.
 tags: [Biological Networks]
 title: Species Associations Across Scales of Organisation
-url_code: "https://github.com/ErikKusch/PhD-Project"
+# url_code: "https://github.com/ErikKusch/PhD-Project"
 # url_pdf: ""
-url_slides: "/talks/2020_12_SalGo-Team.pdf"
+url_slides: "https://github.com/ErikKusch/Homepage/raw/master/static/talks/2020_12_SalGo-Team.pdf"
 # url_video: ""
 ---
 
