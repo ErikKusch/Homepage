@@ -42,7 +42,7 @@ weight: 1
 <style>
 
 blockquote{
-color:#ffffff;
+color:#633a00;
 }
 
 </style>
@@ -54,7 +54,7 @@ options(width = 200)
 
 ## Material
 
-- [Dynamic Bayesian Networks](/courses/bayes-nets/Dynamic-BNs.html) by [Gregor Mathes](https://gregor-mathes.netlify.app/) (one of our study group members)
+- [Dynamic Bayesian Networks](https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/content/courses/bayes-nets/Dynamic-BNs.html) by [Gregor Mathes](https://gregor-mathes.netlify.app/) (one of our study group members)
 
 ## Exercises
 These are answers and solutions to the exercises at the end of chapter 3 in [Bayesian Networks in R with Applications in Systems Biology](https://link.springer.com/book/10.1007/978-1-4614-6446-4) by by Radhakrishnan Nagarajan, Marco Scutari \& Sophie Lèbre. Much of my inspiration for these solutions, where necessary, by consulting the solutions provided by the authors themselves as in the appendix.

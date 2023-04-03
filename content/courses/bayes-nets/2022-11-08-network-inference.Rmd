@@ -42,7 +42,7 @@ weight: 1
 <style>
 
 blockquote{
-color:#ffffff;
+color:#633a00;
 }
 
 </style>
@@ -56,7 +56,7 @@ options(width = 200)
  
 Most of the material in these chapters has already been covered in previous material, so the following summary is rather brief:
 
-- [Bayesian Network Inference](/courses/bayes-nets/8-Bayesian-Network-Inference_08-11-22.html)
+- [Bayesian Network Inference](https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/content/courses/bayes-nets/8-Bayesian-Network-Inference_08-11-22.html)
 
 Please refer to earlier material for introductions of queries, structure learning, and parameter learning in theory and in `R`.
 
@@ -246,7 +246,7 @@ survey <- read.table("survey.txt", header = TRUE, colClasses = "factor")
 
 Remember, this is the corresponding DAG we know to be true: 
 
-<img src="/post/networksscutari/Fig1.1.JPG" width="900"/>
+<img src="/courses/networksscutari/Fig1.1.JPG" width="900"/>
 
 #### Part A
 > Learn a BN with the IAMB algorithm and the asymptotic mutual information test.

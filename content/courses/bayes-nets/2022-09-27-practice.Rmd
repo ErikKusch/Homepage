@@ -42,8 +42,9 @@ weight: 2
 <style>
 
 blockquote{
-color:#ffffff;
+color:#633a00;
 }
+
 
 </style> 
 
@@ -54,7 +55,7 @@ options(width = 200)
 
 ## Material
 
-- [Networks in `R`](/courses/bayes-nets/2-Networks-in-R_27-09-22.html)  
+- [Networks in `R`](https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/content/courses/bayes-nets/2-Networks-in-R_27-09-22.html)  
 
 ## Exercises
 

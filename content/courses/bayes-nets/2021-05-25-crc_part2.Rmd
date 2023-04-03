@@ -42,7 +42,7 @@ weight: 2
 <style>
 
 blockquote{
-color:#ffffff;
+color:#633a00;
 }
 
 </style>
@@ -54,7 +54,7 @@ options(width = 200)
 
 ## Material
 
-- [Gaussian Bayesian Networks](/courses/bayes-nets/4-Gaussian-Networks_11-10-22.html)  
+- [Gaussian Bayesian Networks](https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/content/courses/bayes-nets/4-Gaussian-Networks_11-10-22.html)  
 
 ## Exercises
 These are answers and solutions to the exercises at the end of Part 2 in [Bayesian Networks with Examples in R](https://www.bnlearn.com/book-crc/) by M. Scutari and J.-B. Denis. Much of my inspiration for these solutions, where necessary, by consulting the solutions provided by the authors themselves as in the appendix. 
@@ -89,7 +89,7 @@ So how does this relate to the question that equation 2.2 implies equation 2.3? 
 
 This is the DAG in question:
 
-<img src="/post/networksscutari/Screenshot 2021-06-02 135704.png" width="900"/>
+<img src="/courses/networksscutari/Screenshot 2021-06-02 135704.png" width="900"/>
 
 The equation to prove (2.5) is:
 
@@ -128,7 +128,7 @@ Another case of the quod erat demonstrandums.
 
 Table 2.1 is hardly a table at all, but I did locate it. Basically, it is an amalgamation of the probability distributions proposed for the DAG from the previous exercise:
 
-<img src="/post/networksscutari/Screenshot 2021-06-02 141404.png" width="900"/>
+<img src="/courses/networksscutari/Screenshot 2021-06-02 141404.png" width="900"/>
 
 Note that the parameter $07v$ in the second-to-last row should read $0.7v$.
 
@@ -238,7 +238,7 @@ As is apparent from this, all results fall close to the expected values of rough
 
 The plot in question is this one:
 
-<img src="/post/networksscutari/Screenshot 2021-06-02 163301.png" width="900"/>
+<img src="/courses/networksscutari/Screenshot 2021-06-02 163301.png" width="900"/>
 
 this plot is aimed at showing the distribution of $C$ when both $E$ and $V$ vary. Here, the variation in $V$ is shown along the x-axis, while the variation of $E$ is contained within the sizes of the circles. The y-axis represents the values of $C$ according to its distributions.
 
@@ -271,7 +271,7 @@ $$VAR(B|A) = \left(A-E(A)\right)^2 * \sigma^2_B$$
 
 This one is a doozy and I really needed to consult the solutions in the book for this one. Let's first remind ourselves of the first lines of said table:
 
-<img src="/post/networksscutari/Screenshot 2021-06-02 141404_2.png" width="900"/>
+<img src="/courses/networksscutari/Screenshot 2021-06-02 141404_2.png" width="900"/>
 
 To approach this problem it is useful to point out that the logarithm of the density of a multivariate normal distribution is defined as such:
 
