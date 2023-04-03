@@ -27,16 +27,16 @@ toc: true
 type: docs
 weight: 4
 ---
- 
 
 
-# Theory
-These are the solutions to the exercises contained within the handout to Descriptive Statistics which walks you through the basics of descriptive statistics and its parameters. The analyses presented here are using data from the `StarWars` data set supplied through the `dplyr` package that have been saved as a .csv file. Keep in mind that there is probably a myriad of other ways to reach the same conclusions as presented in these solutions.
 
-I have prepared some {{< staticref "courses/an-introduction-to-biostatistics/04---Descriptive-Statistics_Handout.html" "newtab" >}} Lecture Slides {{< /staticref >}} for this session.
+## Theory
+These are the solutions to the exercises contained within the handout to Descriptive Statistics which walks you through the basics of descriptive statistics and its parameters. The analyses presented here are using data from the `StarWars` data set supplied through the `dplyr` package that have been saved as a .csv file. Keep in mind that there is probably a myriad of other ways to reach the same conclusions as presented in these solutions. 
+
+I have prepared some I have prepared some  {{< staticref "https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/an-introduction-to-biostatistics/04---Descriptive-Statistics_Handout.html" "newtab" >}} Lecture Slides {{< /staticref >}} for this session.
 
 ## Data
-Find the data for this exercise {{< staticref "courses/an-introduction-to-biostatistics/Data/DescriptiveData.csv" "newtab" >}} here{{< /staticref >}}.
+Find the data for this exercise {{< staticref "https://github.com/ErikKusch/Homepage/raw/master/static/courses/an-introduction-to-biostatistics/Data/DescriptiveData.csv" "newtab" >}} here{{< /staticref >}}.
 
 ## Packages
 As you will remember from our lecture slides, the calculation of the mode in `R` can either be achieved through some intense coding or simply by using the `mlv(..., method="mfv")` function contained within the `modeest` package (unfortunately, this package is out of date and can sometimes be challenging to install).  
@@ -55,7 +55,7 @@ install.packages("modeest")
 library(modeest)
 ```
 
-The reason I am not overly fond of this procedure is that it is clunky, can break easily through spelling mistakes and starts cluttering your preamble super fast if the analyses you are wanting to perform require excessive amounts of packages. Additionally, when you are some place with a bad internet connection you might not want to re-download packages that are already contained on your hard drive.
+The reason I am not overly fond of this procedure is that it is clunky, can break easily through spelling mistakes and starts cluttering your preamble super fast if the analyses you are wanting to perform require excessive amounts of packages. Additionally, when you are some place with a bad internet connection you might not want to re-download packages that are already contained on your hard drive. 
 
 ### Advanced Preamble 
 There is a myriad of different preamble styles (just as there are tons of different, personalised coding styles). I am left with presenting my preamble of choice here but I do not claim that this is the most sophisticated one out there.  
@@ -65,13 +65,14 @@ The way this preamble works is that it is structured around a user-defined funct
 ```r
 # function to load packages and install them if they haven't been installed yet
 install.load.package <- function(x) {
-    if (!require(x, character.only = TRUE)) 
+    if (!require(x, character.only = TRUE))
         install.packages(x)
     require(x, character.only = TRUE)
 }
 # packages to load/install if necessary
 package_vec <- c("modeest")
-# applying function install.load.package to all packages specified in package_vec
+# applying function install.load.package to all packages specified in
+# package_vec
 sapply(package_vec, install.load.package)
 ```
 
@@ -84,13 +85,16 @@ sapply(package_vec, install.load.package)
 ##    TRUE
 ```
 
-Why do I prefer this? Firstly, it is way shorter than the basic method when dealing with many packages (which you will get into fast, I promise), reduces the chance for typos by 50\% and does not override already installed packages hence speeding up your processing time.
+Why do I prefer this? Firstly, it is way shorter than the basic method when dealing with many packages (which you will get into fast, I promise), reduces the chance for typos by 50\% and does not override already installed packages hence speeding up your processing time. 
 
 ## Loading the Excel data into `R` 
 Our data is located in the `Data` folder and is called `DescriptiveData.csv`. Since it is a .csv file, we can simply use the `R` in-built function `read.csv()` to load the data by combining the former two identifiers into one long string with a backslash separating the two (the backslash indicates a step down in the folder hierarchy). Given this argument, `read.csv()` will produce an object of type `data.frame` in `R` which we want to keep in our environment and hence need to assign a name to. In our case, let that name be `Data_df` (I recommend using endings to your data object names that indicate their type for easier coding without constant type checking):
 
 ```r
-Data_df <- read.csv("Data/DescriptiveData.csv")  # load data file from Data folder
+# Data_df <- read.csv('Data/DescriptiveData.csv') # load data file from Data
+# folder if you downloaded the data as a .csv alternatively, read the csv
+# directly from the url
+Data_df <- read.csv("https://github.com/ErikKusch/Homepage/raw/master/static/courses/an-introduction-to-biostatistics/Data/DescriptiveData.csv")
 ```
 
 ## What's contained within our data? 
@@ -167,13 +171,20 @@ tail(Data_df)
 ```
 
 ```
-##              name height mass hair_color skin_color eye_color birth_year gender
-## 82           Finn     NA   NA      black       dark      dark         NA   male
-## 83            Rey     NA   NA      brown      light     hazel         NA female
-## 84    Poe Dameron     NA   NA      brown      light     brown         NA   male
-## 85            BB8     NA   NA       none       none     black         NA   none
-## 86 Captain Phasma     NA   NA    unknown    unknown   unknown         NA female
-## 87  Padmé Amidala    165   45      brown      light     brown         46 female
+##                name height mass hair_color skin_color eye_color birth_year
+## 82             Finn     NA   NA      black       dark      dark         NA
+## 83              Rey     NA   NA      brown      light     hazel         NA
+## 84      Poe Dameron     NA   NA      brown      light     brown         NA
+## 85              BB8     NA   NA       none       none     black         NA
+## 86   Captain Phasma     NA   NA    unknown    unknown   unknown         NA
+## 87 Padm\xe9 Amidala    165   45      brown      light     brown         46
+##    gender
+## 82   male
+## 83 female
+## 84   male
+## 85   none
+## 86 female
+## 87 female
 ```
 The avid reader will surely have picked up on the fact that all the records in the `name` column of `Data_df` belong to characters from the Star Wars universe. In fact, this data set is a modified version of the `StarWars` data set supplied by the `dplyr` package and contains information of many of the important cast members of the Star Wars movie universe.
 

@@ -28,19 +28,19 @@ type: docs
 weight: 4
 ---
 
-<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 <div id="TOC">
 
 </div>
 
-<div id="theory" class="section level1">
-<h1>Theory</h1>
+<div id="theory" class="section level2">
+<h2>Theory</h2>
 <p>These are the solutions to the exercises contained within the handout to Descriptive Statistics which walks you through the basics of descriptive statistics and its parameters. The analyses presented here are using data from the <code>StarWars</code> data set supplied through the <code>dplyr</code> package that have been saved as a .csv file. Keep in mind that there is probably a myriad of other ways to reach the same conclusions as presented in these solutions.</p>
-<p>I have prepared some {{&lt; staticref “courses/an-introduction-to-biostatistics/04—Descriptive-Statistics_Handout.html” “newtab” &gt;}} Lecture Slides {{&lt; /staticref &gt;}} for this session.</p>
+<p>I have prepared some I have prepared some {{&lt; staticref “<a href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/an-introduction-to-biostatistics/04---Descriptive-Statistics_Handout.html" class="uri">https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/an-introduction-to-biostatistics/04---Descriptive-Statistics_Handout.html</a>” “newtab” &gt;}} Lecture Slides {{&lt; /staticref &gt;}} for this session.</p>
+</div>
 <div id="data" class="section level2">
 <h2>Data</h2>
-<p>Find the data for this exercise {{&lt; staticref “courses/an-introduction-to-biostatistics/Data/DescriptiveData.csv” “newtab” &gt;}} here{{&lt; /staticref &gt;}}.</p>
+<p>Find the data for this exercise {{&lt; staticref “<a href="https://github.com/ErikKusch/Homepage/raw/master/static/courses/an-introduction-to-biostatistics/Data/DescriptiveData.csv" class="uri">https://github.com/ErikKusch/Homepage/raw/master/static/courses/an-introduction-to-biostatistics/Data/DescriptiveData.csv</a>” “newtab” &gt;}} here{{&lt; /staticref &gt;}}.</p>
 </div>
 <div id="packages" class="section level2">
 <h2>Packages</h2>
@@ -61,13 +61,14 @@ library(modeest)</code></pre>
 <p>The way this preamble works is that it is structured around a user-defined function (something we will touch on later in our seminar series) which first checks whether a package is already downloaded and then installs (if necessary) and/or loads it into <code>R</code>. This function is called <code>install.load.package()</code> and you can see its specification down below (don’t worry if it doesn’t make sense to you yet - it is not supposed to at this point). Unfortunately, it can only ever be applied to one package at a time and so we need a workaround to make it work on multiple packages at once. This can be achieved by establishing a vector of all desired package names (<code>package_vec</code>) and then applying (<code>sapply()</code>) the <code>install.load.package()</code> function to every item of the package name vector iteratively as follows:</p>
 <pre class="r"><code># function to load packages and install them if they haven&#39;t been installed yet
 install.load.package &lt;- function(x) {
-    if (!require(x, character.only = TRUE)) 
+    if (!require(x, character.only = TRUE))
         install.packages(x)
     require(x, character.only = TRUE)
 }
 # packages to load/install if necessary
 package_vec &lt;- c(&quot;modeest&quot;)
-# applying function install.load.package to all packages specified in package_vec
+# applying function install.load.package to all packages specified in
+# package_vec
 sapply(package_vec, install.load.package)</code></pre>
 <pre><code>## Loading required package: modeest</code></pre>
 <pre><code>## modeest 
@@ -78,7 +79,10 @@ sapply(package_vec, install.load.package)</code></pre>
 <div id="loading-the-excel-data-into-r" class="section level2">
 <h2>Loading the Excel data into <code>R</code></h2>
 <p>Our data is located in the <code>Data</code> folder and is called <code>DescriptiveData.csv</code>. Since it is a .csv file, we can simply use the <code>R</code> in-built function <code>read.csv()</code> to load the data by combining the former two identifiers into one long string with a backslash separating the two (the backslash indicates a step down in the folder hierarchy). Given this argument, <code>read.csv()</code> will produce an object of type <code>data.frame</code> in <code>R</code> which we want to keep in our environment and hence need to assign a name to. In our case, let that name be <code>Data_df</code> (I recommend using endings to your data object names that indicate their type for easier coding without constant type checking):</p>
-<pre class="r"><code>Data_df &lt;- read.csv(&quot;Data/DescriptiveData.csv&quot;)  # load data file from Data folder</code></pre>
+<pre class="r"><code># Data_df &lt;- read.csv(&#39;Data/DescriptiveData.csv&#39;) # load data file from Data
+# folder if you downloaded the data as a .csv alternatively, read the csv
+# directly from the url
+Data_df &lt;- read.csv(&quot;https://github.com/ErikKusch/Homepage/raw/master/static/courses/an-introduction-to-biostatistics/Data/DescriptiveData.csv&quot;)</code></pre>
 </div>
 <div id="whats-contained-within-our-data" class="section level2">
 <h2>What’s contained within our data?</h2>
@@ -105,7 +109,7 @@ You can arrive at the same point by using the function <code>View()</code> in <c
 <h3>Modes</h3>
 <p>Now it’s time to get a hang of the <em>modes</em> of the variable records within our data set. To do so, we have two choices, we can either subset the data frame by columns and apply the <code>class()</code> function to each column subset or simply apply the <code>str()</code> function to the data frame object. The reason <code>str()</code> may be favourable in this case is due to the fact that <code>str()</code> automatically breaks down the structure of <code>R</code>-internal objects and hence saves us the sub-setting:</p>
 <pre class="r"><code>str(Data_df)</code></pre>
-<pre><code>## &#39;data.frame&#39;:    87 obs. of  8 variables:
+<pre><code>## &#39;data.frame&#39;:	87 obs. of  8 variables:
 ##  $ name      : chr  &quot;Luke Skywalker&quot; &quot;C-3PO&quot; &quot;R2-D2&quot; &quot;Darth Vader&quot; ...
 ##  $ height    : int  172 167 96 202 150 178 165 97 183 182 ...
 ##  $ mass      : num  77 75 32 136 49 120 75 32 84 77 ...
@@ -136,13 +140,20 @@ You can arrive at the same point by using the function <code>View()</code> in <c
 ## 5 female
 ## 6   male</code></pre>
 <pre class="r"><code>tail(Data_df)</code></pre>
-<pre><code>##              name height mass hair_color skin_color eye_color birth_year gender
-## 82           Finn     NA   NA      black       dark      dark         NA   male
-## 83            Rey     NA   NA      brown      light     hazel         NA female
-## 84    Poe Dameron     NA   NA      brown      light     brown         NA   male
-## 85            BB8     NA   NA       none       none     black         NA   none
-## 86 Captain Phasma     NA   NA    unknown    unknown   unknown         NA female
-## 87  Padmé Amidala    165   45      brown      light     brown         46 female</code></pre>
+<pre><code>##                name height mass hair_color skin_color eye_color birth_year
+## 82             Finn     NA   NA      black       dark      dark         NA
+## 83              Rey     NA   NA      brown      light     hazel         NA
+## 84      Poe Dameron     NA   NA      brown      light     brown         NA
+## 85              BB8     NA   NA       none       none     black         NA
+## 86   Captain Phasma     NA   NA    unknown    unknown   unknown         NA
+## 87 Padm\xe9 Amidala    165   45      brown      light     brown         46
+##    gender
+## 82   male
+## 83 female
+## 84   male
+## 85   none
+## 86 female
+## 87 female</code></pre>
 <p>The avid reader will surely have picked up on the fact that all the records in the <code>name</code> column of <code>Data_df</code> belong to characters from the Star Wars universe. In fact, this data set is a modified version of the <code>StarWars</code> data set supplied by the <code>dplyr</code> package and contains information of many of the important cast members of the Star Wars movie universe.</p>
 </div>
 </div>
@@ -288,6 +299,5 @@ summary</code></pre>
 <pre><code>## Gender
 ##                      female hermaphrodite          male          none 
 ##             3            19             1            62             2</code></pre>
-</div>
 </div>
 </div>

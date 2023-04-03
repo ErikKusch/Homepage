@@ -28,7 +28,6 @@ type: docs
 weight: 3
 ---
 
-<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 <div id="TOC">
 
@@ -37,11 +36,11 @@ weight: 3
 <div id="theory" class="section level2">
 <h2>Theory</h2>
 <p>These are the solutions to the exercises contained within the handout to A Primer For Statistical Tests which walks you through the basics of variables, their scales and distributions. Keep in mind that there is probably a myriad of other ways to reach the same conclusions as presented in these solutions.</p>
-<p>I have prepared some I have prepared some {{&lt; staticref “courses/an-introduction-to-biostatistics/03—A-Primer-For-Statistical-Tests_Handout.html” “newtab” &gt;}} Lecture Slides {{&lt; /staticref &gt;}} for this session.</p>
+<p>I have prepared some I have prepared some {{&lt; staticref “<a href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/an-introduction-to-biostatistics/03---A-Primer-For-Statistical-Tests_Handout.html" class="uri">https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/an-introduction-to-biostatistics/03---A-Primer-For-Statistical-Tests_Handout.html</a>” “newtab” &gt;}} Lecture Slides {{&lt; /staticref &gt;}} for this session.</p>
 </div>
 <div id="data" class="section level2">
 <h2>Data</h2>
-<p>Find the data for this exercise {{&lt; staticref “courses/an-introduction-to-biostatistics/Data/Primer.RData” “newtab” &gt;}} here{{&lt; /staticref &gt;}}.</p>
+<p>Find the data for this exercise {{&lt; staticref “<a href="https://github.com/ErikKusch/Homepage/raw/master/static/courses/an-introduction-to-biostatistics/Data/Primer.RData" class="uri">https://github.com/ErikKusch/Homepage/raw/master/static/courses/an-introduction-to-biostatistics/Data/Primer.RData</a>” “newtab” &gt;}} here{{&lt; /staticref &gt;}}.</p>
 </div>
 <div id="loading-the-r-environment-object" class="section level2">
 <h2>Loading the <code>R</code> Environment Object</h2>
@@ -129,6 +128,10 @@ weight: 3
 <pre class="r"><code>barplot(IndividualsPassingBy)  # fitting?</code></pre>
 <p><img src="/courses/an-introduction-to-biostatistics/03---A-Primer-For-Statistical-Tests_files/figure-html/VIndPass-1.png" width="576" /></p>
 <table>
+<colgroup>
+<col width="54%" />
+<col width="45%" />
+</colgroup>
 <thead>
 <tr class="header">
 <th align="right">Question</th>
@@ -195,6 +198,10 @@ weight: 3
 <pre class="r"><code>barplot(Reproducing)  # fitting?</code></pre>
 <p><img src="/courses/an-introduction-to-biostatistics/03---A-Primer-For-Statistical-Tests_files/figure-html/VRepro-1.png" width="576" /></p>
 <table>
+<colgroup>
+<col width="54%" />
+<col width="45%" />
+</colgroup>
 <thead>
 <tr class="header">
 <th align="right">Question</th>
@@ -294,6 +301,10 @@ weight: 3
 <pre class="r"><code>barplot(Temperature)  # fitting?</code></pre>
 <p><img src="/courses/an-introduction-to-biostatistics/03---A-Primer-For-Statistical-Tests_files/figure-html/VTemp-1.png" width="576" /></p>
 <table>
+<colgroup>
+<col width="54%" />
+<col width="45%" />
+</colgroup>
 <thead>
 <tr class="header">
 <th align="right">Question</th>
@@ -329,7 +340,7 @@ weight: 3
 <p><img src="/courses/an-introduction-to-biostatistics/03---A-Primer-For-Statistical-Tests_files/figure-html/DLength-1.png" width="576" /></p>
 <pre class="r"><code>shapiro.test(Length)  # normality check</code></pre>
 <pre><code>## 
-##  Shapiro-Wilk normality test
+## 	Shapiro-Wilk normality test
 ## 
 ## data:  Length
 ## W = 0.99496, p-value = 0.4331</code></pre>
@@ -341,7 +352,7 @@ weight: 3
 <p><img src="/courses/an-introduction-to-biostatistics/03---A-Primer-For-Statistical-Tests_files/figure-html/DRepro-1.png" width="576" /></p>
 <pre class="r"><code>shapiro.test(Reproducing)  # normality check</code></pre>
 <pre><code>## 
-##  Shapiro-Wilk normality test
+## 	Shapiro-Wilk normality test
 ## 
 ## data:  Reproducing
 ## W = 0.98444, p-value = 0.2889</code></pre>
@@ -353,7 +364,7 @@ weight: 3
 <p><img src="/courses/an-introduction-to-biostatistics/03---A-Primer-For-Statistical-Tests_files/figure-html/DIndiv-1.png" width="576" /></p>
 <pre class="r"><code>shapiro.test(IndividualsPassingBy)  # normality check</code></pre>
 <pre><code>## 
-##  Shapiro-Wilk normality test
+## 	Shapiro-Wilk normality test
 ## 
 ## data:  IndividualsPassingBy
 ## W = 0.96905, p-value = 0.0187</code></pre>

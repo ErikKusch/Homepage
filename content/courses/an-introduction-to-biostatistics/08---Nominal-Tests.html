@@ -28,7 +28,6 @@ type: docs
 weight: 8
 ---
 
-<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
 
 <div id="TOC">
 
@@ -38,11 +37,11 @@ weight: 8
 <h2>Theory</h2>
 <p>Welcome to our second practical experience in <code>R</code>. Throughout the following notes, I will introduce you to a couple nominal statistical test approaches that might be useful to you and are often used in biology.<br />
 To do so, I will enlist the sparrow data set we handled in our last exercise.</p>
-<p>I have prepared some {{&lt; staticref “courses/an-introduction-to-biostatistics/08—Nominal-Tests_Handout.html” “newtab” &gt;}} Lecture Slides {{&lt; /staticref &gt;}} for this session.</p>
+<p>I have prepared some {{&lt; staticref “<a href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/an-introduction-to-biostatistics/08---Nominal-Tests_Handout.html" class="uri">https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/an-introduction-to-biostatistics/08---Nominal-Tests_Handout.html</a>” “newtab” &gt;}} Lecture Slides {{&lt; /staticref &gt;}} for this session.</p>
 </div>
 <div id="data" class="section level2">
 <h2>Data</h2>
-<p>Find the data for this exercise {{&lt; staticref “courses/an-introduction-to-biostatistics/Data/1 - Sparrow_Data_READY.rds” “newtab” &gt;}} here{{&lt; /staticref &gt;}}.</p>
+<p>Find the data for this exercise {{&lt; staticref “<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/1%20-%20Sparrow_Data_READY.rds" class="uri">https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/1%20-%20Sparrow_Data_READY.rds</a>” “newtab” &gt;}} here{{&lt; /staticref &gt;}}.</p>
 </div>
 <div id="preparing-our-procedure" class="section level2">
 <h2>Preparing Our Procedure</h2>
@@ -87,7 +86,7 @@ Data_df &lt;- Data_df_base # duplicate and save initial data on a new object</co
 ##    523    544</code></pre>
 <pre class="r"><code>binom.test(table(Data_df$Sex))</code></pre>
 <pre><code>## 
-##  Exact binomial test
+## 	Exact binomial test
 ## 
 ## data:  table(Data_df$Sex)
 ## number of successes = 523, number of trials = 1067, p-value = 0.5404
@@ -110,7 +109,7 @@ Data_df &lt;- Data_df_base # duplicate and save initial data on a new object</co
 ## 357 710</code></pre>
 <pre class="r"><code>binom.test(x = sum(Data_df$Predator.Presence == &quot;Yes&quot;), n = length(Data_df$Predator.Presence))</code></pre>
 <pre><code>## 
-##  Exact binomial test
+## 	Exact binomial test
 ## 
 ## data:  sum(Data_df$Predator.Presence == &quot;Yes&quot;) and length(Data_df$Predator.Presence)
 ## number of successes = 710, number of trials = 1067, p-value &lt; 2.2e-16
@@ -159,7 +158,7 @@ Sexes_AU_Next_vec &lt;- sample(Sexes, sum(Data_df$Index==&quot;AU&quot;), replac
 <pre class="r"><code>mcnemar_matrix_change &lt;- matrix(rbind(table(Sexes_AU_Now_vec), table(Sexes_AU_Next_vec)), 2)
 mcnemar.test(mcnemar_matrix_change)</code></pre>
 <pre><code>## 
-##  McNemar&#39;s Chi-squared test with continuity correction
+## 	McNemar&#39;s Chi-squared test with continuity correction
 ## 
 ## data:  mcnemar_matrix_change
 ## McNemar&#39;s chi-squared = 7.4462, df = 1, p-value = 0.006357</code></pre>
@@ -217,7 +216,12 @@ CochPredator.Presence &lt;- factor(Data_df_base$Predator.Presence)
 CochSex &lt;- factor(Data_df_base$Sex)
 
 # Making vectors into a matrix
-CochMatrix &lt;- matrix(c(CochColour, CochPredator.Presence, CochSex), ncol = 3) - 1
+CochMatrix &lt;- matrix(c(
+  as.numeric(CochColour), 
+  as.numeric(CochPredator.Presence), 
+  as.numeric(CochSex)
+  ), 
+  ncol = 3)  - 1
 colnames(CochMatrix) &lt;- c(&quot;Colour&quot;, &quot;Predator Presence&quot;, &quot;Sex&quot;)
 head(CochMatrix)</code></pre>
 <pre><code>##      Colour Predator Presence Sex
@@ -259,7 +263,7 @@ head(CochMatrix)</code></pre>
 ##        298        769</code></pre>
 <pre class="r"><code>binom.test(table(CochColour))</code></pre>
 <pre><code>## 
-##  Exact binomial test
+## 	Exact binomial test
 ## 
 ## data:  table(CochColour)
 ## number of successes = 298, number of trials = 1067, p-value &lt; 2.2e-16
@@ -277,7 +281,7 @@ head(CochMatrix)</code></pre>
 ## 357 710</code></pre>
 <pre class="r"><code>binom.test(table(CochPredator.Presence))</code></pre>
 <pre><code>## 
-##  Exact binomial test
+## 	Exact binomial test
 ## 
 ## data:  table(CochPredator.Presence)
 ## number of successes = 357, number of trials = 1067, p-value &lt; 2.2e-16
@@ -308,7 +312,7 @@ head(CochMatrix)</code></pre>
 ##        298        769</code></pre>
 <pre class="r"><code>chisq.test(table(CochColour))</code></pre>
 <pre><code>## 
-##  Chi-squared test for given probabilities
+## 	Chi-squared test for given probabilities
 ## 
 ## data:  table(CochColour)
 ## X-squared = 207.91, df = 1, p-value &lt; 2.2e-16</code></pre>
@@ -323,7 +327,7 @@ head(CochMatrix)</code></pre>
 ##   356   298   413</code></pre>
 <pre class="r"><code>chisq.test(table(Data_df$Colour))</code></pre>
 <pre><code>## 
-##  Chi-squared test for given probabilities
+## 	Chi-squared test for given probabilities
 ## 
 ## data:  table(Data_df$Colour)
 ## X-squared = 18.592, df = 2, p-value = 9.178e-05</code></pre>
@@ -345,7 +349,7 @@ head(CochMatrix)</code></pre>
 ##   Grey      81  332</code></pre>
 <pre class="r"><code>chisq.test(table(Data_df$Colour, Data_df$Sex))</code></pre>
 <pre><code>## 
-##  Pearson&#39;s Chi-squared test
+## 	Pearson&#39;s Chi-squared test
 ## 
 ## data:  table(Data_df$Colour, Data_df$Sex)
 ## X-squared = 388.63, df = 2, p-value &lt; 2.2e-16</code></pre>
@@ -363,7 +367,7 @@ head(CochMatrix)</code></pre>
 ##   Grey   82 331</code></pre>
 <pre class="r"><code>chisq.test(table(Data_df$Colour, Data_df$Predator.Presence))</code></pre>
 <pre><code>## 
-##  Pearson&#39;s Chi-squared test
+## 	Pearson&#39;s Chi-squared test
 ## 
 ## data:  table(Data_df$Colour, Data_df$Predator.Presence)
 ## X-squared = 259.34, df = 2, p-value &lt; 2.2e-16</code></pre>
@@ -377,7 +381,7 @@ head(CochMatrix)</code></pre>
 ##   Grey    233        98</code></pre>
 <pre class="r"><code>chisq.test(table(Data_df$Colour, Data_df$Predator.Type))</code></pre>
 <pre><code>## 
-##  Pearson&#39;s Chi-squared test
+## 	Pearson&#39;s Chi-squared test
 ## 
 ## data:  table(Data_df$Colour, Data_df$Predator.Type)
 ## X-squared = 0.62164, df = 2, p-value = 0.7328</code></pre>
@@ -391,7 +395,7 @@ head(CochMatrix)</code></pre>
 ##   Tree   94 137</code></pre>
 <pre class="r"><code>chisq.test(table(Data_df$Nesting.Site, Data_df$Predator.Presence))</code></pre>
 <pre><code>## 
-##  Pearson&#39;s Chi-squared test with Yates&#39; continuity correction
+## 	Pearson&#39;s Chi-squared test with Yates&#39; continuity correction
 ## 
 ## data:  table(Data_df$Nesting.Site, Data_df$Predator.Presence)
 ## X-squared = 6.2955, df = 1, p-value = 0.0121</code></pre>
@@ -404,7 +408,7 @@ head(CochMatrix)</code></pre>
 ##   Tree     49        88</code></pre>
 <pre class="r"><code>chisq.test(table(Data_df$Nesting.Site, Data_df$Predator.Type))</code></pre>
 <pre><code>## 
-##  Pearson&#39;s Chi-squared test with Yates&#39; continuity correction
+## 	Pearson&#39;s Chi-squared test with Yates&#39; continuity correction
 ## 
 ## data:  table(Data_df$Nesting.Site, Data_df$Predator.Type)
 ## X-squared = 102.88, df = 1, p-value &lt; 2.2e-16</code></pre>

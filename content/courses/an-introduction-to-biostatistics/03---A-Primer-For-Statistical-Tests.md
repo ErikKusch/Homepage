@@ -33,10 +33,10 @@ weight: 3
 ## Theory
 These are the solutions to the exercises contained within the handout to A Primer For Statistical Tests which walks you through the basics of variables, their scales and distributions. Keep in mind that there is probably a myriad of other ways to reach the same conclusions as presented in these solutions.
 
-I have prepared some I have prepared some {{< staticref "courses/an-introduction-to-biostatistics/03---A-Primer-For-Statistical-Tests_Handout.html" "newtab" >}} Lecture Slides {{< /staticref >}} for this session.
+I have prepared some I have prepared some  {{< staticref "https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/an-introduction-to-biostatistics/03---A-Primer-For-Statistical-Tests_Handout.html" "newtab" >}} Lecture Slides {{< /staticref >}} for this session.
 
 ## Data
-Find the data for this exercise {{< staticref "courses/an-introduction-to-biostatistics/Data/Primer.RData" "newtab" >}} here{{< /staticref >}}.
+Find the data for this exercise {{< staticref "https://github.com/ErikKusch/Homepage/raw/master/static/courses/an-introduction-to-biostatistics/Data/Primer.RData" "newtab" >}} here{{< /staticref >}}.
 
 ## Loading the `R` Environment Object 
 
