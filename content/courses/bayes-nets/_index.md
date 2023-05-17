@@ -9,7 +9,7 @@ menu:
   bayesnets:
     name: Overview
     weight: 1
-summary: TBD.
+summary: A series of seminars, presentations and solutions to exercise material aimed at providing an introduction to Bayesian Network analysis tools.
 tags:
 - Bayes
 - Networks
