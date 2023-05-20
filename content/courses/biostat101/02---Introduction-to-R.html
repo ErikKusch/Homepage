@@ -1,0 +1,296 @@
+---
+title: "Introduction to R"
+subtitle: 'First Steps in R'
+author: Erik Kusch
+date: "2020-06-10"
+slug: Introduction to R
+categories: 
+  - BioStat101
+tags: 
+  - R
+  - Statistics
+summary: 'These are the solutions to the exercises contained within the handout to Introduction to R which walks you through the basics of the `R` machinery. `R` is a coding language that can be highly individualised and hence there are often multiple solutions to the same problem. Within these solutions, I shall only present you with one solution for every given task. However, do keep in mind that there is probably a myriad of other ways to achieve your goal.'
+lastmod: '2020-06-10'
+featured: no
+projects:
+output:
+  blogdown::html_page:
+    keep_md: true
+    # toc: true
+    # toc_depth: 2
+    # number_sections: false
+    fig_width: 8
+linktitle: 02 - Introduction to R
+menu:
+  example:
+    parent: Sessions
+    weight: 2
+toc: true
+type: docs
+weight: 2
+---
+
+
+<div id="TOC">
+
+</div>
+
+<div id="theory" class="section level2">
+<h2>Theory</h2>
+<p>These are the solutions to the exercises contained within the handout to Introduction to R which walks you through the basics of the <code>R</code> machinery. <code>R</code> is a coding language that can be highly individualised and hence there are often multiple solutions to the same problem. Within these solutions, I shall only present you with one solution for every given task. However, do keep in mind that there is probably a myriad of other ways to achieve your goal. I have prepared some slides for this session:
+<a href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/biostat101/02---Introduction-to-R_Handout.html" target="_blank"><img src="/courses/BioStat101/02---BioStat101_featured.png" width="900" margin-top = "0"/></a></p>
+<!-- [Lecture Slides](erikkusch.com/courses/An Introduction to Biostatistics/02---Introduction-to-R_Handout.html) for this session. -->
+</div>
+<div id="creating-and-inspecting-objects" class="section level2">
+<h2>Creating and Inspecting Objects</h2>
+<div id="vector" class="section level3">
+<h3>Vector</h3>
+<ul>
+<li>A vector reading: “A”, “B”, “C”</li>
+</ul>
+<pre class="r"><code>Letters_vec &lt;- c(&quot;A&quot;, &quot;B&quot;, &quot;C&quot;)
+Letters_vec</code></pre>
+<pre><code>## [1] &quot;A&quot; &quot;B&quot; &quot;C&quot;</code></pre>
+<pre class="r"><code>length(Letters_vec)</code></pre>
+<pre><code>## [1] 3</code></pre>
+<ul>
+<li>A vector reading: 1, 2, 3</li>
+</ul>
+<pre class="r"><code>Numbers_vec &lt;- c(1, 2, 3)
+Numbers_vec</code></pre>
+<pre><code>## [1] 1 2 3</code></pre>
+<pre class="r"><code>length(Numbers_vec)</code></pre>
+<pre><code>## [1] 3</code></pre>
+<ul>
+<li>A vector reading: <code>TRUE</code>, <code>FALSE</code></li>
+</ul>
+<pre class="r"><code>Logic_vec &lt;- c(TRUE, FALSE)
+Logic_vec</code></pre>
+<pre><code>## [1]  TRUE FALSE</code></pre>
+<pre class="r"><code>length(Logic_vec)</code></pre>
+<pre><code>## [1] 2</code></pre>
+<ul>
+<li>A vector of the elements of the first three vectors</li>
+</ul>
+<pre class="r"><code>Big_vec &lt;- c(Letters_vec, Numbers_vec, Logic_vec)
+Big_vec</code></pre>
+<pre><code>## [1] &quot;A&quot;     &quot;B&quot;     &quot;C&quot;     &quot;1&quot;     &quot;2&quot;     &quot;3&quot;     &quot;TRUE&quot;  &quot;FALSE&quot;</code></pre>
+<pre class="r"><code>length(Big_vec)</code></pre>
+<pre><code>## [1] 8</code></pre>
+<ul>
+<li>A vector reading as a sequence of full numbers from 1 to 20</li>
+</ul>
+<pre class="r"><code>Seq_vec &lt;- c(1:20)
+Seq_vec</code></pre>
+<pre><code>##  [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20</code></pre>
+<pre class="r"><code>length(Seq_vec)</code></pre>
+<pre><code>## [1] 20</code></pre>
+</div>
+<div id="factor" class="section level3">
+<h3>Factor</h3>
+<ul>
+<li>A factor reading: “A”, “B”, “C”</li>
+</ul>
+<pre class="r"><code>Letters_fac &lt;- factor(x = c(&quot;A&quot;, &quot;B&quot;, &quot;C&quot;))
+Letters_fac</code></pre>
+<pre><code>## [1] A B C
+## Levels: A B C</code></pre>
+<pre class="r"><code>length(Letters_fac)</code></pre>
+<pre><code>## [1] 3</code></pre>
+<ul>
+<li>A factor reading: 1, 2, 3</li>
+</ul>
+<pre class="r"><code>Numbers_fac &lt;- factor(x = c(1, 2, 3))
+Numbers_fac</code></pre>
+<pre><code>## [1] 1 2 3
+## Levels: 1 2 3</code></pre>
+<pre class="r"><code>length(Numbers_fac)</code></pre>
+<pre><code>## [1] 3</code></pre>
+<ul>
+<li>A factor reading: 1, 2, 3 but only levels 1 and 2 are allowed</li>
+</ul>
+<pre class="r"><code>Constrained_fac &lt;- factor(x = c(1, 2, 3), levels = c(1, 2))
+Constrained_fac</code></pre>
+<pre><code>## [1] 1    2    &lt;NA&gt;
+## Levels: 1 2</code></pre>
+<pre class="r"><code>length(Constrained_fac)</code></pre>
+<pre><code>## [1] 3</code></pre>
+<ul>
+<li>A factor reading: 1, 2, 3 levels 1 - 4 are allowed</li>
+</ul>
+<pre class="r"><code>Expanded_fac &lt;- factor(x = c(1, 2, 3), levels = c(1, 2, 3, 4))
+Expanded_fac</code></pre>
+<pre><code>## [1] 1 2 3
+## Levels: 1 2 3 4</code></pre>
+<pre class="r"><code>length(Expanded_fac)</code></pre>
+<pre><code>## [1] 3</code></pre>
+</div>
+<div id="matrix" class="section level3">
+<h3>Matrix</h3>
+<ul>
+<li>The first two vectors we established in distinct columns of a matrix</li>
+</ul>
+<pre class="r"><code>Combine_mat &lt;- matrix(data = c(Numbers_vec, Letters_vec), ncol = 2)
+Combine_mat</code></pre>
+<pre><code>##      [,1] [,2]
+## [1,] &quot;1&quot;  &quot;A&quot; 
+## [2,] &quot;2&quot;  &quot;B&quot; 
+## [3,] &quot;3&quot;  &quot;C&quot;</code></pre>
+<pre class="r"><code>dim(Combine_mat)</code></pre>
+<pre><code>## [1] 3 2</code></pre>
+<ul>
+<li>The first two vectors we established in distinct rows of a matrix</li>
+</ul>
+<pre class="r"><code>Pivot_mat &lt;- matrix(data = c(Numbers_vec, Letters_vec), nrow = 2, byrow = TRUE)
+Pivot_mat</code></pre>
+<pre><code>##      [,1] [,2] [,3]
+## [1,] &quot;1&quot;  &quot;2&quot;  &quot;3&quot; 
+## [2,] &quot;A&quot;  &quot;B&quot;  &quot;C&quot;</code></pre>
+<pre class="r"><code>dim(Pivot_mat)</code></pre>
+<pre><code>## [1] 2 3</code></pre>
+<ul>
+<li>The above matrix with meaningful names</li>
+</ul>
+<pre class="r"><code>Names_mat &lt;- Pivot_mat
+dimnames(Names_mat) &lt;- list(c(&quot;Numbers&quot;, &quot;Letters&quot;))
+Names_mat</code></pre>
+<pre><code>##         [,1] [,2] [,3]
+## Numbers &quot;1&quot;  &quot;2&quot;  &quot;3&quot; 
+## Letters &quot;A&quot;  &quot;B&quot;  &quot;C&quot;</code></pre>
+<pre class="r"><code>dim(Names_mat)</code></pre>
+<pre><code>## [1] 2 3</code></pre>
+</div>
+<div id="data-frame" class="section level3">
+<h3>Data Frame</h3>
+<ul>
+<li>The first matrix we established as a data frame</li>
+</ul>
+<pre class="r"><code>Combine_df &lt;- data.frame(Combine_mat)
+Combine_df</code></pre>
+<pre><code>##   X1 X2
+## 1  1  A
+## 2  2  B
+## 3  3  C</code></pre>
+<pre class="r"><code>dim(Combine_df)</code></pre>
+<pre><code>## [1] 3 2</code></pre>
+<ul>
+<li>The previous data frame with meaningful names</li>
+</ul>
+<pre class="r"><code>Names_df &lt;- Combine_df
+colnames(Names_df) &lt;- c(&quot;Numbers&quot;, &quot;Letters&quot;)
+Names_df</code></pre>
+<pre><code>##   Numbers Letters
+## 1       1       A
+## 2       2       B
+## 3       3       C</code></pre>
+<pre class="r"><code>dim(Names_df)</code></pre>
+<pre><code>## [1] 3 2</code></pre>
+</div>
+<div id="list" class="section level3">
+<h3>List</h3>
+<ul>
+<li>The first two vectors we created</li>
+</ul>
+<pre class="r"><code>Vectors_ls &lt;- list(Numbers_vec, Letters_vec)
+Vectors_ls</code></pre>
+<pre><code>## [[1]]
+## [1] 1 2 3
+## 
+## [[2]]
+## [1] &quot;A&quot; &quot;B&quot; &quot;C&quot;</code></pre>
+<pre class="r"><code>length(Vectors_ls)</code></pre>
+<pre><code>## [1] 2</code></pre>
+</div>
+</div>
+<div id="statements-and-loops" class="section level2">
+<h2>Statements and Loops</h2>
+<div id="statements" class="section level3">
+<h3>Statements</h3>
+<ul>
+<li><code>Numbers_vec</code> contains more elements than <code>Letters_fac</code>?</li>
+</ul>
+<pre class="r"><code>length(Numbers_vec) &gt; length(Letters_fac)</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<ul>
+<li>The first column of <code>Combine_df</code> is shorter than <code>Vectors_ls</code>?</li>
+</ul>
+<pre class="r"><code>length(Combine_df[, 1]) &lt; length(Vectors_ls)</code></pre>
+<pre><code>## [1] FALSE</code></pre>
+<ul>
+<li>The elements of <code>Letters_vec</code> are the same as the elements of <code>Letters_fac</code>?</li>
+</ul>
+<pre class="r"><code>Letters_vec == Letters_fac</code></pre>
+<pre><code>## [1] TRUE TRUE TRUE</code></pre>
+</div>
+<div id="loops" class="section level3">
+<h3>Loops</h3>
+<ul>
+<li>Print each element of <code>Vectors_ls</code></li>
+</ul>
+<pre class="r"><code>for (i in 1:length(Vectors_ls)) {
+    print(Vectors_ls[[i]])
+}</code></pre>
+<pre><code>## [1] 1 2 3
+## [1] &quot;A&quot; &quot;B&quot; &quot;C&quot;</code></pre>
+<ul>
+<li>Print each element of <code>Numbers_vec</code> + 1</li>
+</ul>
+<pre class="r"><code>Numbers_veca &lt;- Numbers_vec + 1
+for (i in 1:length(Numbers_veca)) {
+    print(Numbers_veca[i])
+}</code></pre>
+<pre><code>## [1] 2
+## [1] 3
+## [1] 4</code></pre>
+<ul>
+<li>Subtract 1 from each element of the first column of <code>Combine_mat</code> and print each element separately</li>
+</ul>
+<pre class="r"><code>Mat_column &lt;- Combine_mat[, 1]  # extract data
+Mat_column &lt;- as.numeric(Mat_column)  # convert to numeric
+Mat_column &lt;- Mat_column - 1  # substract 1
+for (i in 1:length(Mat_column)) {
+    print(Mat_column[i])
+}</code></pre>
+<pre><code>## [1] 0
+## [1] 1
+## [1] 2</code></pre>
+</div>
+</div>
+<div id="useful-commands" class="section level2">
+<h2>Useful Commands</h2>
+<ul>
+<li>Read out your current working directory (not showing you the result as it is different on every machine, it should start like this “C:/Users/….”)</li>
+</ul>
+<pre class="r"><code>getwd()</code></pre>
+<ul>
+<li>Inspect the <code>Vectors_ls</code> object using the <code>View()</code> function (again, I am not showing you the result as this only works directly in <code>R</code> or Rstudio)</li>
+</ul>
+<pre class="r"><code>View(Vectors_ls)</code></pre>
+<ul>
+<li>Inspect the <code>Combine_df</code> object using the <code>View()</code> function (again, I am not showing you the result as this only works directly in <code>R</code> or Rstudio)</li>
+</ul>
+<pre class="r"><code>View(Combine_df)</code></pre>
+<ul>
+<li>Get the help documentation for the <code>as.matrix()</code> function (again, I am not showing you the result as this only works directly in <code>R</code> or Rstudio)</li>
+</ul>
+<pre class="r"><code>`?`(as.matrix)</code></pre>
+<ul>
+<li>Install and load the <code>dplyr</code> package</li>
+</ul>
+<pre class="r"><code>install.packages(&quot;dplyr&quot;)
+library(dplyr)</code></pre>
+<ul>
+<li>Remove the <code>Logic_vec</code> object from your working environment</li>
+</ul>
+<pre class="r"><code>rm(Logic_vec)</code></pre>
+<ul>
+<li>Clear your entire working environment</li>
+</ul>
+<pre class="r"><code>ls()  # this command shows you all the object in the environment</code></pre>
+<pre><code>##  [1] &quot;Big_vec&quot;         &quot;Combine_df&quot;      &quot;Combine_mat&quot;     &quot;Constrained_fac&quot;
+##  [5] &quot;Expanded_fac&quot;    &quot;i&quot;               &quot;Letters_fac&quot;     &quot;Letters_vec&quot;    
+##  [9] &quot;Mat_column&quot;      &quot;Names_df&quot;        &quot;Names_mat&quot;       &quot;Numbers_fac&quot;    
+## [13] &quot;Numbers_vec&quot;     &quot;Numbers_veca&quot;    &quot;Pivot_mat&quot;       &quot;Seq_vec&quot;        
+## [17] &quot;Vectors_ls&quot;</code></pre>
+<pre class="r"><code>rm(list = ls())</code></pre>
+</div>

@@ -1,0 +1,367 @@
+---
+title: "Ordinal & Metric Tests (More-Than-Two-Sample Situations)"
+subtitle: 'Analysing the Sparrow Data Set'
+author: "Erik Kusch"
+date: "2020-06-10"
+slug: Ordinal & Metric Tests (More-Than-Two-Sample Situations)
+categories: [An Introduction to Biostatistics]
+tags: [R, Statistics]
+summary: 'Welcome to our fifth practical experience in R. Throughout the following notes, I will introduce you to a couple statistical approaches for metric or ordinal data when wanting to compare more than two samples/populations that might be useful to you and are, to varying degrees, often used in biology. To do so, I will enlist the sparrow data set we handled in our first exercise.'
+authors: [Erik Kusch]
+lastmod: '2020-06-10'
+featured: no
+projects:
+output:
+  blogdown::html_page:
+    keep_md: true
+    # toc: true
+    # toc_depth: 2
+    # number_sections: false
+    fig_width: 6
+linktitle: 11 - Ordinal & Metric Tests (More-Than-Two-Sample Situations)
+menu:
+  example:
+    parent: Sessions 
+    weight: 11
+toc: true
+type: docs
+weight: 11
+---
+
+
+<div id="TOC">
+
+</div>
+
+<div id="theory" class="section level2">
+<h2>Theory</h2>
+<p>Welcome to our fifth practical experience in R. Throughout the following notes, I will introduce you to a couple statistical approaches for metric or ordinal data when wanting to compare more than two samples/populations that might be useful to you and are, to varying degrees, often used in biology. To do so, I will enlist the sparrow data set we handled in our first exercise.</p>
+<p>I have prepared some {{&lt; staticref “<a href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/an-introduction-to-biostatistics/11---Ordinal-and-Metric-Test--More-Than-Two-Sample-_Handout.html" class="uri">https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/an-introduction-to-biostatistics/11---Ordinal-and-Metric-Test--More-Than-Two-Sample-_Handout.html</a>” “newtab” &gt;}} Lecture Slides {{&lt; /staticref &gt;}} for this session.</p>
+</div>
+<div id="data" class="section level2">
+<h2>Data</h2>
+<p>Find the data for this exercise {{&lt; staticref “<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/1" class="uri">https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/1</a> - Sparrow_Data_READY.rds” “newtab” &gt;}} here{{&lt; /staticref &gt;}}, {{&lt; staticref “<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/2a" class="uri">https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/2a</a> - Sparrow_ResettledSIMA_READY.rds” “newtab” &gt;}} here{{&lt; /staticref &gt;}}, and {{&lt; staticref “<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/2b" class="uri">https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/2b</a> - Sparrow_ResettledSIUK_READY.rds” “newtab” &gt;}} here{{&lt; /staticref &gt;}}.</p>
+</div>
+<div id="preparing-our-procedure" class="section level2">
+<h2>Preparing Our Procedure</h2>
+<p>To ensure others can reproduce our analysis we run the following three lines of code at the beginning of our <code>R</code> coding file.</p>
+<pre class="r"><code>rm(list=ls()) # clearing environment
+Dir.Base &lt;- getwd() # soft-coding our working directory
+Dir.Data &lt;- paste(Dir.Base, &quot;Data&quot;, sep=&quot;/&quot;) # soft-coding our data directory </code></pre>
+<div id="packages" class="section level3">
+<h3>Packages</h3>
+<p>Using the following, user-defined function, we install/load all the necessary packages into our current <code>R</code> session.</p>
+<pre class="r"><code># function to load packages and install them if they haven&#39;t been installed yet
+install.load.package &lt;- function(x) {
+  if (!require(x, character.only = TRUE))
+    install.packages(x)
+  require(x, character.only = TRUE)
+}
+package_vec &lt;- c()
+sapply(package_vec, install.load.package)</code></pre>
+<pre><code>## list()</code></pre>
+<p>As you can see, we don’t need any packages for our analyses in this practical. Take note that I am not using <code>ggplot2</code> for data visualisation today. Personally, I find it cumbersome for “behind-the-scenes” boxplots (which is what I’ll use a lot today) and so I am presenting you with the base <code>R</code> alternative.</p>
+</div>
+<div id="loading-data" class="section level3">
+<h3>Loading Data</h3>
+<p>During our first exercise (Data Mining and Data Handling - Fixing The Sparrow Data Set) we saved our clean data set as an RDS file. To load this, we use the <code>readRDS()</code> command that comes with base <code>R</code>.</p>
+<pre class="r"><code>Data_df_base &lt;- readRDS(file = paste(Dir.Data, &quot;/1 - Sparrow_Data_READY.rds&quot;, sep=&quot;&quot;))
+Data_df &lt;- Data_df_base # duplicate and save initial data on a new object</code></pre>
+</div>
+</div>
+<div id="kruskal-wallis-test" class="section level2">
+<h2>Kruskal-Wallis Test</h2>
+<div id="climate-warmingextremes" class="section level3">
+<h3>Climate Warming/Extremes</h3>
+<p><strong>Does morphology of Passer domesticus depend on climate?</strong></p>
+<p>Using the Mann-Witney U Test in our last practical, we concluded that climate (when recorded as “Continental” and “Non-Continental”) is an important driver of <em>Passer domesticus</em> morphology. Now we will see whether this holds true when considering non-continental climates as coastal and semi-coastal ones.</p>
+<p>Take note that we need to limit our analysis to our climate type testing sites again as follows (we include Manitoba this time as it is at the same latitude as the UK and Siberia and holds a semi-coastal climate type):</p>
+<pre class="r"><code># prepare climate type testing data
+Data_df &lt;- Data_df_base
+Index &lt;- Data_df$Index
+Rows &lt;- which(Index == &quot;SI&quot; | Index == &quot;UK&quot; | Index == &quot;RE&quot; | Index == &quot;AU&quot; | Index == &quot;MA&quot;)
+Data_df &lt;- Data_df[Rows,]</code></pre>
+<div id="weight" class="section level4">
+<h4>Weight</h4>
+<p>Let’s start with weight records of common house sparrows:</p>
+<pre class="r"><code>WeightCont &lt;- with(Data_df, Weight[which(Climate == &quot;Continental&quot;)])
+WeightSemi &lt;- with(Data_df, Weight[which(Climate == &quot;Semi-Coastal&quot;)])
+WeightCoast &lt;- with(Data_df, Weight[which(Climate == &quot;Coastal&quot;)])
+Weights_vec &lt;- c(WeightCont, WeightSemi, WeightCoast)
+
+Climates &lt;- c(
+  rep(&quot;Continental&quot;, length(WeightCont)),
+  rep(&quot;Semi-Coastal&quot;, length(WeightSemi)),
+  rep(&quot;Coastal&quot;, length(WeightCoast))
+)
+Climates &lt;- as.factor(Climates)
+
+kruskal.test(Weights_vec, Climates)</code></pre>
+<pre><code>## 
+## 	Kruskal-Wallis rank sum test
+## 
+## data:  Weights_vec and Climates
+## Kruskal-Wallis chi-squared = 150.98, df = 2, p-value &lt; 2.2e-16</code></pre>
+<p>We conclude that the three-level climate variable is an important source of information to understand what drives weight records of <em>Passer domesticus</em> and thus <strong>reject the null hypothesis</strong> (p = <span class="math inline">\(1.6418184\times 10^{-33}\)</span>).</p>
+<pre class="r"><code>boxplot(Weights_vec ~ Climates)</code></pre>
+<p><img src="/courses/an-introduction-to-biostatistics/11---Ordinal-and-Metric-Test--More-Than-Two-Sample-_files/figure-html/KruskalSite1b-1.png" width="1440" /></p>
+<p>Looking at the boxplot, we can understand the distribution of weight records as grouped by climate types and identify weight records to be biggest for continental climates followed by semi-coastal ones with similar spreads. Coastal climates, on the other hand, show a remarkable spread of weight records of <em>Passer domesticus</em> with a markedly lower median than the two previous categories.</p>
+</div>
+<div id="height" class="section level4">
+<h4>Height</h4>
+<p>Secondly, let’s repeat the above Kruskal-Wallis Test for the height/length records of our <em>Passer domesticus</em> individuals:</p>
+<pre class="r"><code>HeightCont &lt;- with(Data_df, Height[which(Climate == &quot;Continental&quot;)])
+HeightSemi &lt;- with(Data_df, Height[which(Climate == &quot;Semi-Coastal&quot;)])
+HeightCoast &lt;- with(Data_df, Height[which(Climate == &quot;Coastal&quot;)])
+Heights_vec &lt;- c(HeightCont, HeightSemi, HeightCoast)
+
+Climates &lt;- c(
+  rep(&quot;Continental&quot;, length(HeightCont)),
+  rep(&quot;Semi-Coastal&quot;, length(HeightSemi)),
+  rep(&quot;Coastal&quot;, length(HeightCoast))
+)
+Climates &lt;- as.factor(Climates)
+
+kruskal.test(Heights_vec, Climates)</code></pre>
+<pre><code>## 
+## 	Kruskal-Wallis rank sum test
+## 
+## data:  Heights_vec and Climates
+## Kruskal-Wallis chi-squared = 15.635, df = 2, p-value = 0.0004027</code></pre>
+<pre class="r"><code>boxplot(Heights_vec ~ Climates)</code></pre>
+<p><img src="/courses/an-introduction-to-biostatistics/11---Ordinal-and-Metric-Test--More-Than-Two-Sample-_files/figure-html/KruskalSite2a-1.png" width="1440" />
+We conclude that the three-level climate variable is an important source of information to understand what drives height records of <em>Passer domesticus</em> and thus <strong>reject the null hypothesis</strong> (p = <span class="math inline">\(4.0267296\times 10^{-4}\)</span>).</p>
+<p>Looking at the boxplot, we can understand the distribution of height records as grouped by climate types and identify height records to be smallest for continental climates followed by semi-coastal ones with similar spreads. Coastal climates, on the other hand, show a remarkable spread of height records of <em>Passer domesticus</em> with a markedly higher median than the two previous categories.</p>
+</div>
+<div id="wing-chord" class="section level4">
+<h4>Wing Chord</h4>
+<p>Third, we will test whether climate is a good predictor for wing chord of common house sparrows:</p>
+<pre class="r"><code>Wing.ChordCont &lt;- with(Data_df, Wing.Chord[which(Climate == &quot;Continental&quot;)])
+Wing.ChordSemi &lt;- with(Data_df, Wing.Chord[which(Climate == &quot;Semi-Coastal&quot;)])
+Wing.ChordCoast &lt;- with(Data_df, Wing.Chord[which(Climate == &quot;Coastal&quot;)])
+Wing.Chords_vec &lt;- c(Wing.ChordCont, Wing.ChordSemi, Wing.ChordCoast)
+
+Climates &lt;- c(
+  rep(&quot;Continental&quot;, length(Wing.ChordCont)),
+  rep(&quot;Semi-Coastal&quot;, length(Wing.ChordSemi)),
+  rep(&quot;Coastal&quot;, length(Wing.ChordCoast))
+)
+Climates &lt;- as.factor(Climates)
+
+kruskal.test(Wing.Chords_vec, Climates)</code></pre>
+<pre><code>## 
+## 	Kruskal-Wallis rank sum test
+## 
+## data:  Wing.Chords_vec and Climates
+## Kruskal-Wallis chi-squared = 41.539, df = 2, p-value = 9.548e-10</code></pre>
+<pre class="r"><code>boxplot(Wing.Chords_vec ~ Climates)</code></pre>
+<p><img src="/courses/an-introduction-to-biostatistics/11---Ordinal-and-Metric-Test--More-Than-Two-Sample-_files/figure-html/KruskalSite3a-1.png" width="1440" /></p>
+<p>We conclude that the three-level climate variable is an important source of information to understand what drives wing chord records of <em>Passer domesticus</em> and thus <strong>reject the null hypothesis</strong> (p = <span class="math inline">\(9.5482279\times 10^{-10}\)</span>).</p>
+<p>Looking at the boxplot, we can understand the distribution of wing chord records as grouped by climate types and identify wing chord records to be smallest for continental climates followed by semi-coastal ones with similar spreads. Coastal climates, on the other hand, show a remarkable spread of wing chord records of <em>Passer domesticus</em> with a markedly higher median than the two previous categories.</p>
+</div>
+<div id="automating-the-analysis" class="section level4">
+<h4>Automating the Analysis</h4>
+<p>As we have seen, running seperate tests for every research question may be a bit cumbersome and so we may want to automate the analysis by establishing our own user-defined function as follows:</p>
+<pre class="r"><code>AutomatedKruskal &lt;- function(Variables, Groups, Plotting){
+# establish data frame to save results to
+Export &lt;- data.frame(
+  Variables = Variables,
+  Grouped_by = rep(Groups, length(Variables)),
+  Chi_Squared = rep(NA, length(Variables)),
+  DF = rep(NA, length(Variables)),
+  p_value = rep(NA, length(Variables))
+)
+
+for(i in 1:length(Variables)){
+# extract data and groups from data frame
+YData &lt;- Data_df[,which(colnames(Data_df)==Variables[i])]
+XData &lt;- Data_df[,which(colnames(Data_df)==Groups)]
+
+# establish a list holding our groups for our data
+Data &lt;- list()
+Grouping &lt;- list()
+for(k in 1:length(unique(XData))){
+  Data[[k]] &lt;- YData[which(XData == unique(XData)[k])]
+  Grouping[[k]] &lt;- rep(unique(XData)[k], length = length(Data[[k]]))
+} # end of k-loop
+
+Data &lt;- unlist(Data)
+Grouping &lt;- unlist(Grouping)
+
+# fill data frame
+Export[i, 3] &lt;- kruskal.test(Data, Grouping)[[&quot;statistic&quot;]][[&quot;Kruskal-Wallis chi-squared&quot;]]
+Export[i, 4] &lt;- kruskal.test(Data, Grouping)[[&quot;parameter&quot;]]
+Export[i, 5] &lt;- kruskal.test(Data, Grouping)[[&quot;p.value&quot;]]
+
+# optional plotting
+if(Plotting == TRUE){
+plot(Data ~ factor(Grouping), ylab = Variables[i])
+}
+
+} # end of i loop
+
+# return data frame to R outside of function
+return(Export)
+} # end of function</code></pre>
+<p>This function is <em>named</em> <code>AutomatedKruskal()</code> and takes three <em>arguments</em>: (1) <code>Variables</code> - a vector of character typed identifiers for the variables we want to have tested, (2) <code>Groups</code> - a character string identifying the grouping variable, (3) <code>Plotting</code> - a logical statement (<code>TRUE</code> or <code>FALSE</code>) whether boxplots shall be produced.</p>
+<p>The function then proceeds to establish an empty data frame which it will store the results of our Kurskal-Wallis Tests in. Afterwards, it cycles through all variables contained within the <code>Variables</code> statement, extracts the relevant data, grouping it according to the specified grouping variable (<code>Groups</code>), runs the test, fills the data frame and plots the data if <code>Plotting</code> has been set to <code>TRUE</code>.</p>
+<p>Let’s re-run our earlier test on sparrow morphology as influenced by climate using this function by <em>calling</em> it:</p>
+<pre class="r"><code>par(mfrow = c(3,1)) # adjust plotting panes
+AutomatedKruskal(Variables = c(&quot;Weight&quot;, &quot;Height&quot;, &quot;Wing.Chord&quot;), 
+                 Groups = &quot;Climate&quot;, 
+                 Plotting = TRUE)</code></pre>
+<p><img src="/courses/an-introduction-to-biostatistics/11---Ordinal-and-Metric-Test--More-Than-Two-Sample-_files/figure-html/KruskalSite7b-1.png" width="1440" /></p>
+<pre><code>##    Variables Grouped_by Chi_Squared DF      p_value
+## 1     Weight    Climate   150.97901  2 1.641818e-33
+## 2     Height    Climate    15.63477  2 4.026730e-04
+## 3 Wing.Chord    Climate    41.53899  2 9.548228e-10</code></pre>
+<p>As we can see from the results above, our function works flawlessly and we can use it going ahead.</p>
+<p>Furthermore, we can confirm some of the results of our Mann-Whitney U Test from last seminar.</p>
+</div>
+</div>
+<div id="predation" class="section level3">
+<h3>Predation</h3>
+<p><strong>Does nesting height depend on predator characteristics?</strong></p>
+<p>Again, using the Mann-WHitney U Test in our last exercise, we identified both predator presence as well as predator type to be important predictors for nesting height of <em>Passer domesticus</em>.</p>
+<p>We may wish to use the entirety of our data set again for this purpose:</p>
+<pre class="r"><code>Data_df &lt;- Data_df_base</code></pre>
+<p>Using the Kruskal-Wallis Test, we can combine these two predictors by turning every record of predator type that is recorded as <code>NA</code> into “None” which will then serve as an identifier for the absence of any predators effectively making the predator presence variable redundant:</p>
+<pre class="r"><code># changing levels in predator type
+levels(Data_df$Predator.Type) &lt;- c(levels(Data_df$Predator.Type), &quot;None&quot;)
+Data_df$Predator.Type[which(is.na(Data_df$Predator.Type))] &lt;- &quot;None&quot;
+
+# running analysis
+AutomatedKruskal(Variables = &quot;Nesting.Height&quot;, Groups = &quot;Predator.Type&quot;, Plotting = TRUE)</code></pre>
+<p><img src="/courses/an-introduction-to-biostatistics/11---Ordinal-and-Metric-Test--More-Than-Two-Sample-_files/figure-html/KruskalPredationa-1.png" width="1440" /></p>
+<pre><code>##        Variables    Grouped_by Chi_Squared DF      p_value
+## 1 Nesting.Height Predator.Type    88.81797  2 5.169206e-20</code></pre>
+<p>Using our <code>Automated Kruskal()</code> function, we can conclude that the aggregation of predator presence to predator type records serve as an excellent predictor for sparrow nesting height and <strong>reject the null hypothesis</strong> (p = <span class="math inline">\(5.169206\times 10^{-20}\)</span>).</p>
+<p>Therefore, we can argue that avian predation forces sparrows into low nesting sites, non-avian predation leads to more elevated nesting sites in <em>Passer domesticus</em> and absence of predators seems to not force nesting height in any direction or restricting its spread.</p>
+</div>
+<div id="competition" class="section level3">
+<h3>Competition</h3>
+<p><strong>Does home range depend on climate?</strong></p>
+<p>Having used the Mann-Whitney U Test to identify possible climate-driven changes in home ranges of <em>Passer domesticus</em> in our last seminar, we concluded that climate types largely affect home ranges of the common house sparrow.</p>
+<p>Take note that we need to limit our analysis to our climate type testing sites again as follows (we include Manitoba this time as it is at the same latitude as the UK and Siberia and holds a semi-coastal climate type):</p>
+<pre class="r"><code># prepare climate type testing data
+Data_df &lt;- Data_df_base
+Index &lt;- Data_df$Index
+Rows &lt;- which(Index == &quot;SI&quot; | Index == &quot;UK&quot; | Index == &quot;RE&quot; | Index == &quot;AU&quot; | Index == &quot;MA&quot;)
+Data_df &lt;- Data_df[Rows,]</code></pre>
+<p>Let’s test this for our three-level climate variable:</p>
+<pre class="r"><code>Data_df$Home.Range &lt;- as.numeric(factor(Data_df$Home.Range))
+AutomatedKruskal(Variables = &quot;Home.Range&quot;, Groups = &quot;Climate&quot;, Plotting = TRUE)</code></pre>
+<p><img src="/courses/an-introduction-to-biostatistics/11---Ordinal-and-Metric-Test--More-Than-Two-Sample-_files/figure-html/KruskalCompetitiona-1.png" width="1440" /></p>
+<pre><code>##    Variables Grouped_by Chi_Squared DF    p_value
+## 1 Home.Range    Climate    6.243918  2 0.04407075</code></pre>
+<p>Using our <code>Automated Kruskal()</code> function, we can conclude that the three-loevel climate variable serves as an excellent predictor for sparrow home range and <strong>reject the null hypothesis</strong> (p = <span class="math inline">\(0.0440707\)</span>) thus being at odds with our Mann-Whitney U results (that were only based on two climate types).</p>
+<p>Remember that small numeric ranges mean large actual ranges in this set-up and so we can conclude that climates force common house sparrows to adapt to bigger home ranges.</p>
+</div>
+</div>
+<div id="friedman-test" class="section level2">
+<h2>Friedman Test</h2>
+<p>We can analyse the significance of more than two population/sample medians of metric variables which are dependent of one another using the <code>friedman.test()</code> function in base <code>R</code>.</p>
+<div id="preparing-data" class="section level3">
+<h3>Preparing Data</h3>
+<p>Obviously, none of our data records are paired as such. Whilst one may want to make the argument that many characteristics of individuals that group together might be dependant on the expressions of themselves found throughout said group, we will not concentrate on this possibility within these practicals.</p>
+<p>Conclusively, we need <strong>additional data sets with truly paired records</strong> of sparrows. Within our study set-up, think of a <strong>resettling experiment</strong>, were you take <em>Passer domesticus</em> individuals from one site, transfer them to another and check back with them after some time has passed to see whether some of their characteristics have changed in their expression.<br />
+To this end, presume we have taken the entire <em>Passer domesticus</em> population found at our <strong>Siberian</strong> research station and moved them to <strong>Manitoba</strong>. After a given time at their new location, we are again moving the population from Manitoba to the <strong>United Kingdom</strong>. Whilst this keeps the latitude stable, the sparrows <em>now experience a semi-coastal climate followed by a coastal one instead of a continental one</em>. After some time (let’s say: a year), we have come back and recorded all the characteristics for the same individuals again. Within our data, none of the original individuals have gone missing or died throghout our study period. This is usually not the case in nature and such records would need to be deleted from the data set.</p>
+<p>You will find the corresponding <em>new data</em> in <code>2a - Sparrow_ResettledSIMA_READY.rds</code> (Siberia to Manitoba) and <code>2b - Sparrow_ResettledSIUK_READY.rds</code> (former SIberian population from manitoba to the UK). Take note that these sets only contain records for the transferred individuals in the <strong>same order</strong> as in the old data set.</p>
+<pre class="r"><code>Data_df_SIMA &lt;- readRDS(file = paste(Dir.Data, &quot;/2a - Sparrow_ResettledSIMA_READY.rds&quot;, sep=&quot;&quot;))
+Data_df_SIUK &lt;- readRDS(file = paste(Dir.Data, &quot;/2b - Sparrow_ResettledSIUK_READY.rds&quot;, sep=&quot;&quot;))</code></pre>
+<p>With these data records, we can now re-evaluate how the characteristics of sparrows can change when subjected to different conditions than previously thus shedding light on their <strong>plasticity</strong>.</p>
+<p>As such, this program is very reminiscent of the resettling program in our last exercise when using Wilcoxon Signed Rank Test to account for plasticity of our sparrow individuals. This new program includes the additional step of transferring sparrows via Manitoba first. Why have we chosen this order of resettlements?</p>
+<ol style="list-style-type: decimal">
+<li>Our stations SI, MA and UK are all on roughly the same latitude.<br />
+</li>
+<li>Moving the sparrows from SI to UK via MA results in them experiencing a gradient from continental to semi-coastal to coastal climate.</li>
+<li>Whilst Siberia is populated by avian predators, no predators are present at Manitoba and our sparrows are subject to non-avian predation in the UK.</li>
+</ol>
+<p>All of this serves to <strong>maximise variation</strong> that we want to research whilst <strong>minising constraining factors</strong>.</p>
+</div>
+<div id="climate-warmingextremes-1" class="section level3">
+<h3>Climate Warming/Extremes</h3>
+<p><strong>Does sparrow morphology change depend on climate?</strong></p>
+<p>Thinking back to out Wilcoxon Signed Rank test, we can already argue that weight records of sparrows should change according to climate whilst height and wing chord records should remain unaltered for every individual.</p>
+<p>We may wish to use the entirety of our data set again for this purpose:</p>
+<pre class="r"><code>Data_df &lt;- Data_df_base</code></pre>
+<p>Since this involves testing three seperate criterions of sparrow morphology, we again establish a user-defined function. This one is called <code>AutomatedFried()</code> and has dropped the <code>Groups</code> argument that was present in <code>AutomatedKruskal()</code> since the grouping will always be our three stations:</p>
+<pre class="r"><code>AutomatedFried &lt;- function(Variables, Plotting){
+# establish data frame to save results to
+Export &lt;- data.frame(
+  Variables = Variables,
+  Grouped_by = rep(&quot;Resettling&quot;, length(Variables)),
+  Chi_Squared = rep(NA, length(Variables)),
+  DF = rep(NA, length(Variables)),
+  p_value = rep(NA, length(Variables))
+)
+
+for(i in 1:length(Variables)){
+# extract data and groups from data frame
+YDataSI &lt;- Data_df[,which(colnames(Data_df)==Variables[i])]
+YDataMA &lt;- Data_df_SIMA[,which(colnames(Data_df)==Variables[i])]
+YDataUK &lt;- Data_df_SIUK[,which(colnames(Data_df)==Variables[i])]
+
+Data &lt;- matrix(c(YDataSI[which(Data_df$Index == &quot;SI&quot;)],
+          YDataMA, YDataUK), nrow = dim(Data_df_SIMA)[1],
+       byrow = FALSE, dimnames = list(1:dim(Data_df_SIMA)[1], 
+                                      c(&quot;SI&quot;, &quot;MA&quot;, &quot;UK&quot;))
+  )
+
+# fill data frame
+Export[i, 3] &lt;- friedman.test(Data)[[&quot;statistic&quot;]][[&quot;Friedman chi-squared&quot;]]
+Export[i, 4] &lt;- friedman.test(Data)[[&quot;parameter&quot;]]
+Export[i, 5] &lt;- friedman.test(Data)[[&quot;p.value&quot;]]
+
+# optional plotting
+if(Plotting == TRUE){
+  
+  # prepare plotting data
+  PlotData &lt;- as.vector(Data)
+  Grouping &lt;- as.factor(
+    rep(c(&quot;SI&quot;, &quot;MA&quot;, &quot;UK&quot;), each = dim(Data_df_SIMA)[1])
+    )
+  # plotting
+  plot(PlotData ~ Grouping, ylab = Variables[i])
+}
+} # end of i loop
+
+# return data frame to R outside of function
+return(Export)
+} # end of function</code></pre>
+<p>As such, the above function operates a lot like the earlier user-defined counterpart for the Kruskal-Wallis Test. It returns the important test characteristics and allows for plots. Internally, however, it is built on a matrix rather than vectors.</p>
+<p>Let’s get to testing our prediction:</p>
+<pre class="r"><code>par(mfrow = c(3,1)) # adjust plotting panes
+AutomatedFried(Variables = c(&quot;Weight&quot;, &quot;Height&quot;, &quot;Wing.Chord&quot;), Plotting = TRUE)</code></pre>
+<p><img src="/courses/an-introduction-to-biostatistics/11---Ordinal-and-Metric-Test--More-Than-Two-Sample-_files/figure-html/FriedClimateb-1.png" width="1440" /></p>
+<pre><code>##    Variables Grouped_by Chi_Squared DF      p_value
+## 1     Weight Resettling    97.84848  2 5.655506e-22
+## 2     Height Resettling         NaN  2          NaN
+## 3 Wing.Chord Resettling         NaN  2          NaN</code></pre>
+<p>Indeed, whilst climate is a good predictor for the weight of resettled sparrows (weight in continental climates is higher than in semi-coastal or coastal ones), height and wing chord records couldn’t be properly tested on using the <code>friedman.test()</code> function since they have remained unalterd. Thetrefore, we <strong>reject the null hypothesis</strong> for weight records of <em>Passer domesticus</em> and <strong>accept the null hypothesis</strong> for height and wing chord records.</p>
+</div>
+<div id="predation-1" class="section level3">
+<h3>Predation</h3>
+<p><strong>Does nesting height depend on predator characteristics?</strong></p>
+<p>According to the results of our last practical, we would assume <em>Passer doemsticus</em> to adhere to local conditions when chosing a nesting site and corresponding nesting height depending on predator presence:</p>
+<pre class="r"><code>AutomatedFried(Variables = &quot;Nesting.Height&quot;, Plotting = TRUE)</code></pre>
+<p><img src="/courses/an-introduction-to-biostatistics/11---Ordinal-and-Metric-Test--More-Than-Two-Sample-_files/figure-html/FriedPreda-1.png" width="1440" /></p>
+<pre><code>##        Variables Grouped_by Chi_Squared DF     p_value
+## 1 Nesting.Height Resettling      10.864  2 0.004374338</code></pre>
+<p>Just like we expected, nesting height of resettled sparrows depends hugely on predator presence at the sties they have been moved to (p = <span class="math inline">\(7.3991389\times 10^{-19}\)</span>) and we <strong>reject the null hypothesis</strong>.</p>
+</div>
+<div id="competition-1" class="section level3">
+<h3>Competition</h3>
+<p><strong>Does home range depend on climate?</strong></p>
+<p>As we’ve seen in our last seminar, a statistically signficant change in home ranges did not occur when resettling Siberian sparrows directly to the UK. How about when we resettle them via Manitoba?</p>
+<pre class="r"><code>Data_df_SIMA$Home.Range &lt;- as.numeric(Data_df_SIMA$Home.Range)
+Data_df_SIUK$Home.Range &lt;- as.numeric(Data_df_SIUK$Home.Range)
+
+AutomatedFried(Variables = &quot;Home.Range&quot;, Plotting = TRUE)</code></pre>
+<pre><code>## Warning in xy.coords(x, y, xlabel, ylabel, log): NAs introduced by coercion</code></pre>
+<p><img src="/courses/an-introduction-to-biostatistics/11---Ordinal-and-Metric-Test--More-Than-Two-Sample-_files/figure-html/FriedCompetitiona-1.png" width="1440" /></p>
+<pre><code>##    Variables Grouped_by Chi_Squared DF      p_value
+## 1 Home.Range Resettling         132  2 2.170522e-29</code></pre>
+<p>With our three-step resettling program we do record a statistically significant change in home ranges of our sparrow flocks and <strong>reject the null hypothesis</strong> (p = <span class="math inline">\(2.170522\times 10^{-29}\)</span>).</p>
+</div>
+</div>
