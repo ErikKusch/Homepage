@@ -29,12 +29,10 @@ weight: 7
 ---
 
 ## Theory
-Welcome to our first "real" practical experience in `R`. The following notes present you with an example of how data handling (also known as data cleaning) can be done. Obviously, the possibility for flaws to occur in any given data set are seemingly endless and so the following, tedious procedure should be thought of as less of an recipe of how to fix common flaws in biological data sets but make you aware of how important proper data collection and data entry is.
-
-I have prepared some {{< staticref "https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/an-introduction-to-biostatistics/07---Data-Handling-and-Data-Mining_Handout.html" "newtab" >}} Lecture Slides {{< /staticref >}} for this session.
+Welcome to our first "real" practical experience in `R`. The following notes present you with an example of how data handling (also known as data cleaning) can be done. Obviously, the possibility for flaws to occur in any given data set are seemingly endless and so the following, tedious procedure should be thought of as less of an recipe of how to fix common flaws in biological data sets but make you aware of how important proper data collection and data entry is. I have prepared some slides for this session: <a href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/biostat101/07---Data-Handling-and-Data-Mining_Handout.html" target="_blank"><img src="/courses/biostat101/07---BioStat101_featured.png" width="900" margin-top = "0"/></a>
 
 ## Data
-Find the data for this exercise {{< staticref "https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/SparrowData.csv" "newtab" >}} here{{< /staticref >}}.
+Find the data for this exercise {{< staticref "https://github.com/ErikKusch/Homepage/raw/master/content/courses/biostat101/Data/SparrowData.csv" "newtab" >}} here{{< /staticref >}}.
 
 ## Preparing Our Procedure 
 The following three sections are what I consider to be *essential* parts of the preamble to any `R`-based analysis. I highly recommend clearly indicating these bits in your code. 
@@ -82,7 +80,7 @@ Loading data is crucial to any analysis in `R`. Period.
 
 ```{r DataLoading}
 # Data_df_base <- read.csv(file = paste(Dir.Data, "/SparrowData.csv", sep=""), header = TRUE)
-Data_df_base <- read.csv("https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/SparrowData.csv", 
+Data_df_base <- read.csv("https://github.com/ErikKusch/Homepage/raw/master/content/courses/biostat101/Data/SparrowData.csv", 
                          header = TRUE)
 Data_df <- Data_df_base # duplicate and save initial data on a new object
 ```

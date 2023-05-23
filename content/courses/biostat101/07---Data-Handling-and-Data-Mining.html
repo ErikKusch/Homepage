@@ -35,12 +35,11 @@ weight: 7
 
 <div id="theory" class="section level2">
 <h2>Theory</h2>
-<p>Welcome to our first “real” practical experience in <code>R</code>. The following notes present you with an example of how data handling (also known as data cleaning) can be done. Obviously, the possibility for flaws to occur in any given data set are seemingly endless and so the following, tedious procedure should be thought of as less of an recipe of how to fix common flaws in biological data sets but make you aware of how important proper data collection and data entry is.</p>
-<p>I have prepared some {{&lt; staticref “<a href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/an-introduction-to-biostatistics/07---Data-Handling-and-Data-Mining_Handout.html" class="uri">https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/an-introduction-to-biostatistics/07---Data-Handling-and-Data-Mining_Handout.html</a>” “newtab” &gt;}} Lecture Slides {{&lt; /staticref &gt;}} for this session.</p>
+<p>Welcome to our first “real” practical experience in <code>R</code>. The following notes present you with an example of how data handling (also known as data cleaning) can be done. Obviously, the possibility for flaws to occur in any given data set are seemingly endless and so the following, tedious procedure should be thought of as less of an recipe of how to fix common flaws in biological data sets but make you aware of how important proper data collection and data entry is. I have prepared some slides for this session: <a href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/biostat101/07---Data-Handling-and-Data-Mining_Handout.html" target="_blank"><img src="/courses/biostat101/07---BioStat101_featured.png" width="900" margin-top = "0"/></a></p>
 </div>
 <div id="data" class="section level2">
 <h2>Data</h2>
-<p>Find the data for this exercise {{&lt; staticref “<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/SparrowData.csv" class="uri">https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/SparrowData.csv</a>” “newtab” &gt;}} here{{&lt; /staticref &gt;}}.</p>
+<p>Find the data for this exercise {{&lt; staticref “<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/biostat101/Data/SparrowData.csv" class="uri">https://github.com/ErikKusch/Homepage/raw/master/content/courses/biostat101/Data/SparrowData.csv</a>” “newtab” &gt;}} here{{&lt; /staticref &gt;}}.</p>
 </div>
 <div id="preparing-our-procedure" class="section level2">
 <h2>Preparing Our Procedure</h2>
@@ -86,7 +85,7 @@ sapply(package_vec, install.load.package)</code></pre>
 <p>Loading data is crucial to any analysis in <code>R</code>. Period.</p>
 <p><code>R</code> offers a plethora of approaches to data loading and you will usually be taught the <code>read.table()</code> command in basic biostatistics courses. However, I have found to prefer the functionality provided by the <code>xlsx</code> package since most data recording is taking place in Excel. As this package is dependant on the installation of Java and <code>RJava</code>, we will settle on the base <code>R</code> function <code>read.csv()</code>.</p>
 <pre class="r"><code># Data_df_base &lt;- read.csv(file = paste(Dir.Data, &quot;/SparrowData.csv&quot;, sep=&quot;&quot;), header = TRUE)
-Data_df_base &lt;- read.csv(&quot;https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/SparrowData.csv&quot;, 
+Data_df_base &lt;- read.csv(&quot;https://github.com/ErikKusch/Homepage/raw/master/content/courses/biostat101/Data/SparrowData.csv&quot;, 
                          header = TRUE)
 Data_df &lt;- Data_df_base # duplicate and save initial data on a new object</code></pre>
 <p>Another trick to have up your sleeve (if your RAM enables you to act on it) is to duplicate your initial data onto a new object once loaded into <code>R</code>. This will enable you to easily remedy mistakes in data treatment without having to reload your initial data set from the data file.</p>
@@ -361,7 +360,7 @@ summary(Data_df$Weight)</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA&#39;s 
 ##   19.38   27.89   30.63   29.33   32.23   36.66       1</code></pre>
 <pre class="r"><code>hist(Data_df$Weight, breaks = 100)</code></pre>
-<p><img src="/courses/an-introduction-to-biostatistics/07---Data-Handling-and-Data-Mining_files/figure-html/ColContWeight-1.png" width="576" /></p>
+<p><img src="/courses/biostat101/07---Data-Handling-and-Data-Mining_files/figure-html/ColContWeight-1.png" width="576" /></p>
 <p>We finally fixed it!</p>
 </div>
 </div>
@@ -391,7 +390,7 @@ summary(Data_df$Height)</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
 ##   11.09   13.52   14.51   15.20   16.20   21.68</code></pre>
 <pre class="r"><code>hist(Data_df$Height, breaks = 100)</code></pre>
-<p><img src="/courses/an-introduction-to-biostatistics/07---Data-Handling-and-Data-Mining_files/figure-html/ColContHeight-1.png" width="576" /></p>
+<p><img src="/courses/biostat101/07---Data-Handling-and-Data-Mining_files/figure-html/ColContHeight-1.png" width="576" /></p>
 <p>We finally fixed it!</p>
 </div>
 </div>

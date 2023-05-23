@@ -29,12 +29,10 @@ weight: 11
 ---
 
 ## Theory
-Welcome to our fifth practical experience in R. Throughout the following notes, I will introduce you to a couple statistical approaches for metric or ordinal data when wanting to compare more than two samples/populations that might be useful to you and are, to varying degrees, often used in biology. To do so, I will enlist the sparrow data set we handled in our first exercise.
-
-I have prepared some {{< staticref "https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/an-introduction-to-biostatistics/11---Ordinal-and-Metric-Test--More-Than-Two-Sample-_Handout.html" "newtab" >}} Lecture Slides {{< /staticref >}} for this session.
+Welcome to our fifth practical experience in R. Throughout the following notes, I will introduce you to a couple statistical approaches for metric or ordinal data when wanting to compare more than two samples/populations that might be useful to you and are, to varying degrees, often used in biology. To do so, I will enlist the sparrow data set we handled in our first exercise. I have prepared some slides for this session: <a href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/biostat101/11---Ordinal-and-Metric-Test--More-Than-Two-Sample-_Handout.html" target="_blank"><img src="/courses/biostat101/11---BioStat101_featured.png" width="900" margin-top = "0"/></a>
 
 ## Data
-Find the data for this exercise {{< staticref "https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/1 - Sparrow_Data_READY.rds" "newtab" >}} here{{< /staticref >}},  {{< staticref "https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/2a - Sparrow_ResettledSIMA_READY.rds" "newtab" >}} here{{< /staticref >}}, and {{< staticref "https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/2b - Sparrow_ResettledSIUK_READY.rds" "newtab" >}} here{{< /staticref >}}.
+Find the data for this exercise {{< staticref "https://github.com/ErikKusch/Homepage/raw/master/content/courses/biostat101/Data/1 - Sparrow_Data_READY.rds" "newtab" >}} here{{< /staticref >}},  {{< staticref "https://github.com/ErikKusch/Homepage/raw/master/content/courses/biostat101/Data/2a - Sparrow_ResettledSIMA_READY.rds" "newtab" >}} here{{< /staticref >}}, and {{< staticref "https://github.com/ErikKusch/Homepage/raw/master/content/courses/biostat101/Data/2b - Sparrow_ResettledSIUK_READY.rds" "newtab" >}} here{{< /staticref >}}.
 
 ## Preparing Our Procedure
 To ensure others can reproduce our analysis we run the following three lines of code at the beginning of our `R` coding file.

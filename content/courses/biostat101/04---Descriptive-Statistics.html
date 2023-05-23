@@ -4,7 +4,7 @@ subtitle: 'Getting to know the Data'
 author: "Erik Kusch"
 date: "2020-06-10"
 slug: Descriptive Statistics
-categories: [An Introduction to Biostatistics]
+categories: [BioStat101, An Introduction to Biostatistics]
 tags: [R, Statistics]
 summary: 'These are the solutions to the exercises contained within the handout to Descriptive Statistics which walks you through the basics of descriptive statistics and its parameters. The analyses presented here are using data from the `StarWars` data set supplied through the `dplyr` package that have been saved as a .csv file.'
 authors: [Erik Kusch]
@@ -35,12 +35,12 @@ weight: 4
 
 <div id="theory" class="section level2">
 <h2>Theory</h2>
-<p>These are the solutions to the exercises contained within the handout to Descriptive Statistics which walks you through the basics of descriptive statistics and its parameters. The analyses presented here are using data from the <code>StarWars</code> data set supplied through the <code>dplyr</code> package that have been saved as a .csv file. Keep in mind that there is probably a myriad of other ways to reach the same conclusions as presented in these solutions.</p>
-<p>I have prepared some I have prepared some {{&lt; staticref “<a href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/an-introduction-to-biostatistics/04---Descriptive-Statistics_Handout.html" class="uri">https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/an-introduction-to-biostatistics/04---Descriptive-Statistics_Handout.html</a>” “newtab” &gt;}} Lecture Slides {{&lt; /staticref &gt;}} for this session.</p>
+<p>These are the solutions to the exercises contained within the handout to Descriptive Statistics which walks you through the basics of descriptive statistics and its parameters. The analyses presented here are using data from the <code>StarWars</code> data set supplied through the <code>dplyr</code> package that have been saved as a .csv file. Keep in mind that there is probably a myriad of other ways to reach the same conclusions as presented in these solutions. I have prepared some slides for this session:
+<a href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/biostat101/04---Descriptive-Statistics_Handout.html" target="_blank"><img src="/courses/biostat101/04---BioStat101_featured.png" width="900" margin-top = "0"/></a></p>
 </div>
 <div id="data" class="section level2">
 <h2>Data</h2>
-<p>Find the data for this exercise {{&lt; staticref “<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/DescriptiveData.csv" class="uri">https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/DescriptiveData.csv</a>” “newtab” &gt;}} here{{&lt; /staticref &gt;}}.</p>
+<p>Find the data for this exercise {{&lt; staticref “<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/biostat101/Data/DescriptiveData.csv" class="uri">https://github.com/ErikKusch/Homepage/raw/master/content/courses/biostat101/Data/DescriptiveData.csv</a>” “newtab” &gt;}} here{{&lt; /staticref &gt;}}. Do not worry about downloading it for now.</p>
 </div>
 <div id="packages" class="section level2">
 <h2>Packages</h2>
@@ -82,7 +82,7 @@ sapply(package_vec, install.load.package)</code></pre>
 <pre class="r"><code># Data_df &lt;- read.csv(&#39;Data/DescriptiveData.csv&#39;) # load data file from Data
 # folder if you downloaded the data as a .csv alternatively, read the csv
 # directly from the url
-Data_df &lt;- read.csv(&quot;https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/DescriptiveData.csv&quot;)</code></pre>
+Data_df &lt;- read.csv(&quot;https://github.com/ErikKusch/Homepage/raw/master/content/courses/biostat101/Data/DescriptiveData.csv&quot;)</code></pre>
 </div>
 <div id="whats-contained-within-our-data" class="section level2">
 <h2>What’s contained within our data?</h2>

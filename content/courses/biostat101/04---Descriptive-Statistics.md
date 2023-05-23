@@ -4,7 +4,7 @@ subtitle: 'Getting to know the Data'
 author: "Erik Kusch"
 date: "2020-06-10"
 slug: Descriptive Statistics
-categories: [An Introduction to Biostatistics]
+categories: [BioStat101, An Introduction to Biostatistics]
 tags: [R, Statistics]
 summary: 'These are the solutions to the exercises contained within the handout to Descriptive Statistics which walks you through the basics of descriptive statistics and its parameters. The analyses presented here are using data from the `StarWars` data set supplied through the `dplyr` package that have been saved as a .csv file.'
 authors: [Erik Kusch]
@@ -31,12 +31,11 @@ weight: 4
 
 
 ## Theory
-These are the solutions to the exercises contained within the handout to Descriptive Statistics which walks you through the basics of descriptive statistics and its parameters. The analyses presented here are using data from the `StarWars` data set supplied through the `dplyr` package that have been saved as a .csv file. Keep in mind that there is probably a myriad of other ways to reach the same conclusions as presented in these solutions. 
-
-I have prepared some I have prepared some  {{< staticref "https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/an-introduction-to-biostatistics/04---Descriptive-Statistics_Handout.html" "newtab" >}} Lecture Slides {{< /staticref >}} for this session.
+These are the solutions to the exercises contained within the handout to Descriptive Statistics which walks you through the basics of descriptive statistics and its parameters. The analyses presented here are using data from the `StarWars` data set supplied through the `dplyr` package that have been saved as a .csv file. Keep in mind that there is probably a myriad of other ways to reach the same conclusions as presented in these solutions. I have prepared some slides for this session:
+<a href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/biostat101/04---Descriptive-Statistics_Handout.html" target="_blank"><img src="/courses/biostat101/04---BioStat101_featured.png" width="900" margin-top = "0"/></a>
 
 ## Data
-Find the data for this exercise {{< staticref "https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/DescriptiveData.csv" "newtab" >}} here{{< /staticref >}}.
+Find the data for this exercise {{< staticref "https://github.com/ErikKusch/Homepage/raw/master/content/courses/biostat101/Data/DescriptiveData.csv" "newtab" >}} here{{< /staticref >}}. Do not worry about downloading it for now.
 
 ## Packages
 As you will remember from our lecture slides, the calculation of the mode in `R` can either be achieved through some intense coding or simply by using the `mlv(..., method="mfv")` function contained within the `modeest` package (unfortunately, this package is out of date and can sometimes be challenging to install).  
@@ -94,7 +93,7 @@ Our data is located in the `Data` folder and is called `DescriptiveData.csv`. Si
 # Data_df <- read.csv('Data/DescriptiveData.csv') # load data file from Data
 # folder if you downloaded the data as a .csv alternatively, read the csv
 # directly from the url
-Data_df <- read.csv("https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/DescriptiveData.csv")
+Data_df <- read.csv("https://github.com/ErikKusch/Homepage/raw/master/content/courses/biostat101/Data/DescriptiveData.csv")
 ```
 
 ## What's contained within our data? 
@@ -372,7 +371,7 @@ Gender is another `factor` mode variable (obviously):
 Gender <- Data_df$gender
 ```
 
-We can, again, only judge the mode of our data from the output of the `table()` function:
+We can, again, only judge the mode of our data from the output of the `table()` function: 
 
 
 ```r

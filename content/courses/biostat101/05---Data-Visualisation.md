@@ -29,9 +29,7 @@ weight: 5
 ---
 
 ## Theory
-These are the solutions to the exercises contained within the handout to Data Visualisation which walks you through the basics of data visualisation in `R`using `ggplot2`. The plots presented here are using data from the `iris` data set supplied through the `datasets` package. Keep in mind that there is probably a myriad of other ways to reach the same conclusions as presented in these solutions.
-
-I have prepared some I have prepared some  {{< staticref "https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/an-introduction-to-biostatistics/05---Data-Visualisation_Handout.html" "newtab" >}} Lecture Slides {{< /staticref >}} for this session.
+These are the solutions to the exercises contained within the handout to Data Visualisation which walks you through the basics of data visualisation in `R` using `ggplot2`. The plots presented here are using data from the `iris` data set supplied through the `datasets` package. Keep in mind that there is probably a myriad of other ways to reach the same conclusions as presented in these solutions. I have prepared some slides for this session: <a href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/biostat101/05---Data-Visualisation_Handout.html" target="_blank"><img src="/courses/biostat101/05---BioStat101_featured.png" width="900" margin-top = "0"/></a>
 
 ## Data 
 This practical makes use of R-internal data so you don't need to download anything extra today.

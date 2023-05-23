@@ -1,0 +1,494 @@
+---
+title: "Handling Data with rgbif"
+author: Erik Kusch
+date: '2023-05-21'
+slug: datacontrol
+categories:
+  - GBIF
+  - Biodiversity
+  - Open Science
+tags:
+  - GBIF
+  - Biodiversity
+  - Open Science
+subtitle: "Quality Assurance of GBIF Mediated Data and Referencing it"
+summary: 'A quick overview of data retrieval with `rgbif`.'
+authors: []
+lastmod: '2023-05-21T20:00:00+01:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: 
+output:
+  blogdown::html_page:
+    keep_md: true
+    # toc: true
+    # toc_depth: 1
+    # number_sections: false
+# header-includes:
+#   <script src = "https://polyfill.io/v3/polyfill.min.js?features = es6"></script>
+#   <script id = "MathJax-script" async src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+math: true
+type: docs
+toc: true 
+menu:
+  gbif:
+    parent: Practical Exercises
+    weight: 7
+weight: 7
+---
+
+
+<div id="TOC">
+
+</div>
+
+{{% alert normal %}}
+<details>
+<summary>
+Preamble, Package-Loading, and GBIF API Credential Registering (click here):
+</summary>
+<pre class="r"><code>## Custom install &amp; load function
+install.load.package &lt;- function(x) {
+  if (!require(x, character.only = TRUE)) {
+    install.packages(x, repos = &quot;http://cran.us.r-project.org&quot;)
+  }
+  require(x, character.only = TRUE)
+}
+## names of packages we want installed (if not installed yet) and loaded
+package_vec &lt;- c(
+  &quot;rgbif&quot;,
+  &quot;knitr&quot;, # for rmarkdown table visualisations
+  &quot;sp&quot;, # for spatialobject creation
+  &quot;sf&quot;, # an alternative spatial object library
+  &quot;ggplot2&quot;, # for visualistion
+  &quot;maptools&quot;, # for visualisation
+  &quot;rgeos&quot;, # for visualisation
+  &quot;raster&quot;, # for setting and reading CRS
+  &quot;rnaturalearth&quot; # for shapefiles of naturalearth
+)
+## executing install &amp; load for each package
+sapply(package_vec, install.load.package)</code></pre>
+<pre><code>##         rgbif         knitr            sp            sf       ggplot2      maptools 
+##          TRUE          TRUE          TRUE          TRUE          TRUE          TRUE 
+##         rgeos        raster rnaturalearth 
+##          TRUE          TRUE          TRUE</code></pre>
+<pre class="r"><code>options(gbif_user = &quot;my gbif username&quot;)
+options(gbif_email = &quot;my registred gbif e-mail&quot;)
+options(gbif_pwd = &quot;my gbif password&quot;)</code></pre>
+</details>
+<p>{{% /alert %}}</p>
+<p>First, we obtain and load the data we are interested in like such:</p>
+<pre class="r"><code># Download query
+res &lt;- occ_download(
+  pred(&quot;taxonKey&quot;, sp_key),
+  pred_in(&quot;basisOfRecord&quot;, c(&quot;HUMAN_OBSERVATION&quot;)),
+  pred(&quot;country&quot;, &quot;NO&quot;),
+  pred(&quot;hasCoordinate&quot;, TRUE),
+  pred_gte(&quot;year&quot;, 2000),
+  pred_lte(&quot;year&quot;, 2022)
+)
+# Downloading and Loading
+res_meta &lt;- occ_download_wait(res, status_ping = 5, curlopts = list(), quiet = FALSE)
+res_get &lt;- occ_download_get(res)
+res_data &lt;- occ_download_import(res_get)</code></pre>
+<p>With this data in our <code>R</code> environment, we are ready to explore the data itself.</p>
+<p>{{% alert info %}}
+There are <strong>a myriad</strong> of things you can do to and with GBIF mediated data - here, we focus only on a few data handling steps.
+{{% /alert %}}</p>
+<div id="initial-data-handling" class="section level2">
+<h2>Initial Data Handling</h2>
+<p>Before working with the data you obtained via GBIF, it is usually good practice to first check that all data is as expected/in order and then either reduce the dataset further to fit quality standards and extract the relevant variables for your application.</p>
+<div id="common-data-considerations-issues" class="section level3">
+<h3>Common Data Considerations &amp; Issues</h3>
+<p>Common data considerations and quality flags are largely related to geolocations (but other quality markers do exist). These can be used as limiting factors in data discovery, when querying downloads as well as after a download is done and the data is loaded. Within the GBIF Portal, these options are presented in a side-bar like this:</p>
+<p><img src="/courses/gbif/qualityflags.png" width="100%"/></a></p>
+<p>As a matter of fact, we have already used the functionality by which to control for data quality markers when carrying out data discovery (<code>occ_search(...)</code>) and data download queries (<code>occ_download(...)</code>) by matching Darwin Core Terms like basisOfRecord or hasCoordinate.</p>
+<p>For this exercise, let’s focus on some data markers that are contained in our already downloaded data set which we may want to use for further limiting of our data set for subsequent analyses. To do so, let’s consider the <code>coordinateUncertaintyInMeters</code> field by visualising the values we have obtained for each record in our occurrence data:</p>
+<pre class="r"><code>ggplot(res_data, aes(x = coordinateUncertaintyInMeters)) +
+  geom_histogram(bins = 1e2) +
+  theme_bw() +
+  scale_y_continuous(trans = &quot;log10&quot;)</code></pre>
+<p><img src="/courses/gbif/rgbif-datacontrol_files/figure-html/unnamed-chunk-2-1.png" width="1440" /></p>
+<p><strong>Note:</strong> The y-axis on the above plot is log-transformed and 1053 of the underlying records do not report a value for <code>coordinateUncertaintyInMeters</code> thus being removed from the above visualisation.</p>
+<p>What we find is that there exists considerable variation in confidence of individual occurrence locations and we probably want to remove those records which are assigned a certain level of <code>coordinateUncertaintyInMeters</code>. Let’s say 10 metres:</p>
+<pre class="r"><code>preci_data &lt;- res_data[which(res_data$coordinateUncertaintyInMeters &lt; 10), ]</code></pre>
+<p>This quality control leaves us with 6802 <em>Calluna vulgaris</em> records. A significant drop in data points which may well change our analyses and their outcomes drastically.</p>
+</div>
+<div id="extract-a-subset-of-cata-columns" class="section level3">
+<h3>Extract a Subset of Cata-Columns</h3>
+<p>GBIF mediated data comes with a lot of attributes. These can be assessed readily via the Darwin Core or, within <code>R</code> via: <code>colnames(...)</code> (here with <code>...</code> = <code>res_data</code>). Rarely will we need all of them for our analyses. For now, we will simply subset the data for a smaller set of columns which are often relevant for end-users:</p>
+<pre class="r"><code>data_subset &lt;- preci_data[
+  ,
+  c(&quot;scientificName&quot;, &quot;decimalLongitude&quot;, &quot;decimalLatitude&quot;, &quot;basisOfRecord&quot;, &quot;year&quot;, &quot;month&quot;, &quot;day&quot;, &quot;eventDate&quot;, &quot;countryCode&quot;, &quot;municipality&quot;, &quot;taxonKey&quot;, &quot;species&quot;, &quot;catalogNumber&quot;, &quot;hasGeospatialIssues&quot;, &quot;hasCoordinate&quot;, &quot;datasetKey&quot;)
+]
+knitr::kable(head(data_subset))</code></pre>
+<table>
+<colgroup>
+<col width="11%" />
+<col width="7%" />
+<col width="6%" />
+<col width="7%" />
+<col width="2%" />
+<col width="2%" />
+<col width="1%" />
+<col width="4%" />
+<col width="5%" />
+<col width="5%" />
+<col width="3%" />
+<col width="7%" />
+<col width="5%" />
+<col width="8%" />
+<col width="5%" />
+<col width="15%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">scientificName</th>
+<th align="right">decimalLongitude</th>
+<th align="right">decimalLatitude</th>
+<th align="left">basisOfRecord</th>
+<th align="right">year</th>
+<th align="right">month</th>
+<th align="right">day</th>
+<th align="left">eventDate</th>
+<th align="left">countryCode</th>
+<th align="left">municipality</th>
+<th align="right">taxonKey</th>
+<th align="left">species</th>
+<th align="left">catalogNumber</th>
+<th align="left">hasGeospatialIssues</th>
+<th align="left">hasCoordinate</th>
+<th align="left">datasetKey</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Calluna vulgaris (L.) Hull</td>
+<td align="right">6.704158</td>
+<td align="right">62.66793</td>
+<td align="left">HUMAN_OBSERVATION</td>
+<td align="right">2012</td>
+<td align="right">9</td>
+<td align="right">28</td>
+<td align="left">2012-09-28</td>
+<td align="left">NO</td>
+<td align="left"></td>
+<td align="right">2882482</td>
+<td align="left">Calluna vulgaris</td>
+<td align="left">30179</td>
+<td align="left">FALSE</td>
+<td align="left">TRUE</td>
+<td align="left">09c38deb-8674-446e-8be8-3347f6c094ef</td>
+</tr>
+<tr class="even">
+<td align="left">Calluna vulgaris (L.) Hull</td>
+<td align="right">6.868125</td>
+<td align="right">62.72794</td>
+<td align="left">HUMAN_OBSERVATION</td>
+<td align="right">2012</td>
+<td align="right">9</td>
+<td align="right">28</td>
+<td align="left">2012-09-28</td>
+<td align="left">NO</td>
+<td align="left"></td>
+<td align="right">2882482</td>
+<td align="left">Calluna vulgaris</td>
+<td align="left">30076</td>
+<td align="left">FALSE</td>
+<td align="left">TRUE</td>
+<td align="left">09c38deb-8674-446e-8be8-3347f6c094ef</td>
+</tr>
+<tr class="odd">
+<td align="left">Calluna vulgaris (L.) Hull</td>
+<td align="right">6.883944</td>
+<td align="right">62.74096</td>
+<td align="left">HUMAN_OBSERVATION</td>
+<td align="right">2012</td>
+<td align="right">9</td>
+<td align="right">28</td>
+<td align="left">2012-09-28</td>
+<td align="left">NO</td>
+<td align="left"></td>
+<td align="right">2882482</td>
+<td align="left">Calluna vulgaris</td>
+<td align="left">29952</td>
+<td align="left">FALSE</td>
+<td align="left">TRUE</td>
+<td align="left">09c38deb-8674-446e-8be8-3347f6c094ef</td>
+</tr>
+<tr class="even">
+<td align="left">Calluna vulgaris (L.) Hull</td>
+<td align="right">6.614745</td>
+<td align="right">62.68688</td>
+<td align="left">HUMAN_OBSERVATION</td>
+<td align="right">2012</td>
+<td align="right">9</td>
+<td align="right">22</td>
+<td align="left">2012-09-22</td>
+<td align="left">NO</td>
+<td align="left"></td>
+<td align="right">2882482</td>
+<td align="left">Calluna vulgaris</td>
+<td align="left">29905</td>
+<td align="left">FALSE</td>
+<td align="left">TRUE</td>
+<td align="left">09c38deb-8674-446e-8be8-3347f6c094ef</td>
+</tr>
+<tr class="odd">
+<td align="left">Calluna vulgaris (L.) Hull</td>
+<td align="right">6.544501</td>
+<td align="right">62.65040</td>
+<td align="left">HUMAN_OBSERVATION</td>
+<td align="right">2012</td>
+<td align="right">9</td>
+<td align="right">22</td>
+<td align="left">2012-09-22</td>
+<td align="left">NO</td>
+<td align="left"></td>
+<td align="right">2882482</td>
+<td align="left">Calluna vulgaris</td>
+<td align="left">29879</td>
+<td align="left">FALSE</td>
+<td align="left">TRUE</td>
+<td align="left">09c38deb-8674-446e-8be8-3347f6c094ef</td>
+</tr>
+<tr class="even">
+<td align="left">Calluna vulgaris (L.) Hull</td>
+<td align="right">6.548010</td>
+<td align="right">62.64857</td>
+<td align="left">HUMAN_OBSERVATION</td>
+<td align="right">2012</td>
+<td align="right">9</td>
+<td align="right">22</td>
+<td align="left">2012-09-22</td>
+<td align="left">NO</td>
+<td align="left"></td>
+<td align="right">2882482</td>
+<td align="left">Calluna vulgaris</td>
+<td align="left">29814</td>
+<td align="left">FALSE</td>
+<td align="left">TRUE</td>
+<td align="left">09c38deb-8674-446e-8be8-3347f6c094ef</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="explore-the-occurrence-data" class="section level2">
+<h2>Explore the Occurrence Data</h2>
+<p>Now that we have the data we might use for analyses ready, we can explore what the data itself contains.</p>
+<div id="data-contents" class="section level3">
+<h3>Data Contents</h3>
+<p>Here are a few overviews of <em>Calluna vulgaris</em> abundances across different data attributes:</p>
+<pre class="r"><code>table(data_subset$year)</code></pre>
+<pre><code>## 
+## 2000 2001 2002 2003 2004 2005 2006 2007 2008 2009 2010 2011 2012 2013 2014 2015 2016 2017 
+##    2    5    1   11    4    8    8   12   37  313  509  380  255  255  349  404  505  502 
+## 2018 2019 2020 2021 2022 
+##  256  369  427 1022 1168</code></pre>
+<pre class="r"><code>table(data_subset$stateProvince)</code></pre>
+<pre><code>## &lt; table of extent 0 &gt;</code></pre>
+<pre class="r"><code>table(data_subset$mediaType)</code></pre>
+<pre><code>## &lt; table of extent 0 &gt;</code></pre>
+</div>
+<div id="spatial-data-handling" class="section level3">
+<h3>Spatial Data Handling</h3>
+<p>Most use-cases of GBIF make use of the geolocation references for data records either implicitly or explicitly. It is thus vital to be able to handle GBIF mediated data for spatial analyses. There exist plenty workshop (like <a href="https://pjbartlein.github.io/REarthSysSci/geospatial.html">this one</a>) already for this topic so I will be brief.</p>
+<div id="make-spatialpointsdataframe" class="section level4">
+<h4>Make <code>SpatialPointsDataFrame</code></h4>
+<p>First, we can use the <code>sp</code> package to create <code>SpatialPoints</code> from our geo-referenced occurrence data:</p>
+<pre class="r"><code>options(digits = 8) ## set 8 digits (ie. all digits, not decimals) for the type cast as.double to keep decimals
+data_subset &lt;- as.data.frame(data_subset)
+data_subset$lon &lt;- as.double(data_subset$decimalLongitude) ## cast lon from char to double
+data_subset$lat &lt;- as.double(data_subset$decimalLatitude) ## cast lat from char to double
+coordinates(data_subset) &lt;- ~ lon + lat ## make data_subset into SpatialPointsDataFrame
+proj4string(data_subset) &lt;- CRS(&quot;+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0&quot;) ## set CRS</code></pre>
+<p>This data format lends itself well for analysing where occurrence have been recorded in relation to study parameters of choice (e.g., climatic conditions, land-use, political boundaries, etc.).</p>
+</div>
+<div id="spatialpoints-and-polygons" class="section level4">
+<h4><code>SpatialPoints</code> and Polygons</h4>
+<p>In first instance, <code>SpatialPoints</code> can easily be used to create initial visualisations of spatial patterns:</p>
+<pre class="r"><code>## Data Handling
+data_xy &lt;- data_subset[c(&quot;decimalLongitude&quot;, &quot;decimalLatitude&quot;)] ## Extract only the coordinates
+data(wrld_simpl)
+norway_mask &lt;- subset(wrld_simpl, NAME == &quot;Norway&quot;)
+## Plotting
+plot(norway_mask, axes = TRUE)
+title(&quot;Calluna vulgaris presences recorded by human observation between 2000 and 2022 across Norway&quot;)
+points(data_xy, col = &quot;red&quot;, pch = 20, cex = 1) # plot species occurrence points to the map
+legend(&quot;bottomright&quot;, title = &quot;Legend&quot;, legend = &quot;Occurrences&quot;, pch = 20, col = &quot;red&quot;, cex = 0.9)</code></pre>
+<p><img src="/courses/gbif/rgbif-datacontrol_files/figure-html/unnamed-chunk-7-1.png" width="1440" /></p>
+</div>
+<div id="the-coordinate-reference-system-crs" class="section level4">
+<h4>The Coordinate Reference System (CRS)</h4>
+<p>Each spatial object in <code>R</code> is assigned a <a href="https://www.earthdatascience.org/courses/earth-analytics/spatial-data-r/intro-to-coordinate-reference-systems/">Coordinate Reference System (CRS)</a> which details how geolocational values are to be understood. For an overview of different CRSs, see <a href="https://epsg.io/">here</a>.</p>
+<p>In <code>R</code>, we can assess the CRS of most spatial objects as follows:</p>
+<pre class="r"><code>raster::crs(wrld_simpl)</code></pre>
+<pre><code>## Coordinate Reference System:
+## Deprecated Proj.4 representation:
+##  +proj=longlat +ellps=WGS84 +towgs84=0,0,0,0,0,0,0 +no_defs 
+## WKT2 2019 representation:
+## GEOGCRS[&quot;unknown&quot;,
+##     DATUM[&quot;World Geodetic System 1984&quot;,
+##         ELLIPSOID[&quot;WGS 84&quot;,6378137,298.257223563,
+##             LENGTHUNIT[&quot;metre&quot;,1]],
+##         ID[&quot;EPSG&quot;,6326]],
+##     PRIMEM[&quot;Greenwich&quot;,0,
+##         ANGLEUNIT[&quot;degree&quot;,0.0174532925199433],
+##         ID[&quot;EPSG&quot;,8901]],
+##     CS[ellipsoidal,2],
+##         AXIS[&quot;longitude&quot;,east,
+##             ORDER[1],
+##             ANGLEUNIT[&quot;degree&quot;,0.0174532925199433,
+##                 ID[&quot;EPSG&quot;,9122]]],
+##         AXIS[&quot;latitude&quot;,north,
+##             ORDER[2],
+##             ANGLEUNIT[&quot;degree&quot;,0.0174532925199433,
+##                 ID[&quot;EPSG&quot;,9122]]]]</code></pre>
+<pre class="r"><code>raster::crs(data_subset)</code></pre>
+<pre><code>## Coordinate Reference System:
+## Deprecated Proj.4 representation: +proj=longlat +datum=WGS84 +no_defs 
+## WKT2 2019 representation:
+## GEOGCRS[&quot;unknown&quot;,
+##     DATUM[&quot;World Geodetic System 1984&quot;,
+##         ELLIPSOID[&quot;WGS 84&quot;,6378137,298.257223563,
+##             LENGTHUNIT[&quot;metre&quot;,1]],
+##         ID[&quot;EPSG&quot;,6326]],
+##     PRIMEM[&quot;Greenwich&quot;,0,
+##         ANGLEUNIT[&quot;degree&quot;,0.0174532925199433],
+##         ID[&quot;EPSG&quot;,8901]],
+##     CS[ellipsoidal,2],
+##         AXIS[&quot;longitude&quot;,east,
+##             ORDER[1],
+##             ANGLEUNIT[&quot;degree&quot;,0.0174532925199433,
+##                 ID[&quot;EPSG&quot;,9122]]],
+##         AXIS[&quot;latitude&quot;,north,
+##             ORDER[2],
+##             ANGLEUNIT[&quot;degree&quot;,0.0174532925199433,
+##                 ID[&quot;EPSG&quot;,9122]]]]</code></pre>
+<p>When dealing with data in specific areas of the world or wanting to match occurrence data to other products with specific CRSs, it may be prudent to reproject the <code>SpatialPoints</code> occurrence data object. We can use <code>sp:spTransform()</code> to do so (this is reprojecting to the same CRS the data is already in):</p>
+<pre class="r"><code>sp::spTransform(data_subset, CRS(&quot;+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0&quot;))</code></pre>
+<pre><code>## class       : SpatialPointsDataFrame 
+## features    : 6802 
+## extent      : 4.619497, 30.051781, 57.969404, 70.981838  (xmin, xmax, ymin, ymax)
+## crs         : +proj=longlat +datum=WGS84 +no_defs 
+## variables   : 16
+## names       :             scientificName, decimalLongitude, decimalLatitude,     basisOfRecord, year, month, day,  eventDate, countryCode, municipality, taxonKey,          species, catalogNumber, hasGeospatialIssues, hasCoordinate, ... 
+## min values  : Calluna vulgaris (L.) Hull,         4.619497,       57.969404, HUMAN_OBSERVATION, 2000,     1,   1,  961891200,          NO,             ,  2882482, Calluna vulgaris,              ,                   0,             1, ... 
+## max values  : Calluna vulgaris (L.) Hull,        30.051781,       70.981838, HUMAN_OBSERVATION, 2022,    12,  31, 1671235200,          NO,         Voss,  2882482, Calluna vulgaris, OBS.259608743,                   0,             1, ...</code></pre>
+</div>
+<div id="classifying-spatial-data" class="section level4">
+<h4>Classifying Spatial Data</h4>
+<p>Moving from the relatively limited <code>sp</code> package to the more functional <code>sf</code> package enables more advanced visualisations of additional spatial considerations of our data.</p>
+<p>For example, consider we want to quantify abundances of <em>Calluna vulgaris</em> across political regions in Norway:</p>
+<pre class="r"><code>## Obtain sf object
+data_sf &lt;- st_as_sf(data_subset) # make sp into sf
+NO_municip &lt;- rnaturalearth::ne_states(country = &quot;Norway&quot;, returnclass = &quot;sf&quot;) # get shapefiles for Norwegian states
+NO_municip &lt;- sf::st_crop(NO_municip, extent(4.5, 31.5, 50, 71.5)) # crop shapefile to continental Norway
+## Identify overlap of points and polygons
+cover_sf &lt;- st_intersects(NO_municip, data_sf)
+names(cover_sf) &lt;- NO_municip$name
+## report abundances
+abundances_municip &lt;- unlist(lapply(cover_sf, length))
+sort(abundances_municip, decreasing = TRUE)</code></pre>
+<pre><code>##          Østfold  Møre og Romsdal         Buskerud       Vest-Agder         Telemark 
+##             1838             1173              366              315              283 
+##         Rogaland         Akershus        Hordaland       Aust-Agder    Sør-Trøndelag 
+##              263              199              197              172              150 
+##         Nordland          Hedmark Sogn og Fjordane             Oslo          Oppland 
+##              129              127              115              106              104 
+##         Vestfold   Nord-Trøndelag         Finnmark            Troms 
+##               82               31               28               12</code></pre>
+<p>Looks like there are hotspots for <em>Calluna vulgaris</em> in Østfold and Møre og Romsdal - could this be sampling bias or effects of bioclimatic niche preferences and local environmental conditions? Questions like these you will be able to answer with additional analyses which are beyond the scope of this workshop.</p>
+<p>Let’s visualise these abundances:</p>
+<pre class="r"><code>NO_municip$abundances &lt;- abundances_municip
+ggplot(data = NO_municip) +
+  geom_sf(aes(fill = abundances)) +
+  scale_fill_viridis_c() +
+  labs(x = &quot;Longitude&quot;, y = &quot;Latitude&quot;, col = &quot;Abundance&quot;)</code></pre>
+<p><img src="/courses/gbif/rgbif-datacontrol_files/figure-html/unnamed-chunk-11-1.png" width="1440" /></p>
+<p>Finally, let’s consider wanting to identify for each data record and attach to the data itself which state it falls into. We can do so as follows (not necessarily the most elegant way:</p>
+<pre class="r"><code>## create a dataframe of occurrence records by rownumber in original data (data_subset) and state-membership
+cover_ls &lt;- lapply(names(cover_sf), FUN = function(x) {
+  data.frame(
+    municip = x,
+    points = cover_sf[[x]]
+  )
+})
+cover_df &lt;- do.call(rbind, cover_ls)
+## attach state-membership to original data, NAs for points without state-membership
+data_subset$municip &lt;- NA
+data_subset$municip[cover_df$points] &lt;- cover_df$municip
+## visualise the result
+ggplot(data = NO_municip) +
+  geom_sf(fill = &quot;white&quot;) +
+  geom_point(
+    data = data_subset@data, size = 1,
+    aes(x = decimalLongitude, y = decimalLatitude, col = municip)
+  ) +
+  scale_colour_viridis_d() +
+  labs(x = &quot;Longitude&quot;, y = &quot;Latitude&quot;, col = &quot;Municipality&quot;)</code></pre>
+<p><img src="/courses/gbif/rgbif-datacontrol_files/figure-html/unnamed-chunk-12-1.png" width="1440" /></p>
+<p>Let’s say we feed these data into an analysis which runs to completion and we want to report on our findings. What’s next? Citing the data we used.</p>
+<p>{{% alert success %}}
+Now that you can <strong>handle GBIF data locally</strong>, you are ready to pipe these data into your specific analysis tools. Lastly, you only need to cite the data you used.
+{{% /alert %}}</p>
+</div>
+</div>
+</div>
+<div id="session-info" class="section level2">
+<h2>Session Info</h2>
+<pre><code>## R version 4.3.0 (2023-04-21)
+## Platform: x86_64-apple-darwin20 (64-bit)
+## Running under: macOS Ventura 13.3.1
+## 
+## Matrix products: default
+## BLAS:   /Library/Frameworks/R.framework/Versions/4.3-x86_64/Resources/lib/libRblas.0.dylib 
+## LAPACK: /Library/Frameworks/R.framework/Versions/4.3-x86_64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## time zone: Europe/Oslo
+## tzcode source: internal
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+## [1] rnaturalearth_0.3.2 raster_3.6-20       rgeos_0.6-2         maptools_1.1-6     
+## [5] ggplot2_3.4.2       sf_1.0-12           sp_1.6-0            knitr_1.42         
+## [9] rgbif_3.7.7        
+## 
+## loaded via a namespace (and not attached):
+##  [1] gtable_0.3.3             xfun_0.39                bslib_0.4.2             
+##  [4] lattice_0.21-8           vctrs_0.6.2              tools_4.3.0             
+##  [7] generics_0.1.3           curl_5.0.0               tibble_3.2.1            
+## [10] proxy_0.4-27             fansi_1.0.4              highr_0.10              
+## [13] pkgconfig_2.0.3          R.oo_1.25.0              KernSmooth_2.23-20      
+## [16] data.table_1.14.8        lifecycle_1.0.3          R.cache_0.16.0          
+## [19] farver_2.1.1             compiler_4.3.0           stringr_1.5.0           
+## [22] munsell_0.5.0            terra_1.7-29             codetools_0.2-19        
+## [25] htmltools_0.5.5          class_7.3-21             sass_0.4.6              
+## [28] yaml_2.3.7               lazyeval_0.2.2           pillar_1.9.0            
+## [31] jquerylib_0.1.4          whisker_0.4.1            R.utils_2.12.2          
+## [34] classInt_0.4-9           cachem_1.0.8             wk_0.7.2                
+## [37] styler_1.9.1             tidyselect_1.2.0         digest_0.6.31           
+## [40] stringi_1.7.12           dplyr_1.1.2              purrr_1.0.1             
+## [43] bookdown_0.34            labeling_0.4.2           fastmap_1.1.1           
+## [46] grid_4.3.0               colorspace_2.1-0         cli_3.6.1               
+## [49] magrittr_2.0.3           triebeard_0.4.1          crul_1.4.0              
+## [52] utf8_1.2.3               e1071_1.7-13             foreign_0.8-84          
+## [55] withr_2.5.0              scales_1.2.1             bit64_4.0.5             
+## [58] oai_0.4.0                rmarkdown_2.21           httr_1.4.5              
+## [61] bit_4.0.5                blogdown_1.16            rnaturalearthhires_0.2.1
+## [64] R.methodsS3_1.8.2        evaluate_0.20            rgdal_1.6-6             
+## [67] viridisLite_0.4.2        s2_1.1.3                 urltools_1.7.3          
+## [70] rlang_1.1.1              Rcpp_1.0.10              httpcode_0.3.0          
+## [73] glue_1.6.2               DBI_1.1.3                xml2_1.3.4              
+## [76] rstudioapi_0.14          jsonlite_1.8.4           R6_2.5.1                
+## [79] plyr_1.8.8               units_0.8-2</code></pre>
+</div>

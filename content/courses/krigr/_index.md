@@ -1,5 +1,5 @@
 ---
-title: Motivation & Workshop
+title: KrigR Workshop
 linktitle: Motivation & Workshop
 slug: overview
 date: 2021-01-01

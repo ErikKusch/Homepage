@@ -31,8 +31,15 @@ weight: 3
 
 
 ## Theory
-These are the solutions to the exercises contained within the handout to A Primer For Statistical Tests which walks you through the basics of variables, their scales and distributions. Keep in mind that there is probably a myriad of other ways to reach the same conclusions as presented in these solutions. I have prepared some slides for this session:
-<a href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/biostat101/03---A-Primer-For-Statistical-Tests_Handout.html" target="_blank"><img src="/courses/BioStat101/03---BioStat101_featured.png" width="900" margin-top = "0"/></a>
+These are the solutions to the exercises contained within the handout to A Primer For Statistical Tests which walks you through the basics of variables, their scales and distributions. Keep in mind that there is probably a myriad of other ways to reach the same conclusions as presented in these solutions.
+
+{{% alert success %}}
+<details>
+  <summary>Theory slides for this session.</summary>
+  Click the outline of the presentation below to get to the HTML version of the slides for this session.
+    <a href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/biostat101/03---A-Primer-For-Statistical-Tests_Handout.html" target="_blank"><img src="/courses/biostat101/03---BioStat101_featured.png" width="900" margin-top = "0"/></a>
+</details> 
+{{% /alert %}}
 
 ## Data
 Find the data for this exercise {{< staticref "https://github.com/ErikKusch/Homepage/raw/master/content/courses/biostat101/Data/Primer.RData" "newtab" >}} here{{< /staticref >}}.

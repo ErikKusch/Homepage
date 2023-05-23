@@ -51,75 +51,78 @@ The current release of `KrigR` is stable, but it is still undergoing development
 I have taken up a new position at the University of Oslo and hope to continue to continue my development of `KrigR` within the purview of this position. If I can do so, `KrigR` development will be slow but steady.
 {{% /alert %}}
 
-{{% alert warning %}}
-As part of my development of `KrigR`, I plan to soon register these development goals on the `KrigR` [GitHub page](https://github.com/ErikKusch/KrigR). If you have suggestions for additional functionality, please register these as issues there.
-{{% /alert %}}
+As part of my development of `KrigR`, I plan to soon register these development goals on the `KrigR` [GitHub page](https://github.com/ErikKusch/KrigR). If you have suggestions for additional functionality, please register these as issues there:
 
+```{r, echo = FALSE, embed, out.extra='style="border: none;"', out.width='100%'}
+knitr::include_url("https://github.com/ErikKusch/KrigR/issues")
+```
 
-## Data Objects to be included in `KrigR`:
+Also, if you have the capability to help with coding for `KrigR` development, I am happy to start talking.
 
-In the future, we hope to ship `KrigR` with a few in-built data sets for easier demoing of the package: 
-- ERA5-Land data  
-- GMTED 2010 data  
+<!-- ## Data Objects to be included in `KrigR`: -->
 
-To improve user-friendliness of the `download_ERA()` experience, we plan to ship `KrigR` with metadata files for each data set containing:  
-- Name of dataset  
-- Dataset spatial extent  
-- Time-window of dataset  
-- Subsets of dataset (e.g. monthly averaged reanalysis, vs. monthly averaged reanalysis by hour of the day)  
-- Temporal resolution of dataset and subsets  
-- Variables contained in dataset  
-- Variable-dependant issues (i.e. missing values for starting intervals of time series, cumulative records)  
-- Obligatory and optional arguments for API call  
-- Citation key  
-- Link to data set  
+<!-- In the future, we hope to ship `KrigR` with a few in-built data sets for easier demoing of the package:  -->
+<!-- - ERA5-Land data   -->
+<!-- - GMTED 2010 data   -->
 
-These metadata files will be used for sanity checking of download request before execution, automatic fixes of first-hour issues and the like, easier request building and piping through `ecmwfr` behind the scenes, and will be possible to query to give users an overview of datasets.
+<!-- To improve user-friendliness of the `download_ERA()` experience, we plan to ship `KrigR` with metadata files for each data set containing:   -->
+<!-- - Name of dataset   -->
+<!-- - Dataset spatial extent   -->
+<!-- - Time-window of dataset   -->
+<!-- - Subsets of dataset (e.g. monthly averaged reanalysis, vs. monthly averaged reanalysis by hour of the day)   -->
+<!-- - Temporal resolution of dataset and subsets   -->
+<!-- - Variables contained in dataset   -->
+<!-- - Variable-dependant issues (i.e. missing values for starting intervals of time series, cumulative records)   -->
+<!-- - Obligatory and optional arguments for API call   -->
+<!-- - Citation key   -->
+<!-- - Link to data set   -->
 
-## Function Changes
+<!-- These metadata files will be used for sanity checking of download request before execution, automatic fixes of first-hour issues and the like, easier request building and piping through `ecmwfr` behind the scenes, and will be possible to query to give users an overview of datasets. -->
 
-`KrigR` works as intended, but there are some changes to the core functions of `KrigR` which we have set our eyes on in an effort to improve efficiency and user-friendliness:  
+<!-- ## Function Changes -->
 
-### General Function Changes
-- Try `terra` functions instead of `raster` functions for a potential increase in computational speed  
-- Check if `tidyverse` is loaded and multiple cores are specified. Unload tidyverse packages at the beginning of `KrigR` functions and reload them when code exits with `on.exit()`
-- Enable saving of raster in non-NETCDF formats  
+<!-- `KrigR` works as intended, but there are some changes to the core functions of `KrigR` which we have set our eyes on in an effort to improve efficiency and user-friendliness:   -->
 
-### Download Function
+<!-- ### General Function Changes -->
+<!-- - Try `terra` functions instead of `raster` functions for a potential increase in computational speed   -->
+<!-- - Check if `tidyverse` is loaded and multiple cores are specified. Unload tidyverse packages at the beginning of `KrigR` functions and reload them when code exits with `on.exit()` -->
+<!-- - Enable saving of raster in non-NETCDF formats   -->
 
-- Support additional ECMWF products (e.g.: CMIP6 climate projections)  
-- Download by hours of date, too  
-- Export NETCDFS with layer names according to desired time-window and temporal resolution  
-- Make temporal aggregation dependant on dataset metadata file  
-- Ensemble spread download for data sets which offer ensembles for uncertainty metrics  
-- Optional argument to return extracted values for points in data frame with arguments passed on to `raster::extract()` function  
-- Temporal aggregation time windows and entire time series match check before downloading  
-- Investigate ways to reduce the two month data download for a single month of cumulative records  
-- Toggle `SingularDL` on intelligently depending on download specification by default  
-- Multi-core temporal aggregation  
-- Make it recognise tibbles or spatialpoints for points  
-- Query to CDS download queue?  
-- Cumulative back calculation function  
-- Check for cumulatively stored variables and cumulative back-calculation  
+<!-- ### Download Function -->
 
-### Covariate Function	
+<!-- - Support additional ECMWF products (e.g.: CMIP6 climate projections)   -->
+<!-- - Download by hours of date, too   -->
+<!-- - Export NETCDFS with layer names according to desired time-window and temporal resolution   -->
+<!-- - Make temporal aggregation dependant on dataset metadata file   -->
+<!-- - Ensemble spread download for data sets which offer ensembles for uncertainty metrics   -->
+<!-- - Optional argument to return extracted values for points in data frame with arguments passed on to `raster::extract()` function   -->
+<!-- - Temporal aggregation time windows and entire time series match check before downloading   -->
+<!-- - Investigate ways to reduce the two month data download for a single month of cumulative records   -->
+<!-- - Toggle `SingularDL` on intelligently depending on download specification by default   -->
+<!-- - Multi-core temporal aggregation   -->
+<!-- - Make it recognise tibbles or spatialpoints for points   -->
+<!-- - Query to CDS download queue?   -->
+<!-- - Cumulative back calculation function   -->
+<!-- - Check for cumulatively stored variables and cumulative back-calculation   -->
 
-- Include query to HWSD and Soil Property covariates  
-- Aggregation and preparation of user-provided covariates (provided at target resolution)  
-	
-### Kriging Function
+<!-- ### Covariate Function	 -->
 
-- Kriging recommendation table  
-- Covariates that vary over time  
-- Duration timer into call list  
-	
-## Shiny / Web-Client Application
+<!-- - Include query to HWSD and Soil Property covariates   -->
+<!-- - Aggregation and preparation of user-provided covariates (provided at target resolution)   -->
 
-To further reduce barrier of entry to the use of `KrigR`, we intend to, in the future, ship `KrigR` with a shiny app with which to create download scripts from a more visual interface.
+<!-- ### Kriging Function -->
 
-- Browser-based creation of download script for `KrigR`  
-- Time-line with coloured sections according to chosen time-window and temporal resolution  
-- Map for Visualisation of dataset extent  
-- Map for Extent selection  
-- Map for Polygon shapefile creation  
-- Map for Point selection by clicking or typing coordinates out  
+<!-- - Kriging recommendation table   -->
+<!-- - Covariates that vary over time   -->
+<!-- - Duration timer into call list   -->
+
+<!-- ## Shiny / Web-Client Application -->
+
+<!-- To further reduce barrier of entry to the use of `KrigR`, we intend to, in the future, ship `KrigR` with a shiny app with which to create download scripts from a more visual interface. -->
+
+<!-- - Browser-based creation of download script for `KrigR`   -->
+<!-- - Time-line with coloured sections according to chosen time-window and temporal resolution   -->
+<!-- - Map for Visualisation of dataset extent   -->
+<!-- - Map for Extent selection   -->
+<!-- - Map for Polygon shapefile creation   -->
+<!-- - Map for Point selection by clicking or typing coordinates out   -->

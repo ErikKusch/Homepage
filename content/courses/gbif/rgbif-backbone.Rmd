@@ -1,0 +1,181 @@
+---
+title: "Working with the GBIF Backbone"
+author: Erik Kusch
+date: '2023-05-21'
+slug: backbone
+categories:
+  - GBIF
+  - Biodiversity
+  - Open Science
+tags:
+  - GBIF
+  - Biodiversity
+  - Open Science
+subtitle: "Name Resolving GBIF for Mediated Data"
+summary: 'A quick overview of name resolution with `rgbif`.'
+authors: []
+lastmod: '2023-05-21T20:00:00+01:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: 
+output:
+  blogdown::html_page:
+    keep_md: true
+    # toc: true
+    # toc_depth: 1
+    # number_sections: false
+# header-includes:
+#   <script src = "https://polyfill.io/v3/polyfill.min.js?features = es6"></script>
+#   <script id = "MathJax-script" async src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+math: true
+type: docs
+toc: true 
+menu:
+  gbif:
+    parent: Practical Exercises
+    weight: 4
+weight: 4
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, tidy='styler', tidy.opts=list(strict=TRUE), fig.width = 15, fig.height = 8)
+options(width = 90)
+source("PersonalSettings.R")
+```
+
+{{% alert normal %}}
+<details>
+  <summary>Preamble, Package-Loading, and GBIF API Credential Registering (click here):</summary>
+```{r InstallAdvanced}
+## Custom install & load function
+install.load.package <- function(x){
+  if (!require(x, character.only = TRUE)) {
+    install.packages(x, repos = "http://cran.us.r-project.org")
+  }
+  require(x, character.only = TRUE)
+}
+## names of packages we want installed (if not installed yet) and loaded
+package_vec <- c(
+  "rgbif",
+  "knitr", # for rmarkdown table visualisations
+  "rnaturalearth", # for shapefile access
+  "wicket" # for transforming polygons into wkt format; may have to run: remotes::install_version("wicket", "0.4.0")
+)
+## executing install & load for each package
+sapply(package_vec, install.load.package)
+```
+```{r registeruser, eval=FALSE}
+options(gbif_user = "my gbif username")
+options(gbif_email = "my registred gbif e-mail")
+options(gbif_pwd = "my gbif password")
+```
+</details> 
+{{% /alert %}}
+
+The ways in which we record and report species identities is arguably more varied than recorded species identities themselves. For example, while the binomial nomenclature is widely adopted across scientific research, the same species may be still be referred to via different binomial names with descriptor or subspecies suffixes. In addition, particularly when dealing with citizen science data, species names may not always be recorded according to the binomial nomenclature but rather via vernacular names.
+
+The [GBIF Backbone Taxonomy](https://www.gbif.org/dataset/d7dddbf4-2cf0-4f39-9b2a-bb099caae36c) circumvents these issues on the data-management side as it assigns unambiguous keys to taxonomic units of interest - these are known as **taxonKeys**.
+
+{{% alert danger %}}
+GBIF recognises taxonomic units via unique identifiers which are linked to more commonly used names and descriptors.
+{{% /alert %}}
+
+Matching between what you require and how GBIF indexes its data is therefore vital to ensure you retrieve the data you need accurately and in full. To discover data themselves, we first need to discover their corresponding relevant identifiers.
+
+## Finding the **taxonKeys**
+
+To identify the relevant taxonKeys for our [study organism](/courses/gbif/#study-organism) (*Calluna vulgaris*), we will use the `name_backbone(...)` function to match our binomial species name to the GBIF backbone as follows:
+
+```{r taxonkey}
+sp_name <- "Calluna vulgaris"
+sp_backbone <- name_backbone(name = sp_name)
+```
+Let's look at the output of this function call:
+```{r taxonkey2}
+knitr::kable(sp_backbone)
+```
+
+The data frame / `tibble` returned by the `name_backbone(...)` function contains important information regarding the confidence and type of match achieved between the input species name and the GBIF backbone. In addition, it lists all relevant taxonKeys. Of particular to most use-cases are the following columns:
+
+- `usageKey`: The taxonKey by which this species is indexed in the GBIF backbone.
+- `matchType`: This can be either: 
+  - `r "EXACT"`: binomial input matched 1-1 to backbone
+  - `r "FUZZY"`: binomial input was matched to backbone assuming misspelling
+  - `r "HIGHERRANK"`: binomial input is not a species-level name, but indexes a higher-rank taxonomic group
+  - `r "NONE"`: no match could be made
+
+Let's extract the `usageKey` of *Calluna vulgaris* in the GBIF backbone for later use in this workshop.
+```{r taxonkey3}
+sp_key <- sp_backbone$usageKey
+sp_key
+```
+
+{{% alert success %}}
+We now have a unique identifier for *Caluna vulgaris* which we can use to query GBIF for data.
+{{% /alert %}}
+
+## Resolving Taxonomic Names
+
+Not all species identities are as straightforwardly matched to the GBIF backbone and there is more information stored in the GBIF backbone which may be relevant to users. Here, I would like to spend some time delving further into these considerations.
+
+### Matching Input to Backbone
+
+To widen the backbone matching, we can set `verbose = TRUE` in the `name_backbone(...)` function. Doing so for *Calluna vulgaris*, we obtain the following:
+```{r resolving}
+sp_backbone <- name_backbone(name = sp_name, verbose = TRUE)
+knitr::kable(t(sp_backbone))
+```
+
+Here, you can see how fuzzy matching has resulted in an erroneous match with a different plant: *Carlina vulgaris* - the thistle - also a neat plant, but not the one we are after here.
+
+### Competing Name Matches
+
+By horribly misspelling our binomial input, we can coerce an output of `r "HIGHERRANK"` match which now indexes the Genus itself:
+```{r resolving2}
+knitr::kable(name_backbone("Calluna vul",verbose=TRUE))
+```
+
+To truly see how competing name identifiers can cause us to struggle identifying the correct `usageKey` we must turn away from *Calluna vulgaris*. Instead, let us look at *Glocianus punctiger* - a species of weevil:
+```{r resolving2b}
+knitr::kable(name_backbone("Glocianus punctiger", verbose=TRUE))
+```
+
+Here, we find that there exist two competing identifiers for *Glocianus punctiger* in the GBIF backbone in accordance with their competing descriptors. To query data for all *Glocianus punctiger* records, we should thus always use the keys `r paste(name_backbone("Glocianus punctiger", verbose=TRUE)$usageKey[-1], collapse = " and ")`.
+
+### Matching Names and Backbone for several Species
+
+The above use of `name_backbone(...)` can be executed for multiple species at once using instead the `name_backbone_checklist(...)` function:
+```{r resolving3}
+checklist_df <- name_backbone_checklist(c(sp_name, "Glocianus punctiger"))
+knitr::kable(checklist_df)
+```
+
+{{% alert success %}}
+It is best practise to carefully investigate the match between your binomial input and the GBIF backbone.
+{{% /alert %}}
+
+## Name Suggestions and Lookup
+
+To catch other commonly used or relevant names for a species of interest, you can use the `name_suggest(...)` function. This is particularly useful when data mining publications or data sets for records which can be grouped to the same species although they might be recorded with different names:
+```{r}
+sp_suggest <- name_suggest(sp_name)$data
+knitr::kable(t(head(sp_suggest)))
+```
+To trawl GBIF mediated data sets for records of a specific species, one may use the `name_lookup(...)` function:
+```{r}
+sp_lookup <- name_lookup(sp_name)$data
+knitr::kable(head(sp_lookup))
+```
+
+Here, we see clearly that *Calluna vulgaris* is recorded slightly differently in the datasets mediated by GBIF, but are indexed just fine for GBIF to find them for us.
+
+Lastly, to gain a better understanding of the variety of vernacular names by which our species is know, we can use the `name_usage(..., data = "vernacularnames")` function as follows:
+```{r}
+sp_usage <- name_usage(key = sp_key, data = "vernacularNames")$data
+knitr::kable(head(sp_usage))
+```
+
+`name_usage(...)` can be tuned to output different information and its documentation gives a good overview of this. Simply call `?name_usage` to look for yourself.

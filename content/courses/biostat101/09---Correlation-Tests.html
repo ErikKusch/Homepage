@@ -35,12 +35,11 @@ weight: 9
 
 <div id="theory" class="section level2">
 <h2>Theory</h2>
-<p>Welcome to our third practical experience in R. Throughout the following notes, I will introduce you to a couple statistical correlation approaches that might be useful to you and are, to varying degrees, often used in biology. To do so, I will enlist the sparrow data set we handled in our first exercise.</p>
-<p>I have prepared some {{&lt; staticref “<a href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/an-introduction-to-biostatistics/09---Correlation-Tests_Handout.html" class="uri">https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/an-introduction-to-biostatistics/09---Correlation-Tests_Handout.html</a>” “newtab” &gt;}} Lecture Slides {{&lt; /staticref &gt;}} for this session.</p>
+<p>Welcome to our third practical experience in R. Throughout the following notes, I will introduce you to a couple statistical correlation approaches that might be useful to you and are, to varying degrees, often used in biology. To do so, I will enlist the sparrow data set we handled in our first exercise. I have prepared some slides for this session: <a href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/biostat101/09---Correlation-Tests_Handout.html" target="_blank"><img src="/courses/biostat101/09---BioStat101_featured.png" width="900" margin-top = "0"/></a></p>
 </div>
 <div id="data" class="section level2">
 <h2>Data</h2>
-<p>Find the data for this exercise {{&lt; staticref “<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/1" class="uri">https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/1</a> - Sparrow_Data_READY.rds” “newtab” &gt;}} here{{&lt; /staticref &gt;}}.</p>
+<p>Find the data for this exercise {{&lt; staticref “<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/biostat101/Data/1" class="uri">https://github.com/ErikKusch/Homepage/raw/master/content/courses/biostat101/Data/1</a> - Sparrow_Data_READY.rds” “newtab” &gt;}} here{{&lt; /staticref &gt;}}.</p>
 </div>
 <div id="preparing-our-procedure" class="section level2">
 <h2>Preparing Our Procedure</h2>
@@ -192,13 +191,13 @@ ggplot(data = plot_df, aes(x = RankedWeight, y = RankedEggWeight)) +
   geom_point() + theme_bw() + stat_smooth(method = &quot;lm&quot;) + 
   labs(title = &quot;Ranked female weight of Passer domesticus vs. Ranked weigt of eggs&quot;)</code></pre>
 <pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
-<p><img src="/courses/an-introduction-to-biostatistics/09---Correlation-Tests_files/figure-html/Kendall.26b-1.png" width="1440" /></p>
+<p><img src="/courses/biostat101/09---Correlation-Tests_files/figure-html/Kendall.26b-1.png" width="1440" /></p>
 <pre class="r"><code># plot ranked female weight vs. number of eggs
 ggplot(data = plot_df, aes(x = RankedWeight, y = RankedEggNumber)) +
   geom_point() + theme_bw() + stat_smooth(method = &quot;lm&quot;) + 
   labs(title = &quot;Ranked female weight of Passer domesticus vs. Ranked number of eggs&quot;)</code></pre>
 <pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
-<p><img src="/courses/an-introduction-to-biostatistics/09---Correlation-Tests_files/figure-html/Kendall.26b-2.png" width="1440" /></p>
+<p><img src="/courses/biostat101/09---Correlation-Tests_files/figure-html/Kendall.26b-2.png" width="1440" /></p>
 <p>This highlights an obvious and intuitive trade-off in nature and has us <strong>reject the null hypotheses</strong>.</p>
 </div>
 </div>
@@ -261,7 +260,7 @@ Normal_df</code></pre>
   geom_point() + theme_bw() + stat_smooth(method = &quot;lm&quot;) + 
   labs(title = &quot;Height of Passer domesticus vs. Latitude&quot;)</code></pre>
 <pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
-<p><img src="/courses/an-introduction-to-biostatistics/09---Correlation-Tests_files/figure-html/Spearman1-1.png" width="1440" />
+<p><img src="/courses/biostat101/09---Correlation-Tests_files/figure-html/Spearman1-1.png" width="1440" />
 Interestingly enough, our analysis yields a negative correlation which would disproof Bermann’s rule. This is a good example to show how important biological background knowledge is when doing biostatistics. Whilst a pure statistician might now believe to have just dis-proven a big rule of biology, it should be apparent to any biologist that Bergmann spoke of “bigger” organisms in colder climates (higher latitudes) and not of “taller” individuals. What our sparrows lack in height, they might make up for in circumference. This is an example where we would <strong>reject the null hypothesis</strong> but shouldn’t <strong>accept the alternative hypothesis</strong> based on biological understanding.</p>
 </div>
 <div id="weight" class="section level5">
@@ -285,7 +284,7 @@ Interestingly enough, our analysis yields a negative correlation which would dis
   geom_point() + theme_bw() + stat_smooth(method = &quot;lm&quot;) + 
   labs(title = &quot;Weight of Passer domesticus vs. Latitude&quot;)</code></pre>
 <pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
-<p><img src="/courses/an-introduction-to-biostatistics/09---Correlation-Tests_files/figure-html/Spearman-1.png" width="1440" />
+<p><img src="/courses/biostat101/09---Correlation-Tests_files/figure-html/Spearman-1.png" width="1440" />
 Bergmann was obviously right and we <strong>reject the null hypothesis</strong>.</p>
 </div>
 <div id="wing-chord" class="section level5">
@@ -309,7 +308,7 @@ Bergmann was obviously right and we <strong>reject the null hypothesis</strong>.
   geom_point() + theme_bw() + stat_smooth(method = &quot;lm&quot;) + 
   labs(title = &quot;Wing chord of Passer domesticus vs. Latitude&quot;)</code></pre>
 <pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
-<p><img src="/courses/an-introduction-to-biostatistics/09---Correlation-Tests_files/figure-html/Spearman2-1.png" width="1440" /></p>
+<p><img src="/courses/biostat101/09---Correlation-Tests_files/figure-html/Spearman2-1.png" width="1440" /></p>
 <p>And we were right! Sparrows have shorter wingspans in higher latitudes and we <strong>reject the null hypothesis</strong>.</p>
 </div>
 <div id="number-of-eggs" class="section level5">
@@ -335,7 +334,7 @@ Bergmann was obviously right and we <strong>reject the null hypothesis</strong>.
 <pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
 <pre><code>## Warning: Removed 394 rows containing non-finite values (`stat_smooth()`).</code></pre>
 <pre><code>## Warning: Removed 394 rows containing missing values (`geom_point()`).</code></pre>
-<p><img src="/courses/an-introduction-to-biostatistics/09---Correlation-Tests_files/figure-html/Spearman3-1.png" width="1440" />
+<p><img src="/courses/biostat101/09---Correlation-Tests_files/figure-html/Spearman3-1.png" width="1440" />
 We were right. Female house sparrows produce less eggs per capita in higher latitudes and we <strong>reject the null hypothesis</strong>.</p>
 </div>
 <div id="egg-weight" class="section level5">
@@ -361,7 +360,7 @@ We were right. Female house sparrows produce less eggs per capita in higher lati
 <pre><code>## `geom_smooth()` using formula = &#39;y ~ x&#39;</code></pre>
 <pre><code>## Warning: Removed 395 rows containing non-finite values (`stat_smooth()`).</code></pre>
 <pre><code>## Warning: Removed 395 rows containing missing values (`geom_point()`).</code></pre>
-<p><img src="/courses/an-introduction-to-biostatistics/09---Correlation-Tests_files/figure-html/Spearman4-1.png" width="1440" />
+<p><img src="/courses/biostat101/09---Correlation-Tests_files/figure-html/Spearman4-1.png" width="1440" />
 Indeed, the higher the latitude, the heavier the average egg per nest of <em>Passer domesticus</em> and we <strong>reject the null hypothesis</strong>.</p>
 </div>
 </div>

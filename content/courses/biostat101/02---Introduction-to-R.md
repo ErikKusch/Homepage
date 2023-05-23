@@ -32,11 +32,16 @@ weight: 2
 
 
 
-## Theory
-These are the solutions to the exercises contained within the handout to Introduction to R which walks you through the basics of the `R` machinery. `R` is a coding language that can be highly individualised and hence there are often multiple solutions to the same problem. Within these solutions, I shall only present you with one solution for every given task. However, do keep in mind that there is probably a myriad of other ways to achieve your goal. I have prepared some slides for this session:
-<a href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/biostat101/02---Introduction-to-R_Handout.html" target="_blank"><img src="/courses/BioStat101/02---BioStat101_featured.png" width="900" margin-top = "0"/></a>  
+## Theory 
+These are the solutions to the exercises contained within the handout to Introduction to R which walks you through the basics of the `R` machinery. `R` is a coding language that can be highly individualised and hence there are often multiple solutions to the same problem. Within these solutions, I shall only present you with one solution for every given task. However, do keep in mind that there is probably a myriad of other ways to achieve your goal.
 
-<!-- [Lecture Slides](erikkusch.com/courses/An Introduction to Biostatistics/02---Introduction-to-R_Handout.html) for this session. -->
+{{% alert success %}}
+<details>
+  <summary>Theory slides for this session.</summary>
+  Click the outline of the presentation below to get to the HTML version of the slides for this session.
+    <a href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/biostat101/02---Introduction-to-R_Handout.html" target="_blank"><img src="/courses/biostat101/02---BioStat101_featured.png" width="900" margin-top = "0"/></a>  
+</details> 
+{{% /alert %}}
 
 ## Creating and Inspecting Objects
 ### Vector

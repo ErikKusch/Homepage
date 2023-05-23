@@ -29,13 +29,10 @@ weight: 8
 ---
 
 ## Theory 
-Welcome to our second practical experience in `R`. Throughout the following notes, I will introduce you to a couple nominal statistical test approaches that might be useful to you and are often used in biology.  
-To do so, I will enlist the sparrow data set we handled in our last exercise. 
-
-I have prepared some {{< staticref "https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/an-introduction-to-biostatistics/08---Nominal-Tests_Handout.html" "newtab" >}} Lecture Slides {{< /staticref >}} for this session.
+Welcome to our second practical experience in `R`. Throughout the following notes, I will introduce you to a couple nominal statistical test approaches that might be useful to you and are often used in biology. To do so, I will enlist the sparrow data set we handled in our last exercise. I have prepared some slides for this session: <a href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/biostat101/08---Nominal-Tests_Handout.html" target="_blank"><img src="/courses/biostat101/08---BioStat101_featured.png" width="900" margin-top = "0"/></a>
 
 ## Data 
-Find the data for this exercise {{< staticref "https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/1%20-%20Sparrow_Data_READY.rds" "newtab" >}} here{{< /staticref >}}. 
+Find the data for this exercise {{< staticref "https://github.com/ErikKusch/Homepage/raw/master/content/courses/biostat101/Data/1%20-%20Sparrow_Data_READY.rds" "newtab" >}} here{{< /staticref >}}. 
 
 ## Preparing Our Procedure
 To ensure others can reproduce our analysis we run the following three lines of code at the beginning of our `R` coding file.

@@ -1,0 +1,367 @@
+---
+title: "Downloading Data with rgbif"
+author: Erik Kusch
+date: '2023-05-21'
+slug: datadownload
+categories:
+  - GBIF
+  - Biodiversity
+  - Open Science
+tags:
+  - GBIF
+  - Biodiversity
+  - Open Science
+subtitle: "Obtaining GBIF Mediated Data"
+summary: 'A quick overview of data retrieval with `rgbif`.'
+authors: []
+lastmod: '2023-05-21T20:00:00+01:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: 
+output:
+  blogdown::html_page:
+    keep_md: true
+    # toc: true
+    # toc_depth: 1
+    # number_sections: false
+# header-includes:
+#   <script src = "https://polyfill.io/v3/polyfill.min.js?features = es6"></script>
+#   <script id = "MathJax-script" async src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+math: true
+type: docs
+toc: true 
+menu:
+  gbif:
+    parent: Practical Exercises
+    weight: 6   
+weight: 6
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, tidy='styler', tidy.opts=list(strict=TRUE), fig.width = 15, fig.height = 8)
+options(width = 90)
+source("PersonalSettings.R")
+```
+
+{{% alert normal %}}
+<details>
+  <summary>Preamble, Package-Loading, and GBIF API Credential Registering (click here):</summary>
+```{r InstallAdvanced}
+## Custom install & load function
+install.load.package <- function(x){
+  if (!require(x, character.only = TRUE)) {
+    install.packages(x, repos = "http://cran.us.r-project.org")
+  }
+  require(x, character.only = TRUE)
+}
+## names of packages we want installed (if not installed yet) and loaded
+package_vec <- c(
+  "rgbif",
+  "knitr", # for rmarkdown table visualisations
+  "rio" # for dwc import
+)
+## executing install & load for each package
+sapply(package_vec, install.load.package)
+```
+```{r registeruser, eval=FALSE}
+options(gbif_user = "my gbif username")
+options(gbif_email = "my registred gbif e-mail")
+options(gbif_pwd = "my gbif password")
+```
+</details> 
+{{% /alert %}}
+
+First, we need to register the correct **usageKey** for *Calluna vulgaris*:
+```{r}
+sp_name <- "Calluna vulgaris"
+sp_backbone <- name_backbone(name = sp_name)
+sp_key <- sp_backbone$usageKey
+```
+
+Second, this is the specific data we are interested in obtaining:
+```{r}
+occ_final <- occ_search(taxonKey = sp_key,
+                        country = "NO",
+                        year = "2000,2022",
+                        basisOfRecord = "HUMAN_OBSERVATION",
+                        occurrenceStatus = "PRESENT")
+```
+
+Finally, we are ready to obtain GBIF mediated data we may want to use in downstream analyses and applications. This can be done in one of two ways - either via:
+1. Near-Instant Download - via `occ_data(...)`
+2. Asynchronous Download - via `occ_download(...)`
+
+Let's explore both of these in turn.
+
+# Near-Instant Download
+
+{{% alert warning %}}
+Near-instant downloads should only ever be used for initial data exploration and data stream/model building and **not for final publications**.
+{{% /alert %}}
+
+Near-instant downloads do not require a GBIF account to be set-up and are the quickest way to obtain GBIF mediated data, but also the more limited functionality since near-instant downloads allow the user to only obtain 100,000 records per query and do not create citable DOIs for easy reference and accreditation of GBIF mediated data.
+
+Let me demonstrate how these can be executed nevertheless.
+
+As a matter of fact, we have already executed one of these through our call to `occ_search(...)` at the top of this page. While this function does download data via the `...$data` output it provides, let's showcase instead how we could use the `occ_data(...)` function to arrive at the same result:
+
+```{r}
+NI_occ <- occ_data(
+  taxonKey = sp_key,
+  country = "NO",
+  year = "2000,2022",
+  basisOfRecord = "HUMAN_OBSERVATION",
+  occurrenceStatus = "PRESENT"
+)
+knitr::kable(head(NI_occ$data))
+```
+
+The near-instantaneous nature of this type of download is largely due to the hard limit on how much data you may obtain. For our example, the 100,000 record limit is not an issue as we are dealing with only `r NI_occ$meta$count` records being available to us, but queries to GBIF mediated records can easily and quickly exceed this limit.
+
+# Asynchronous Download
+
+{{% alert success %}}
+This is how you should obtain data **for publication-level research and reports**.
+{{% /alert %}}
+
+To avoid the reproducibility and data richness limitations of near-instant downloads, we must make a more formal download query to the GBIF API and await processing of our data request - an asynchronous download. To do so, we need to do three things in order:
+
+1. Specify the data we want and request processing and download from GBIF
+2. Download the data once it is processed
+3. Load the downloaded data into `R`
+
+{{% alert info %}}
+Time between registering a download request and retrieval of data may vary according to how busy the GBIF API and servers are as well as the size and complexity of the data requested. GBIF will only handle a maximum of 3 download request per user simultaneously.
+{{% /alert %}}
+
+Let's tackle these step-by-step.
+
+## Data Request at GBIF
+
+To start this process of obtaining GBIF-mediated occurrence records, we first need to make a request to GBIF to start processing of the data we require. This is done with the `occ_download(...)` function. Making a data request at GBIF via the `occ_download(...)` function comes with two important considerations:
+
+1. `occ_download(...)` specific syntax
+2. data query metadata
+
+### Syntax and Query through `occ_download()`
+
+The `occ_download(...)` function - while powerful - requires us to confront a new set of syntax which translates the download request as we have seen it so far into a form which the GBIF API can understand. To do so, we use a host of `rgbif` functions built around the GBIF predicate DSL (domain specific language). These functions (with a few exceptions which you can see by calling the documentation - `?download_predicate_dsl`) all take two arguments:
+
+- `key` - this is a core term which we want to target for our request
+- `value` - this is the value for the core term which we are interested in
+
+Finally, the relevant functions and how the relate `key` to `value` are:
+- `pred(...)`: equals
+- `pred_lt(...)`: lessThan
+- `pred_lte(...)`: lessThanOrEquals
+- `pred_gt(...)`: greaterThan
+- `pred_gte(...)`: greaterThanOrEquals
+- `pred_like(...)`: like
+- `pred_within(...)`: within (only for geospatial queries, and only accepts a WKT string)
+- `pred_notnull(...)`: isNotNull (only for geospatial queries, and only accepts a WKT string)
+- `pred_isnull(...)`: isNull (only for stating that you want a key to be null)
+- `pred_and(...)`: and (accepts multiple individual predicates, separating them by either "and" or "or")
+- `pred_or(...)`: or (accepts multiple individual predicates, separating them by either "and" or "or")
+- `pred_not(...)`: not (negates whatever predicate is passed in)
+- `pred_in(...)`: in (accepts a single key but many values; stating that you want to search for all the values)
+
+Let us use these to query the data we are interested in:
+```{r, echo = FALSE}
+if(file.exists(file.path(getwd(), "registereddownload.RData"))){
+  load(file.path(getwd(), "registereddownload.RData"))
+}else{
+  res <- occ_download(
+  pred("taxonKey", sp_key),
+  pred("basisOfRecord", 'HUMAN_OBSERVATION'),
+  pred("country", "NO"),
+  pred_gte("year", 2000),
+  pred_lte("year", 2022)
+)
+  save(res, file = "registereddownload.RData")
+}
+```
+
+```{r searchandgetkey, eval=FALSE}
+res <- occ_download(
+  pred("taxonKey", sp_key),
+  pred("basisOfRecord", 'HUMAN_OBSERVATION'),
+  pred("country", "NO"),
+  pred("hasCoordinate", TRUE),
+  pred_gte("year", 2000),
+  pred_lte("year", 2022)
+)
+```
+
+Now that the download request has been made with GBIF, you need to wait for GBIF to process your query and return the desired data to you. You will find an overview of all your requested and processed downloads in your personal [download tab](https://www.gbif.org/user/download) on the GBIF webportal.
+
+### Data Query Metadata
+To keep track of all your data queries, each call to `occ_download(...)` returns a set of metadata for your download request as part of its object structure. This can be assessed as follows:
+```{r}
+occ_download_meta(res)
+```
+
+It can even be subset for relevant parts of it like so:
+```{r}
+occ_download_meta(res)$downloadLink
+```
+
+This is done according to the underlying structure of the metadata:
+
+```{r}
+str(occ_download_meta(res), max.level = 1)
+```
+
+**Note:** You will find that the number of records in our query made via `occ_download(...)` here and `occ_search(...)` above are different:
+```{r}
+occ_download_meta(res)$totalRecords
+```
+
+```{r, eval = FALSE}
+NI_occ$meta$count
+```
+```
+## [1] 24347
+```
+
+This is due to different ways data ranges are handled. Running `occ_search(...)` instead like so fixes the mismatch:
+
+```{r, eval = FALSE}
+occ_search(
+  taxonKey = sp_key,
+  country = "NO",
+  year = "2000,2023", # we need to expand the upper range limit here
+  basisOfRecord = "HUMAN_OBSERVATION",
+  occurrenceStatus = "PRESENT",
+  hasGeospatialIssue = FALSE,
+  hasCoordinate = TRUE
+)$meta$count
+```
+```
+## [1] 24904
+```
+Now the data products match.
+
+## Data Download
+
+Now that the download request is registered with GBIF, it is time to actually obtain the data you have queried. To facilitate this, there are three distinct ways to obtain the data itself:
+
+1. Webportal
+2. `rgbif`
+3. File download with `R`
+
+Personally, I can not recommend any of these methods over the `rgbif`-internal download method. However, in case you might prefer other options, I will quickly show how these work, too.
+
+### GBIF Portal Download Method
+
+At the most basic level, you may obtain data through the [GBIF portal](https://www.gbif.org/user/download) where you will find an overview of your download requests. Any individual download request can be investigated more deeply by clicking the "SHOW" button:
+
+<img src="/courses/gbif/gbif-download1.jpeg" width="100%"/></a>
+
+There, you will see a breakdown of your download request and also whether it is still being processed or already finished:
+<img src="/courses/gbif/gbif-download2.jpeg" width="100%"/></a>
+
+Upon completion of your request on the GBIF end, a "DOWNLOAD" button will appear on the specific download request overview page:
+<img src="/courses/gbif/gbif-download3.jpeg" width="100%"/></a>
+
+For requests of few data points you will usually have to be quite quick to see this in action as GBIF is often pretty fast and getting data ready for you.
+
+### `rgbif` Download Method
+
+{{% alert success %}}
+This is the **preferred method** for downloading data you have requested from GBIF.
+{{% /alert %}}
+
+To download our data programmatically, we need to execute roughly the same steps as we did above:
+
+1. Wait for data to be ready for download
+2. Download the data
+3. Load the data into `R` (we didn't do this in the above)
+
+This is done with the following three corresponding functions:
+```{r download2, eval=TRUE}
+## 1. Check GBIF whether data is ready, this function will finish running when done and return metadata
+res_meta <- occ_download_wait(res, status_ping = 5, curlopts = list(), quiet = FALSE)
+## 2. Download the data as .zip (can specify a path)
+res_get <- occ_download_get(res)
+## 3. Load the data into R
+res_data <- occ_download_import(res_get)
+```
+
+Let's have a look at the data we just loaded:
+```{r, eval=TRUE}
+dim(res_data)
+knitr::kable(head(res_data))
+```
+
+Note that the structure of this data set is different to that obtained with `occ_search(...)` hence enforcing that you **should always stage downloads whose data are used in publications with `occ_download(...)`!**
+
+### File Download Method
+
+If, for some reason, you prefer a programmatic solution that does not use `rgbif`, you can also use base `R` functions to (1) wait for your download to be ready, (2) obtain your data and (3) load it into `R`.
+
+To this end, we can code our own function:
+```{r download3, eval=TRUE}
+#------------------------------------------------------------------------------
+# Asyncronous download from the GBIF API. 
+# The function tries, with given time interval to download data generated 
+# by the download key as object given by "occ_download" function of the "rgbif" 
+# library. 
+#
+# Input:
+# download_url: GBIF API download url (e.g. from occ_download in rgbif package)
+# n_try: Number of times the function should keep trying
+# Sys.sleep_duration: Time interval between each try (in seconds)
+#
+# Output: 
+# Downloaded dwc-archive, named with the download key and written to the 
+# the current R session working directory.
+#------------------------------------------------------------------------------
+download_GBIF_API <- function(download_url, n_try = 10, Sys.sleep_duration = 60, destfile_name){
+  # Download waiting and downloading
+  n_try_count <- 1
+  try_download <- try(download.file(url=download_url,destfile=destfile_name,
+                                    quiet=TRUE),silent = TRUE)
+  while (inherits(try_download, "try-error") & n_try_count < n_try) {   
+    Sys.sleep(Sys.sleep_duration)
+    n_try_count <- n_try_count+1
+    try_download <- try(download.file(url=download_url,destfile=destfile_name,
+                      quiet=TRUE),silent = TRUE)
+    print(paste("trying... Download link not ready. Time elapsed (min):",
+                round(as.numeric(paste(difftime(Sys.time(),start_time, units = "mins"))),2)))
+  }
+  
+  # Data Loading
+  archive_files <- unzip(destfile_name, files = "NULL", list = TRUE)
+  occurrence_data <- rio::import(unzip(destfile_name, files = "occurrence.txt"), header = TRUE, sep = "\t")
+
+  # Retunring data
+  return(occurrence_data)
+}
+
+# call function
+occurrence_data <- download_GBIF_API(download_url = occ_download_meta(res)$downloadLink,
+                                     destfile_name = tempfile(), 
+                                     n_try = 5, Sys.sleep_duration = 30)
+                  
+```
+*Note:* The current script is set up to store the downloaded data to a temporary file. If you work with large datasets you probably want to store the data on disk for re-use in later sessions.  
+
+Now to test if that works the same as the more streamlined `rgbif` implementation:
+
+```{r}
+all.equal(data.frame(occurrence_data), data.frame(res_data))
+```
+
+That worked!
+
+{{% alert success %}}
+You now have the means of **obtaining GBIF mediated data**. Next, you will need to work with that data locally.
+{{% /alert %}}
+
+# Session Info
+```{r, echo = FALSE}
+sessionInfo()
+```

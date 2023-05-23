@@ -35,13 +35,11 @@ weight: 8
 
 <div id="theory" class="section level2">
 <h2>Theory</h2>
-<p>Welcome to our second practical experience in <code>R</code>. Throughout the following notes, I will introduce you to a couple nominal statistical test approaches that might be useful to you and are often used in biology.<br />
-To do so, I will enlist the sparrow data set we handled in our last exercise.</p>
-<p>I have prepared some {{&lt; staticref “<a href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/an-introduction-to-biostatistics/08---Nominal-Tests_Handout.html" class="uri">https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/an-introduction-to-biostatistics/08---Nominal-Tests_Handout.html</a>” “newtab” &gt;}} Lecture Slides {{&lt; /staticref &gt;}} for this session.</p>
+<p>Welcome to our second practical experience in <code>R</code>. Throughout the following notes, I will introduce you to a couple nominal statistical test approaches that might be useful to you and are often used in biology. To do so, I will enlist the sparrow data set we handled in our last exercise. I have prepared some slides for this session: <a href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/biostat101/08---Nominal-Tests_Handout.html" target="_blank"><img src="/courses/biostat101/08---BioStat101_featured.png" width="900" margin-top = "0"/></a></p>
 </div>
 <div id="data" class="section level2">
 <h2>Data</h2>
-<p>Find the data for this exercise {{&lt; staticref “<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/1%20-%20Sparrow_Data_READY.rds" class="uri">https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/1%20-%20Sparrow_Data_READY.rds</a>” “newtab” &gt;}} here{{&lt; /staticref &gt;}}.</p>
+<p>Find the data for this exercise {{&lt; staticref “<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/biostat101/Data/1%20-%20Sparrow_Data_READY.rds" class="uri">https://github.com/ErikKusch/Homepage/raw/master/content/courses/biostat101/Data/1%20-%20Sparrow_Data_READY.rds</a>” “newtab” &gt;}} here{{&lt; /staticref &gt;}}.</p>
 </div>
 <div id="preparing-our-procedure" class="section level2">
 <h2>Preparing Our Procedure</h2>
@@ -176,7 +174,7 @@ plot_df &lt;- data.frame(Data = c(prop.table(mcnemar_matrix_change[1,]),
 ggplot(plot_df, aes(x = Year, y = Data, fill = Identifiers)) + geom_bar(stat=&quot;identity&quot;) +
   ggtitle(label = &quot;Abundances of the sexes among study organisms&quot;) + theme_bw() +
   ylab(&quot;Proportion&quot;)</code></pre>
-<p><img src="/courses/an-introduction-to-biostatistics/08---Nominal-Tests_files/figure-html/McNemar6-1.png" width="576" /></p>
+<p><img src="/courses/biostat101/08---Nominal-Tests_files/figure-html/McNemar6-1.png" width="576" /></p>
 <p>The above plot is very crude and should only ever be used for data exploration and not for publishing purposes. Clearly, we can see the change in sex ratio towards a male-biased state (blue colour represents males).</p>
 </div>
 </div>
@@ -196,7 +194,7 @@ plot_df &lt;- data.frame(Data = c(prop.table(counts[,1]), prop.table(counts[,2])
                       Predation = rep(c(&quot;No&quot;, &quot;Yes&quot;), each = 3))
 # plotting
 ggplot(plot_df, aes(x = Predation, y = Data, fill = Identifiers)) + geom_bar(stat=&quot;identity&quot;) + ggtitle(label = &quot;Colour Variations of the common House Sparrow&quot;) + theme_bw() +ylab(&quot;Proportions&quot;) + scale_fill_manual(values=c(&quot;black&quot;, &quot;saddlebrown&quot;, &quot;grey&quot;))</code></pre>
-<p><img src="/courses/an-introduction-to-biostatistics/08---Nominal-Tests_files/figure-html/ChochranPrep-1.png" width="576" /></p>
+<p><img src="/courses/biostat101/08---Nominal-Tests_files/figure-html/ChochranPrep-1.png" width="576" /></p>
 <p>This might lead us to believe that the presence of predators cause an evolutionary change of the plumage colour of <em>Passer domesticus</em> (we will have a more in-depth look on this in later seminars) and we might even postulate that “Black” and “Grey” serve as camouflage.</p>
 <p>Cochran’s Q requires data to be delivered as binomial records. Therefore, we prepare colour as a binary variable of “Brown” and “Camouflage” (which we postulate to encompass “Grey” and “Black”). Since Colour is of type <code>factor</code> within our data set, we need to take some precautions in changing the data records. Predator Presence and Sex don’t need any additional preparation.</p>
 <pre class="r"><code># Colour 

@@ -19,35 +19,41 @@
   url = "/courses/krigr/"
   weight = 1
   parent = "courses"
+  
+  [[main]]
+  name = "Accessing and Referencing GBIF Data for Research"
+  url = "/courses/gbif/"
+  weight = 2
+  parent = "courses"
 
   [[main]]
   name = "Statistical Rethinking - Introduction to Bayesian Statistics"
   url = "/courses/rethinking/"
-  weight = 2
+  weight = 3
   parent = "courses"
   
   [[main]]
   name = "Bayesian Networks - Causality through Bayesian Approaches"
   url = "/courses/bayes-nets/"
-  weight = 3
+  weight = 4
   parent = "courses"
   
   [[main]]
   name = "Biostats 101 - An Introduction to Biostatistics"
-  url = "/courses/an-introduction-to-biostatistics/"
-  weight = 4
+  url = "/courses/BioStat101/"
+  weight = 5
   parent = "courses"
   
   [[main]]
   name = "Biostats 301 - Excursions into Biostatistics"
   url = "/courses/excursions-into-biostatistics/"
-  weight = 5
+  weight = 6
   parent = "courses"
   
   [[main]]
   name = "BFTP - First Steps in Macroecology in R"
   url = "/courses/bftp-biome-detection/"
-  weight = 6
+  weight = 7
   parent = "courses"
 
 [[main]]

@@ -8175,7 +8175,7 @@ article .article-metadata {
 .article-style video {
   margin-left: auto;
   margin-right: auto;
-  margin-top: 2rem;
+  margin-top: 0.2rem;
   margin-bottom: 2rem;
   padding: 0; }
 

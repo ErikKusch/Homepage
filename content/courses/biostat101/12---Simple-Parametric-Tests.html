@@ -35,12 +35,11 @@ weight: 12
 
 <div id="theory" class="section level2">
 <h2>Theory</h2>
-<p>Welcome to our sixth practical experience in R. Throughout the following notes, I will introduce you to a couple of simple parametric test. Whilst parametric tests are used extremely often in biological statistics, they can be somewhat challenging to fit to your data as you will see soon. To do so, I will enlist the sparrow data set we handled in our first exercise. Additionally, todays seminar is showing plotting via base plot instead of <code>ggplot2</code> to highlight the usefulness of base plot and show you the base notation.</p>
-<p>I have prepared some {{&lt; staticref “<a href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/an-introduction-to-biostatistics/12---Simple-Parametric-Tests_Handout.html" class="uri">https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/an-introduction-to-biostatistics/12---Simple-Parametric-Tests_Handout.html</a>” “newtab” &gt;}} Lecture Slides {{&lt; /staticref &gt;}} for this session.</p>
+<p>Welcome to our sixth practical experience in R. Throughout the following notes, I will introduce you to a couple of simple parametric test. Whilst parametric tests are used extremely often in biological statistics, they can be somewhat challenging to fit to your data as you will see soon. To do so, I will enlist the sparrow data set we handled in our first exercise. Additionally, todays seminar is showing plotting via base plot instead of <code>ggplot2</code> to highlight the usefulness of base plot and show you the base notation. I have prepared some slides for this session: <a href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/biostat101/12---Simple-Parametric-Tests_Handout.html" target="_blank"><img src="/courses/biostat101/12---BioStat101_featured.png" width="900" margin-top = "0"/></a></p>
 </div>
 <div id="data" class="section level2">
 <h2>Data</h2>
-<p>Find the data for this exercise {{&lt; staticref “<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/1" class="uri">https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/1</a> - Sparrow_Data_READY.rds” “newtab” &gt;}} here{{&lt; /staticref &gt;}} and {{&lt; staticref “<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/2b" class="uri">https://github.com/ErikKusch/Homepage/raw/master/content/courses/an-introduction-to-biostatistics/Data/2b</a> - Sparrow_ResettledSIUK_READY.rds” “newtab” &gt;}} here{{&lt; /staticref &gt;}}.</p>
+<p>Find the data for this exercise {{&lt; staticref “<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/biostat101/Data/1" class="uri">https://github.com/ErikKusch/Homepage/raw/master/content/courses/biostat101/Data/1</a> - Sparrow_Data_READY.rds” “newtab” &gt;}} here{{&lt; /staticref &gt;}} and {{&lt; staticref “<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/biostat101/Data/2b" class="uri">https://github.com/ErikKusch/Homepage/raw/master/content/courses/biostat101/Data/2b</a> - Sparrow_ResettledSIUK_READY.rds” “newtab” &gt;}} here{{&lt; /staticref &gt;}}.</p>
 </div>
 <div id="preparing-our-procedure" class="section level2">
 <h2>Preparing Our Procedure</h2>
@@ -183,7 +182,7 @@ Here’s what we’ve learned from the t-Test so far:<br />
 plot(Data_df$Weight ~ Data_df$Climate)
 plot(Data_df$Height ~ Data_df$Climate)
 plot(Data_df$Wing.Chord ~ Data_df$Climate)</code></pre>
-<p><img src="/courses/an-introduction-to-biostatistics/12---Simple-Parametric-Tests_files/figure-html/t-test1-1.png" width="1440" /></p>
+<p><img src="/courses/biostat101/12---Simple-Parametric-Tests_files/figure-html/t-test1-1.png" width="1440" /></p>
 </div>
 </div>
 <div id="sexual-dimorphism" class="section level3">
@@ -331,7 +330,7 @@ shapiro.test(WeightDiff)</code></pre>
 <p>Now let’s visualise that using a qqplot:</p>
 <pre class="r"><code>qqnorm(WeightDiff)
 qqline(WeightDiff)</code></pre>
-<p><img src="/courses/an-introduction-to-biostatistics/12---Simple-Parametric-Tests_files/figure-html/Norm3-1.png" width="576" /></p>
+<p><img src="/courses/biostat101/12---Simple-Parametric-Tests_files/figure-html/Norm3-1.png" width="576" /></p>
 </div>
 <div id="climate-warmingextremes-1" class="section level3">
 <h3>Climate Warming/Extremes</h3>
@@ -357,7 +356,7 @@ Weights &lt;- c(DataSI, Data_df_Resettled$Weight)
 Sites &lt;- factor(rep(c(&quot;SI&quot;, &quot;SI_UK&quot;), each = length(DataSI)))
 # Plot
 plot(Weights ~ Sites)</code></pre>
-<p><img src="/courses/an-introduction-to-biostatistics/12---Simple-Parametric-Tests_files/figure-html/tpaired1-1.png" width="576" /></p>
+<p><img src="/courses/biostat101/12---Simple-Parametric-Tests_files/figure-html/tpaired1-1.png" width="576" /></p>
 <p>Quite obviously sparrows observed in Siberia are heavier than when they are resettled to the United Kingdom (this may be due to the more forgiving climate in the UK). Just like the test stated, the difference of the average weights is roughly 2g between the sparrows at the two sites.</p>
 </div>
 </div>
@@ -430,7 +429,7 @@ ANOVACheck(Variables = c(&quot;Weight&quot;, &quot;Height&quot;, &quot;Wing.Chor
 
 ## Warning in leveneTest.default(y = y, group = group, ...): group coerced to
 ## factor.</code></pre>
-<p><img src="/courses/an-introduction-to-biostatistics/12---Simple-Parametric-Tests_files/figure-html/AssCheck1b-1.png" width="576" /></p>
+<p><img src="/courses/biostat101/12---Simple-Parametric-Tests_files/figure-html/AssCheck1b-1.png" width="576" /></p>
 <pre><code>##                               Weight       Height  Wing.Chord
 ## Residual Normality       0.002521771 2.671414e-05 0.001685579
 ## Homogeneity of Variances 0.110120912 1.896577e-01 0.013575440</code></pre>
@@ -490,7 +489,7 @@ anova(model)</code></pre>
 plot(Data_df$Weight ~ factor(Data_df$Climate))
 plot(Data_df$Height ~ factor(Data_df$Climate))
 plot(Data_df$Wing.Chord ~ factor(Data_df$Climate))</code></pre>
-<p><img src="/courses/an-introduction-to-biostatistics/12---Simple-Parametric-Tests_files/figure-html/Analysis1-1.png" width="576" /></p>
+<p><img src="/courses/biostat101/12---Simple-Parametric-Tests_files/figure-html/Analysis1-1.png" width="576" /></p>
 <p>As you can see, the variances are definitely not equal between our groups which explains why part of our assumption test failed.</p>
 </div>
 </div>
@@ -510,7 +509,7 @@ Data_df$Predator.Type[which(is.na(Data_df$Predator.Type))] &lt;- &quot;None&quot
 # Assumption Check
 par(mfrow=c(1,2))
 ANOVACheck(Variables = &quot;Nesting.Height&quot;, Grouping = &quot;Predator.Type&quot;, data = Data_df, plotting = TRUE)</code></pre>
-<p><img src="/courses/an-introduction-to-biostatistics/12---Simple-Parametric-Tests_files/figure-html/AssCheck2-1.png" width="576" /></p>
+<p><img src="/courses/biostat101/12---Simple-Parametric-Tests_files/figure-html/AssCheck2-1.png" width="576" /></p>
 <pre><code>##                          Nesting.Height
 ## Residual Normality         0.0017160318
 ## Homogeneity of Variances   0.0005845899</code></pre>
@@ -520,7 +519,7 @@ ANOVACheck(Variables = &quot;Nesting.Height&quot;, Grouping = &quot;Predator.Typ
 <h4>Analysis</h4>
 <p>Since none of our assumptions are met, we cannot run an ANOVA and therefore resort to data visualisation alone:</p>
 <pre class="r"><code>plot(Data_df$Nesting.Height ~ Data_df$Predator.Type)</code></pre>
-<p><img src="/courses/an-introduction-to-biostatistics/12---Simple-Parametric-Tests_files/figure-html/Analysis2-1.png" width="576" />
+<p><img src="/courses/biostat101/12---Simple-Parametric-Tests_files/figure-html/Analysis2-1.png" width="576" />
 Once more, we can see why our homogeneity of variances test failed.</p>
 </div>
 </div>
@@ -592,7 +591,7 @@ ANOVACheck_TWO(Formulas = c(Weight ~ Population.Status*Sex,
                             Height ~ Population.Status*Sex,
                             Wing.Chord ~ Population.Status*Sex)
                , data = Data_df, plotting = TRUE)</code></pre>
-<p><img src="/courses/an-introduction-to-biostatistics/12---Simple-Parametric-Tests_files/figure-html/AssCheck5-1.png" width="576" /></p>
+<p><img src="/courses/biostat101/12---Simple-Parametric-Tests_files/figure-html/AssCheck5-1.png" width="576" /></p>
 <pre><code>##     Weight ~ Population.Status * Sex Height ~ Population.Status * Sex
 ## RN                       0.287959531                        0.2171916
 ## HoV                      0.004492103                        0.9057774
@@ -630,7 +629,7 @@ anova(model)</code></pre>
 par(mfrow=c(1,2))
 boxplot(Height ~ Population.Status*Sex, data = Data_df, col = c(&quot;blue&quot;, &quot;red&quot;))
 boxplot(Wing.Chord ~ Population.Status*Sex, data = Data_df, col = c(&quot;blue&quot;, &quot;red&quot;))</code></pre>
-<p><img src="/courses/an-introduction-to-biostatistics/12---Simple-Parametric-Tests_files/figure-html/Analysis5-1.png" width="576" />
+<p><img src="/courses/biostat101/12---Simple-Parametric-Tests_files/figure-html/Analysis5-1.png" width="576" />
 As it turns out, population status and sex are no viable predictors for sparrow height or wing chord and so we <strong>accept the null hypothesis</strong>.</p>
 </div>
 </div>
@@ -727,7 +726,7 @@ The function returns a data frames containing the p-values indexing whether to a
 PlotAncovas(Variables = c(&quot;Weight&quot;, &quot;Height&quot;, &quot;Wing.Chord&quot;, &quot;Nesting.Height&quot;, &quot;Egg.Weight&quot;, &quot;Number.of.Eggs&quot;, &quot;Home.Range&quot;), Grouping = &quot;Climate&quot;, Covariate = &quot;Latitude&quot;, data = Data_df)</code></pre>
 <p>I will not interpret these plots here in text and leave this to you.</p>
 <p>Take note that this <strong>could’ve been achieved much easier with <code>ggplot2</code>!</strong></p>
-<p><img src="/courses/an-introduction-to-biostatistics/12---Simple-Parametric-Tests_files/figure-html/Analysisc-1.png" width="576" /><img src="/courses/an-introduction-to-biostatistics/12---Simple-Parametric-Tests_files/figure-html/Analysisc-2.png" width="576" /><img src="/courses/an-introduction-to-biostatistics/12---Simple-Parametric-Tests_files/figure-html/Analysisc-3.png" width="576" /><img src="/courses/an-introduction-to-biostatistics/12---Simple-Parametric-Tests_files/figure-html/Analysisc-4.png" width="576" /></p>
+<p><img src="/courses/biostat101/12---Simple-Parametric-Tests_files/figure-html/Analysisc-1.png" width="576" /><img src="/courses/biostat101/12---Simple-Parametric-Tests_files/figure-html/Analysisc-2.png" width="576" /><img src="/courses/biostat101/12---Simple-Parametric-Tests_files/figure-html/Analysisc-3.png" width="576" /><img src="/courses/biostat101/12---Simple-Parametric-Tests_files/figure-html/Analysisc-4.png" width="576" /></p>
 </div>
 </div>
 <div id="sparrow-characteristics-and-sites" class="section level3">
@@ -751,7 +750,7 @@ PlotAncovas(Variables = c(&quot;Weight&quot;, &quot;Height&quot;, &quot;Wing.Cho
 <p>Firstly, we test whether assumptions are met. For brevities sake, we only test four variables:</p>
 <pre class="r"><code>par(mfrow=c(1,3))
 ANCOVACheck(Variables = c(&quot;Height&quot;, &quot;Wing.Chord&quot;, &quot;Egg.Weight&quot;, &quot;Number.of.Eggs&quot;), Grouping = &quot;Index&quot;, Covariate = &quot;Weight&quot;, data = Data_df, plotting = TRUE)</code></pre>
-<p><img src="/courses/an-introduction-to-biostatistics/12---Simple-Parametric-Tests_files/figure-html/AssCheck7-1.png" width="576" /><img src="/courses/an-introduction-to-biostatistics/12---Simple-Parametric-Tests_files/figure-html/AssCheck7-2.png" width="576" /><img src="/courses/an-introduction-to-biostatistics/12---Simple-Parametric-Tests_files/figure-html/AssCheck7-3.png" width="576" /><img src="/courses/an-introduction-to-biostatistics/12---Simple-Parametric-Tests_files/figure-html/AssCheck7-4.png" width="576" /></p>
+<p><img src="/courses/biostat101/12---Simple-Parametric-Tests_files/figure-html/AssCheck7-1.png" width="576" /><img src="/courses/biostat101/12---Simple-Parametric-Tests_files/figure-html/AssCheck7-2.png" width="576" /><img src="/courses/biostat101/12---Simple-Parametric-Tests_files/figure-html/AssCheck7-3.png" width="576" /><img src="/courses/biostat101/12---Simple-Parametric-Tests_files/figure-html/AssCheck7-4.png" width="576" /></p>
 <pre><code>##           Height   Wing.Chord   Egg.Weight Number.of.Eggs
 ## RN  1.499909e-06 5.251393e-08 0.1565038171   9.220862e-07
 ## HoV 3.594021e-13 2.434880e-01 0.0002015813   2.660146e-02</code></pre>
@@ -761,7 +760,7 @@ ANCOVACheck(Variables = c(&quot;Height&quot;, &quot;Wing.Chord&quot;, &quot;Egg.
 <h4>Analysis</h4>
 <p>First, let’s visualise our data:</p>
 <pre class="r"><code>PlotAncovas(Variables = &quot;Egg.Weight&quot;, Grouping = &quot;Index&quot;, Covariate = &quot;Weight&quot;, data = Data_df)</code></pre>
-<p><img src="/courses/an-introduction-to-biostatistics/12---Simple-Parametric-Tests_files/figure-html/Analysis7-1.png" width="576" /></p>
+<p><img src="/courses/biostat101/12---Simple-Parametric-Tests_files/figure-html/Analysis7-1.png" width="576" /></p>
 <p>Quite obviously, Belize (BE) records are very different from the other stations, whose egg weight and weight records are grouped together. There seems to be some evidence for an overall linkage of sparrow weight and egg weight (a positive correlation).</p>
 <p>Now we run the analysis:</p>
 <pre class="r"><code>LM_fit5 &lt;- lm(Egg.Weight ~ Weight*Index, data = Data_df)
