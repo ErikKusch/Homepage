@@ -59,7 +59,7 @@ package_vec <- c(
   "rgbif",
   "knitr", # for rmarkdown table visualisations
   "rnaturalearth", # for shapefile access
-  "wicket", # for transforming polygons into wkt format; may have to run: remotes::install_version("wicket", "0.4.0")
+  "sf", # for transforming polygons into wkt format
   "ggplot2", # for visualisations
   "networkD3", # for sankey plots
   "htmlwidgets", # for sankey inclusion in website
@@ -71,7 +71,7 @@ sapply(package_vec, install.load.package)
 ```
 
 ```
-##         rgbif         knitr rnaturalearth        wicket       ggplot2     networkD3 
+##         rgbif         knitr rnaturalearth            sf       ggplot2     networkD3 
 ##          TRUE          TRUE          TRUE          TRUE          TRUE          TRUE 
 ##   htmlwidgets       leaflet       pbapply 
 ##          TRUE          TRUE          TRUE
@@ -109,7 +109,7 @@ occ_count(taxonKey = sp_key)
 ```
 
 ```
-## [1] 882400
+## [1] 882471
 ```
 
 ```r
@@ -117,10 +117,10 @@ occ_search(taxonKey = sp_key, limit = 0)$meta$count
 ```
 
 ```
-## [1] 882400
+## [1] 882471
 ```
 
-Using both of these, we obtain the same output of $8.824\times 10^{5}$ *Calluna vulgaris* records mediated by GBIF. Note that this number will likely be higher for you as data is continually added to the GBIF indexing and this document here is frozen in time (it was last updated on 2023-05-22).
+Using both of these, we obtain the same output of $8.82471\times 10^{5}$ *Calluna vulgaris* records mediated by GBIF. Note that this number will likely be higher for you as data is continually added to the GBIF indexing and this document here is frozen in time (it was last updated on 2023-05-24).
 
 {{% alert warning %}}
 When wanting to discover data matching Darwin Core Terms with multiple characteristics, these can be fed to the `occ_search(...)` function as strings with semicolons separating desired characteristics (e.g., `year = "2000;2001"`).
@@ -141,10 +141,10 @@ occ_NO$meta$count
 ```
 
 ```
-## [1] 36501
+## [1] 36503
 ```
 
-Here is how *Caluna vulgaris* records are distributed across countries according to GBIF on 2023-05-22:
+Here is how *Caluna vulgaris* records are distributed across countries according to GBIF on 2023-05-24:
 <details>
   <summary>Click here for code necessary to create the figure below.</summary>
 
@@ -210,7 +210,7 @@ Oftentimes, you won't be interested in occurrences according to a specific count
 
 
 ```r
-NO_shp <- rnaturalearth::ne_countries(country = "Norway", scale = 110)
+NO_shp <- rnaturalearth::ne_countries(country = "Norway", scale = 110, returnclass = "sf")
 ```
 
 This shapefile subsequently looks like this:
@@ -230,7 +230,7 @@ saveWidget(shape_leaflet, "leaflet_shape.html", selfcontained = TRUE)
 Unfortunately, `rgbif` prefers to be told about shapefiles in Well Known Text (WKT) format so we need to reformat our polygon data frame obtained above. We do so like such:
 
 ```r
-NO_wkt <- wicket::sp_convert(NO_shp, group = TRUE)
+NO_wkt <- st_as_text(st_geometry(NO_shp))
 ```
 
 We can now pass this information into the `occ_search(...)` function using the `geometry` argument:
@@ -241,7 +241,7 @@ occ_wkt$meta$count
 ```
 
 ```
-## [1] 29068
+## [1] 29070
 ```
 
 Finally, we find that there are fewer records available when using the shapefile for data discovery. Why would that be? In this case, you will find that we are using a pretty coarse shapefile for Norway which probably cuts off some obersvations of *Calluna vulgaris* that do belong rightfully into Norway.
@@ -626,7 +626,7 @@ str(occ_meta, max.level = 1)
 ## List of 5
 ##  $ meta     :List of 4
 ##  $ hierarchy:List of 1
-##  $ data     : tibble [500 × 89] (S3: tbl_df/tbl/data.frame)
+##  $ data     : tibble [500 × 92] (S3: tbl_df/tbl/data.frame)
 ##  $ media    :List of 500
 ##  $ facets   : Named list()
 ##  - attr(*, "class")= chr "gbif"
@@ -734,12 +734,12 @@ str(occ_final, max.level = 1)
 ## 
 ## other attached packages:
 ## [1] pbapply_1.7-0       leaflet_2.1.2       htmlwidgets_1.6.2   networkD3_0.4      
-## [5] ggplot2_3.4.2       wicket_0.4.0        rnaturalearth_0.3.2 knitr_1.42         
+## [5] ggplot2_3.4.2       sf_1.0-12           rnaturalearth_0.3.2 knitr_1.42         
 ## [9] rgbif_3.7.7        
 ## 
 ## loaded via a namespace (and not attached):
 ##  [1] gtable_0.3.3       xfun_0.39          bslib_0.4.2        lattice_0.21-8    
-##  [5] crosstalk_1.2.0    vctrs_0.6.2        tools_4.3.0        generics_0.1.3    
+##  [5] vctrs_0.6.2        tools_4.3.0        crosstalk_1.2.0    generics_0.1.3    
 ##  [9] curl_5.0.0         parallel_4.3.0     tibble_3.2.1       proxy_0.4-27      
 ## [13] fansi_1.0.4        highr_0.10         pkgconfig_2.0.3    R.oo_1.25.0       
 ## [17] KernSmooth_2.23-20 data.table_1.14.8  lifecycle_1.0.3    R.cache_0.16.0    
@@ -748,13 +748,13 @@ str(occ_final, max.level = 1)
 ## [29] lazyeval_0.2.2     pillar_1.9.0       jquerylib_0.1.4    whisker_0.4.1     
 ## [33] ellipsis_0.3.2     R.utils_2.12.2     classInt_0.4-9     cachem_1.0.8      
 ## [37] styler_1.9.1       tidyselect_1.2.0   digest_0.6.31      stringi_1.7.12    
-## [41] sf_1.0-12          dplyr_1.1.2        purrr_1.0.1        bookdown_0.34     
-## [45] labeling_0.4.2     fastmap_1.1.1      grid_4.3.0         colorspace_2.1-0  
-## [49] cli_3.6.1          magrittr_2.0.3     triebeard_0.4.1    crul_1.4.0        
-## [53] utf8_1.2.3         e1071_1.7-13       withr_2.5.0        scales_1.2.1      
-## [57] sp_1.6-0           oai_0.4.0          rmarkdown_2.21     httr_1.4.5        
-## [61] igraph_1.4.2       blogdown_1.16      R.methodsS3_1.8.2  evaluate_0.20     
-## [65] urltools_1.7.3     rlang_1.1.1        Rcpp_1.0.10        httpcode_0.3.0    
-## [69] glue_1.6.2         DBI_1.1.3          xml2_1.3.4         rstudioapi_0.14   
-## [73] jsonlite_1.8.4     R6_2.5.1           plyr_1.8.8         units_0.8-2
+## [41] dplyr_1.1.2        purrr_1.0.1        bookdown_0.34      labeling_0.4.2    
+## [45] fastmap_1.1.1      grid_4.3.0         colorspace_2.1-0   cli_3.6.1         
+## [49] magrittr_2.0.3     triebeard_0.4.1    crul_1.4.0         utf8_1.2.3        
+## [53] e1071_1.7-13       withr_2.5.0        scales_1.2.1       sp_1.6-0          
+## [57] oai_0.4.0          rmarkdown_2.21     httr_1.4.5         igraph_1.4.2      
+## [61] blogdown_1.16      R.methodsS3_1.8.2  evaluate_0.20      urltools_1.7.3    
+## [65] rlang_1.1.1        Rcpp_1.0.10        httpcode_0.3.0     glue_1.6.2        
+## [69] DBI_1.1.3          xml2_1.3.4         rstudioapi_0.14    jsonlite_1.8.4    
+## [73] R6_2.5.1           plyr_1.8.8         units_0.8-2
 ```

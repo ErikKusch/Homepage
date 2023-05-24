@@ -63,7 +63,7 @@ package_vec <- c(
   "rgbif",
   "knitr", # for rmarkdown table visualisations
   "rnaturalearth", # for shapefile access
-  "wicket", # for transforming polygons into wkt format; may have to run: remotes::install_version("wicket", "0.4.0")
+  "sf", # for transforming polygons into wkt format
   "ggplot2", #for visualisations
   "networkD3", # for sankey plots
   "htmlwidgets", # for sankey inclusion in website
@@ -179,7 +179,7 @@ As it turns out, roughly `r round(occ_NO$meta$count/occ_count(taxonKey = sp_key)
 Oftentimes, you won't be interested in occurrences according to a specific country, but rather a specific area on Earth as identified through a shapefile. To demonstrate data discovery by shapefile, let's obtain the shapefile for Norway from [naturalearth](https://www.naturalearthdata.com/):
 
 ```{r}
-NO_shp <- rnaturalearth::ne_countries(country = "Norway", scale = 110) 
+NO_shp <- rnaturalearth::ne_countries(country = "Norway", scale = 110, returnclass = "sf") 
 ```
 
 This shapefile subsequently looks like this:
@@ -197,7 +197,7 @@ saveWidget(shape_leaflet, "leaflet_shape.html", selfcontained = TRUE)
 
 Unfortunately, `rgbif` prefers to be told about shapefiles in Well Known Text (WKT) format so we need to reformat our polygon data frame obtained above. We do so like such:
 ```{r}
-NO_wkt <- wicket::sp_convert(NO_shp, group = TRUE)
+NO_wkt <- st_as_text(st_geometry(NO_shp))
 ```
 
 We can now pass this information into the `occ_search(...)` function using the `geometry` argument:
