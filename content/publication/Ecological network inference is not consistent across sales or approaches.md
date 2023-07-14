@@ -14,7 +14,7 @@ projects:
 publication: "*TBD*"
 # publication_short: ""
 publication_types: # 1 = conference paper, 2 = journal article, 3 = preprint, 4 = conference paper, 5 = book, 6 = Book section, 7 = Thesis, 8 = patent
-- "2"
+- "3"
 # publishDate: ""
 tags:
 - Cooccurrence
@@ -28,7 +28,7 @@ tags:
 - Species Associations
 # url_code: https://github.com/ErikKusch/Vegetation-Memory
 # url_dataset: ''
-# url_pdf: https://www.biorxiv.org/content/10.1101/2022.03.09.483599v1
+url_pdf: https://doi.org/10.1101/2023.07.13.548816 
 # url_poster: /media/poster/2020_ISEC/Poster - Global Dryland Vegetation Memory.pdf
 # url_project: ""
 # url_slides: ""
