@@ -1,5 +1,5 @@
 ---
-title: Ecological network inference is not consistent across sales or approaches
+title: Ecological network inference is not consistent across scales or approaches
 abstract: The abstract will be added after a publication date is communicated.
 authors:
 - ErikKusch
