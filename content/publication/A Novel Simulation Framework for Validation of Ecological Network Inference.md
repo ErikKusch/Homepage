@@ -10,7 +10,6 @@ abstract: |
     3.	We find that network inference performance scores highlight concerningly low accuracy of inferred networks as compared to true association networks and suggest analysis procedures with which to explore network inference reliability with respect to bioclimatic niche preferences and association strength of association partner-species.
     
     4.	With this study, we provide the groundwork with which to validate and compare ecological network inference methods, and ultimately vastly increase our ability to predict species biodiversity across space.
-
 authors:
 - ErikKusch
 - Anna C. Vinton
