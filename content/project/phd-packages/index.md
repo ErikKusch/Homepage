@@ -21,16 +21,24 @@ links:
   url: /publication/networkextinction-an-r-package-to-simulate-extinctions-propagation-and-rewiring-potential-in-ecological-networks/
 - icon: file
   icon_pack: fas
-  name: Kusch et. al, 2022
+  name: Kusch et. al, 2023
   url: /publication/ecological-network-inference-is-not-consistent-across-sales-or-approaches/
+- icon: file
+  icon_pack: fas
+  name: Kusch, Ordonez, 2023
+  url: /publication/ecological-network-resilience-extinction-proxies-updating-projections-of-ecological-networks/
+- icon: file
+  icon_pack: fas
+  name: Kusch & Vinton, 2023
+  url: /publication/a-novel-simulation-framework-for-validation-of-ecological-network-inference/
 #- icon: github
 #  icon_pack: fab
 #  name: GitHub
 #  url: https://github.com/ErikKusch/PhD-Project
-- icon: researchgate
-  icon_pack: fab
-  name: Updates
-  url: https://www.researchgate.net/project/Cross-Trophic-Effects-of-Differential-Extinctions
+# - icon: researchgate
+#   icon_pack: fab
+#   name: Updates
+#   url: https://www.researchgate.net/project/Cross-Trophic-Effects-of-Differential-Extinctions
 # slides: example
 summary: My PhD project and its working packages.
 tags:
@@ -74,16 +82,16 @@ In addressing this knowledge gap, I have co-developed the `NetworkExtinction` `R
 
 ![CH2 - Ecological Networks as Forecasting Tools](2.png)
 
-The `NetworkExtinction` package is currently under review as [Ávila-Thieme & Kusch et. al](/publication/networkextinction-an-r-package-to-simulate-extinctions-propagation-and-rewiring-potential-in-ecological-networks/) while the exploration of mutualistic network resilience landscapes (Kusch & Ordonez) is currently being prepared for submission.
+The `NetworkExtinction` package has been published as [Ávila-Thieme & Kusch et. al, 2023](/publication/networkextinction-an-r-package-to-simulate-extinctions-propagation-and-rewiring-potential-in-ecological-networks/) while the exploration of mutualistic network resilience landscapes ([Kusch, Ordonez](/publication/ecological-network-resilience-extinction-proxies-updating-projections-of-ecological-networks/)) is currently being prepared for submission.
 
 ## Chapter 3 - Inferring Biological Interactions from Proxies
 Ecological networks are affected by the scales (e.g., local, regional, and continental) at which they are represented. Thus, locally quantified biological interactions cannot be used reliably to represent macroecological processes. However, sourcing networks at macroecological scales via traditional in-situ observations is prohibitively labour-intensive thus requiring the inference of biological interactions from macroecological proxies. However, the accuracy of already established biological interaction inference approaches remains understudied, calling into question their utility. Therefore, consistency and performance of interaction inference ought to be evaluated for use at macroecological scales.
 
-Within this final chapter of my PhD, I assess the consistency of four different interaction inference approaches (COOCCUR, NETASSOC, HMSC, and NDD-RIM) across ecologically relevant skills. Finding little consistency between the inferred ecological networks, I subsequently develop a demographic simulation framework of populations of interactiong species across time and space and establish guidelines for assessment of ecological network inference performance.
+Within this final chapter of my PhD, I assess the consistency of four different interaction inference approaches (COOCCUR, NETASSOC, HMSC, and NDD-RIM) across ecologically relevant skills. Finding little consistency between the inferred ecological networks, I subsequently develop a demographic simulation framework of populations of interacting species across time and space and establish guidelines for assessment of ecological network inference performance.
 
 ![CH3 - Ecological Network Inference](3.png)
 
-While the study of inference consistency is already submitted for review as [Kusch et. al, 2022](/publication/ecological-network-inference-is-not-consistent-across-sales-or-approaches/), a publication of Kusch & Vinton, Ordonez is to follow presenting the simulation framework.
+While the study of inference consistency is already submitted for review as [Kusch et. al, 2023](/publication/ecological-network-inference-is-not-consistent-across-sales-or-approaches/), a publication of [Kusch & Vinton](/publication/a-novel-simulation-framework-for-validation-of-ecological-network-inference/) is to follow presenting the simulation framework.
 
 # Implications
 
