@@ -42,5 +42,5 @@ url_pdf: https://doi.org/10.1101/2023.08.05.552122
 # url_slides: ""
 # url_source: '#'
 # url_video: '#'
-summary: Simulation framework for generation of data ready for ecological network inference and validation of network inference approaches.
+summary: Simulation framework for generation of data ready for ecological network inference and validation of network inference approaches.  
 ---
