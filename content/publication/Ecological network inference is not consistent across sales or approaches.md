@@ -8,7 +8,7 @@ authors:
 - Alejandro Ordonez
 date: "2023-08-02T00:00:00Z"
 doi: ""
-featured: false
+featured: true
 projects:
 - phd-packages
 publication: "*TBD*"
