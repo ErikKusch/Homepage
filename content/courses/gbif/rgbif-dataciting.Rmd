@@ -167,7 +167,7 @@ For our purposes, we have used a heavily subsetted data download - just look at 
 ```{r}
 ggplot(data.frame(
   Records = c(nrow(data_subset), nrow(res_data)),
-  Data = c("Original", "Subset")
+  Data = c("Subset", "Original")
   ), aes (y = Data, x = Records)) +
   geom_bar(stat = "identity", fill = "#4f004e") +
   theme_bw(base_size = 12)
