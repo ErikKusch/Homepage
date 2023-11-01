@@ -359,7 +359,7 @@ cowplot::plot_grid(
     Shp = as(buffer_sf, "Spatial"),
     Dates = c("Mean Air Temperature 2000-2022")
   ),
-  Plot_Raw(SL_crop$AT,
+  Plot_Raw(SL_crop$QS,
     Shp = as(buffer_sf, "Spatial"),
     COL = rev(viridis(100)),
     Legend = "Soil Moisture",
@@ -369,7 +369,7 @@ cowplot::plot_grid(
 ```
 
 <img src="rgbif-climatedata_files/figure-html/unnamed-chunk-17-1.png" width="1440" />
-Now, we can figure out (1) which cells of this raster contain presences, (2) identify which cells do not, (3) obtain coordinates of cells containing no GBIF presences and (4) extract climate conditions in absence cells:
+Now, we can figure out (1) which cells of this raster contain presences, (2) identify which cells do not, (3) obtain coordinates of cells containing no GBIF presences and (4) extract climate conditions in absence cells: 
 
 ```r
 Pres_cells <- raster::cellFromXY(SL_stack, occ_sp)
