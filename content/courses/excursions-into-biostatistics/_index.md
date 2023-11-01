@@ -14,7 +14,7 @@ type: docs
 weight: 1
 ---
 
-## Disclaimer
+## Disclaimer 
 You can also find all of this on [GitHub](https://github.com/ErikKusch/Excursions-into-Biostatistics).
 
 

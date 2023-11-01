@@ -22,7 +22,7 @@ type: docs
 weight: 1
 ---
 
-## Learning Goals
+## Learning Goals 
 
 The material presented here is aimed at providing the reader with:  
 
