@@ -61,15 +61,18 @@ install.load.package <- function(x) {
 ## names of packages we want installed (if not installed yet) and loaded
 package_vec <- c(
   "rgbif",
-  "ggplot2" # for visualisation
+  "ggplot2", # for visualisation
+  "tidybayes", # for more visualisations
+  "data.table", # for data reformatting
+  "ggpubr" # for t-tests directly in ggplot vis
 )
 ## executing install & load for each package
 sapply(package_vec, install.load.package)
 ```
 
 ```
-##   rgbif ggplot2 
-##    TRUE    TRUE
+##      rgbif    ggplot2  tidybayes data.table     ggpubr 
+##       TRUE       TRUE       TRUE       TRUE       TRUE
 ```
 
 ```r
@@ -248,17 +251,47 @@ Plot_Raw(QS_ras,
 
 <img src="rgbif-climatedata_files/figure-html/unnamed-chunk-9-1.png" width="1440" />
 
-We now have our two single-layer raster objects corresponding to air temperature and soiul moisture ready for matching them to GBIF data.
+We now have our two single-layer raster objects corresponding to air temperature and soil moisture ready for matching them to GBIF data.
 
 ### Bioclimatic Layers
 
-{{% alert danger %}}
-**This section is still under development.**
-{{% /alert %}}
+Ultimately, most macroecological uses of GBIF mediated records use some version of bioclimatic variables. Using `KrigR`, we can obtain these from state-of-the-art climate reanalysis products and even specify more pertinent water variables than the standard precipitation data. Since we are looking at a plant here, probably soil moisture may be most adequate:
 
+```r
+if (file.exists(file.path(Dir.Data, "Qsoil_BC.nc"))) {
+  BC_ras <- stack(file.path(Dir.Data, "Qsoil_BC.nc"))
+  names(BC_ras) <- paste0("BIO", 1:19)
+} else {
+  BC_ras <- BioClim(
+    Water_Var = "volumetric_soil_water_layer_1",
+    Y_start = 2000,
+    Y_end = 2022,
+    Extent = Area_shp,
+    Dir = Dir.Data,
+    Keep_Monthly = TRUE,
+    FileName = "Qsoil_BC.nc",
+    API_User = API_User,
+    API_Key = API_Key,
+    Cores = parallel::detectCores(),
+    TimeOut = Inf,
+    SingularDL = FALSE
+  )
+}
+```
 
+The above function call needs to download and process a lot of data hence why I check if the data is already present in the first place. You will see this when running thios function yourself.
 
+Now to visualise the bioclimatic data we have obtained for our study region:
 
+```r
+cowplot::plot_grid(
+  Plot_BC(BC_ras, Shp = Area_shp, Water_Var = "Soil Moisture", which = 1),
+  Plot_BC(BC_ras, Shp = Area_shp, Water_Var = "Soil Moisture", which = 2:19),
+  ncol = 1, rel_heights = c(1.3, 9)
+)
+```
+
+<img src="rgbif-climatedata_files/figure-html/unnamed-chunk-10-1.png" width="1440" />
 
 ## Matching Climate Data with GBIF Records
 
@@ -397,15 +430,23 @@ head(SLAbs_vals)
 SLAbs_vals <- data.table::melt(SLAbs_vals, id.vars = "ID")
 ```
 
-Now to visualise the climate conditions in locations of GBIF presence and absence of our study organism:
+Now to visualise the climate conditions in locations of GBIF presence and absence of our study organism. I also add a t-test comparison between the two presence options to the plot:
 
 ```r
 SL_vals$Presence <- "Presence"
 SLAbs_vals$Presence <- "Absence"
 SLPlot_vals <- rbind(SL_vals, SLAbs_vals)
-ggplot(SLPlot_vals, aes(y = value, x = Presence, fill = variable)) +
+ggplot(SLPlot_vals, aes(
+  y = value, x = Presence,
+  fill = variable,
+  group = Presence
+)) +
   geom_violin() +
   geom_boxplot(width = 0.1, fill = "white") +
+  stat_compare_means(
+    comparisons = list(c("Presence", "Absence")),
+    method = "t.test", label = "p.signif"
+  ) +
   facet_wrap(~variable, scales = "free") +
   theme_bw() +
   guides(fill = "none")
@@ -418,13 +459,65 @@ With this in hand, we could now continue to figure out what exactly drives prese
 
 ### Bioclimatic Variables
 
-{{% alert danger %}}
-**This section is still under development.**
-{{% /alert %}}
+Finally, let's also match our GBIF records with bioclimatic data:
 
+```r
+BC_vals <- raster::extract(BC_ras, occ_sp, df = TRUE)
+head(BC_vals)
+```
 
+```
+##   ID     BIO1     BIO2     BIO3     BIO4     BIO5     BIO6    BIO7     BIO8     BIO9
+## 1  1       NA       NA       NA       NA       NA       NA      NA       NA       NA
+## 2  2       NA       NA       NA       NA       NA       NA      NA       NA       NA
+## 3  3       NA       NA       NA       NA       NA       NA      NA       NA       NA
+## 4  4       NA       NA       NA       NA       NA       NA      NA       NA       NA
+## 5  5 278.8715 9.521352 24.52553 531.2745 296.3646 257.5424 38.8222 276.3758 280.5536
+## 6  6 278.8715 9.521352 24.52553 531.2745 296.3646 257.5424 38.8222 276.3758 280.5536
+##      BIO10    BIO11     BIO12     BIO13     BIO14    BIO15     BIO16     BIO17     BIO18
+## 1       NA       NA        NA        NA        NA       NA        NA        NA        NA
+## 2       NA       NA        NA        NA        NA       NA        NA        NA        NA
+## 3       NA       NA        NA        NA        NA       NA        NA        NA        NA
+## 4       NA       NA        NA        NA        NA       NA        NA        NA        NA
+## 5 285.4859 273.0706 0.2596402 0.3110663 0.1319089 13.86852 0.2778338 0.2388455 0.2465124
+## 6 285.4859 273.0706 0.2596402 0.3110663 0.1319089 13.86852 0.2778338 0.2388455 0.2465124
+##       BIO19
+## 1        NA
+## 2        NA
+## 3        NA
+## 4        NA
+## 5 0.2753689
+## 6 0.2753689
+```
 
+```r
+BC_vals <- data.table::melt(na.omit(BC_vals), id.vars = "ID")
+```
 
+Again, we create plots for the extracted values. This time however, we use a different frequency visualisation option:
+
+```r
+cols <- list(
+  AT = inferno(1e2),
+  QS = rev(viridis(1e2))
+)
+plotlist <- lapply(unique(BC_vals$variable), FUN = function(x) {
+  y <- ifelse(as.numeric(gsub("\\D", "", x)) < 12, 1, 2)
+  p <- ggplot(BC_vals[BC_vals$variable == x, ], aes(x = value)) +
+    stat_halfeye(fill = cols[[y]][50]) +
+    # geom_histogram(bins = 1e2, fill = cols[[y]]) +
+    theme_bw() +
+    labs(title = x)
+  return(p)
+})
+cowplot::plot_grid(
+  plotlist[[1]],
+  cowplot::plot_grid(plotlist = plotlist[-1], ncol = 2),
+  ncol = 1, rel_heights = c(1.3, 9)
+)
+```
+
+<img src="rgbif-climatedata_files/figure-html/unnamed-chunk-21-1.png" width="1440" />
 
 {{% alert success %}}
 You are finished - you should now be able to obtain relevant climate data to match your GBIF records to as well as carry out some basic spatial operations such as buffering points, merging polygons and handling raster files.
@@ -457,36 +550,41 @@ You are finished - you should now be able to obtain relevant climate data to mat
 ## [13] automap_1.1-9     doSNOW_1.0.20     snow_0.4-4        doParallel_1.0.17
 ## [17] iterators_1.0.14  foreach_1.5.2     rgdal_1.6-7       raster_3.6-23    
 ## [21] sp_2.0-0          stringr_1.5.0     keyring_1.3.1     ecmwfr_1.5.0     
-## [25] ncdf4_1.21        ggplot2_3.4.3     rgbif_3.7.7      
+## [25] ncdf4_1.21        ggpubr_0.6.0      data.table_1.14.8 tidybayes_3.0.4  
+## [29] ggplot2_3.4.3     rgbif_3.7.7      
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] DBI_1.1.3                gridExtra_2.3            rlang_1.1.1             
-##  [4] magrittr_2.0.3           e1071_1.7-13             compiler_4.3.1          
-##  [7] reshape2_1.4.4           vctrs_0.6.3              httpcode_0.3.0          
-## [10] pkgconfig_2.0.3          fastmap_1.1.1            labeling_0.4.3          
-## [13] utf8_1.2.3               rmarkdown_2.21           purrr_1.0.1             
-## [16] bit_4.0.5                rnaturalearthhires_0.2.1 xfun_0.39               
-## [19] cachem_1.0.8             jsonlite_1.8.7           highr_0.10              
-## [22] styler_1.9.1             reshape_0.8.9            R6_2.5.1                
-## [25] bslib_0.4.2              stringi_1.7.12           jquerylib_0.1.4         
-## [28] Rcpp_1.0.11              bookdown_0.34            assertthat_0.2.1        
-## [31] knitr_1.43               zoo_1.8-12               triebeard_0.4.1         
-## [34] R.utils_2.12.2           FNN_1.1.3.2              R.cache_0.16.0          
-## [37] timechange_0.2.0         tidyselect_1.2.0         rnaturalearth_0.3.2     
-## [40] rstudioapi_0.15.0        yaml_2.3.7               codetools_0.2-19        
-## [43] blogdown_1.16            curl_5.0.2               lattice_0.21-8          
-## [46] tibble_3.2.1             intervals_0.15.4         plyr_1.8.8              
-## [49] withr_2.5.1              evaluate_0.20            units_0.8-4             
-## [52] proxy_0.4-27             xts_0.13.1               xml2_1.3.4              
-## [55] pillar_1.9.0             whisker_0.4.1            KernSmooth_2.23-21      
-## [58] generics_0.1.3           spacetime_1.3-0          munsell_0.5.0           
-## [61] scales_1.2.1             class_7.3-22             glue_1.6.2              
-## [64] lazyeval_0.2.2           tools_4.3.1              data.table_1.14.8       
-## [67] grid_4.3.1               urltools_1.7.3           colorspace_2.1-0        
-## [70] cli_3.6.1                gstat_2.1-1              fansi_1.0.4             
-## [73] dplyr_1.1.2              gtable_0.3.4             R.methodsS3_1.8.2       
-## [76] oai_0.4.0                sass_0.4.6               digest_0.6.31           
-## [79] classInt_0.4-10          crul_1.4.0               farver_2.1.1            
-## [82] memoise_2.0.1            htmltools_0.5.5          R.oo_1.25.0             
-## [85] lifecycle_1.0.3          bit64_4.0.5
+##  [1] tensorA_0.36.2           rstudioapi_0.15.0        jsonlite_1.8.7          
+##  [4] magrittr_2.0.3           farver_2.1.1             rmarkdown_2.21          
+##  [7] vctrs_0.6.3              memoise_2.0.1            rstatix_0.7.2           
+## [10] blogdown_1.16            htmltools_0.5.5          distributional_0.3.2    
+## [13] curl_5.0.2               broom_1.0.4              sass_0.4.6              
+## [16] KernSmooth_2.23-21       bslib_0.4.2              plyr_1.8.8              
+## [19] zoo_1.8-12               cachem_1.0.8             whisker_0.4.1           
+## [22] lifecycle_1.0.3          pkgconfig_2.0.3          R6_2.5.1                
+## [25] fastmap_1.1.1            rnaturalearthhires_0.2.1 digest_0.6.31           
+## [28] colorspace_2.1-0         reshape_0.8.9            labeling_0.4.3          
+## [31] fansi_1.0.4              urltools_1.7.3           timechange_0.2.0        
+## [34] compiler_4.3.1           proxy_0.4-27             intervals_0.15.4        
+## [37] bit64_4.0.5              withr_2.5.1              backports_1.4.1         
+## [40] carData_3.0-5            DBI_1.1.3                highr_0.10              
+## [43] R.utils_2.12.2           ggsignif_0.6.4           classInt_0.4-10         
+## [46] oai_0.4.0                tools_4.3.1              units_0.8-4             
+## [49] R.oo_1.25.0              glue_1.6.2               R.cache_0.16.0          
+## [52] grid_4.3.1               checkmate_2.2.0          reshape2_1.4.4          
+## [55] generics_0.1.3           gtable_0.3.4             R.methodsS3_1.8.2       
+## [58] class_7.3-22             xml2_1.3.4               car_3.1-2               
+## [61] utf8_1.2.3               pillar_1.9.0             ggdist_3.3.0            
+## [64] posterior_1.4.1          dplyr_1.1.2              lattice_0.21-8          
+## [67] FNN_1.1.3.2              bit_4.0.5                tidyselect_1.2.0        
+## [70] knitr_1.43               arrayhelpers_1.1-0       gridExtra_2.3           
+## [73] bookdown_0.34            crul_1.4.0               xfun_0.39               
+## [76] stringi_1.7.12           lazyeval_0.2.2           yaml_2.3.7              
+## [79] evaluate_0.20            codetools_0.2-19         httpcode_0.3.0          
+## [82] tibble_3.2.1             cli_3.6.1                munsell_0.5.0           
+## [85] jquerylib_0.1.4          styler_1.9.1             spacetime_1.3-0         
+## [88] Rcpp_1.0.11              rnaturalearth_0.3.2      triebeard_0.4.1         
+## [91] coda_0.19-4              svUnit_1.0.6             assertthat_0.2.1        
+## [94] scales_1.2.1             xts_0.13.1               e1071_1.7-13            
+## [97] gstat_2.1-1              purrr_1.0.1              rlang_1.1.1
 ```

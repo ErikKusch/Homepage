@@ -37,7 +37,7 @@ Throughout this workshop material, I walk you through the functionality, use-cas
 ## Recording Availability
 A recording of me presenting an earlier version of this workshop (with much of the contents herein) can be found on [YouTube](https://www.youtube.com/watch?v=wwb107L4wVw&ab_channel=ErikKusch).
 
-## Learning Goals
+## Learning Goals 
 
 Throughout this workshop, you will learn how to:  
 

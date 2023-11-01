@@ -29,7 +29,7 @@ In the age of changes and threat to the Ecosphere at macroecological scales, big
 
 Throughout this workshop material, I present practical examples for obtaining GBIF data using `rgbif`. Much of this work has been directly inspired or adapted from the official [`rgbif` website](https://docs.ropensci.org/rgbif/index.html) and a [previous GBIF workshop](https://gbif-europe.github.io/nordic_oikos_2018_r/).
 
-## Learning Goals
+## Learning Goals 
 
 Throughout this workshop, you will be introduced to:  
 
