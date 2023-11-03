@@ -528,7 +528,7 @@ You are finished - you should now be able to obtain relevant climate data to mat
 ```
 ## R version 4.3.1 (2023-06-16)
 ## Platform: x86_64-apple-darwin20 (64-bit)
-## Running under: macOS Sonoma 14.0
+## Running under: macOS Sonoma 14.1
 ## 
 ## Matrix products: default
 ## BLAS:   /Library/Frameworks/R.framework/Versions/4.3-x86_64/Resources/lib/libRblas.0.dylib 
