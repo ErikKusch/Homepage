@@ -63,12 +63,17 @@ For the time being, `KrigR` is only available through the associated [GitHub](ht
 {{% /alert %}}
 
 <!-- {{% alert danger %}} -->
-<!-- Example text that *may* contain **markdown** `markup`. -->
+<!-- Example text that *may* contain **markdownK** `markup`. -->
 <!-- {{% /alert %}} -->
 
-<!-- {{% alert normal %}} -->
-<!-- Example text that *may* contain **markdown** `markup`. -->
-<!-- {{% /alert %}} -->
+{{% alert danger %}}
+A `KrigR` dependency, `rgdal`, is no longer available at CRAN. You need to download and install it separately as follows:
+```{r, eval = FALSE}
+remotes::install_github("https://github.com/cran/rgdal")
+```
+
+I will work to remove this dependency as soon as possible and hope to achieve this (alongside additional `KrigR` development) in 2024.
+{{% /alert %}}
 
 Here, we use the `devtools` package within `R` to get access to the `install_github()` function. For this to run, we need to tell `R` to not stop the installation from GitHub as soon as a warning is produced. This would stop the installation process as early as one of the `KrigR` dependencies hits a warning as benign as `Package XYZ was built under R Version X.X.X` which can usually be ignored safely. 
 

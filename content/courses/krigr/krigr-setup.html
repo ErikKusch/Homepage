@@ -55,11 +55,13 @@ Until we have implemented our <a href="/courses//krigr/outlook/">development ide
 For the time being, <code>KrigR</code> is only available through the associated <a href="https://github.com/ErikKusch/KrigR">GitHub</a> repository.
 {{% /alert %}}</p>
 <!-- {{% alert danger %}} -->
-<!-- Example text that *may* contain **markdown** `markup`. -->
+<!-- Example text that *may* contain **markdownK** `markup`. -->
 <!-- {{% /alert %}} -->
-<!-- {{% alert normal %}} -->
-<!-- Example text that *may* contain **markdown** `markup`. -->
-<!-- {{% /alert %}} -->
+<p>{{% alert danger %}}
+A <code>KrigR</code> dependency, <code>rgdal</code>, is no longer available at CRAN. You need to download and install it separately as follows:</p>
+<pre class="r"><code>remotes::install_github(&quot;https://github.com/cran/rgdal&quot;)</code></pre>
+<p>I will work to remove this dependency as soon as possible and hope to achieve this (alongside additional <code>KrigR</code> development) in 2024.
+{{% /alert %}}</p>
 <p>Here, we use the <code>devtools</code> package within <code>R</code> to get access to the <code>install_github()</code> function. For this to run, we need to tell <code>R</code> to not stop the installation from GitHub as soon as a warning is produced. This would stop the installation process as early as one of the <code>KrigR</code> dependencies hits a warning as benign as <code>Package XYZ was built under R Version X.X.X</code> which can usually be ignored safely.</p>
 <p>Subsequently, <code>KrigR</code> can be installed and loaded as follows:</p>
 <pre class="r"><code>Sys.setenv(R_REMOTES_NO_ERRORS_FROM_WARNINGS = &quot;true&quot;)
