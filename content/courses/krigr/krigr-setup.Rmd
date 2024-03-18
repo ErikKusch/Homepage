@@ -87,7 +87,9 @@ library(KrigR)
 
 
 ## CDS API Access
-Before you can access [Climate Data Store](https://cds.climate.copernicus.eu/) (CDS) products through `KrigR`, you need to open up an account at the CDS and [create an API key](https://cds.climate.copernicus.eu/api-how-to). 
+Before you can access [Climate Data Store](https://cds.climate.copernicus.eu/) (CDS) products through `KrigR`, you need to open up an account at the CDS and [create an API key](https://cds.climate.copernicus.eu/api-how-to). Once you have created your account and registered for API credentials, you can always find them again on your personal page (which you access by clicking your name in the top-right corner of the webpage) on the CDS webpage:
+
+<img src="APIKEY.png" alt=""  />
 
 Once you have done so, we recommend you register the user ID and API Key as characters as seen below (this will match the naming scheme in our workshop material):
 
