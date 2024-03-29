@@ -41,6 +41,17 @@ experience:
           - Network creation for Biodiversity informatics expertise
         * Statistical consultant/advisor for BioDT use cases
         * Statistical education and lecturing
+  
+  - title: Visiting Researcher
+    company: Complexity Science and Evolution Unit, Okinawa Institute of Science and Technology 
+    company_url: https://groups.oist.jp/cse
+    location: 1919-1 Tancha, Onna-son, Kunigami-gun, Okinawa
+    date_start: '2024-01-26'
+    date_end: ''
+    description: |2-
+        Responsibilities include:
+        * Statistical consultant
+        * Analyses of large simulation data to study evolutionary rescue dynamics
         
   - title: Research Affiliate 
     company: SalGo-Team, Oxford University

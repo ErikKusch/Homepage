@@ -31,7 +31,9 @@ organizations:
   url: https://www.uio.no/english/
 - name: University of Oxford
   url: https://www.ox.ac.uk/
-role: Senior Engineer & Research Infrastructure Manager
+- name: Okinawa Institute of Science and Technology
+  url: https://www.oist.jp/
+role: Senior Engineer & Statistical Consultant
 social:
 - icon: envelope
   icon_pack: fas
