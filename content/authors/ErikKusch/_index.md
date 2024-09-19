@@ -27,6 +27,8 @@ interests:
 - Resilience
 - Macroecology
 organizations:
+- name: CICERO Center for International Climate Research
+  url: https://cicero.oslo.no/en
 - name: University of Oslo
   url: https://www.uio.no/english/
 - name: University of Oxford
