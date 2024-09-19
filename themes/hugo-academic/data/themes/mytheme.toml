@@ -5,10 +5,10 @@ name = "Erik's Theme"
 light = true
 
 # Primary
-primary = "#00694b" #005b37
+primary = "#9c9c9c" #"#00694b" #005b37
 
 # Menu
-menu_primary = "#00694b"
+menu_primary = "#9c9c9c" #"#00694b"
 menu_text = "rgba(255,255,255,0.9)"
 menu_text_active = "rgba(255,255,255,1)"
 menu_title = "#fff"

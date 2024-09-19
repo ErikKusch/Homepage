@@ -88,23 +88,23 @@ show_related = {docs = true, page = false, post = true, project = true, publicat
 ############################
 
 # Enter contact details (optional). To hide a field, clear it to "".
-email = "erik.kusch@nhm.uio.no"
+email = "erik.kusch@cicero.oslo.no"
 phone = ""
 
 # Address
 # For country_code, use the 2-letter ISO code (see https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2 )
-address = {street = "Sars' gate", city = "Oslo", region = "Oslo", postcode = "0562", country = "Norway", country_code = "NO"}
+address = {street = "Gaustadalléen 21", city = "Oslo", region = "Oslo", postcode = "0349", country = "Norway", country_code = "NO"}
 
 # Geographic coordinates
 # To get your coordinates, right-click on Google Maps and choose "What's here?". The coords will show up at the bottom.
-coordinates = {latitude = "59.917992", longitude = "10.772422"}
+coordinates = {latitude = "59.941849635981114", longitude = "10.715695904135815"}
 
 # Directions for visitors to locate you.
 directions = ""
 
 # Office hours
 # A list of your office hours. To remove, set to an empty list `[]`.
-office_hours = ["Monday 09:00 to 11:30"]
+office_hours = []
 
 # Enter an optional link for booking appointments (e.g. calendly.com).
 # appointment_url = ""
@@ -136,7 +136,7 @@ twitter = "ErikKusch"
 
 # Date and time format (refer to https://sourcethemes.com/academic/docs/customization/#date-format )
 #   Examples: "Mon, Jan 2, 2006" or "2006-01-02"
-date_format = "Jan 2, 2006"
+date_format = "2006-01-02"
 #   Examples: "3:04 pm" or "15:04"
 time_format = "15:04"
 
