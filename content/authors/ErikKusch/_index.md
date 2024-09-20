@@ -17,7 +17,7 @@ education:
   - course: B.Sc. in Biology
     institution: Technical University of Dresden
     year: 2013 - 2017
-email: "erikkus@nhm.uio.no"
+email: "erikkus@cicero.oslo.no"
 highlight_name: false
 interests:
 - Data Science
