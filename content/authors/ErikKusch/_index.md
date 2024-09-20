@@ -63,11 +63,11 @@ social:
   link: https://www.instagram.com/erik_kusch/
 ---
 
-## Hi. I'm **Erik Kusch**, a senior engineer at the [Natural History Museum of the University of Oslo](https://www.nhm.uio.no/english/) where I manage research infrastructure for the [BioDT project](https://biodt.eu/).
+## Hi. I'm **Erik Kusch**, an advisor at [CICERO Center for International Climate Research](https://cicero.oslo.no/en) where I work on interdisciplinary research focusing on [Climate and Nature Risk](https://cicero.oslo.no/en/research-groups/climate-impacts). In addition, I also work as a senior engineer at the [Natural History Museum of the University of Oslo](https://www.nhm.uio.no/english/) where I manage research infrastructure for the [BioDT project](https://biodt.eu/).
 
 Using big data and generating novel statistical methodology, I aim to understand how global and local processes and patterns in biological systems come about and are reinforced thus generating knowledge about the resilience of the Earth's ecosystems. 
 
-I am currently also working towards publication of manuscripts related to my [PhD project](/project/phd-packages/) at [Aarhus University](https://international.au.dk/) which focused on ecological interactions and the networks they form at macroecological scales as well as their usefulness for biodiversity forecasting and our capability or inference thereof.
+My PhD project at [Aarhus University](https://international.au.dk/) focused on ecological interactions and the networks they form at macroecological scales.
 
 In my free time, I escape to the mountains and engage in landscape and wildlife photography.
 
