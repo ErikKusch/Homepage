@@ -1,0 +1,734 @@
+---
+title: "Data Handling and Data Mining"
+subtitle: 'Fixing the Sparrow Data Set'
+author: "Erik Kusch"
+date: "2020-06-10"
+slug: Data Handling and Data Mining
+categories: [An Introduction to Biostatistics]
+tags: [R, Statistics]
+summary: 'Welcome to our first "real" practical experience in `R`. The following notes present you with an example of how data handling (also known as data cleaning) can be done. Obviously, the possibility for flaws to occur in any given data set are seemingly endless and so the following, tedious procedure should be thought of as less of an recipe of how to fix common flaws in biological data sets but make you aware of how important proper data collection and data entry is.'
+authors: [Erik Kusch]
+lastmod: '2020-06-10'
+featured: no
+projects:
+output:
+  blogdown::html_page:
+    keep_md: true
+    # toc: true
+    # toc_depth: 2
+    # number_sections: false
+    fig_width: 6
+linktitle: 07 - Data Handling and Data Mining
+menu:
+  example:
+    parent: Sessions 
+    weight: 7
+toc: true
+type: docs
+weight: 7
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+<div id="TOC">
+
+</div>
+
+<div id="theory" class="section level2">
+<h2>Theory</h2>
+<p>Welcome to our first “real” practical experience in <code>R</code>. The following notes present you with an example of how data handling (also known as data cleaning) can be done. Obviously, the possibility for flaws to occur in any given data set are seemingly endless and so the following, tedious procedure should be thought of as less of an recipe of how to fix common flaws in biological data sets but make you aware of how important proper data collection and data entry is.</p>
+<p>I have prepared some {{&lt; staticref “courses/an-introduction-to-biostatistics/07—Data-Handling-and-Data-Mining_Handout.html” “newtab” &gt;}} Lecture Slides {{&lt; /staticref &gt;}} for this session.</p>
+</div>
+<div id="data" class="section level2">
+<h2>Data</h2>
+<p>Find the data for this exercise {{&lt; staticref “courses/an-introduction-to-biostatistics/Data/SparrowData.csv” “newtab” &gt;}} here{{&lt; /staticref &gt;}}.</p>
+</div>
+<div id="preparing-our-procedure" class="section level2">
+<h2>Preparing Our Procedure</h2>
+<p>The following three sections are what I consider to be <em>essential</em> parts of the preamble to any <code>R</code>-based analysis. I highly recommend clearly indicating these bits in your code.</p>
+<p>More often than not, you will use variations of these code chunks whether you are working on data handling, data exploration or full-fledged statistical analyses.</p>
+<div id="necessary-steps-for-reproducibility" class="section level3">
+<h3>Necessary Steps For Reproducibility</h3>
+<p>Reproducibility is the be-all and end-all of any statistical analysis, particularly in light of the peer-review process in life sciences.</p>
+<pre class="r"><code>rm(list=ls()) # clearing environment
+Dir.Base &lt;- getwd() # soft-coding our working directory
+Dir.Data &lt;- paste(Dir.Base, &quot;Data&quot;, sep=&quot;/&quot;) # soft-coding our data directory </code></pre>
+<p>Once you get into highly complex statistical analyses, you may wish to break up chunks of your analysis into separate documents. To ensure that remnants of an earlier analysis or analysis chunk do not influence the results of your current analysis, you may wish to <em>empty</em> <code>R</code>’s cache (<em>Environment</em>) before attempting a new analysis. This is achieved via the command <code>rm(list=ls())</code>.</p>
+<p>Next, you <em>need</em> to remember the importance of <em>soft-coding</em> for the sake of reproducibility. One of the worst offences to the peer-review process in <code>R</code>-based statistics is the erroneous hard-coding of the working directory. The <code>getwd()</code> function shown above solves this exact problem. However, for this workaround to function properly you need to open the code document of interest by double-clicking it within its containing folder.</p>
+<p>When using the <code>xlsx</code> package or any <em>Excel</em>-reliant process via <code>R</code>, your code will automatically run a Java process in the background. By default the Java engine is limited as far as RAM allocation goes and tends to fail when faced with enormous data sets. The workaround <code>options(java.parameters = "-Xmx8g")</code> gets rid of this issue by allocation 8 GBs of RAM to Java.</p>
+</div>
+<div id="packages" class="section level3">
+<h3>Packages</h3>
+<p>Packages are <code>R</code>’s way of giving you access to a seemingly infinite repository of functions.</p>
+<pre class="r"><code># function to load packages and install them if they haven&#39;t been installed yet
+install.load.package &lt;- function(x) {
+  if (!require(x, character.only = TRUE))
+    install.packages(x)
+  require(x, character.only = TRUE)
+}
+package_vec &lt;- c(&quot;dplyr&quot; # we need this package to fix the most common data errors
+                 )
+sapply(package_vec, install.load.package)</code></pre>
+<pre><code>## Loading required package: dplyr</code></pre>
+<pre><code>## 
+## Attaching package: &#39;dplyr&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     filter, lag</code></pre>
+<pre><code>## The following objects are masked from &#39;package:base&#39;:
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<pre><code>## dplyr 
+##  TRUE</code></pre>
+<p>Using the above function is way more sophisticated than the usual <code>install.packages()</code> + <code>library()</code> approach since it automatically detects which packages require installing and only install these thus not overwriting already installed packages.</p>
+</div>
+<div id="loading-the-data" class="section level3">
+<h3>Loading The Data</h3>
+<p>Loading data is crucial to any analysis in <code>R</code>. Period.</p>
+<p><code>R</code> offers a plethora of approaches to data loading and you will usually be taught the <code>read.table()</code> command in basic biostatistics courses. However, I have found to prefer the functionality provided by the <code>xlsx</code> package since most data recording is taking place in Excel. As this package is dependant on the installation of Java and <code>RJava</code>, we will settle on the base <code>R</code> function <code>read.csv()</code>.</p>
+<pre class="r"><code>Data_df_base &lt;- read.csv(file = paste(Dir.Data, &quot;/SparrowData.csv&quot;, sep=&quot;&quot;), header = TRUE)
+Data_df &lt;- Data_df_base # duplicate and save initial data on a new object</code></pre>
+<p>Another trick to have up your sleeve (if your RAM enables you to act on it) is to duplicate your initial data onto a new object once loaded into <code>R</code>. This will enable you to easily remedy mistakes in data treatment without having to reload your initial data set from the data file.</p>
+</div>
+</div>
+<div id="inspecting-the-data" class="section level2">
+<h2>Inspecting The Data</h2>
+<p>Once the data is loaded into <code>R</code>, you <em>need to inspect</em> it to make sure it is ready for use.</p>
+<div id="assessing-a-data-frame-in-r" class="section level3">
+<h3>Assessing A Data Frame in <code>R</code></h3>
+<p>Most, if not all, data you will ever load into <code>R</code> will be stored as a <code>data.frame</code> within <code>R</code>. Some of the most important functions for inspecting data frames (“df” in the following) in base <code>R</code> are the following four:</p>
+<ul>
+<li><code>dim(df)</code> returns the dimensions (Rows <span class="math inline">\(\times\)</span> Columns)of the data frame</li>
+<li><code>head(df)</code> returns the first 6 rows of the data frame by default (here changed to 4)</li>
+<li><code>tail(df)</code> returns the last 6 rows of the data frame by default (here changed to 4)</li>
+<li><code>View(df)</code> opens nearly any <code>R</code> object in a separate tab for further inspection. Since we are dealing with an enormous data set here, I will exclude this function for now to save you from printing unnecessary pages.</li>
+</ul>
+<pre class="r"><code>dim(Data_df)</code></pre>
+<pre><code>## [1] 1068   21</code></pre>
+<pre class="r"><code>head(Data_df, n = 4)</code></pre>
+<pre><code>##   X    Site Index Latitude Longitude     Climate Population.Status Weight
+## 1 1 Siberia    SI       60       100 Continental            Native  34,05
+## 2 2 Siberia    SI       60       100 Continental            Native  34,86
+## 3 3 Siberia    SI       60       100 Continental            Native  32,34
+## 4 4 Siberia    SI       60       100 Continental            Native  34,78
+##   Height Wing.Chord Colour    Sex Nesting.Site Nesting.Height Number.of.Eggs
+## 1  12.87       6.67  Brown   Male         &lt;NA&gt;             NA             NA
+## 2  13.68       6.79   Grey   Male         &lt;NA&gt;             NA             NA
+## 3  12.66       6.64  Black Female        Shrub           35.6              1
+## 4  15.09       7.00  Brown Female        Shrub          47.75              0
+##   Egg.Weight Flock Home.Range Flock.Size Predator.Presence Predator.Type
+## 1         NA     B      Large         16               Yes         Avian
+## 2         NA     B      Large         16               Yes         Avian
+## 3       3.21     C      Large         14               Yes         Avian
+## 4         NA     E      Large         10               Yes         Avian</code></pre>
+<pre class="r"><code>tail(Data_df, n = 4)</code></pre>
+<pre><code>##         X           Site Index Latitude Longitude Climate Population.Status
+## 1065 1065 Falkland Isles    FI   -51.75    -59.17 Coastal        Introduced
+## 1066 1066 Falkland Isles    FI   -51.75    -59.17 Coastal        Introduced
+## 1067 1067 Falkland Isles    FI   -51.75    -59.17 Coastal        Introduced
+## 1068 1068 Falkland Isles    FI   -51.75    -59.17 Coastal        Introduced
+##      Weight Height Wing.Chord Colour  Sex Nesting.Site Nesting.Height
+## 1065  34.25  15.26       7.04   Grey Male                            
+## 1066  31.76  12.78       6.67   Grey Male                            
+## 1067  31.48  12.49       6.63  Black Male                            
+## 1068  31.94  12.96       6.70   Grey Male                            
+##      Number.of.Eggs Egg.Weight Flock Home.Range Flock.Size Predator.Presence
+## 1065                               A      Large         19               Yes
+## 1066                               A      Large         19               Yes
+## 1067                               C      Large         18               Yes
+## 1068                               A      Large         19               Yes
+##      Predator.Type
+## 1065         Avian
+## 1066         Avian
+## 1067         Avian
+## 1068         Avian</code></pre>
+<p>When having an initial look at the results of <code>head(Data_df)</code> and <code>tail(Data_df)</code> we can spot two important things:</p>
+<ul>
+<li><code>NA</code>s in head and tail of our data set are stored differently. This is a common problem with biological data sets and we will deal with this issue extensively in the next few sections of this document.</li>
+<li>Due to our data loading procedure we ended up with a redundant first column that is simply showing the respective row numbers. However, this is unnecessary in <code>R</code> and so we can delete this column as seen below.</li>
+</ul>
+<pre class="r"><code>Data_df &lt;- Data_df[,-1] # eliminating the erroneous first column as it is redundant
+dim(Data_df) # checking if the elimination went right</code></pre>
+<pre><code>## [1] 1068   20</code></pre>
+</div>
+<div id="the-summary-function" class="section level3">
+<h3>The <code>Summary()</code> Function</h3>
+<p>As already stated in our seminar series, the <code>summary()</code> function is <em>invaluable</em> to data exploration and data inspection. However, it is only partially applicable as it will not work flawlessly on every class of data. Examples of this are shown below.</p>
+<p>The weight data contained within our data frame should be numeric and thus pose no issue to the <code>summary()</code> function. However, as shown in the next section, it is currently of type character which leads the <code>summary()</code> function to work improperly.</p>
+<pre class="r"><code>summary(Data_df$Weight)</code></pre>
+<pre><code>##    Length     Class      Mode 
+##      1068 character character</code></pre>
+<p>The height data within our data set, on the other hand, is stored correctly as class numeric. Thus the <code>summary()</code> function performs flawlessly.</p>
+<pre class="r"><code>summary(Data_df$Height)</code></pre>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##    1.35   13.52   14.52   15.39   16.22  135.40</code></pre>
+<p>Making data inspection more easy, one may which to automate the use of the <code>summary()</code> function. However, this only makes sense, when every data column is presenting data in the correct class type. Therefore, we will first fix the column classes and then use the <code>summary()</code> command.</p>
+</div>
+</div>
+<div id="data-cleaning-workflow" class="section level2">
+<h2>Data Cleaning Workflow</h2>
+<div id="identifying-problems" class="section level3">
+<h3>Identifying Problems</h3>
+<p>Indentifying most problems in any data set you may ever encounter comes down to mostly two manifestations of inadequate data entry or handling:</p>
+<p><strong>1. Types/Classes </strong><br />
+Before even opening a data set, we should know what kind of data classes we expect for every variable (for example, height records as a <code>factor</code> don’t make much sense). Problems with data/variable classes can have lasting influence on your analyses and so we need to test the class for each variable (column) individually. Before we alter any column classes, we will first need to identify columns whose classes need fixing. Doing so is as easy applying the <code>class()</code> function to the data contained within every column of our data frame separately.<br />
+<code>R</code> offers multiple functions for this but I find the <code>lapply()</code> function to perform flawlessly as shown below. Since <code>lapply()</code> returns a <code>list</code> of class identifiers and these don’t translate well to paper, I have opted to transform the list into a named character vector using the <code>unlist()</code> command. One could also use the <code>str()</code> function.</p>
+<pre class="r"><code>unlist(lapply(Data_df, class))</code></pre>
+<pre><code>##              Site             Index          Latitude         Longitude 
+##       &quot;character&quot;       &quot;character&quot;         &quot;numeric&quot;         &quot;numeric&quot; 
+##           Climate Population.Status            Weight            Height 
+##       &quot;character&quot;       &quot;character&quot;       &quot;character&quot;         &quot;numeric&quot; 
+##        Wing.Chord            Colour               Sex      Nesting.Site 
+##         &quot;numeric&quot;       &quot;character&quot;       &quot;character&quot;       &quot;character&quot; 
+##    Nesting.Height    Number.of.Eggs        Egg.Weight             Flock 
+##       &quot;character&quot;       &quot;character&quot;       &quot;character&quot;       &quot;character&quot; 
+##        Home.Range        Flock.Size Predator.Presence     Predator.Type 
+##       &quot;character&quot;         &quot;integer&quot;       &quot;character&quot;       &quot;character&quot;</code></pre>
+<p>For further inspection, one may want to combine the information obtained by using the <code>class()</code> function with either the <code>summary()</code> function (for all non-numeric records) or the <code>hist</code> function (particularly useful for numeric records).</p>
+<p><strong>2. Contents/Values </strong><br />
+Typos and the like will always lead to some data that simply doesn’t make sense given the context of your project. Sometimes, errors like these are salvageable but doing so can be a very difficult process. Before we alter any column contents, we will first need to identify columns whose contents need fixing, however. Doing so is as easy applying an automated version of <code>summary()</code> to the data contained within every column of our data frame separately after having fixed possibly erroneous data classes.</p>
+</div>
+<div id="fixing-the-problems" class="section level3">
+<h3>Fixing The Problems</h3>
+<p>Fixing the problems in our data sets always comes down to altering data classes, altering faulty values or removing them entirely.<br />
+To make sure we fix all problems, we may often wish to enlist the <code>summary()</code> function as well as the <code>hist()</code> function for data inspection and visualisation.</p>
+<p>Before we alter any column contents, we will first need to identify columns whose contents need fixing.</p>
+<!-- Doing so is as easy applying an automated version of `summary()` to the data contained within every column of our data frame separately which is now possible since we have fixed the column types.   -->
+<!-- The code below does exactly that: -->
+<!-- ```{r ColContProblems} -->
+<!-- for(i in 1:dim(Data_df)[2]){ -->
+<!--   print(colnames(Data_df)[i]) -->
+<!--   print(summary(Data_df[,i])) -->
+<!--   print("------------------------------------------------------") -->
+<!-- } -->
+<!-- ``` -->
+<!-- There are some glaring issues her which we will address in the following sections. -->
+</div>
+</div>
+<div id="our-data" class="section level2">
+<h2>Our Data</h2>
+<div id="site" class="section level3">
+<h3>Site</h3>
+<p><strong>Variable Class Expectation:</strong> <code>factor</code> (only 11 possible values)</p>
+<div id="identifying-problems-1" class="section level4">
+<h4>Identifying Problems</h4>
+<p>Let’s asses our Site records for our <em>Passer domesticus</em> individuals and check whether they behave as expected:</p>
+<pre class="r"><code>class(Data_df$Site)</code></pre>
+<pre><code>## [1] &quot;character&quot;</code></pre>
+<pre class="r"><code>summary(Data_df$Site)</code></pre>
+<pre><code>##    Length     Class      Mode 
+##      1068 character character</code></pre>
+<p>Indeed, they do behave just like we’d expect them to.</p>
+</div>
+<div id="fixing-problems" class="section level4">
+<h4>Fixing Problems</h4>
+<p>We don’t need to fix anything here.</p>
+</div>
+</div>
+<div id="index" class="section level3">
+<h3>Index</h3>
+<p><strong>Variable Class Expectation:</strong> <code>factor</code> (only 11 possible values)</p>
+<div id="identifying-problems-2" class="section level4">
+<h4>Identifying Problems</h4>
+<p>Let’s asses our Index records for our <em>Passer domesticus</em> individuals and check whether they behave as expected:</p>
+<pre class="r"><code>class(Data_df$Index)</code></pre>
+<pre><code>## [1] &quot;character&quot;</code></pre>
+<pre class="r"><code>summary(Data_df$Index)</code></pre>
+<pre><code>##    Length     Class      Mode 
+##      1068 character character</code></pre>
+<p>Indeed, they do behave just like we’d expect them to. Pay attention that thes shortened index numbers lign up with the numbers of site records!</p>
+</div>
+<div id="fixing-problems-1" class="section level4">
+<h4>Fixing Problems</h4>
+<p>We don’t need to fix anything here.</p>
+<div style="page-break-after: always;"></div>
+</div>
+</div>
+<div id="latitude" class="section level3">
+<h3>Latitude</h3>
+<p><strong>Variable Class Expectation:</strong> <code>numeric</code> (Latitude is inherently continuous)</p>
+<div id="identifying-problems-3" class="section level4">
+<h4>Identifying Problems</h4>
+<p>Let’s asses our Latitude records for our <em>Passer domesticus</em> individuals and check whether they behave as expected:</p>
+<pre class="r"><code>class(Data_df$Latitude)</code></pre>
+<pre><code>## [1] &quot;numeric&quot;</code></pre>
+<pre class="r"><code>table(Data_df$Latitude) # use this instead of summary due to station-dependency here</code></pre>
+<pre><code>## 
+## -51.75    -25  -21.1      4   10.5  17.25     31     54     55     60     70 
+##     69     88     95    250    114    105     81     68     68     66     64</code></pre>
+<p>Indeed, they do behave just like we’d expect them to.</p>
+</div>
+<div id="fixing-problems-2" class="section level4">
+<h4>Fixing Problems</h4>
+<p>We don’t need to fix anything here.</p>
+</div>
+</div>
+<div id="longitude" class="section level3">
+<h3>Longitude</h3>
+<p><strong>Variable Class Expectation:</strong> <code>numeric</code> (Longitude is inherently continuous)</p>
+<div id="identifying-problems-4" class="section level4">
+<h4>Identifying Problems</h4>
+<p>Let’s asses our Longitude records for our <em>Passer domesticus</em> individuals and check whether they behave as expected:</p>
+<pre class="r"><code>class(Data_df$Longitude)</code></pre>
+<pre><code>## [1] &quot;numeric&quot;</code></pre>
+<pre class="r"><code>table(Data_df$Longitude) # use this instead of summary due to station-dependency here</code></pre>
+<pre><code>## 
+##    -97    -92    -90 -88.75    -67 -59.17    -53     -2   55.6    100    135 
+##     68     81     64    105    114     69    250     68     95     66     88</code></pre>
+<p>Indeed, they do behave just like we’d expect them to.</p>
+</div>
+<div id="fixing-problems-3" class="section level4">
+<h4>Fixing Problems</h4>
+<p>We don’t need to fix anything here.</p>
+</div>
+</div>
+<div id="climate" class="section level3">
+<h3>Climate</h3>
+<p><strong>Variable Class Expectation:</strong> <code>factor</code> (three levels: coastal, semi-coastal, continental)</p>
+<div id="identifying-problems-5" class="section level4">
+<h4>Identifying Problems</h4>
+<p>Let’s asses our Climate records for our <em>Passer domesticus</em> individuals and check whether they behave as expected:</p>
+<pre class="r"><code>class(Data_df$Climate)</code></pre>
+<pre><code>## [1] &quot;character&quot;</code></pre>
+<pre class="r"><code>summary(Data_df$Climate)</code></pre>
+<pre><code>##    Length     Class      Mode 
+##      1068 character character</code></pre>
+<p>Indeed, they do behave just like we’d expect them to.</p>
+</div>
+<div id="fixing-problems-4" class="section level4">
+<h4>Fixing Problems</h4>
+<p>We don’t need to fix anything here.</p>
+</div>
+</div>
+<div id="population-status" class="section level3">
+<h3>Population Status</h3>
+<p><strong>Variable Class Expectation:</strong> <code>factor</code> (two levels: native, introduced)</p>
+<div id="identifying-problems-6" class="section level4">
+<h4>Identifying Problems</h4>
+<p>Let’s asses our Population Status records for our <em>Passer domesticus</em> individuals and check whether they behave as expected:</p>
+<pre class="r"><code>class(Data_df$Population.Status)</code></pre>
+<pre><code>## [1] &quot;character&quot;</code></pre>
+<pre class="r"><code>summary(Data_df$Population.Status)</code></pre>
+<pre><code>##    Length     Class      Mode 
+##      1068 character character</code></pre>
+<p>Indeed, they do behave just like we’d expect them to.</p>
+</div>
+<div id="fixing-problems-5" class="section level4">
+<h4>Fixing Problems</h4>
+<p>We don’t need to fix anything here.</p>
+</div>
+</div>
+<div id="weight" class="section level3">
+<h3>Weight</h3>
+<p><strong>Variable Class Expectation:</strong> <code>numeric</code> (weight is a continuous metric)</p>
+<div id="identifying-problems-7" class="section level4">
+<h4>Identifying Problems</h4>
+<p>Let’s asses our Weight records for our <em>Passer domesticus</em> individuals and check whether they behave as expected:</p>
+<pre class="r"><code>class(Data_df$Weight)</code></pre>
+<pre><code>## [1] &quot;character&quot;</code></pre>
+<pre class="r"><code>summary(Data_df$Weight)</code></pre>
+<pre><code>##    Length     Class      Mode 
+##      1068 character character</code></pre>
+<p>Obviously, something is wrong.</p>
+</div>
+<div id="fixing-problems-6" class="section level4">
+<h4>Fixing Problems</h4>
+<p>As seen above, weight records are currently stored as character which they shouldn’t. So how do we fix this?</p>
+<p>Firstly, let’s try an intuitive <code>as.numeric()</code> approach which attempts to convert all values contained within a vector into numeric records.</p>
+<pre class="r"><code>Data_df$Weight &lt;- as.numeric(Data_df_base$Weight)</code></pre>
+<pre><code>## Warning: NAs introduced by coercion</code></pre>
+<pre class="r"><code>summary(Data_df$Weight)</code></pre>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA&#39;s 
+##   19.38   26.34   30.38   29.40   31.87  420.00      66</code></pre>
+<p>Apparently, this didn’t do the trick since weight data values (recorded in g) below 13 and above 40 are highly unlikely for <em>Passer domesticus</em>.</p>
+<p>Sometimes, the <code>as.numeric()</code> can be made more powerful by handing it data of class <code>character</code>. To do so, simply combine <code>as.numeric()</code> with <code>as.character()</code> as shown below.</p>
+<pre class="r"><code>Data_df$Weight &lt;- as.numeric(as.character(Data_df_base$Weight))</code></pre>
+<pre><code>## Warning: NAs introduced by coercion</code></pre>
+<pre class="r"><code>summary(Data_df$Weight)</code></pre>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA&#39;s 
+##   19.38   26.34   30.38   29.40   31.87  420.00      66</code></pre>
+<p>That still didn’t resolve our problem. Weight measurements were taken for all study organisms and so there shouldn’t be any <code>NA</code>s and yet we find 66.</p>
+<p>Interestingly enough this is the exact same number as observations available for Siberia. A closer look at the data frame shows us that weight data for Siberia has been recorded with commas as decimal delimiters whilst the rest of the data set utilises dots.</p>
+<p>Fixing this is not necessarily difficult but it is an erroneous issue for data handling which comes up often and is easy to avoid. Getting rid of the flaws is as simple as using the <code>gsub()</code> function contained within the <code>dplyr</code> package.</p>
+<pre class="r"><code>Data_df$Weight &lt;- as.numeric(gsub(pattern = &quot;,&quot;, replacement = &quot;.&quot;, x = Data_df_base$Weight))
+summary(Data_df$Weight)</code></pre>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   19.38   27.90   30.63   29.69   32.24  420.00</code></pre>
+<p>There is one data record left hat exceeds the biologically viable span for body weight records of <em>Passer domesticus</em>. This data record holds the value 420. Since this is unlikely to be a simple mistake of placing the decimal delimiter in the wrong place (both 4.2 and 42 grams are also not feasible weight records for house sparrows), we have to delete the weight data record in question:</p>
+<pre class="r"><code>Data_df$Weight[which(Data_df_base$Weight == 420)] &lt;- NA 
+summary(Data_df$Weight)</code></pre>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA&#39;s 
+##   19.38   27.89   30.63   29.33   32.23   36.66       1</code></pre>
+<pre class="r"><code>hist(Data_df$Weight, breaks = 100)</code></pre>
+<p><img src="/courses/an-introduction-to-biostatistics/07---Data-Handling-and-Data-Mining_files/figure-html/ColContWeight-1.png" width="576" /></p>
+<p>We finally fixed it!</p>
+</div>
+</div>
+<div id="height" class="section level3">
+<h3>Height</h3>
+<p><strong>Variable Class Expectation:</strong> <code>numeric</code> (height is a continuous metric)</p>
+<div id="identifying-problems-8" class="section level4">
+<h4>Identifying Problems</h4>
+<p>Let’s asses our Height records for our <em>Passer domesticus</em> individuals and check whether they behave as expected:</p>
+<pre class="r"><code>class(Data_df$Height)</code></pre>
+<pre><code>## [1] &quot;numeric&quot;</code></pre>
+<pre class="r"><code>summary(Data_df$Height)</code></pre>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##    1.35   13.52   14.52   15.39   16.22  135.40</code></pre>
+<p>Again, some of our data don’t behave the way the should (a 135.4 or 1.35 cm tall sparrow are just absurd).</p>
+</div>
+<div id="fixing-problems-7" class="section level4">
+<h4>Fixing Problems</h4>
+<p>Height (or “Length”) records of <em>Passer domesticus</em> should fall roughly between 10cm and 22cm. Looking at the data which exceed these thresholds, it is apparent that these are generated simply through misplaced decimal delimiters. So we fix them as follows and use a histogram to check if it worked.</p>
+<pre class="r"><code>Data_df$Height[which(Data_df$Height &lt; 10)] # decimal point placed wrong here</code></pre>
+<pre><code>## [1] 1.350 1.446</code></pre>
+<pre class="r"><code>Data_df$Height[which(Data_df$Height &lt; 10)] &lt;- Data_df$Height[which(Data_df$Height &lt; 10)] * 10 # FIXED IT!
+Data_df$Height[which(Data_df$Height &gt; 22)] # decimal point placed wrong here</code></pre>
+<pre><code>## [1] 126.7 135.4</code></pre>
+<pre class="r"><code>Data_df$Height[which(Data_df$Height &gt; 22)] &lt;- Data_df$Height[which(Data_df$Height &gt; 22)]/10 # FIXED IT!
+summary(Data_df$Height)</code></pre>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   11.09   13.52   14.51   15.20   16.20   21.68</code></pre>
+<pre class="r"><code>hist(Data_df$Height, breaks = 100)</code></pre>
+<p><img src="/courses/an-introduction-to-biostatistics/07---Data-Handling-and-Data-Mining_files/figure-html/ColContHeight-1.png" width="576" /></p>
+<p>We finally fixed it!</p>
+</div>
+</div>
+<div id="wing-chord" class="section level3">
+<h3>Wing Chord</h3>
+<p><strong>Variable Class Expectation:</strong> <code>numeric</code> (wing chord is a continuous metric)</p>
+<div id="identifying-problems-9" class="section level4">
+<h4>Identifying Problems</h4>
+<p>Let’s asses our Wing Chord records for our <em>Passer domesticus</em> individuals and check whether they behave as expected:</p>
+<pre class="r"><code>class(Data_df$Wing.Chord)</code></pre>
+<pre><code>## [1] &quot;numeric&quot;</code></pre>
+<pre class="r"><code>summary(Data_df$Wing.Chord)</code></pre>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##   6.410   6.840   7.050   7.337   7.400   9.000</code></pre>
+<p>Indeed, they do behave just like we’d expect them to.</p>
+</div>
+<div id="fixing-problems-8" class="section level4">
+<h4>Fixing Problems</h4>
+<p>We don’t need to fix anything here.</p>
+</div>
+</div>
+<div id="colour" class="section level3">
+<h3>Colour</h3>
+<p><strong>Variable Class Expectation:</strong> <code>factor</code> (three levels: black, grey, brown)</p>
+<div id="identifying-problems-10" class="section level4">
+<h4>Identifying Problems</h4>
+<p>Let’s asses our Colour records for our <em>Passer domesticus</em> individuals and check whether they behave as expected:</p>
+<pre class="r"><code>class(Data_df$Colour)</code></pre>
+<pre><code>## [1] &quot;character&quot;</code></pre>
+<pre class="r"><code>summary(Data_df$Colour)</code></pre>
+<pre><code>##    Length     Class      Mode 
+##      1068 character character</code></pre>
+<p>Some of the colour records are very odd.</p>
+</div>
+<div id="fixing-problems-9" class="section level4">
+<h4>Fixing Problems</h4>
+<p>The colour records “Bright black” and “Grey with black spots” should be “Grey”. Someone clearly got too eager on the assignment of colours here. The fix is as easy as identifying the data records which are “too precise” and overwrite them with the correct assignment:</p>
+<pre class="r"><code>Data_df$Colour[which(Data_df$Colour == &quot;Bright black&quot;)] &lt;- &quot;Grey&quot;
+Data_df$Colour[which(Data_df$Colour == &quot;Grey with black spots&quot;)] &lt;- &quot;Grey&quot;
+Data_df$Colour &lt;- droplevels(factor(Data_df$Colour)) # drop unused factor levels
+summary(Data_df$Colour) # FIXED IT!</code></pre>
+<pre><code>## Black Brown  Grey 
+##   356   298   414</code></pre>
+<p>We finally fixed it!</p>
+</div>
+</div>
+<div id="sex" class="section level3">
+<h3>Sex</h3>
+<p><strong>Variable Class Expectation:</strong> <code>factor</code> (two levels: male and female)</p>
+<div id="identifying-problems-11" class="section level4">
+<h4>Identifying Problems</h4>
+<p>Let’s asses our Climate records for our <em>Passer domesticus</em> individuals and check whether they behave as expected:</p>
+<pre class="r"><code>class(Data_df$Sex)</code></pre>
+<pre><code>## [1] &quot;character&quot;</code></pre>
+<pre class="r"><code>summary(Data_df$Sex)</code></pre>
+<pre><code>##    Length     Class      Mode 
+##      1068 character character</code></pre>
+<p>Indeed, they do behave just like we’d expect them to.</p>
+</div>
+<div id="fixing-problems-10" class="section level4">
+<h4>Fixing Problems</h4>
+<p>We don’t need to fix anything here.</p>
+</div>
+</div>
+<div id="nesting-site" class="section level3">
+<h3>Nesting Site</h3>
+<p><strong>Variable Class Expectation:</strong> <code>factor</code> (two levels: shrub and tree)</p>
+<div id="identifying-problems-12" class="section level4">
+<h4>Identifying Problems</h4>
+<p>Let’s asses our Nesting Site records for our <em>Passer domesticus</em> individuals and check whether they behave as expected:</p>
+<pre class="r"><code>class(Data_df$Nesting.Site)</code></pre>
+<pre><code>## [1] &quot;character&quot;</code></pre>
+<pre class="r"><code>summary(Data_df$Nesting.Site)</code></pre>
+<pre><code>##    Length     Class      Mode 
+##      1068 character character</code></pre>
+</div>
+<div id="fixing-problems-11" class="section level4">
+<h4>Fixing Problems</h4>
+<p>One individual is recording to be nesting on the ground. This is something house sparrows don’t do. Therefore, we have to assume that this individual is not even a <em>Passer domesticus</em> to begin with.</p>
+<p>The only way to solve this is to remove all observations pertaining to this individual:</p>
+<pre class="r"><code>Data_df &lt;- Data_df[-which(Data_df$Nesting.Site == &quot;Ground&quot;), ]
+summary(Data_df$Nesting.Site)</code></pre>
+<pre><code>##    Length     Class      Mode 
+##      1067 character character</code></pre>
+<p>We just deleted a data record. This affects the flock size of the flock it belongs to (basically, this column contains hard-coded values) which we are going to deal with later.<br />
+Still, there are manually entered <code>NA</code> records present which we have to get rid of. These can be fixed easily without altering column classes and simply making use of logic by indexing their dependencies on other column values. The nesting site for a data record where sex reads “Male” has to be <code>NA</code>.</p>
+<pre class="r"><code>Data_df$Nesting.Site[which(Data_df$Sex == &quot;Male&quot;)] &lt;- NA 
+Data_df$Nesting.Site &lt;- droplevels(factor(Data_df$Nesting.Site)) # drop unused factor levels
+summary(Data_df$Nesting.Site)# FIXED IT!</code></pre>
+<pre><code>## Shrub  Tree  NA&#39;s 
+##   292   231   544</code></pre>
+</div>
+</div>
+<div id="nesting-height" class="section level3">
+<h3>Nesting Height</h3>
+<p><strong>Variable Class Expectation:</strong> <code>numeric</code> (continuous records in two clusters corresponding to shrubs and trees)</p>
+<div id="identifying-problems-13" class="section level4">
+<h4>Identifying Problems</h4>
+<p>Let’s asses our Nesting Height records for our <em>Passer domesticus</em> individuals and check whether they behave as expected:</p>
+<pre class="r"><code>class(Data_df$Nesting.Height)</code></pre>
+<pre><code>## [1] &quot;character&quot;</code></pre>
+<pre class="r"><code>summary(Data_df$Nesting.Height)</code></pre>
+<pre><code>##    Length     Class      Mode 
+##      1067 character character</code></pre>
+<p>There are obviously some issues here.</p>
+</div>
+<div id="fixing-problems-12" class="section level4">
+<h4>Fixing Problems</h4>
+<p>Nesting height is a clear example of a variable that should be recorded as <code>numeric</code> and yet our data frame currently stores them as character.</p>
+<p>Our first approach to fixing this, again, is using the <code>as.numeric()</code> function.</p>
+<pre class="r"><code>summary(as.numeric(Data_df$Nesting.Height))</code></pre>
+<pre><code>## Warning in summary(as.numeric(Data_df$Nesting.Height)): NAs introduced by
+## coercion</code></pre>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA&#39;s 
+##   11.78   42.34   64.85  480.59  951.38 1950.86     544</code></pre>
+<p>Clearly, something went horribly wrong here. When taking a closer look, the number of 1s is artificially inflated. This is due to the <code>NA</code>s contained within the data set. These are currently stored as characters since they have been entered into the Excel sheet itself. The <code>as.numeric()</code> function transforms these into 1s.</p>
+<p>One way of circumventing this issue is to combine the <code>as.numeric()</code> function with the <code>as.character()</code> function.</p>
+<pre class="r"><code>Data_df$Nesting.Height &lt;- as.numeric(as.character(Data_df$Nesting.Height))</code></pre>
+<pre><code>## Warning: NAs introduced by coercion</code></pre>
+<pre class="r"><code>summary(Data_df$Nesting.Height)</code></pre>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA&#39;s 
+##   11.78   42.34   64.85  480.59  951.38 1950.86     544</code></pre>
+<p>This quite clearly fixed our problems.</p>
+<!-- As can be seen in the histograms below there are now far less erroneously small values. -->
+<!-- ```{r plottingpanesNestingHeight, fig.height=2.75} -->
+<!-- par(mfrow=c(1,2)) # plotting panes as 1 by 2 -->
+<!-- hist(as.numeric(Data_df_base$Nesting.Height), main = "Numeric(Data)", breaks = 100) -->
+<!-- hist(as.numeric(as.character(Data_df_base$Nesting.Height)), main = "Numeric(Character(Data))", breaks = 100) -->
+<!-- ``` -->
+</div>
+</div>
+<div id="number-of-eggs" class="section level3">
+<h3>Number of Eggs</h3>
+<p><strong>Variable Class Expectation:</strong> <code>numeric</code> (no a priori knowledge of levels)</p>
+<div id="identifying-problems-14" class="section level4">
+<h4>Identifying Problems</h4>
+<p>Let’s asses our Number of Eggs records for our <em>Passer domesticus</em> individuals and check whether they behave as expected:</p>
+<pre class="r"><code>class(Data_df$Number.of.Eggs)</code></pre>
+<pre><code>## [1] &quot;character&quot;</code></pre>
+<pre class="r"><code>summary(Data_df$Number.of.Eggs)</code></pre>
+<pre><code>##    Length     Class      Mode 
+##      1067 character character</code></pre>
+<p>One very out of the ordinary record is to be seen.</p>
+</div>
+<div id="fixing-problems-13" class="section level4">
+<h4>Fixing Problems</h4>
+<p>Number of eggs is another variable which should be recorded as <code>numeric</code> and yet is currently stored as character.</p>
+<p>Our first approach to fixing this, again, is using the <code>as.numeric()</code> function.</p>
+<pre class="r"><code>summary(as.numeric(Data_df$Number.of.Eggs))</code></pre>
+<pre><code>## Warning in summary(as.numeric(Data_df$Number.of.Eggs)): NAs introduced by
+## coercion</code></pre>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA&#39;s 
+##   0.000   2.000   3.000   3.746   4.000  10.000     544</code></pre>
+<p>Again, this didn’t do the trick. The number of 1s might be inflated and we expect exactly 544 (number of males) <code>NA</code>s since number of eggs have only been recorded for female house sparrows.</p>
+<p>We already know that improperly stored <code>NA</code> records are prone to causing an inflation of data records of value 1. We also remember that head and tail of our data frame hold different types of <code>NA</code> records. Let’s find out who entered <code>NA</code>s correctly:</p>
+<pre class="r"><code>unique(Data_df$Site[which(is.na(Data_df$Egg.Weight))])</code></pre>
+<pre><code>## character(0)</code></pre>
+<p>The code above identifies the sites at which proper <code>NA</code> recording has been done. The Falkland Isle team did it right (<code>NA</code> fields in Excel were left blank). Fixing this is actually a bit more challenging and so we do the following:</p>
+<pre class="r"><code># make everything into characters
+Data_df$Number.of.Eggs &lt;- as.character(Data_df$Number.of.Eggs) 
+# writing character NA onto actual NAs
+Data_df$Number.of.Eggs[which(is.na(Data_df$Number.of.Eggs))] &lt;- &quot;  NA&quot;
+# make all character NAs into proper NAs
+Data_df$Number.of.Eggs[Data_df$Number.of.Eggs == &quot;  NA&quot;] &lt;- NA 
+# make everything numeric
+Data_df$Number.of.Eggs &lt;- as.numeric(as.character(Data_df$Number.of.Eggs))</code></pre>
+<pre><code>## Warning: NAs introduced by coercion</code></pre>
+<pre class="r"><code>summary(Data_df$Number.of.Eggs)</code></pre>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA&#39;s 
+##   0.000   2.000   3.000   3.746   4.000  10.000     544</code></pre>
+<p>We did it!</p>
+</div>
+</div>
+<div id="egg-weight" class="section level3">
+<h3>Egg Weight</h3>
+<p><strong>Variable Class Expectation:</strong> <code>numeric</code> (another weight measurement that needs to be continuous)</p>
+<div id="identifying-problems-15" class="section level4">
+<h4>Identifying Problems</h4>
+<p>Let’s asses our Egg Weight records for our <em>Passer domesticus</em> individuals and check whether they behave as expected:</p>
+<pre class="r"><code>class(Data_df$Egg.Weight)</code></pre>
+<pre><code>## [1] &quot;character&quot;</code></pre>
+<pre class="r"><code>summary(Data_df$Egg.Weight)</code></pre>
+<pre><code>##    Length     Class      Mode 
+##      1067 character character</code></pre>
+</div>
+<div id="fixing-problems-14" class="section level4">
+<h4>Fixing Problems</h4>
+<p>Egg weight should be recorded as <code>numeric</code> and yet is currently stored as character. Our first approach to fixing this, again, is using the <code>as.numeric()</code> function again.</p>
+<pre class="r"><code>summary(as.numeric(Data_df$Egg.Weight))</code></pre>
+<pre><code>## Warning in summary(as.numeric(Data_df$Egg.Weight)): NAs introduced by coercion</code></pre>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA&#39;s 
+##   1.580   2.340   2.670   2.619   2.890   3.590     590</code></pre>
+<p>Something is wrong here. Not enough <code>NA</code>s are recorded. We expect exactly 590 <code>NA</code>s (Number of males + Number of Females with zero eggs). Additionally, there are way too many 1s.
+Our problem, again, lies with the way the <code>NA</code>s have been entered into the data set from the beginning and so we use the following fix again.</p>
+<pre class="r"><code># make everything into characters
+Data_df$Egg.Weight &lt;- as.character(Data_df$Egg.Weight) 
+# writing character NA onto actual NAs
+Data_df$Egg.Weight[which(is.na(Data_df$Egg.Weight))] &lt;- &quot;  NA&quot; 
+# make all character NAs into proper NAs
+Data_df$Egg.Weight[Data_df$Egg.Weight == &quot;  NA&quot;] &lt;- NA 
+# make everything numeric
+Data_df$Egg.Weight &lt;- as.numeric(as.character(Data_df$Egg.Weight))
+summary(Data_df$Egg.Weight)</code></pre>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA&#39;s 
+##   1.580   2.340   2.670   2.619   2.890   3.590     590</code></pre>
+</div>
+</div>
+<div id="flock" class="section level3">
+<h3>Flock</h3>
+<p><strong>Variable Class Expectation:</strong> <code>factor</code> (each sparrow was assigned to one particular flock)</p>
+<div id="identifying-problems-16" class="section level4">
+<h4>Identifying Problems</h4>
+<p>Let’s asses our Flock records for our <em>Passer domesticus</em> individuals and check whether they behave as expected:</p>
+<pre class="r"><code>class(Data_df$Flock)</code></pre>
+<pre><code>## [1] &quot;character&quot;</code></pre>
+<pre class="r"><code>summary(Data_df$Flock)</code></pre>
+<pre><code>##    Length     Class      Mode 
+##      1067 character character</code></pre>
+<p>Indeed, they do behave just like we’d expect them to.</p>
+</div>
+<div id="fixing-problems-15" class="section level4">
+<h4>Fixing Problems</h4>
+<p>We don’t need to fix anything here.</p>
+</div>
+</div>
+<div id="home-range" class="section level3">
+<h3>Home Range</h3>
+<p><strong>Variable Class Expectation:</strong> <code>factor</code> (three levels: small, medium, large)</p>
+<div id="identifying-problems-17" class="section level4">
+<h4>Identifying Problems</h4>
+<p>Let’s asses our Home Range records for our <em>Passer domesticus</em> individuals and check whether they behave as expected:</p>
+<pre class="r"><code>class(Data_df$Home.Range)</code></pre>
+<pre><code>## [1] &quot;character&quot;</code></pre>
+<pre class="r"><code>summary(Data_df$Home.Range)</code></pre>
+<pre><code>##    Length     Class      Mode 
+##      1067 character character</code></pre>
+<p>Indeed, they do behave just like we’d expect them to.</p>
+</div>
+<div id="fixing-problems-16" class="section level4">
+<h4>Fixing Problems</h4>
+<p>We don’t need to fix anything here.</p>
+</div>
+</div>
+<div id="flock-size" class="section level3">
+<h3>Flock Size</h3>
+<p><strong>Variable Class Expectation:</strong> <code>numeric</code> (continuous measurement of how many sparrows are in each flock - measured as integers)</p>
+<div id="identifying-problems-18" class="section level4">
+<h4>Identifying Problems</h4>
+<p>Let’s asses our Flock Size records for our <em>Passer domesticus</em> individuals and check whether they behave as expected:</p>
+<pre class="r"><code>class(Data_df$Flock.Size)</code></pre>
+<pre><code>## [1] &quot;integer&quot;</code></pre>
+<pre class="r"><code>summary(Data_df$Flock.Size)</code></pre>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##    7.00   16.00   19.00   25.81   31.00   58.00</code></pre>
+<p>Indeed, they do behave just like we’d expect them to.</p>
+</div>
+<div id="fixing-problems-17" class="section level4">
+<h4>Fixing Problems</h4>
+<p>We don’t need to fix anything here.</p>
+</div>
+</div>
+<div id="predator-presence" class="section level3">
+<h3>Predator Presence</h3>
+<p><strong>Variable Class Expectation:</strong> <code>factor</code> (two levels: yes and no)</p>
+<div id="identifying-problems-19" class="section level4">
+<h4>Identifying Problems</h4>
+<p>Let’s asses our Predator Presence records for our <em>Passer domesticus</em> individuals and check whether they behave as expected:</p>
+<pre class="r"><code>class(Data_df$Predator.Presence)</code></pre>
+<pre><code>## [1] &quot;character&quot;</code></pre>
+<pre class="r"><code>summary(Data_df$Predator.Presence)</code></pre>
+<pre><code>##    Length     Class      Mode 
+##      1067 character character</code></pre>
+<p>Indeed, they do behave just like we’d expect them to.</p>
+</div>
+<div id="fixing-problems-18" class="section level4">
+<h4>Fixing Problems</h4>
+<p>We don’t need to fix anything here.</p>
+</div>
+</div>
+<div id="predator-type" class="section level3">
+<h3>Predator Type</h3>
+<p><strong>Variable Class Expectation:</strong> <code>factor</code> (three levels: Avian, Non-Avian, and <code>NA</code>)</p>
+<div id="identifying-problems-20" class="section level4">
+<h4>Identifying Problems</h4>
+<p>Let’s asses our Predator Type records for our <em>Passer domesticus</em> individuals and check whether they behave as expected:</p>
+<pre class="r"><code>class(Data_df$Predator.Type)</code></pre>
+<pre><code>## [1] &quot;character&quot;</code></pre>
+<pre class="r"><code>summary(Data_df$Predator.Type)</code></pre>
+<pre><code>##    Length     Class      Mode 
+##      1067 character character</code></pre>
+<p>Something doesn’t sit well here.</p>
+</div>
+<div id="fixing-problems-19" class="section level4">
+<h4>Fixing Problems</h4>
+<p>Someone got overly eager when recording Predator Type and specified the presence of a hawk instead of taking down “Avian”. We fix this as follows:</p>
+<pre class="r"><code>Data_df$Predator.Type[which(Data_df$Predator.Type == &quot;Hawk&quot;)] &lt;- &quot;Avian&quot;
+summary(Data_df$Predator.Type)</code></pre>
+<pre><code>##    Length     Class      Mode 
+##      1067 character character</code></pre>
+<p>This fixed it but there are still manually entered <code>NA</code> records present which we have to get rid of. These can be fixed easily without altering column classes and simply making use of logic by indexing their dependencies on other column values. The predator type for a data record where predator presence reads “No” has to be <code>NA</code>.</p>
+<pre class="r"><code>Data_df$Predator.Type[which(Data_df$Predator.Presence == &quot;No&quot;)] &lt;- NA 
+Data_df$Predator.Type &lt;- droplevels(factor(Data_df$Predator.Type)) # drop unused factor levels
+summary(Data_df$Predator.Type)# FIXED IT!</code></pre>
+<pre><code>##     Avian Non-Avian      NA&#39;s 
+##       490       220       357</code></pre>
+</div>
+</div>
+<div id="redundant-data" class="section level3">
+<h3>Redundant Data</h3>
+<p>Our data contains redundant columns (i.e.: columns whose data is present in another column already). These are (1) Flock Size (data contained in Flock column) and (2) Flock.Size (data contained in Index column). The fix to this is as easy as removing the columns in question.</p>
+<pre class="r"><code>Data_df &lt;- within(Data_df, rm(Flock.Size, Site))
+dim(Data_df)</code></pre>
+<pre><code>## [1] 1067   18</code></pre>
+<p>Fixed it!</p>
+<p>By doing so, we have gotten rid of our flock size problem stemming from the deletion of a data record. You could also argue that the columns <code>Site</code> and <code>Index</code> are redundant. We keep both for quality-of-life when interpreting our results (make use of <code>Sites</code>) and coding (make use os <code>Index</code>).</p>
+</div>
+</div>
+<div id="saving-the-fixed-data-set" class="section level2">
+<h2>Saving The Fixed Data Set</h2>
+<p>We fixed out entire data set! The data set is now ready for use.</p>
+<p>Keep in mind that the data set I provided you with was relatively clean and real-world messy data sets can be far more difficult to clean up.</p>
+<p>Before going forth, we need to save it. <strong>Attention:</strong> don’t overwrite your initial data file!</p>
+<div id="final-check" class="section level3">
+<h3>Final Check</h3>
+<p>Before exporting you may want to ensure that everything is in order and do a final round of data inspection. This can be achieved by running the automated <code>summary()</code> command from earlier again as follows. I am not including the output here to save some space.</p>
+<pre class="r"><code>for(i in 1:dim(Data_df)[2]){
+  print(colnames(Data_df)[i])
+  print(summary(Data_df[,i]))
+  print(&quot;------------------------------------------------------&quot;)
+}</code></pre>
+<p>Everything checks out. Let’s save our final data frame.</p>
+</div>
+<div id="exporting-the-altered-data" class="section level3">
+<h3>Exporting The Altered Data</h3>
+<p>Since Excel is readily available for viewing data outside of R, I like to save my final data set in excel format as can be seen below. Additionally, I recommend saving your final data frame as an RDS file. These are <code>R</code> specific data files which you will not be able to alter outside of <code>R</code> thus saving yourself from accidentally changing records when only trying to view your data. On top of that, RDS files take up less space than either Excel or TXT files do.</p>
+<pre class="r"><code># saving in excel sheet
+write.csv(Data_df, file = paste(Dir.Data, &quot;/SparrowData_FIXED.csv&quot;, sep=&quot;&quot;))
+# saving as R data frame object
+saveRDS(Data_df, file = paste(Dir.Data, &quot;/1 - Sparrow_Data_READY.rds&quot;, sep=&quot;&quot;)) </code></pre>
+</div>
+</div>

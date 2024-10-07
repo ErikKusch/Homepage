@@ -1,0 +1,293 @@
+---
+title: "Descriptive Statistics"
+subtitle: 'Getting to know the Data'
+author: "Erik Kusch"
+date: "2020-06-10"
+slug: Descriptive Statistics
+categories: [An Introduction to Biostatistics]
+tags: [R, Statistics]
+summary: 'These are the solutions to the exercises contained within the handout to Descriptive Statistics which walks you through the basics of descriptive statistics and its parameters. The analyses presented here are using data from the `StarWars` data set supplied through the `dplyr` package that have been saved as a .csv file.'
+authors: [Erik Kusch]
+lastmod: '2020-06-10'
+featured: no
+projects:
+output:
+  blogdown::html_page:
+    keep_md: true
+    # toc: true
+    # toc_depth: 2
+    # number_sections: false
+    fig_width: 6
+linktitle: 04 - Descriptive Statistics
+menu:
+  example:
+    parent: Sessions 
+    weight: 4
+toc: true
+type: docs
+weight: 4
+---
+
+<script src="/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+<div id="TOC">
+
+</div>
+
+<div id="theory" class="section level1">
+<h1>Theory</h1>
+<p>These are the solutions to the exercises contained within the handout to Descriptive Statistics which walks you through the basics of descriptive statistics and its parameters. The analyses presented here are using data from the <code>StarWars</code> data set supplied through the <code>dplyr</code> package that have been saved as a .csv file. Keep in mind that there is probably a myriad of other ways to reach the same conclusions as presented in these solutions.</p>
+<p>I have prepared some {{&lt; staticref “courses/an-introduction-to-biostatistics/04—Descriptive-Statistics_Handout.html” “newtab” &gt;}} Lecture Slides {{&lt; /staticref &gt;}} for this session.</p>
+<div id="data" class="section level2">
+<h2>Data</h2>
+<p>Find the data for this exercise {{&lt; staticref “courses/an-introduction-to-biostatistics/Data/DescriptiveData.csv” “newtab” &gt;}} here{{&lt; /staticref &gt;}}.</p>
+</div>
+<div id="packages" class="section level2">
+<h2>Packages</h2>
+<p>As you will remember from our lecture slides, the calculation of the mode in <code>R</code> can either be achieved through some intense coding or simply by using the <code>mlv(..., method="mfv")</code> function contained within the <code>modeest</code> package (unfortunately, this package is out of date and can sometimes be challenging to install).</p>
+<p>Conclusively, it is now time for you to get familiar with how packages work in <code>R</code>. Packages are the way by which <code>R</code> is supplied with user-created and moderator-mediated functionality that exceeds the base applicability of <code>R</code>. Many things you will want to accomplish in more advanced statistics is impossible without such packages and even basic tasks such as data visualisation (dealt with in our next seminar) are reliant on <code>R</code> packages.</p>
+<p>If you want to get a package and its functions into <code>R</code> there are two ways we will discuss in the following. In general, it pays to load all packages at the beginning of a coding document before any actual analyses happen (in the preamble) so you get a good overview of what the program is calling upon.</p>
+<div id="basic-preamble" class="section level3">
+<h3>Basic Preamble</h3>
+<p>This is the most basic version of getting packages into <code>R</code> and is widely practised and taught. Unsurprisingly, I am not a big fan of it.</p>
+<p>First, you use function <code>install.packages()</code> to download the desired package off dedicated servers (usually CRAN-mirrors) to your machine where it is then unpacked into a library (a folder that’s located in your documents section by default). Secondly, you need to invoke the <code>library()</code> function to load the <code>R</code> package you need into your active <code>R</code> session. In our case of the package <code>modeest</code> it would look something like this:</p>
+<pre class="r"><code>install.packages(&quot;modeest&quot;)
+library(modeest)</code></pre>
+<p>The reason I am not overly fond of this procedure is that it is clunky, can break easily through spelling mistakes and starts cluttering your preamble super fast if the analyses you are wanting to perform require excessive amounts of packages. Additionally, when you are some place with a bad internet connection you might not want to re-download packages that are already contained on your hard drive.</p>
+</div>
+<div id="advanced-preamble" class="section level3">
+<h3>Advanced Preamble</h3>
+<p>There is a myriad of different preamble styles (just as there are tons of different, personalised coding styles). I am left with presenting my preamble of choice here but I do not claim that this is the most sophisticated one out there.</p>
+<p>The way this preamble works is that it is structured around a user-defined function (something we will touch on later in our seminar series) which first checks whether a package is already downloaded and then installs (if necessary) and/or loads it into <code>R</code>. This function is called <code>install.load.package()</code> and you can see its specification down below (don’t worry if it doesn’t make sense to you yet - it is not supposed to at this point). Unfortunately, it can only ever be applied to one package at a time and so we need a workaround to make it work on multiple packages at once. This can be achieved by establishing a vector of all desired package names (<code>package_vec</code>) and then applying (<code>sapply()</code>) the <code>install.load.package()</code> function to every item of the package name vector iteratively as follows:</p>
+<pre class="r"><code># function to load packages and install them if they haven&#39;t been installed yet
+install.load.package &lt;- function(x) {
+    if (!require(x, character.only = TRUE)) 
+        install.packages(x)
+    require(x, character.only = TRUE)
+}
+# packages to load/install if necessary
+package_vec &lt;- c(&quot;modeest&quot;)
+# applying function install.load.package to all packages specified in package_vec
+sapply(package_vec, install.load.package)</code></pre>
+<pre><code>## Loading required package: modeest</code></pre>
+<pre><code>## modeest 
+##    TRUE</code></pre>
+<p>Why do I prefer this? Firstly, it is way shorter than the basic method when dealing with many packages (which you will get into fast, I promise), reduces the chance for typos by 50% and does not override already installed packages hence speeding up your processing time.</p>
+</div>
+</div>
+<div id="loading-the-excel-data-into-r" class="section level2">
+<h2>Loading the Excel data into <code>R</code></h2>
+<p>Our data is located in the <code>Data</code> folder and is called <code>DescriptiveData.csv</code>. Since it is a .csv file, we can simply use the <code>R</code> in-built function <code>read.csv()</code> to load the data by combining the former two identifiers into one long string with a backslash separating the two (the backslash indicates a step down in the folder hierarchy). Given this argument, <code>read.csv()</code> will produce an object of type <code>data.frame</code> in <code>R</code> which we want to keep in our environment and hence need to assign a name to. In our case, let that name be <code>Data_df</code> (I recommend using endings to your data object names that indicate their type for easier coding without constant type checking):</p>
+<pre class="r"><code>Data_df &lt;- read.csv(&quot;Data/DescriptiveData.csv&quot;)  # load data file from Data folder</code></pre>
+</div>
+<div id="whats-contained-within-our-data" class="section level2">
+<h2>What’s contained within our data?</h2>
+<p>Now that our data set is finally loaded into <code>R</code>, we can finally get to trying to make sense of it. Usually, this shouldn’t ever be something one has to do in <code>R</code> but should be manageable through a project-/data-specific README file (we will cover this in our seminar on hypotheses testing and project planning) but for now we are stuck with pure exploration of our data set. Get your goggles on and let’s dive in!</p>
+<p>Firstly, it always pays to asses the basic attributes of any data object (remember the Introduction to <code>R</code> seminar):</p>
+<ul>
+<li><em>Name</em> - we know the name (it is <code>Data_df</code>) since we named it that<br />
+</li>
+<li><em>Type</em> - we already know that it is a <code>data.frame</code> because we created it using the <code>read.csv</code> function<br />
+</li>
+<li><em>Mode</em> - this is an interesting one as it means having to subset our data frame<br />
+</li>
+<li><em>Dimensions</em> - a crucial information about how many observations and variables are contained within our data set</li>
+</ul>
+<div id="dimensions" class="section level3">
+<h3>Dimensions</h3>
+<p>Let’s start with the <em>dimensions</em> because these will tell us how many <em>modes</em> (these are object attribute modes and not descriptive parameter modes) to asses:</p>
+<pre class="r"><code>dim(Data_df)</code></pre>
+<pre><code>## [1] 87  8</code></pre>
+<p>Using the <code>dim()</code> function, we arrive at the conclusion that our <code>Data_df</code> contains 87 rows and 8 columns. Since data frames are usually ordered as observations <span class="math inline">\(\times\)</span> variables, we can conclude that we have 87 observations and 8 variables at our hands.<br />
+You can arrive at the same point by using the function <code>View()</code> in <code>R</code>. I’m not showing this here because it does not translate well to paper and would make whoever chooses to print this waste paper.</p>
+</div>
+<div id="modes" class="section level3">
+<h3>Modes</h3>
+<p>Now it’s time to get a hang of the <em>modes</em> of the variable records within our data set. To do so, we have two choices, we can either subset the data frame by columns and apply the <code>class()</code> function to each column subset or simply apply the <code>str()</code> function to the data frame object. The reason <code>str()</code> may be favourable in this case is due to the fact that <code>str()</code> automatically breaks down the structure of <code>R</code>-internal objects and hence saves us the sub-setting:</p>
+<pre class="r"><code>str(Data_df)</code></pre>
+<pre><code>## &#39;data.frame&#39;:    87 obs. of  8 variables:
+##  $ name      : chr  &quot;Luke Skywalker&quot; &quot;C-3PO&quot; &quot;R2-D2&quot; &quot;Darth Vader&quot; ...
+##  $ height    : int  172 167 96 202 150 178 165 97 183 182 ...
+##  $ mass      : num  77 75 32 136 49 120 75 32 84 77 ...
+##  $ hair_color: chr  &quot;blond&quot; &quot;&quot; &quot;&quot; &quot;none&quot; ...
+##  $ skin_color: chr  &quot;fair&quot; &quot;gold&quot; &quot;white, blue&quot; &quot;white&quot; ...
+##  $ eye_color : chr  &quot;blue&quot; &quot;yellow&quot; &quot;red&quot; &quot;yellow&quot; ...
+##  $ birth_year: num  19 112 33 41.9 19 52 47 NA 24 57 ...
+##  $ gender    : chr  &quot;male&quot; &quot;&quot; &quot;&quot; &quot;male&quot; ...</code></pre>
+<p>As it turns out, our data frame knows the 8 variables of name, height, mass, hair_color, skin_color, eye_color, birth_year, gender which range from <code>integer</code> to <code>numeric</code> and <code>factor</code> modes.</p>
+</div>
+<div id="data-content" class="section level3">
+<h3>Data Content</h3>
+<p>So what does our data actually tell us? Answering this question usually comes down to some analyses but for now we are only really interested in what kind of information our data frame is storing.</p>
+<p>Again, this would be easiest to asses using a README file or the <code>View()</code> function in <code>R</code>. However, for the sake of brevity we can make due with the following to commands which present the user with the first and last five rows of any respective data frame:</p>
+<pre class="r"><code>head(Data_df)</code></pre>
+<pre><code>##             name height mass  hair_color  skin_color eye_color birth_year
+## 1 Luke Skywalker    172   77       blond        fair      blue       19.0
+## 2          C-3PO    167   75                    gold    yellow      112.0
+## 3          R2-D2     96   32             white, blue       red       33.0
+## 4    Darth Vader    202  136        none       white    yellow       41.9
+## 5    Leia Organa    150   49       brown       light     brown       19.0
+## 6      Owen Lars    178  120 brown, grey       light      blue       52.0
+##   gender
+## 1   male
+## 2       
+## 3       
+## 4   male
+## 5 female
+## 6   male</code></pre>
+<pre class="r"><code>tail(Data_df)</code></pre>
+<pre><code>##              name height mass hair_color skin_color eye_color birth_year gender
+## 82           Finn     NA   NA      black       dark      dark         NA   male
+## 83            Rey     NA   NA      brown      light     hazel         NA female
+## 84    Poe Dameron     NA   NA      brown      light     brown         NA   male
+## 85            BB8     NA   NA       none       none     black         NA   none
+## 86 Captain Phasma     NA   NA    unknown    unknown   unknown         NA female
+## 87  Padmé Amidala    165   45      brown      light     brown         46 female</code></pre>
+<p>The avid reader will surely have picked up on the fact that all the records in the <code>name</code> column of <code>Data_df</code> belong to characters from the Star Wars universe. In fact, this data set is a modified version of the <code>StarWars</code> data set supplied by the <code>dplyr</code> package and contains information of many of the important cast members of the Star Wars movie universe.</p>
+</div>
+</div>
+<div id="parameters-of-descriptive-statistics" class="section level2">
+<h2>Parameters of descriptive statistics</h2>
+<div id="names" class="section level3">
+<h3>Names</h3>
+<p>As it turns out (and should’ve been obvious from the onset if we’re honest), every major character in the cinematic Star Wars Universe has a unique name to themselves. Conclusively, the calculation of any parameters of descriptive statistics makes no sense with the names of our characters for the two following reasons:</p>
+<ul>
+<li>The name variable is of mode character/factor and only allows for the calculation of the mode<br />
+</li>
+<li>Since every name only appears once, there is no mode</li>
+</ul>
+<p>As long as the calculation of descriptive parameters of the <code>name</code> variable of our data set is concerned, Admiral Ackbar said it best: “It’s a trap”.</p>
+</div>
+<div id="height" class="section level3">
+<h3>Height</h3>
+<p>Let’s get started on figuring out some parameters of descriptive statistics for the <code>height</code> variable of our Star Wars characters.</p>
+<div id="subsetting" class="section level4">
+<h4>Subsetting</h4>
+<p>First, we need to extract the data in question from our big data frame object. This can be achieved by indexing through the column name as follows:</p>
+<pre class="r"><code>Height &lt;- Data_df$height</code></pre>
+</div>
+<div id="location-parameters" class="section level4">
+<h4>Location Parameters</h4>
+<p>Now, with our <code>Height</code> vector being the numeric height records of the Star Wars characters in our data set, we are primed to calculate location parameters as follows:</p>
+<pre class="r"><code>mean &lt;- mean(Height, na.rm = TRUE)
+median &lt;- median(Height, na.rm = TRUE)
+mode &lt;- mlv(na.omit(Height), method = &quot;mfv&quot;)
+min &lt;- min(Height, na.rm = TRUE)
+max &lt;- max(Height, na.rm = TRUE)
+range &lt;- max - min
+
+# Combining all location parameters into one vector for easier viewing
+LocPars_vec &lt;- c(mean, median, mode, min, max, range)
+names(LocPars_vec) &lt;- c(&quot;mean&quot;, &quot;median&quot;, &quot;mode&quot;, &quot;minimum&quot;, &quot;maximum&quot;, &quot;range&quot;)
+LocPars_vec</code></pre>
+<pre><code>##    mean  median    mode minimum maximum   range 
+## 174.358 180.000 183.000  66.000 264.000 198.000</code></pre>
+<p>As you can clearly see, there is a big range in the heights of our respective Star Wars characters with mean and median being fairly disjunct due to the outliers in height on especially either end.</p>
+</div>
+<div id="distribution-parameters" class="section level4">
+<h4>Distribution Parameters</h4>
+<p>Now that we are aware of the location parameters of the Star Wars height records, we can move on to the distribution parameters/parameters of spread. Those can be calculated in <code>R</code> as follows:</p>
+<pre class="r"><code>var &lt;- var(Height, na.rm = TRUE)
+sd &lt;- sd(Height, na.rm = TRUE)
+quantiles &lt;- quantile(Height, na.rm = TRUE)
+
+# Combining all location parameters into one vector for easier viewing
+DisPars_vec &lt;- c(var, sd, quantiles)
+names(DisPars_vec) &lt;- c(&quot;var&quot;, &quot;sd&quot;, &quot;0%&quot;, &quot;25%&quot;, &quot;50%&quot;, &quot;75%&quot;, &quot;100%&quot;)
+DisPars_vec</code></pre>
+<pre><code>##        var         sd         0%        25%        50%        75%       100% 
+## 1208.98272   34.77043   66.00000  167.00000  180.00000  191.00000  264.00000</code></pre>
+<p>Notice how some of the quantiles (actually quartiles in this case) link up with some of the parameters of central tendency.</p>
+</div>
+<div id="summary" class="section level4">
+<h4>Summary</h4>
+<p>Just to round this off, have a look at what the <code>summary()</code> function in <code>R</code> supplies you with:</p>
+<pre class="r"><code>summary &lt;- summary(na.omit(Height))
+summary</code></pre>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##    66.0   167.0   180.0   174.4   191.0   264.0</code></pre>
+<p>This is a nice assortment of location and dispersion parameters.</p>
+</div>
+</div>
+<div id="mass" class="section level3">
+<h3>Mass</h3>
+<p>Now let’s focus on the weight of our Star Wars characters.</p>
+<div id="subsetting-1" class="section level4">
+<h4>Subsetting</h4>
+<p>Again, we need to extract our data from the data frame. For the sake of brevity, I will refrain from showing you the rest of the analysis and only present its results to save some space.</p>
+<pre class="r"><code>Mass &lt;- Data_df$mass</code></pre>
+</div>
+<div id="location-parameters-1" class="section level4">
+<h4>Location Parameters</h4>
+<pre><code>##       mean     median       mode    minimum    maximum      range 
+##   97.31186   79.00000   80.00000   15.00000 1358.00000 1343.00000</code></pre>
+<p>As you can see, there is a huge range in weight records of Star Wars characters and especially the outlier on the upper end (1358kg) push the mean towards the upper end of the weight range and away from the median. We’ve got Jabba Desilijic Tiure to thank for that.</p>
+</div>
+<div id="distribution-parameters-1" class="section level4">
+<h4>Distribution Parameters</h4>
+<pre><code>##        var         sd         0%        25%        50%        75%       100% 
+## 28715.7300   169.4572    15.0000    55.6000    79.0000    84.5000  1358.0000</code></pre>
+<p>Quite obviously, the wide range of weight records also prompts a large variance and standard deviation.</p>
+</div>
+</div>
+<div id="hair-color" class="section level3">
+<h3>Hair Color</h3>
+<p>Hair colour in our data set is saved in column 4 of our data set and so when sub-setting the data frame to obtain information about a characters hair colour, instead of calling on <code>Data_df$hair_color</code> we can also do so as follows:</p>
+<pre class="r"><code>HCs &lt;- Data_df[, 4]</code></pre>
+<p>Of course, hair colour is not a <code>numeric</code> variable and much better represent by being of mode <code>factor</code>. Therefore, we are unable to obtain most parameters of descriptive statistics but we can show a frequency count as follows which allows for the calculation of the mode:</p>
+<pre class="r"><code>table(HCs)</code></pre>
+<pre><code>## HCs
+##                      auburn  auburn, grey auburn, white         black 
+##             5             1             1             1            13 
+##         blond        blonde         brown   brown, grey          grey 
+##             3             1            18             1             1 
+##          none       unknown         white 
+##            37             1             4</code></pre>
+</div>
+<div id="eye-colour" class="section level3">
+<h3>Eye Colour</h3>
+<p>Eye colour is another <code>factor</code> mode variable:</p>
+<pre class="r"><code>ECs &lt;- Data_df$eye_color</code></pre>
+<p>We can only calculate the mode by looking for the maximum in our <code>table()</code> output:</p>
+<pre class="r"><code>table(ECs)</code></pre>
+<pre><code>## ECs
+##         black          blue     blue-gray         brown          dark 
+##            10            19             1            21             1 
+##          gold green, yellow         hazel        orange          pink 
+##             1             1             3             8             1 
+##           red     red, blue       unknown         white        yellow 
+##             5             1             3             1            11</code></pre>
+</div>
+<div id="birth-year" class="section level3">
+<h3>Birth Year</h3>
+<div id="subsetting-2" class="section level4">
+<h4>Subsetting</h4>
+<p>As another <code>numeric</code> variable, birth year allows for the calculation of the full range of parameters of descriptive statistics:</p>
+<pre class="r"><code>BY &lt;- Data_df$birth_year</code></pre>
+<p>Keep in mind that StarWars operates on a different time reference scale than we do.</p>
+</div>
+<div id="location-parameters-2" class="section level4">
+<h4>Location Parameters</h4>
+<pre><code>##      mean    median      mode   minimum   maximum     range 
+##  87.56512  52.00000  19.00000   8.00000 896.00000 888.00000</code></pre>
+<p>Again, there is a big disparity here between mean and median which stems from extreme outliers on both ends of the age spectrum (Yoda and Wicket Systri Warrick, respectively).</p>
+</div>
+<div id="distribution-parameters-2" class="section level4">
+<h4>Distribution Parameters</h4>
+<pre><code>##        var         sd         0%        25%        50%        75%       100% 
+## 23929.4414   154.6914     8.0000    35.0000    52.0000    72.0000   896.0000</code></pre>
+<p>Unsurprisingly, there is a big variance and standard deviation for the observed birth year/age records.</p>
+</div>
+</div>
+<div id="gender" class="section level3">
+<h3>Gender</h3>
+<p>Gender is another <code>factor</code> mode variable (obviously):</p>
+<pre class="r"><code>Gender &lt;- Data_df$gender</code></pre>
+<p>We can, again, only judge the mode of our data from the output of the <code>table()</code> function:</p>
+<pre class="r"><code>table(Gender)</code></pre>
+<pre><code>## Gender
+##                      female hermaphrodite          male          none 
+##             3            19             1            62             2</code></pre>
+</div>
+</div>
+</div>
