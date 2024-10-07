@@ -1,0 +1,267 @@
+
+<div id="TOC">
+
+</div>
+
+<!-- # ```{r, sourcing-previous, echo = FALSE} -->
+<!-- # source_rmd <- function(file, local = FALSE, ...){ -->
+<!-- #   options(knitr.duplicate.label = 'allow') -->
+<!-- #  -->
+<!-- #   tempR <- tempfile(tmpdir = ".", fileext = ".R") -->
+<!-- #   on.exit(unlink(tempR)) -->
+<!-- #   knitr::purl(file, output=tempR, quiet = TRUE) -->
+<!-- #  -->
+<!-- #   envir <- globalenv() -->
+<!-- #   source(tempR, local = envir, ...) -->
+<!-- # } -->
+<!-- # source_rmd("krigr-locations.Rmd") -->
+<!-- # ``` -->
+<p>{{% alert danger %}}
+This part of the workshop is meant to give a <strong>very brief</strong> introduction to <code>KrigR</code> and I highly recommend you peruse the rest of the content, too. If you are already committed to going through the more thorough workshop material in the <strong>Workshop</strong> tab on the left, I would recommend skipping this quickstart guide as you will gain more knowledge at a more approachable pace in that more exhaustive part of the material.
+{{% /alert %}}</p>
+<!-- {{% alert danger %}} -->
+<!-- This part of the workshop is dependant on set-up and preparation done previously [here](/courses/krigr/prep/). -->
+<!-- {{% /alert %}} -->
+<div id="pre-krigr-housekeeping" class="section level2">
+<h2>Pre-<code>KrigR</code> Housekeeping</h2>
+<p>Before we can commence the quick start guide, I want to set up a directory structure and prepare some plotting functions to make the rest of the guide run more smoothly.</p>
+<div id="cds-api-credentials" class="section level3">
+<h3>CDS API Credentials</h3>
+<p>As explained in the <a href="courses/krigr/setup/#cds-api-access"><code>KrigR</code> setup</a>, please register your CDS API credentials into your <code>R</code> session like so:</p>
+<pre class="r"><code>API_User &lt;- &quot;youremail@somethingortheother&quot;
+API_Key &lt;- &quot;YourApiKeyGoesHereAsACharacterString&quot;</code></pre>
+</div>
+<div id="setting-up-directories" class="section level3">
+<h3>Setting up Directories</h3>
+<p>For this guide to run in a structured way, we create a folder/directory structure. We create the following directories:</p>
+<ul>
+<li>A <strong>Data</strong> directory for all of our data downloads<br />
+</li>
+<li>A <strong>Covariate</strong> directory for all of our covariate data<br />
+</li>
+<li>An <strong>Exports</strong> directory for all of our Kriging outputs</li>
+</ul>
+<pre class="r"><code>Dir.Base &lt;- getwd() # identifying the current directory
+Dir.Data &lt;- file.path(Dir.Base, &quot;Data&quot;) # folder path for data
+Dir.Covariates &lt;- file.path(Dir.Base, &quot;Covariates&quot;) # folder path for covariates
+Dir.Exports &lt;- file.path(Dir.Base, &quot;Exports&quot;) # folder path for exports
+## create directories, if they don&#39;t exist yet
+Dirs &lt;- sapply(
+  c(Dir.Data, Dir.Covariates, Dir.Exports),
+  function(x) if (!dir.exists(x)) dir.create(x)
+)
+rm(Dirs) # we don&#39;t need to keep the response to directory creation</code></pre>
+</div>
+</div>
+<div id="using-krigr" class="section level2">
+<h2>Using <code>KrigR</code></h2>
+<p>Before we start these exercises, we need to load <code>KrigR</code>:</p>
+<pre class="r"><code>library(KrigR)</code></pre>
+<p>Since <code>KrigR</code> works with <code>terra</code> objects to handle raster data, we may also want to load the <code>terra</code> package at this point:</p>
+<pre class="r"><code>library(terra)</code></pre>
+<p><code>KrigR</code> is conceptualised around a three-step progression through its functionality using the three core functions <code>CDownloadS()</code>, <code>CovariateSetup()</code>, and <code>Kriging()</code>:</p>
+<p><img src="Workflow.png" alt=""  /></p>
+<div id="data-retrieval-handling---cdownloads" class="section level3">
+<h3>Data Retrieval &amp; Handling - <code>CDownloadS()</code></h3>
+<p>Using the <code>CDownloadS()</code> function, you gain access to a number of CDS-hosted data products. More details on how you can find out which data products are supported and how to query them, refer to the <a href="/courses/krigr/meta/">Finding CDS-Hosted Data Products</a> section. For the sake of this quickstart overview of <code>KrigR</code> capabilities, we will execute a very simple call to <code>CDownloadS()</code>. For a deeper understanding of the capabilities of <code>KrigR</code> for CDS-data download and processing, please refer to the <a href="/courses/krigr/cdownloads">Data Retrieval &amp; Handling</a></p>
+<p>The most simple way in which you can run the functions of the <code>KrigR</code> package is by specifying a rectangular bounding box (i.e., an <code>SpatExtent</code>) to specify your study region(s). For this quickstart, we focus on an area covering southern and central Norway:</p>
+<pre class="r"><code>Extent_ext &lt;- ext(c(4.05, 12.95, 58.05, 63.55))
+Extent_ext</code></pre>
+<pre><code>## SpatExtent : 4.05, 12.95, 58.05, 63.55 (xmin, xmax, ymin, ymax)</code></pre>
+<p>Next, you specify, which variable, from which data product, for which time-window you want to obtain and at which temporal resolution. For this part of the workshop, we download air temperature for a three-day interval around 2022-08-18 - when I camped on a mountain flank below Hurrungane facing Fannaråki - the mountain that inspired my relocation to Norway. Loaded with this information, <code>CDownloadS()</code> then executes preliminary checks of validity of your data request, breaks the request into separate chunks if it is too big to be handled by CDS all at once, hands the request to CDS, waits for request completion on CDS followed by data download, spatial limiting, temporal aggregation, and finally, saving of the resulting file to your hard drive.</p>
+<p>{{% alert %}}
+Notice that the downloading of CDS-hosted data may take a short while to start as the download request gets queued with CDS before it is executed. An overview of your CDS requests can be seen <a href="https://cds.climate.copernicus.eu/requests?tab=all">here</a>.
+{{% /alert %}}</p>
+<p>{{% alert danger %}}
+You need to accept the required licences for each data product before download queries are accepted by CDS. You only have to do this once per data product. If licenses haven’t been accepted yet, <code>CDownloadS()</code> terminates with an error message containing the URL to the data product page where you will find a “Terms of use” section under which you need to accept the required license(s).
+{{% /alert %}}</p>
+<pre class="r"><code>## Note that I have already downloaded the QuickStart raw data and CDownloadS() is simply loading this from the disk for me here. Your console output while CDownloadS() is being executed will look differently.
+QuickStart_Raw &lt;- CDownloadS(
+  ## Variable and Data Product
+  Variable = &quot;2m_temperature&quot;, # this is air temperature
+  DataSet = &quot;reanalysis-era5-land&quot;, # data product from which we want to download
+  ## Time-Window
+  DateStart = &quot;2022-08-17&quot;, # date at which time window opens
+  DateStop = &quot;2022-08-19&quot;, # date at which time window terminates
+  TZone = &quot;CET&quot;, # European Central Time to align with our study region
+  ## Temporal Aggregation
+  TResolution = &quot;day&quot;, # we want daily aggregates
+  TStep = 1, # we want aggregates of 1 day each
+  ## Spatial Limiting
+  Extent = Extent_ext, # our rectangular bounding box
+  ## File Storing
+  Dir = Dir.Data, # where to store the data
+  FileName = &quot;QuickStart_Raw&quot;, # what to call the resulting file
+  ## API User Credentials
+  API_User = API_User,
+  API_Key = API_Key
+)</code></pre>
+<pre><code>## ###### CDS Request &amp; Data Download</code></pre>
+<pre><code>## [1] &quot;Building request&quot;
+## [1] &quot;Checking request validity&quot;
+## [1] &quot;A file with the name QuickStart_Raw.nc already exists in C:/Users/erikkus/Documents/Homepage/content/courses/krigr/Data.&quot;
+## [1] &quot;Loading this file for you from the disk.&quot;</code></pre>
+<pre class="r"><code>QuickStart_Raw</code></pre>
+<pre><code>## class       : SpatRaster 
+## dimensions  : 55, 88, 3  (nrow, ncol, nlyr)
+## resolution  : 0.1, 0.1  (x, y)
+## extent      : 4.1, 12.9, 58.1, 63.6  (xmin, xmax, ymin, ymax)
+## coord. ref. : lon/lat Coordinate System imported from GRIB file 
+## source      : QuickStart_Raw.nc 
+## names       : QuickStart_Raw_1, QuickStart_Raw_2, QuickStart_Raw_3 
+## time        : 2022-08-16 to 2022-08-18 CEST</code></pre>
+<p>See how we have obtained a <code>SpatRaster</code> corresponding the three dates we indicated to <code>CDownloadS()</code>? Great! The raw, hourly ERA5-Land data we queried has been aggregated to daily intervals as specified by us. You may also notice that the <code>SpatRaster</code> we obtained has a slightly different extent than what we queried. This is because CDS aligns the data with a data product specific grid. If in doubt on this, simply specify a slightly larger extent than you ultimately need for your study.</p>
+<p>Using the <code>KrigR</code> function <code>Plot.SpatRast()</code>, we can easily visualise the data we just obtained.</p>
+<pre class="r"><code>Plot.SpatRast(QuickStart_Raw)</code></pre>
+<p><img src="/courses/krigr/2%20-%20krigr-quickstart_files/figure-html/ClimExtVis-1.png" width="1440" /></p>
+<p>As you can see the <code>CDownloadS()</code> function updates you on what it is currently working on at each major step. I implemented this to make sure people don’t get too anxious staring at an empty console in <code>R</code>. If this feature is not appealing to you, you can turn this progress tracking off by setting <code>verbose = FALSE</code> in the function call to <code>CDownloadS()</code>.</p>
+<p><code>CDownloadS()</code> also saves metadata pertaining to your download &amp; handling query directly to the final output. While we store all settings of your function call (sans your API credentials), the most relevant metadata appended to your files obtained with <code>CDownloadS()</code> will most likely be the citation command by which to reference this data in your subsequent research outputs. You can retrieve this information as follows:</p>
+<pre class="r"><code>metags(QuickStart_Raw)[&quot;Citation&quot;]</code></pre>
+<pre><code>##                                                                                                                                 Citation 
+## &quot;reanalysis-era5-land data (DOI:10.24381/cds.e2161bac) obtained with KrigR (DOI:10.1088/1748-9326/ac48b3) on 2024-10-04 14:29:18.291047&quot;</code></pre>
+<p>{{% alert success %}}
+More detailed instructions on how to make the most effective use of the <code>CDownloadS()</code> function and ensure you receive the data you require can be found <a href="/courses/krigr/download/">here</a>.
+{{% /alert %}}</p>
+<p>Keep in mind that every function within the <code>KrigR</code> package produces NetCDF (.nc) or TIFF (.tif) files (depending on your specification of the <code>FileExtension</code> argument in <code>CDownloadS()</code>) in the specified directory (<code>Dir</code> argument in the function call) to allow for further manipulation outside of <code>R</code> if necessary (for example, using Panoply).</p>
+</div>
+<div id="downscaling-covariates---covariatesetup" class="section level3">
+<h3>Downscaling Covariates - <code>CovariateSetup()</code></h3>
+<p>Next, we use the <code>CovariateSetup()</code> function which comes with <code>KrigR</code> to obtain elevation data as our covariate of choice. This produces two <code>SpatRasters</code>:</p>
+<ol style="list-style-type: decimal">
+<li>A raster of <strong>training</strong> resolution which matches the input data in all attributes except for the data in each cell.<br />
+</li>
+<li>A raster of <strong>target</strong> resolution which matches the input data as closely as possible in all attributes except for the resolution (which is specified by the user).</li>
+</ol>
+<p>Both of these products are bundled into a <code>list</code> where the first element corresponds to the <em>training</em> resolution and the second element contains the <em>target</em> resolution covariate data. Here, we specify a target resolution of <code>.02</code>.</p>
+<p>{{% alert %}}
+Alternatively to specifying a target resolution, you can specify a different <code>SpatRaster</code> which should be matched in all attributes by the raster at target resolution.
+<!-- This is explained more in-depth in [this part of the workshop](/courses/krigr/third-party).  -->
+{{% /alert %}}</p>
+<pre class="r"><code>## Note that I have already downloaded the global GMTED2010 data with this function prior, your output will show the download itself as well
+Covs_ls &lt;- CovariateSetup(
+  Training = QuickStart_Raw,
+  Target = .02,
+  Dir = Dir.Covariates,
+  Keep_Global = TRUE
+)</code></pre>
+<pre><code>## [1] &quot;GMTED2010 covariate data already downloaded.&quot;</code></pre>
+<pre class="r"><code>Covs_ls</code></pre>
+<pre><code>## $Training
+## class       : SpatRaster 
+## dimensions  : 55, 88, 1  (nrow, ncol, nlyr)
+## resolution  : 0.1, 0.1  (x, y)
+## extent      : 4.1, 12.9, 58.1, 63.6  (xmin, xmax, ymin, ymax)
+## coord. ref. : lon/lat WGS 84 (EPSG:4326) 
+## source      : Covariates_Train.nc 
+## name        : GMTED2010 
+## 
+## $Target
+## class       : SpatRaster 
+## dimensions  : 330, 528, 1  (nrow, ncol, nlyr)
+## resolution  : 0.01666667, 0.01666667  (x, y)
+## extent      : 4.09986, 12.89986, 58.09986, 63.59986  (xmin, xmax, ymin, ymax)
+## coord. ref. : lon/lat WGS 84 (EPSG:4326) 
+## source      : Covariates_Target.nc 
+## name        : GMTED2010</code></pre>
+<p>Again, we can use a <code>KrigR</code> plotting function to easily visualise this data:</p>
+<pre class="r"><code>Plot.Covariates(Covs_ls)</code></pre>
+<p><img src="/courses/krigr/2%20-%20krigr-quickstart_files/figure-html/CovExtViz-1.png" width="1440" /></p>
+<p>{{% alert success %}}
+The <code>CovariateSetup()</code> function can also be used to prepare raster data you already have at hand for use in subsequent Kriging.
+{{% /alert %}}</p>
+</div>
+<div id="statistical-downscaling---kriging" class="section level3">
+<h3>Statistical Downscaling - <code>Kriging()</code></h3>
+<p>Now let’s statistically downscale the data we just obtained with the covariates we just prepared. We do so using the <code>Kriging()</code> function:</p>
+<pre class="r"><code>QuickStart_Krig &lt;- Kriging(
+  Data = QuickStart_Raw, # data we want to krig as a raster object
+  Covariates_training = Covs_ls[[1]], # training covariate as a raster object
+  Covariates_target = Covs_ls[[2]], # target covariate as a raster object
+  Equation = &quot;GMTED2010&quot;, # the covariate(s) we want to use
+  nmax = 40, # degree of localisation
+  Cores = 3, # we want to krig using three cores to speed this process up
+  FileName = &quot;QuickStart_Krig&quot;, # the file name for our full kriging output
+  Dir = Dir.Exports # which directory to save our final input in
+)
+QuickStart_Krig</code></pre>
+<pre><code>## $Prediction
+## class       : SpatRaster 
+## dimensions  : 330, 528, 3  (nrow, ncol, nlyr)
+## resolution  : 0.01666667, 0.01666667  (x, y)
+## extent      : 4.09986, 12.89986, 58.09986, 63.59986  (xmin, xmax, ymin, ymax)
+## coord. ref. : lon/lat Coordinate System imported from GRIB file 
+## source      : QuickStart_Krig_Kriged.nc 
+## varname     : QuickStart_Raw 
+## names       : QuickStart~g_Kriged_1, QuickStart~g_Kriged_2, QuickStart~g_Kriged_3 
+## time        : 2022-08-16 to 2022-08-18 CEST 
+## 
+## $StDev
+## class       : SpatRaster 
+## dimensions  : 330, 528, 3  (nrow, ncol, nlyr)
+## resolution  : 0.01666667, 0.01666667  (x, y)
+## extent      : 4.09986, 12.89986, 58.09986, 63.59986  (xmin, xmax, ymin, ymax)
+## coord. ref. : lon/lat Coordinate System imported from GRIB file 
+## source      : QuickStart_Krig_STDev.nc 
+## varname     : QuickStart_Raw 
+## names       : QuickStart~ig_STDev_1, QuickStart~ig_STDev_2, QuickStart~ig_STDev_3 
+## time        : 2022-08-16 to 2022-08-18 CEST</code></pre>
+<p>This operation took 2 seconds on my machine (this may vary drastically on other devices). There we go. All the data has been downscaled and we do have uncertainties recorded for all of our outputs. Let’s visualise this again with a <code>KrigR</code> function - <code>Plot.Kriged()</code>:</p>
+<pre class="r"><code>Plot.Kriged(QuickStart_Krig)</code></pre>
+<p><img src="/courses/krigr/2%20-%20krigr-quickstart_files/figure-html/KrigExtViz-1.png" width="1440" /></p>
+<p>As you can see, the elevation patterns show up clearly in our kriged air temperature output. Seems like Norway got warmer the day I left camp on August of 2022 - I do remember the night from the 18th to the 19th being the first clear night after a few days of constant cloud cover and it did get cold in my tent that night, but the heat during daytime thereafter seems to have balanced that out and swung the daily average into being a warmer day. Furthermore, you can see that our certainty of Kriging predictions steadily increases towards the 2022-08-18 in comparison to the preceding days. However, do keep in mind that a maximum standard error of 2.84, 1.89, 1.5 (for each layer of our output respectively, and across the sea at that, where there are no topographical variations we can exploit for kriging) on a total range of data of 15.31, 14.8, 14.73 (again, for each layer in the output respectively) is evident of a downscaling result we can be confident in.</p>
+<p>{{% alert %}}
+More detailed instructions on how to make the most effective use of the <code>krigR()</code> function can be found <a href="/courses/krigr/kriging/">here</a>.
+{{% /alert %}}</p>
+<p>{{% alert success %}}
+This concludes the quick start tutorial for <code>KrigR</code>. For more effective use of the <code>KrigR</code> toolbox, I suggest you peruse the rest of the workshop material or use the search function if you have specific queries.
+{{% /alert %}}</p>
+</div>
+</div>
+<div id="session-info" class="section level2">
+<h2>Session Info</h2>
+<pre class="r"><code>sessionInfo()</code></pre>
+<pre><code>## R version 4.4.0 (2024-04-24 ucrt)
+## Platform: x86_64-w64-mingw32/x64
+## Running under: Windows 11 x64 (build 22631)
+## 
+## Matrix products: default
+## 
+## 
+## locale:
+## [1] C
+## 
+## time zone: Europe/Oslo
+## tzcode source: internal
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+## [1] terra_1.7-78 KrigR_0.4.0 
+## 
+## loaded via a namespace (and not attached):
+##  [1] tidyselect_1.2.1   viridisLite_0.4.2  dplyr_1.1.4        farver_2.1.2      
+##  [5] viridis_0.6.5      R.utils_2.12.3     fastmap_1.2.0      reshape_0.8.9     
+##  [9] blogdown_1.19      digest_0.6.37      timechange_0.3.0   lifecycle_1.0.4   
+## [13] sf_1.0-17          magrittr_2.0.3     compiler_4.4.0     rlang_1.1.4       
+## [17] sass_0.4.9         progress_1.2.3     doSNOW_1.0.20      tools_4.4.0       
+## [21] utf8_1.2.4         yaml_2.3.10        knitr_1.48         FNN_1.1.4.1       
+## [25] prettyunits_1.2.0  labeling_0.4.3     sp_2.1-4           classInt_0.4-10   
+## [29] plyr_1.8.9         abind_1.4-8        KernSmooth_2.23-22 R.cache_0.16.0    
+## [33] withr_3.0.1        purrr_1.0.2        R.oo_1.26.0        grid_4.4.0        
+## [37] fansi_1.0.6        xts_0.14.0         e1071_1.7-16       colorspace_2.1-1  
+## [41] ggplot2_3.5.1      scales_1.3.0       iterators_1.0.14   cli_3.6.3         
+## [45] rmarkdown_2.28     crayon_1.5.3       intervals_0.15.5   generics_0.1.3    
+## [49] httr_1.4.7         ncdf4_1.23         DBI_1.2.3          pbapply_1.7-2     
+## [53] cachem_1.1.0       proxy_0.4-27       ecmwfr_2.0.2       stringr_1.5.1     
+## [57] stars_0.6-6        parallel_4.4.0     vctrs_0.6.5        jsonlite_1.8.8    
+## [61] bookdown_0.40      hms_1.1.3          foreach_1.5.2      jquerylib_0.1.4   
+## [65] tidyr_1.3.1        units_0.8-5        snow_0.4-4         glue_1.7.0        
+## [69] codetools_0.2-20   cowplot_1.1.3      gstat_2.1-2        lubridate_1.9.3   
+## [73] stringi_1.8.4      gtable_0.3.5       munsell_0.5.1      tibble_3.2.1      
+## [77] styler_1.10.3      pillar_1.9.0       htmltools_0.5.8.1  R6_2.5.1          
+## [81] automap_1.1-12     evaluate_0.24.0    lattice_0.22-6     highr_0.11        
+## [85] R.methodsS3_1.8.2  memoise_2.0.1      bslib_0.8.0        class_7.3-22      
+## [89] Rcpp_1.0.13        gridExtra_2.3      spacetime_1.3-2    xfun_0.47         
+## [93] zoo_1.8-12         pkgconfig_2.0.3</code></pre>
+</div>

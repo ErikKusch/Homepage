@@ -1,0 +1,63 @@
+---
+title: "The Theory Behind KrigR"
+author: Erik Kusch
+date: '2022-05-26'
+slug: background
+categories:
+  - KrigR
+  - Climate Data
+tags:
+  - Climate Data
+  - Statistical Downscaling
+  - KrigR
+subtitle: ""
+summary: 'Introduction to the theory and considerations of climate reanalyses and statistical downscaling applications.'
+authors: []
+lastmod: '2021-05-26T20:00:00+01:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: 
+output:
+  blogdown::html_page:
+    keep_md: true
+    # toc: true
+    # toc_depth: 1
+    # number_sections: false
+# header-includes:
+#   <script src = "https://polyfill.io/v3/polyfill.min.js?features = es6"></script>
+#   <script id = "MathJax-script" async src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+math: true
+type: docs
+toc: true 
+menu:
+  krigr:
+    parent: Introduction
+    weight: 1
+weight: 1
+---
+
+
+
+## Climate Reanalyses
+
+Climate reanalyses are the go-to data products for climate scientists and represent the best-in-class approximations of climate characteristics across the Earth. 
+
+The accuracy of climate reanalyses is largely owed to the number of observations assimilated, the underlying dynamical model, and the data assimilation methodology. Furthermore, climate reanalyses offer access to a vast array of Essential Climate Variables (ECVs) at unparalleled temporal resolutions. Lastly, as reanalyses are created from multiple models (i.e. ensembles), we can obtain data uncertainty for each data record.
+
+To our mind, this makes climate reanalyses the gold standard in climate data products for use in macroecological analyses.
+
+Please have a look at this presentation for an introduction to climate science:
+<a href="http://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/content/courses/krigr/KrigRClimate.html" target="_blank"><img src="/courses/krigr/climrean.png" width="900" margin-top = "0"/></a>
+
+## The `KrigR` Package
+
+The `KrigR` package has been designed to overcome the major stop-gaps in integrating climate reanalyses data into our research frameworks:  
+
+1. Accessing, downloading, and processing of climate reanalysis data  
+2. Matching spatial resolutions which downstream applications have become used to  
+
+For an introduction to `KrigR` in presentation form, please have a look at this material:
+<a href="http://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/content/courses/krigr/KrigRDemo.html" target="_blank"><img src="/courses/krigr/climrean.png" width="900" border="-20"/></a>

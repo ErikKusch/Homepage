@@ -1,0 +1,107 @@
+---
+title: "Setting up KrigR"
+author: Erik Kusch
+date: '2022-05-26'
+slug: setup
+categories:
+  - KrigR
+  - Climate Data
+tags:
+  - Climate Data
+  - Statistical Downscaling
+  - KrigR
+subtitle: "Hitting the Ground Running with `KrigR`"
+summary: 'Set-up instructions for `KrigR` and preparations for the workshop.'
+authors: []
+lastmod: '2021-05-26T20:00:00+01:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: 
+output:
+  blogdown::html_page:
+    keep_md: true
+    # toc: true
+    # toc_depth: 1
+    # number_sections: false
+# header-includes:
+#   <script src = "https://polyfill.io/v3/polyfill.min.js?features = es6"></script>
+#   <script id = "MathJax-script" async src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+math: true
+type: docs
+toc: true 
+menu:
+  krigr:
+    parent: Quick Start
+    weight: 2
+weight: 2
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, tidy='styler', tidy.opts=list(strict=TRUE), fig.width = 15, fig.height = 8)
+options(width = 90)
+if("devtools" %in% rownames(installed.packages()) == FALSE){ # KrigR check
+  install.packages("devtools")
+}
+if("KrigR" %in% rownames(installed.packages()) == FALSE){ # KrigR check
+  Sys.setenv(R_REMOTES_NO_ERRORS_FROM_WARNINGS="true")
+  # devtools::install_github("https://github.com/ErikKusch/KrigR")
+  devtools::install_github("https://github.com/ErikKusch/KrigR", ref = "Development")
+}
+library(KrigR)
+source("PersonalSettings.r") # I do this here to specify number of cores and API credentials and am thus not sharing this file
+```
+
+<!-- # Setting Things Up & Preparing the Workshop -->
+## Installing `KrigR`
+First of all, we need to install `KrigR`.
+
+<!-- {{% alert info %}} -->
+Until we have implemented our [development ideas and goals](https://github.com/ErikKusch/KrigR/issues?q=is%3Aopen+is%3Aissue+label%3Aenhancement), `KrigR` will not be submitted to [CRAN](https://cran.r-project.org/) to avoid the hassle of updating an already accepted package. For the time being, `KrigR` is only available through the associated [GitHub](https://github.com/ErikKusch/KrigR) repository.
+<!-- {{% /alert %}} -->
+
+Installation of an `R`-Package from GitHub is facilitated via the `devtools` package and its `install_github()` function. Thus, `KrigR` can be installed and loaded as follows:
+
+{{% alert danger %}}
+As `KrigR` is currently undergoing substantial development in response to the establishment of a new CDS and deprecation of previous dependency packages, you have to install the latest development version.
+{{% /alert %}}
+
+```{r InstallKrigR, eval = FALSE}
+devtools::install_github("https://github.com/ErikKusch/KrigR", ref = "Development")
+library(KrigR)
+```
+
+
+## CDS API Access
+
+{{% alert danger %}}
+If you have used `KrigR` or CDS services before 2024-09-16, please be advised that a new CDS has been established and you will need to create a new account and register your new user credentials with `KrigR` to ensure continued use of it.
+{{% /alert %}}
+
+Before you can access [Climate Data Store](https://cds.climate.copernicus.eu/) (CDS) products through `KrigR`, you need to [register an account at CDS](https://accounts.ecmwf.int/auth/realms/ecmwf/login-actions/registration?client_id=cds&tab_id=13GUMw5dlhU). Don't forget to accept the terms and conditions:
+
+<img src="TermsConditions.png" alt=""  />
+
+Once you have created your account, you can find your API credentials on your personal page (which you access by clicking your name in the top-right corner of the webpage) on the CDS webpage:
+
+<img src="APIKEY.png" alt=""  />
+
+Once you have done so, we recommend you register the user ID and API Key as characters as seen below (this will match the naming scheme in our workshop material):
+
+```{r APICredentials, eval = FALSE}
+API_User <- "youremail@somethingortheother"
+API_Key <- "YourApiKeyGoesHereAsACharacterString"
+```
+
+{{% alert success %}}
+You are now **ready** for `KrigR`.
+{{% /alert %}}
+
+If this is your **first contact** with `KrigR`, we recommend strongly you **follow the workshop material in order**. If you **return to** `KrigR` with specific questions or ideas, we recommend you make use of the **search function** at the top left of this page. If you are short on time, the [quick start](/courses/krigr/quickstart/) guide will be useful to you.
+
+<!-- ## Session Info -->
+<!-- ```{r, echo = FALSE} -->
+<!-- sessionInfo() -->
+<!-- ``` -->

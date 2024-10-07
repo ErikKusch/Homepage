@@ -40,7 +40,9 @@ weight: 30
 ---
 
 
-
+<p>{{% alert danger %}}
+<strong><code>KrigR</code> is currently undergoing development. As a result, this part of the workshop has become deprecated. Please refer to the <a href="/courses/krigr/setup/">setup</a> <a href="/courses/krigr/quickstart/">quick guide</a> portions of this material as these are up-to-date. </strong> 
+{{% /alert %}}</p>
 
 
 
