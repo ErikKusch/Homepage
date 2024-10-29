@@ -14,7 +14,7 @@ tags:
 subtitle: "Name Resolving GBIF for Mediated Data"
 summary: 'A quick overview of name resolution with `rgbif`.'
 authors: []
-lastmod: '2023-05-21T20:00:00+01:00'
+lastmod: '2024-11-06T20:00:00+01:00'
 featured: no
 image:
   caption: ''
@@ -41,7 +41,7 @@ weight: 4
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, tidy='styler', tidy.opts=list(strict=TRUE), fig.width = 15, fig.height = 8)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, tidy = "styler", tidy.opts = list(strict = TRUE), fig.width = 15, fig.height = 8)
 options(width = 90)
 source("PersonalSettings.R")
 ```
@@ -51,7 +51,7 @@ source("PersonalSettings.R")
   <summary>Preamble, Package-Loading, and GBIF API Credential Registering (click here):</summary>
 ```{r InstallAdvanced}
 ## Custom install & load function
-install.load.package <- function(x){
+install.load.package <- function(x) {
   if (!require(x, character.only = TRUE)) {
     install.packages(x, repos = "http://cran.us.r-project.org")
   }
@@ -60,9 +60,7 @@ install.load.package <- function(x){
 ## names of packages we want installed (if not installed yet) and loaded
 package_vec <- c(
   "rgbif",
-  "knitr", # for rmarkdown table visualisations
-  "rnaturalearth", # for shapefile access
-  "wicket" # for transforming polygons into wkt format; may have to run: remotes::install_version("wicket", "0.4.0")
+  "knitr" # for rmarkdown table visualisations
 )
 ## executing install & load for each package
 sapply(package_vec, install.load.package)
@@ -87,10 +85,10 @@ Matching between what you require and how GBIF indexes its data is therefore vit
 
 ## Finding the **taxonKeys**
 
-To identify the relevant taxonKeys for our [study organism](/courses/gbif/#study-organism) (*Calluna vulgaris*), we will use the `name_backbone(...)` function to match our binomial species name to the GBIF backbone as follows:
+To identify the relevant taxonKeys for our [study organism](/courses/gbif/#study-organism) (*Lagopus muta*), we will use the `name_backbone(...)` function to match our binomial species name to the GBIF backbone as follows:
 
 ```{r taxonkey}
-sp_name <- "Calluna vulgaris"
+sp_name <- "Lagopus muta"
 sp_backbone <- name_backbone(name = sp_name)
 ```
 Let's look at the output of this function call:
@@ -107,14 +105,14 @@ The data frame / `tibble` returned by the `name_backbone(...)` function contains
   - `r "HIGHERRANK"`: binomial input is not a species-level name, but indexes a higher-rank taxonomic group
   - `r "NONE"`: no match could be made
 
-Let's extract the `usageKey` of *Calluna vulgaris* in the GBIF backbone for later use in this workshop.
+Let's extract the `usageKey` of *Lagopus muta* in the GBIF backbone for later use in this workshop.
 ```{r taxonkey3}
 sp_key <- sp_backbone$usageKey
 sp_key
 ```
 
 {{% alert success %}}
-We now have a unique identifier for *Caluna vulgaris* which we can use to query GBIF for data.
+We now have a unique identifier for *Lagpus muta* which we can use to query GBIF for data.
 {{% /alert %}}
 
 ## Resolving Taxonomic Names
@@ -123,33 +121,41 @@ Not all species identities are as straightforwardly matched to the GBIF backbone
 
 ### Matching Input to Backbone
 
-To widen the backbone matching, we can set `verbose = TRUE` in the `name_backbone(...)` function. Doing so for *Calluna vulgaris*, we obtain the following:
+To widen the backbone matching, we can set `verbose = TRUE` in the `name_backbone(...)` function. Doing so for *Lagopus muta*, we obtain the following:
 ```{r resolving}
 sp_backbone <- name_backbone(name = sp_name, verbose = TRUE)
-knitr::kable(t(sp_backbone))
+knitr::kable(sp_backbone)
 ```
 
-Here, you can see how fuzzy matching has resulted in an erroneous match with a different plant: *Carlina vulgaris* - the thistle - also a neat plant, but not the one we are after here.
+Seems like, even with widened backbone matching, *Lagopus muta* is precise enough of a specification for there to be one direct match.
+
+To demonstrate how this widened backbone matching can result in multiple matches, let's consider *Calluna vulgaris* - the common heather and my favourite plant:
+```{r resolving2}
+sp_backbone2 <- name_backbone(name = "Calluna vulgaris", verbose = TRUE)
+knitr::kable(t(sp_backbone2))
+```
+
+Here, you can see how fuzzy matching has resulted in an erroneous match with a different plant: *Carlina vulgaris* - the thistle - also a neat plant, but not the one I was after here.
 
 ### Competing Name Matches
 
-By horribly misspelling our binomial input, we can coerce an output of `r "HIGHERRANK"` match which now indexes the Genus itself:
-```{r resolving2}
-knitr::kable(name_backbone("Calluna vul",verbose=TRUE))
+By horribly misspelling our binomial input, we can coerce an output of match type `r "FUZZY"` (a match achieved with deviations to the supplied string) or `r "HIGHERRANK"`  (a match indexing the Genus itself):
+```{r resolving3}
+knitr::kable(name_backbone("Lagopus mut", verbose = TRUE))
 ```
 
-To truly see how competing name identifiers can cause us to struggle identifying the correct `usageKey` we must turn away from *Calluna vulgaris*. Instead, let us look at *Glocianus punctiger* - a species of weevil:
-```{r resolving2b}
-knitr::kable(name_backbone("Glocianus punctiger", verbose=TRUE))
+To truly see how competing name identifiers can cause us to struggle identifying the correct `usageKey` we must turn away from *Lagopus muta*. Instead, let us look at *Glocianus punctiger* - a species of weevil:
+```{r resolving3b}
+knitr::kable(name_backbone("Glocianus punctiger", verbose = TRUE))
 ```
 
 Here, we find that there exist two competing identifiers for *Glocianus punctiger* in the GBIF backbone in accordance with their competing descriptors. To query data for all *Glocianus punctiger* records, we should thus always use the keys `r paste(name_backbone("Glocianus punctiger", verbose=TRUE)$usageKey[-1], collapse = " and ")`.
 
 ### Matching Names and Backbone for several Species
 
-The above use of `name_backbone(...)` can be executed for multiple species at once using instead the `name_backbone_checklist(...)` function:
-```{r resolving3}
-checklist_df <- name_backbone_checklist(c(sp_name, "Glocianus punctiger"))
+The above use of `name_backbone(...)` can be executed for multiple species at once using instead the `name_backbone_checklist(...)` function. So let's do so for our target species as well as my favourite plant:
+```{r resolving4}
+checklist_df <- name_backbone_checklist(c(sp_name, "Calluna vulgaris"))
 knitr::kable(checklist_df)
 ```
 
@@ -164,15 +170,18 @@ To catch other commonly used or relevant names for a species of interest, you ca
 sp_suggest <- name_suggest(sp_name)$data
 knitr::kable(t(head(sp_suggest)))
 ```
+
 To trawl GBIF mediated data sets for records of a specific species, one may use the `name_lookup(...)` function:
+
 ```{r}
 sp_lookup <- name_lookup(sp_name)$data
 knitr::kable(head(sp_lookup))
 ```
 
-Here, we see clearly that *Calluna vulgaris* is recorded slightly differently in the datasets mediated by GBIF, but are indexed just fine for GBIF to find them for us.
+Here, we see clearly that *Lagopus muta* is recorded slightly differently in the datasets mediated by GBIF, but are indexed just fine for GBIF to find them for us.
 
 Lastly, to gain a better understanding of the variety of vernacular names by which our species is know, we can use the `name_usage(..., data = "vernacularnames")` function as follows:
+
 ```{r}
 sp_usage <- name_usage(key = sp_key, data = "vernacularNames")$data
 knitr::kable(head(sp_usage))

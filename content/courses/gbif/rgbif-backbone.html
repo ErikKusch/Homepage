@@ -14,7 +14,7 @@ tags:
 subtitle: "Name Resolving GBIF for Mediated Data"
 summary: 'A quick overview of name resolution with `rgbif`.'
 authors: []
-lastmod: '2023-05-21T20:00:00+01:00'
+lastmod: '2024-11-06T20:00:00+01:00'
 featured: no
 image:
   caption: ''
@@ -60,14 +60,12 @@ install.load.package &lt;- function(x) {
 ## names of packages we want installed (if not installed yet) and loaded
 package_vec &lt;- c(
   &quot;rgbif&quot;,
-  &quot;knitr&quot;, # for rmarkdown table visualisations
-  &quot;rnaturalearth&quot;, # for shapefile access
-  &quot;wicket&quot; # for transforming polygons into wkt format; may have to run: remotes::install_version(&quot;wicket&quot;, &quot;0.4.0&quot;)
+  &quot;knitr&quot; # for rmarkdown table visualisations
 )
 ## executing install &amp; load for each package
 sapply(package_vec, install.load.package)</code></pre>
-<pre><code>##         rgbif         knitr rnaturalearth        wicket 
-##          TRUE          TRUE          TRUE          TRUE</code></pre>
+<pre><code>## rgbif knitr 
+##  TRUE  TRUE</code></pre>
 <pre class="r"><code>options(gbif_user = &quot;my gbif username&quot;)
 options(gbif_email = &quot;my registred gbif e-mail&quot;)
 options(gbif_pwd = &quot;my gbif password&quot;)</code></pre>
@@ -81,36 +79,36 @@ GBIF recognises taxonomic units via unique identifiers which are linked to more 
 <p>Matching between what you require and how GBIF indexes its data is therefore vital to ensure you retrieve the data you need accurately and in full. To discover data themselves, we first need to discover their corresponding relevant identifiers.</p>
 <div id="finding-the-taxonkeys" class="section level2">
 <h2>Finding the <strong>taxonKeys</strong></h2>
-<p>To identify the relevant taxonKeys for our <a href="/courses/gbif/#study-organism">study organism</a> (<em>Calluna vulgaris</em>), we will use the <code>name_backbone(...)</code> function to match our binomial species name to the GBIF backbone as follows:</p>
-<pre class="r"><code>sp_name &lt;- &quot;Calluna vulgaris&quot;
+<p>To identify the relevant taxonKeys for our <a href="/courses/gbif/#study-organism">study organism</a> (<em>Lagopus muta</em>), we will use the <code>name_backbone(...)</code> function to match our binomial species name to the GBIF backbone as follows:</p>
+<pre class="r"><code>sp_name &lt;- &quot;Lagopus muta&quot;
 sp_backbone &lt;- name_backbone(name = sp_name)</code></pre>
 <p>Let’s look at the output of this function call:</p>
 <pre class="r"><code>knitr::kable(sp_backbone)</code></pre>
-<table style="width:100%;">
+<table>
 <colgroup>
 <col width="3%" />
-<col width="10%" />
-<col width="6%" />
+<col width="11%" />
+<col width="5%" />
 <col width="3%" />
 <col width="3%" />
+<col width="4%" />
 <col width="4%" />
 <col width="3%" />
 <col width="3%" />
 <col width="4%" />
-<col width="3%" />
-<col width="3%" />
-<col width="3%" />
-<col width="6%" />
-<col width="4%" />
-<col width="3%" />
-<col width="3%" />
-<col width="3%" />
-<col width="3%" />
-<col width="3%" />
 <col width="4%" />
 <col width="3%" />
 <col width="5%" />
-<col width="6%" />
+<col width="4%" />
+<col width="4%" />
+<col width="3%" />
+<col width="3%" />
+<col width="4%" />
+<col width="3%" />
+<col width="4%" />
+<col width="3%" />
+<col width="2%" />
+<col width="5%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -141,29 +139,29 @@ sp_backbone &lt;- name_backbone(name = sp_name)</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="right">2882482</td>
-<td align="left">Calluna vulgaris (L.) Hull</td>
-<td align="left">Calluna vulgaris</td>
+<td align="right">5227679</td>
+<td align="left">Lagopus muta (Montin, 1781)</td>
+<td align="left">Lagopus muta</td>
 <td align="left">SPECIES</td>
 <td align="left">ACCEPTED</td>
-<td align="right">97</td>
+<td align="right">99</td>
 <td align="left">EXACT</td>
-<td align="left">Plantae</td>
-<td align="left">Tracheophyta</td>
-<td align="left">Ericales</td>
-<td align="left">Ericaceae</td>
-<td align="left">Calluna</td>
-<td align="left">Calluna vulgaris</td>
-<td align="right">6</td>
-<td align="right">7707728</td>
-<td align="right">220</td>
-<td align="right">1353</td>
-<td align="right">2505</td>
-<td align="right">2882481</td>
-<td align="right">2882482</td>
+<td align="left">Animalia</td>
+<td align="left">Chordata</td>
+<td align="left">Galliformes</td>
+<td align="left">Phasianidae</td>
+<td align="left">Lagopus</td>
+<td align="left">Lagopus muta</td>
+<td align="right">1</td>
+<td align="right">44</td>
+<td align="right">212</td>
+<td align="right">723</td>
+<td align="right">9331</td>
+<td align="right">2473369</td>
+<td align="right">5227679</td>
 <td align="left">FALSE</td>
-<td align="left">Magnoliopsida</td>
-<td align="left">Calluna vulgaris</td>
+<td align="left">Aves</td>
+<td align="left">Lagopus muta</td>
 </tr>
 </tbody>
 </table>
@@ -178,12 +176,12 @@ sp_backbone &lt;- name_backbone(name = sp_name)</code></pre>
 <li>NONE: no match could be made</li>
 </ul></li>
 </ul>
-<p>Let’s extract the <code>usageKey</code> of <em>Calluna vulgaris</em> in the GBIF backbone for later use in this workshop.</p>
+<p>Let’s extract the <code>usageKey</code> of <em>Lagopus muta</em> in the GBIF backbone for later use in this workshop.</p>
 <pre class="r"><code>sp_key &lt;- sp_backbone$usageKey
 sp_key</code></pre>
-<pre><code>## [1] 2882482</code></pre>
+<pre><code>## [1] 5227679</code></pre>
 <p>{{% alert success %}}
-We now have a unique identifier for <em>Caluna vulgaris</em> which we can use to query GBIF for data.
+We now have a unique identifier for <em>Lagpus muta</em> which we can use to query GBIF for data.
 {{% /alert %}}</p>
 </div>
 <div id="resolving-taxonomic-names" class="section level2">
@@ -191,9 +189,94 @@ We now have a unique identifier for <em>Caluna vulgaris</em> which we can use to
 <p>Not all species identities are as straightforwardly matched to the GBIF backbone and there is more information stored in the GBIF backbone which may be relevant to users. Here, I would like to spend some time delving further into these considerations.</p>
 <div id="matching-input-to-backbone" class="section level3">
 <h3>Matching Input to Backbone</h3>
-<p>To widen the backbone matching, we can set <code>verbose = TRUE</code> in the <code>name_backbone(...)</code> function. Doing so for <em>Calluna vulgaris</em>, we obtain the following:</p>
+<p>To widen the backbone matching, we can set <code>verbose = TRUE</code> in the <code>name_backbone(...)</code> function. Doing so for <em>Lagopus muta</em>, we obtain the following:</p>
 <pre class="r"><code>sp_backbone &lt;- name_backbone(name = sp_name, verbose = TRUE)
-knitr::kable(t(sp_backbone))</code></pre>
+knitr::kable(sp_backbone)</code></pre>
+<table>
+<colgroup>
+<col width="3%" />
+<col width="11%" />
+<col width="5%" />
+<col width="3%" />
+<col width="3%" />
+<col width="4%" />
+<col width="4%" />
+<col width="3%" />
+<col width="3%" />
+<col width="4%" />
+<col width="4%" />
+<col width="3%" />
+<col width="5%" />
+<col width="4%" />
+<col width="4%" />
+<col width="3%" />
+<col width="3%" />
+<col width="4%" />
+<col width="3%" />
+<col width="4%" />
+<col width="3%" />
+<col width="2%" />
+<col width="5%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">usageKey</th>
+<th align="left">scientificName</th>
+<th align="left">canonicalName</th>
+<th align="left">rank</th>
+<th align="left">status</th>
+<th align="right">confidence</th>
+<th align="left">matchType</th>
+<th align="left">kingdom</th>
+<th align="left">phylum</th>
+<th align="left">order</th>
+<th align="left">family</th>
+<th align="left">genus</th>
+<th align="left">species</th>
+<th align="right">kingdomKey</th>
+<th align="right">phylumKey</th>
+<th align="right">classKey</th>
+<th align="right">orderKey</th>
+<th align="right">familyKey</th>
+<th align="right">genusKey</th>
+<th align="right">speciesKey</th>
+<th align="left">synonym</th>
+<th align="left">class</th>
+<th align="left">verbatim_name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">5227679</td>
+<td align="left">Lagopus muta (Montin, 1781)</td>
+<td align="left">Lagopus muta</td>
+<td align="left">SPECIES</td>
+<td align="left">ACCEPTED</td>
+<td align="right">99</td>
+<td align="left">EXACT</td>
+<td align="left">Animalia</td>
+<td align="left">Chordata</td>
+<td align="left">Galliformes</td>
+<td align="left">Phasianidae</td>
+<td align="left">Lagopus</td>
+<td align="left">Lagopus muta</td>
+<td align="right">1</td>
+<td align="right">44</td>
+<td align="right">212</td>
+<td align="right">723</td>
+<td align="right">9331</td>
+<td align="right">2473369</td>
+<td align="right">5227679</td>
+<td align="left">FALSE</td>
+<td align="left">Aves</td>
+<td align="left">Lagopus muta</td>
+</tr>
+</tbody>
+</table>
+<p>Seems like, even with widened backbone matching, <em>Lagopus muta</em> is precise enough of a specification for there to be one direct match.</p>
+<p>To demonstrate how this widened backbone matching can result in multiple matches, let’s consider <em>Calluna vulgaris</em> - the common heather and my favourite plant:</p>
+<pre class="r"><code>sp_backbone2 &lt;- name_backbone(name = &quot;Calluna vulgaris&quot;, verbose = TRUE)
+knitr::kable(t(sp_backbone2))</code></pre>
 <table>
 <colgroup>
 <col width="14%" />
@@ -382,45 +465,47 @@ knitr::kable(t(sp_backbone))</code></pre>
 </tr>
 </tbody>
 </table>
-<p>Here, you can see how fuzzy matching has resulted in an erroneous match with a different plant: <em>Carlina vulgaris</em> - the thistle - also a neat plant, but not the one we are after here.</p>
+<p>Here, you can see how fuzzy matching has resulted in an erroneous match with a different plant: <em>Carlina vulgaris</em> - the thistle - also a neat plant, but not the one I was after here.</p>
 </div>
 <div id="competing-name-matches" class="section level3">
 <h3>Competing Name Matches</h3>
-<p>By horribly misspelling our binomial input, we can coerce an output of HIGHERRANK match which now indexes the Genus itself:</p>
-<pre class="r"><code>knitr::kable(name_backbone(&quot;Calluna vul&quot;, verbose = TRUE))</code></pre>
-<table style="width:100%;">
+<p>By horribly misspelling our binomial input, we can coerce an output of match type FUZZY (a match achieved with deviations to the supplied string) or HIGHERRANK (a match indexing the Genus itself):</p>
+<pre class="r"><code>knitr::kable(name_backbone(&quot;Lagopus mut&quot;, verbose = TRUE))</code></pre>
+<table>
 <colgroup>
 <col width="4%" />
-<col width="7%" />
-<col width="6%" />
+<col width="3%" />
+<col width="3%" />
+<col width="3%" />
+<col width="11%" />
+<col width="5%" />
 <col width="2%" />
-<col width="4%" />
-<col width="5%" />
-<col width="5%" />
 <col width="3%" />
-<col width="5%" />
-<col width="4%" />
-<col width="4%" />
 <col width="3%" />
+<col width="4%" />
+<col width="4%" />
 <col width="5%" />
-<col width="4%" />
-<col width="4%" />
-<col width="4%" />
 <col width="4%" />
 <col width="4%" />
 <col width="3%" />
+<col width="3%" />
+<col width="3%" />
+<col width="3%" />
+<col width="3%" />
+<col width="5%" />
 <col width="6%" />
-<col width="6%" />
+<col width="5%" />
 </colgroup>
 <thead>
 <tr class="header">
+<th align="right">confidence</th>
+<th align="left">matchType</th>
+<th align="left">synonym</th>
 <th align="right">usageKey</th>
 <th align="left">scientificName</th>
 <th align="left">canonicalName</th>
 <th align="left">rank</th>
 <th align="left">status</th>
-<th align="right">confidence</th>
-<th align="left">matchType</th>
 <th align="left">kingdom</th>
 <th align="left">phylum</th>
 <th align="left">order</th>
@@ -432,38 +517,207 @@ knitr::kable(t(sp_backbone))</code></pre>
 <th align="right">orderKey</th>
 <th align="right">familyKey</th>
 <th align="right">genusKey</th>
-<th align="left">synonym</th>
 <th align="left">class</th>
+<th align="right">acceptedUsageKey</th>
 <th align="left">verbatim_name</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="right">2882481</td>
-<td align="left">Calluna Salisb.</td>
-<td align="left">Calluna</td>
+<td align="right">100</td>
+<td align="left">NONE</td>
+<td align="left">FALSE</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left">Lagopus mut</td>
+</tr>
+<tr class="even">
+<td align="right">69</td>
+<td align="left">EXACT</td>
+<td align="left">FALSE</td>
+<td align="right">2473369</td>
+<td align="left">Lagopus Brisson, 1760</td>
+<td align="left">Lagopus</td>
 <td align="left">GENUS</td>
 <td align="left">ACCEPTED</td>
-<td align="right">94</td>
-<td align="left">HIGHERRANK</td>
+<td align="left">Animalia</td>
+<td align="left">Chordata</td>
+<td align="left">Galliformes</td>
+<td align="left">Phasianidae</td>
+<td align="left">Lagopus</td>
+<td align="right">1</td>
+<td align="right">44</td>
+<td align="right">212</td>
+<td align="right">723</td>
+<td align="right">9331</td>
+<td align="right">2473369</td>
+<td align="left">Aves</td>
+<td align="right">NA</td>
+<td align="left">Lagopus mut</td>
+</tr>
+<tr class="odd">
+<td align="right">68</td>
+<td align="left">EXACT</td>
+<td align="left">TRUE</td>
+<td align="right">3233696</td>
+<td align="left">Lagopus (Gren. &amp; Godr.) Fourr.</td>
+<td align="left">Lagopus</td>
+<td align="left">GENUS</td>
+<td align="left">SYNONYM</td>
 <td align="left">Plantae</td>
 <td align="left">Tracheophyta</td>
-<td align="left">Ericales</td>
-<td align="left">Ericaceae</td>
-<td align="left">Calluna</td>
+<td align="left">Lamiales</td>
+<td align="left">Plantaginaceae</td>
+<td align="left">Plantago</td>
 <td align="right">6</td>
 <td align="right">7707728</td>
 <td align="right">220</td>
-<td align="right">1353</td>
-<td align="right">2505</td>
-<td align="right">2882481</td>
-<td align="left">FALSE</td>
+<td align="right">408</td>
+<td align="right">2420</td>
+<td align="right">3189695</td>
 <td align="left">Magnoliopsida</td>
-<td align="left">Calluna vul</td>
+<td align="right">3189695</td>
+<td align="left">Lagopus mut</td>
+</tr>
+<tr class="even">
+<td align="right">68</td>
+<td align="left">EXACT</td>
+<td align="left">TRUE</td>
+<td align="right">3233247</td>
+<td align="left">Lagopus Bernh.</td>
+<td align="left">Lagopus</td>
+<td align="left">GENUS</td>
+<td align="left">SYNONYM</td>
+<td align="left">Plantae</td>
+<td align="left">Tracheophyta</td>
+<td align="left">Fabales</td>
+<td align="left">Fabaceae</td>
+<td align="left">Trifolium</td>
+<td align="right">6</td>
+<td align="right">7707728</td>
+<td align="right">220</td>
+<td align="right">1370</td>
+<td align="right">5386</td>
+<td align="right">2973363</td>
+<td align="left">Magnoliopsida</td>
+<td align="right">2973363</td>
+<td align="left">Lagopus mut</td>
+</tr>
+<tr class="odd">
+<td align="right">68</td>
+<td align="left">EXACT</td>
+<td align="left">TRUE</td>
+<td align="right">8132572</td>
+<td align="left">Lagopus Hill</td>
+<td align="left">Lagopus</td>
+<td align="left">GENUS</td>
+<td align="left">SYNONYM</td>
+<td align="left">Plantae</td>
+<td align="left">Tracheophyta</td>
+<td align="left">Fabales</td>
+<td align="left">Fabaceae</td>
+<td align="left">Trifolium</td>
+<td align="right">6</td>
+<td align="right">7707728</td>
+<td align="right">220</td>
+<td align="right">1370</td>
+<td align="right">5386</td>
+<td align="right">2973363</td>
+<td align="left">Magnoliopsida</td>
+<td align="right">2973363</td>
+<td align="left">Lagopus mut</td>
+</tr>
+<tr class="even">
+<td align="right">68</td>
+<td align="left">EXACT</td>
+<td align="left">TRUE</td>
+<td align="right">6007644</td>
+<td align="left">Lagopus Reichenbach, 1817</td>
+<td align="left">Lagopus</td>
+<td align="left">GENUS</td>
+<td align="left">SYNONYM</td>
+<td align="left">Animalia</td>
+<td align="left">Arthropoda</td>
+<td align="left">Lepidoptera</td>
+<td align="left">Noctuidae</td>
+<td align="left">Callopistria</td>
+<td align="right">1</td>
+<td align="right">54</td>
+<td align="right">216</td>
+<td align="right">797</td>
+<td align="right">7015</td>
+<td align="right">8875134</td>
+<td align="left">Insecta</td>
+<td align="right">8875134</td>
+<td align="left">Lagopus mut</td>
+</tr>
+<tr class="odd">
+<td align="right">43</td>
+<td align="left">FUZZY</td>
+<td align="left">TRUE</td>
+<td align="right">4825684</td>
+<td align="left">Lagomus McEnery, 1859</td>
+<td align="left">Lagomus</td>
+<td align="left">GENUS</td>
+<td align="left">SYNONYM</td>
+<td align="left">Animalia</td>
+<td align="left">Chordata</td>
+<td align="left">Lagomorpha</td>
+<td align="left">Prolagidae</td>
+<td align="left">Prolagus</td>
+<td align="right">1</td>
+<td align="right">44</td>
+<td align="right">359</td>
+<td align="right">785</td>
+<td align="right">5468</td>
+<td align="right">2436678</td>
+<td align="left">Mammalia</td>
+<td align="right">2436678</td>
+<td align="left">Lagopus mut</td>
+</tr>
+<tr class="even">
+<td align="right">38</td>
+<td align="left">FUZZY</td>
+<td align="left">FALSE</td>
+<td align="right">4834660</td>
+<td align="left">Lagodus Pomel, 1852</td>
+<td align="left">Lagodus</td>
+<td align="left">GENUS</td>
+<td align="left">DOUBTFUL</td>
+<td align="left">Animalia</td>
+<td align="left">Chordata</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">Lagodus</td>
+<td align="right">1</td>
+<td align="right">44</td>
+<td align="right">359</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">4834660</td>
+<td align="left">Mammalia</td>
+<td align="right">NA</td>
+<td align="left">Lagopus mut</td>
 </tr>
 </tbody>
 </table>
-<p>To truly see how competing name identifiers can cause us to struggle identifying the correct <code>usageKey</code> we must turn away from <em>Calluna vulgaris</em>. Instead, let us look at <em>Glocianus punctiger</em> - a species of weevil:</p>
+<p>To truly see how competing name identifiers can cause us to struggle identifying the correct <code>usageKey</code> we must turn away from <em>Lagopus muta</em>. Instead, let us look at <em>Glocianus punctiger</em> - a species of weevil:</p>
 <pre class="r"><code>knitr::kable(name_backbone(&quot;Glocianus punctiger&quot;, verbose = TRUE))</code></pre>
 <table>
 <colgroup>
@@ -548,7 +802,7 @@ knitr::kable(t(sp_backbone))</code></pre>
 <td align="left">Glocianus punctiger</td>
 </tr>
 <tr class="even">
-<td align="right">4464480</td>
+<td align="right">11356251</td>
 <td align="left">Glocianus punctiger (C.R.Sahlberg, 1835)</td>
 <td align="left">Glocianus punctiger</td>
 <td align="left">SPECIES</td>
@@ -574,7 +828,7 @@ knitr::kable(t(sp_backbone))</code></pre>
 <td align="left">Glocianus punctiger</td>
 </tr>
 <tr class="odd">
-<td align="right">11356251</td>
+<td align="right">4464480</td>
 <td align="left">Glocianus punctiger (Gyllenhal, 1837)</td>
 <td align="left">Glocianus punctiger</td>
 <td align="left">SPECIES</td>
@@ -601,12 +855,12 @@ knitr::kable(t(sp_backbone))</code></pre>
 </tr>
 </tbody>
 </table>
-<p>Here, we find that there exist two competing identifiers for <em>Glocianus punctiger</em> in the GBIF backbone in accordance with their competing descriptors. To query data for all <em>Glocianus punctiger</em> records, we should thus always use the keys 4464480 and 11356251.</p>
+<p>Here, we find that there exist two competing identifiers for <em>Glocianus punctiger</em> in the GBIF backbone in accordance with their competing descriptors. To query data for all <em>Glocianus punctiger</em> records, we should thus always use the keys 11356251 and 4464480.</p>
 </div>
 <div id="matching-names-and-backbone-for-several-species" class="section level3">
 <h3>Matching Names and Backbone for several Species</h3>
-<p>The above use of <code>name_backbone(...)</code> can be executed for multiple species at once using instead the <code>name_backbone_checklist(...)</code> function:</p>
-<pre class="r"><code>checklist_df &lt;- name_backbone_checklist(c(sp_name, &quot;Glocianus punctiger&quot;))
+<p>The above use of <code>name_backbone(...)</code> can be executed for multiple species at once using instead the <code>name_backbone_checklist(...)</code> function. So let’s do so for our target species as well as my favourite plant:</p>
+<pre class="r"><code>checklist_df &lt;- name_backbone_checklist(c(sp_name, &quot;Calluna vulgaris&quot;))
 knitr::kable(checklist_df)</code></pre>
 <table style="width:100%;">
 <colgroup>
@@ -619,7 +873,7 @@ knitr::kable(checklist_df)</code></pre>
 <col width="3%" />
 <col width="3%" />
 <col width="4%" />
-<col width="3%" />
+<col width="4%" />
 <col width="4%" />
 <col width="2%" />
 <col width="5%" />
@@ -632,7 +886,7 @@ knitr::kable(checklist_df)</code></pre>
 <col width="3%" />
 <col width="2%" />
 <col width="4%" />
-<col width="6%" />
+<col width="5%" />
 <col width="5%" />
 </colgroup>
 <thead>
@@ -665,6 +919,32 @@ knitr::kable(checklist_df)</code></pre>
 </thead>
 <tbody>
 <tr class="odd">
+<td align="right">5227679</td>
+<td align="left">Lagopus muta (Montin, 1781)</td>
+<td align="left">Lagopus muta</td>
+<td align="left">SPECIES</td>
+<td align="left">ACCEPTED</td>
+<td align="right">99</td>
+<td align="left">EXACT</td>
+<td align="left">Animalia</td>
+<td align="left">Chordata</td>
+<td align="left">Galliformes</td>
+<td align="left">Phasianidae</td>
+<td align="left">Lagopus</td>
+<td align="left">Lagopus muta</td>
+<td align="right">1</td>
+<td align="right">44</td>
+<td align="right">212</td>
+<td align="right">723</td>
+<td align="right">9331</td>
+<td align="right">2473369</td>
+<td align="right">5227679</td>
+<td align="left">FALSE</td>
+<td align="left">Aves</td>
+<td align="left">Lagopus muta</td>
+<td align="right">1</td>
+</tr>
+<tr class="even">
 <td align="right">2882482</td>
 <td align="left">Calluna vulgaris (L.) Hull</td>
 <td align="left">Calluna vulgaris</td>
@@ -688,32 +968,6 @@ knitr::kable(checklist_df)</code></pre>
 <td align="left">FALSE</td>
 <td align="left">Magnoliopsida</td>
 <td align="left">Calluna vulgaris</td>
-<td align="right">1</td>
-</tr>
-<tr class="even">
-<td align="right">4239</td>
-<td align="left">Curculionidae</td>
-<td align="left">Curculionidae</td>
-<td align="left">FAMILY</td>
-<td align="left">ACCEPTED</td>
-<td align="right">97</td>
-<td align="left">HIGHERRANK</td>
-<td align="left">Animalia</td>
-<td align="left">Arthropoda</td>
-<td align="left">Coleoptera</td>
-<td align="left">Curculionidae</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="right">1</td>
-<td align="right">54</td>
-<td align="right">216</td>
-<td align="right">1470</td>
-<td align="right">4239</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="left">FALSE</td>
-<td align="left">Insecta</td>
-<td align="left">Glocianus punctiger</td>
 <td align="right">2</td>
 </tr>
 </tbody>
@@ -728,404 +982,421 @@ It is best practise to carefully investigate the match between your binomial inp
 <p>To catch other commonly used or relevant names for a species of interest, you can use the <code>name_suggest(...)</code> function. This is particularly useful when data mining publications or data sets for records which can be grouped to the same species although they might be recorded with different names:</p>
 <pre class="r"><code>sp_suggest &lt;- name_suggest(sp_name)$data
 knitr::kable(t(head(sp_suggest)))</code></pre>
-<table>
+<table style="width:100%;">
 <colgroup>
+<col width="10%" />
 <col width="9%" />
-<col width="11%" />
-<col width="11%" />
-<col width="17%" />
 <col width="16%" />
-<col width="17%" />
+<col width="15%" />
 <col width="16%" />
+<col width="16%" />
+<col width="15%" />
 </colgroup>
 <tbody>
 <tr class="odd">
 <td align="left">key</td>
-<td align="left">2882482</td>
-<td align="left">8208549</td>
-<td align="left">11077703</td>
-<td align="left">7953575</td>
-<td align="left">12164569</td>
-<td align="left">9270560</td>
+<td align="left">5227679</td>
+<td align="left">5227710</td>
+<td align="left">7397817</td>
+<td align="left">5227690</td>
+<td align="left">5227698</td>
+<td align="left">5227695</td>
 </tr>
 <tr class="even">
 <td align="left">canonicalName</td>
-<td align="left">Calluna vulgaris</td>
-<td align="left">Calluna vulgaris</td>
-<td align="left">Calluna vulgaris albiflora</td>
-<td align="left">Calluna vulgaris hirsuta</td>
-<td align="left">Calluna vulgaris pubesens</td>
-<td align="left">Calluna vulgaris hirsuta</td>
+<td align="left">Lagopus muta</td>
+<td align="left">Lagopus muta pyrenaica</td>
+<td align="left">Lagopus muta macruros</td>
+<td align="left">Lagopus muta evermanni</td>
+<td align="left">Lagopus muta atkhensis</td>
+<td align="left">Lagopus muta ridgwayi</td>
 </tr>
 <tr class="odd">
 <td align="left">rank</td>
 <td align="left">SPECIES</td>
-<td align="left">SPECIES</td>
-<td align="left">VARIETY</td>
-<td align="left">VARIETY</td>
-<td align="left">VARIETY</td>
-<td align="left">VARIETY</td>
+<td align="left">SUBSPECIES</td>
+<td align="left">SUBSPECIES</td>
+<td align="left">SUBSPECIES</td>
+<td align="left">SUBSPECIES</td>
+<td align="left">SUBSPECIES</td>
 </tr>
 </tbody>
 </table>
 <p>To trawl GBIF mediated data sets for records of a specific species, one may use the <code>name_lookup(...)</code> function:</p>
 <pre class="r"><code>sp_lookup &lt;- name_lookup(sp_name)$data
 knitr::kable(head(sp_lookup))</code></pre>
-<table>
+<table style="width:100%;">
 <colgroup>
 <col width="2%" />
-<col width="5%" />
+<col width="3%" />
+<col width="1%" />
 <col width="7%" />
 <col width="1%" />
 <col width="2%" />
 <col width="2%" />
 <col width="1%" />
 <col width="2%" />
-<col width="3%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
+<col width="2%" />
 <col width="2%" />
 <col width="3%" />
 <col width="1%" />
+<col width="1%" />
 <col width="3%" />
 <col width="3%" />
-<col width="2%" />
+<col width="1%" />
+<col width="1%" />
+<col width="1%" />
 <col width="4%" />
 <col width="3%" />
 <col width="1%" />
 <col width="1%" />
 <col width="1%" />
-<col width="2%" />
 <col width="1%" />
+<col width="2%" />
 <col width="2%" />
 <col width="3%" />
 <col width="2%" />
 <col width="2%" />
 <col width="2%" />
-<col width="2%" />
-<col width="2%" />
-<col width="2%" />
-<col width="2%" />
 <col width="1%" />
 <col width="2%" />
-<col width="3%" />
-<col width="2%" />
 <col width="1%" />
-<col width="2%" />
-<col width="2%" />
-<col width="1%" />
-<col width="2%" />
 </colgroup>
 <thead>
 <tr class="header">
 <th align="right">key</th>
 <th align="left">scientificName</th>
+<th align="right">nameKey</th>
 <th align="left">datasetKey</th>
 <th align="right">nubKey</th>
 <th align="right">parentKey</th>
 <th align="left">parent</th>
-<th align="left">genus</th>
-<th align="right">genusKey</th>
-<th align="left">canonicalName</th>
-<th align="left">nameType</th>
-<th align="left">taxonomicStatus</th>
-<th align="left">origin</th>
-<th align="right">numDescendants</th>
-<th align="right">numOccurrences</th>
-<th align="left">habitats</th>
-<th align="left">nomenclaturalStatus</th>
-<th align="left">threatStatuses</th>
-<th align="left">synonym</th>
-<th align="right">nameKey</th>
 <th align="left">kingdom</th>
-<th align="left">phylum</th>
 <th align="left">order</th>
 <th align="left">family</th>
 <th align="left">species</th>
 <th align="right">kingdomKey</th>
-<th align="right">phylumKey</th>
 <th align="right">classKey</th>
 <th align="right">orderKey</th>
 <th align="right">familyKey</th>
 <th align="right">speciesKey</th>
+<th align="left">canonicalName</th>
 <th align="left">authorship</th>
+<th align="left">nameType</th>
+<th align="left">taxonomicStatus</th>
 <th align="left">rank</th>
+<th align="left">origin</th>
+<th align="right">numDescendants</th>
+<th align="right">numOccurrences</th>
+<th align="left">taxonID</th>
+<th align="left">extinct</th>
+<th align="left">habitats</th>
+<th align="left">nomenclaturalStatus</th>
+<th align="left">threatStatuses</th>
+<th align="left">synonym</th>
 <th align="left">class</th>
+<th align="left">phylum</th>
+<th align="left">genus</th>
+<th align="right">phylumKey</th>
+<th align="right">genusKey</th>
 <th align="left">constituentKey</th>
+<th align="left">publishedIn</th>
+<th align="left">accordingTo</th>
 <th align="right">acceptedKey</th>
 <th align="left">accepted</th>
-<th align="left">publishedIn</th>
 <th align="right">basionymKey</th>
 <th align="left">basionym</th>
-<th align="left">accordingTo</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="right">164940665</td>
-<td align="left">Calluna vulgaris</td>
-<td align="left">e1fd4493-a11a-438d-a27f-ca3ca5152f6b</td>
-<td align="right">2882482</td>
-<td align="right">209476827</td>
-<td align="left">Calluna</td>
-<td align="left">Calluna</td>
-<td align="right">209476827</td>
-<td align="left">Calluna vulgaris</td>
+<td align="right">133167086</td>
+<td align="left">Lagopus muta</td>
+<td align="right">5972798</td>
+<td align="left">47f16512-bf31-410f-b272-d151c996b2f6</td>
+<td align="right">5227679</td>
+<td align="right">135274878</td>
+<td align="left">Phasianidae</td>
+<td align="left">Animalia</td>
+<td align="left">Galliformes</td>
+<td align="left">Phasianidae</td>
+<td align="left">Lagopus muta</td>
+<td align="right">135274602</td>
+<td align="right">135274603</td>
+<td align="right">135274874</td>
+<td align="right">135274878</td>
+<td align="right">133167086</td>
+<td align="left">Lagopus muta</td>
+<td align="left"></td>
 <td align="left">SCIENTIFIC</td>
 <td align="left">ACCEPTED</td>
+<td align="left">SPECIES</td>
 <td align="left">SOURCE</td>
 <td align="right">0</td>
 <td align="right">0</td>
+<td align="left">1613</td>
+<td align="left">FALSE</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">FALSE</td>
-<td align="right">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
+<td align="left">Aves</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="right">NA</td>
 <td align="right">NA</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="right">NA</td>
 <td align="left">NA</td>
-<td align="left">NA</td>
 <td align="right">NA</td>
-<td align="left">NA</td>
 <td align="left">NA</td>
 </tr>
 <tr class="even">
-<td align="right">164940660</td>
-<td align="left">Calluna vulgaris</td>
-<td align="left">e1fd4493-a11a-438d-a27f-ca3ca5152f6b</td>
-<td align="right">2882482</td>
-<td align="right">209476827</td>
-<td align="left">Calluna</td>
-<td align="left">Calluna</td>
-<td align="right">209476827</td>
-<td align="left">Calluna vulgaris</td>
+<td align="right">114449074</td>
+<td align="left">Lagopus muta</td>
+<td align="right">5972798</td>
+<td align="left">3772da2f-daa1-4f07-a438-15a881a2142c</td>
+<td align="right">5227679</td>
+<td align="right">183207232</td>
+<td align="left">Lagopus</td>
+<td align="left">Animalia</td>
+<td align="left">Galliformes</td>
+<td align="left">Tetraonidae</td>
+<td align="left">NA</td>
+<td align="right">183203277</td>
+<td align="right">183206633</td>
+<td align="right">183207227</td>
+<td align="right">183207228</td>
+<td align="right">NA</td>
+<td align="left">Lagopus muta</td>
+<td align="left"></td>
 <td align="left">SCIENTIFIC</td>
 <td align="left">ACCEPTED</td>
+<td align="left">NA</td>
 <td align="left">SOURCE</td>
 <td align="right">0</td>
 <td align="right">0</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
 <td align="left">FALSE</td>
-<td align="right">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="left">NA</td>
+<td align="left">Aves</td>
+<td align="left">Chordata</td>
+<td align="left">Lagopus</td>
+<td align="right">183205906</td>
+<td align="right">183207232</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="right">NA</td>
 <td align="left">NA</td>
-<td align="left">NA</td>
 <td align="right">NA</td>
-<td align="left">NA</td>
 <td align="left">NA</td>
 </tr>
 <tr class="odd">
-<td align="right">164940666</td>
-<td align="left">Calluna vulgaris</td>
-<td align="left">e1fd4493-a11a-438d-a27f-ca3ca5152f6b</td>
-<td align="right">2882482</td>
-<td align="right">209476827</td>
-<td align="left">Calluna</td>
-<td align="left">Calluna</td>
-<td align="right">209476827</td>
-<td align="left">Calluna vulgaris</td>
+<td align="right">104151733</td>
+<td align="left">Lagopus muta</td>
+<td align="right">NA</td>
+<td align="left">fab88965-e69d-4491-a04d-e3198b626e52</td>
+<td align="right">5227679</td>
+<td align="right">104151714</td>
+<td align="left">Lagopus</td>
+<td align="left">Metazoa</td>
+<td align="left">Galliformes</td>
+<td align="left">Phasianidae</td>
+<td align="left">Lagopus muta</td>
+<td align="right">103832354</td>
+<td align="right">104106614</td>
+<td align="right">104149839</td>
+<td align="right">104150497</td>
+<td align="right">104151733</td>
+<td align="left">Lagopus muta</td>
+<td align="left">NA</td>
 <td align="left">SCIENTIFIC</td>
 <td align="left">ACCEPTED</td>
+<td align="left">SPECIES</td>
 <td align="left">SOURCE</td>
 <td align="right">0</td>
 <td align="right">0</td>
+<td align="left">64668</td>
+<td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">FALSE</td>
-<td align="right">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="left">NA</td>
+<td align="left">Aves</td>
+<td align="left">Chordata</td>
+<td align="left">Lagopus</td>
+<td align="right">103882489</td>
+<td align="right">104151714</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="right">NA</td>
 <td align="left">NA</td>
-<td align="left">NA</td>
 <td align="right">NA</td>
-<td align="left">NA</td>
 <td align="left">NA</td>
 </tr>
 <tr class="even">
-<td align="right">100222089</td>
-<td align="left">Calluna vulgaris</td>
-<td align="left">b351a324-77c4-41c9-a909-f30f77268bc4</td>
-<td align="right">2882482</td>
-<td align="right">NA</td>
+<td align="right">100160233</td>
+<td align="left">Lagopus muta</td>
+<td align="right">5972798</td>
+<td align="left">d7435f14-dfc9-4aaa-bef3-5d1ed22d65bf</td>
+<td align="right">5227679</td>
+<td align="right">128727594</td>
+<td align="left">Lagopus</td>
+<td align="left">Animalia</td>
 <td align="left">NA</td>
-<td align="left">NA</td>
+<td align="left">Phasianidae</td>
+<td align="left">Lagopus muta</td>
+<td align="right">128725468</td>
+<td align="right">128725469</td>
 <td align="right">NA</td>
-<td align="left">Calluna vulgaris</td>
+<td align="right">128727593</td>
+<td align="right">100160233</td>
+<td align="left">Lagopus muta</td>
+<td align="left"></td>
 <td align="left">SCIENTIFIC</td>
 <td align="left">ACCEPTED</td>
+<td align="left">SPECIES</td>
 <td align="left">SOURCE</td>
 <td align="right">0</td>
 <td align="right">0</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
 <td align="left">FALSE</td>
-<td align="right">NA</td>
+<td align="left">Aves</td>
 <td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
+<td align="left">Lagopus</td>
 <td align="right">NA</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="right">NA</td>
-<td align="left">NA</td>
+<td align="right">128727594</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="right">NA</td>
 <td align="left">NA</td>
-<td align="left">NA</td>
 <td align="right">NA</td>
-<td align="left">NA</td>
 <td align="left">NA</td>
 </tr>
 <tr class="odd">
-<td align="right">162496909</td>
-<td align="left">Calluna vulgaris (L.) Hull</td>
-<td align="left">15147db1-27c3-49b5-9c69-c78d55a4b8ff</td>
-<td align="right">2882482</td>
-<td align="right">201308749</td>
-<td align="left">Ericaceae</td>
-<td align="left">NA</td>
+<td align="right">123212008</td>
+<td align="left">Lagopus muta</td>
+<td align="right">5972798</td>
+<td align="left">a5dd063e-f45b-4a54-8b94-8fa3adf7f1e1</td>
+<td align="right">5227679</td>
+<td align="right">167183824</td>
+<td align="left">Phasianidae</td>
+<td align="left">Animalia</td>
+<td align="left">Galliformes</td>
+<td align="left">Phasianidae</td>
+<td align="left">Lagopus muta</td>
+<td align="right">167183684</td>
 <td align="right">NA</td>
-<td align="left">Calluna vulgaris</td>
+<td align="right">167183822</td>
+<td align="right">167183824</td>
+<td align="right">123212008</td>
+<td align="left">Lagopus muta</td>
+<td align="left"></td>
 <td align="left">SCIENTIFIC</td>
 <td align="left">ACCEPTED</td>
+<td align="left">SPECIES</td>
 <td align="left">SOURCE</td>
 <td align="right">0</td>
 <td align="right">0</td>
-<td align="left">TERRESTRIAL</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">FALSE</td>
-<td align="right">1843465</td>
-<td align="left">Plantae</td>
-<td align="left">Tracheophyta</td>
-<td align="left">Ericales</td>
-<td align="left">Ericaceae</td>
-<td align="left">Calluna vulgaris</td>
-<td align="right">201308187</td>
-<td align="right">201308188</td>
-<td align="right">201308206</td>
-<td align="right">201308743</td>
-<td align="right">201308749</td>
-<td align="right">162496909</td>
-<td align="left">(L.) Hull</td>
-<td align="left">SPECIES</td>
-<td align="left">Magnoliopsida</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
 <td align="left">NA</td>
 <td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="right">NA</td>
 <td align="left">NA</td>
+<td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
 <tr class="even">
-<td align="right">196388823</td>
-<td align="left">Calluna vulgaris (L.) Hull</td>
-<td align="left">b95e74e0-b772-430c-a729-9d56ce0182e2</td>
-<td align="right">2882482</td>
-<td align="right">201288386</td>
-<td align="left">Ericaceae</td>
-<td align="left">NA</td>
-<td align="right">NA</td>
-<td align="left">Calluna vulgaris</td>
+<td align="right">177659687</td>
+<td align="left">Lagopus muta</td>
+<td align="right">5972798</td>
+<td align="left">6b6b2923-0a10-4708-b170-5b7c611aceef</td>
+<td align="right">5227679</td>
+<td align="right">177659682</td>
+<td align="left">Lagopus</td>
+<td align="left">Metazoa</td>
+<td align="left">Galliformes</td>
+<td align="left">Phasianidae</td>
+<td align="left">Lagopus muta</td>
+<td align="right">177651702</td>
+<td align="right">177656782</td>
+<td align="right">177659367</td>
+<td align="right">177659587</td>
+<td align="right">177659687</td>
+<td align="left">Lagopus muta</td>
+<td align="left"></td>
 <td align="left">SCIENTIFIC</td>
 <td align="left">ACCEPTED</td>
+<td align="left">SPECIES</td>
 <td align="left">SOURCE</td>
+<td align="right">4</td>
 <td align="right">0</td>
-<td align="right">0</td>
-<td align="left">TERRESTRIAL</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">FALSE</td>
-<td align="right">1843465</td>
-<td align="left">Plantae</td>
-<td align="left">Tracheophyta</td>
-<td align="left">Ericales</td>
-<td align="left">Ericaceae</td>
-<td align="left">Calluna vulgaris</td>
-<td align="right">201288193</td>
-<td align="right">201288216</td>
-<td align="right">201288343</td>
-<td align="right">201288379</td>
-<td align="right">201288386</td>
-<td align="right">196388823</td>
-<td align="left">(L.) Hull</td>
-<td align="left">SPECIES</td>
-<td align="left">Magnoliopsida</td>
+<td align="left">Aves</td>
+<td align="left">Chordata</td>
+<td align="left">Lagopus</td>
+<td align="right">177654008</td>
+<td align="right">177659682</td>
 <td align="left">NA</td>
-<td align="right">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 <td align="right">NA</td>
 <td align="left">NA</td>
+<td align="right">NA</td>
 <td align="left">NA</td>
 </tr>
 </tbody>
 </table>
-<p>Here, we see clearly that <em>Calluna vulgaris</em> is recorded slightly differently in the datasets mediated by GBIF, but are indexed just fine for GBIF to find them for us.</p>
+<p>Here, we see clearly that <em>Lagopus muta</em> is recorded slightly differently in the datasets mediated by GBIF, but are indexed just fine for GBIF to find them for us.</p>
 <p>Lastly, to gain a better understanding of the variety of vernacular names by which our species is know, we can use the <code>name_usage(..., data = "vernacularnames")</code> function as follows:</p>
 <pre class="r"><code>sp_usage &lt;- name_usage(key = sp_key, data = &quot;vernacularNames&quot;)$data
 knitr::kable(head(sp_usage))</code></pre>
 <table>
 <colgroup>
-<col width="5%" />
-<col width="9%" />
-<col width="5%" />
-<col width="60%" />
-<col width="9%" />
+<col width="6%" />
+<col width="11%" />
+<col width="6%" />
+<col width="50%" />
+<col width="10%" />
 <col width="5%" />
 <col width="3%" />
+<col width="6%" />
 </colgroup>
 <thead>
 <tr class="header">
@@ -1136,60 +1407,67 @@ knitr::kable(head(sp_usage))</code></pre>
 <th align="right">sourceTaxonKey</th>
 <th align="left">country</th>
 <th align="left">area</th>
+<th align="left">preferred</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td align="right">2882482</td>
-<td align="left">Besenheide</td>
-<td align="left"></td>
-<td align="left">Catalogue of Life Checklist</td>
-<td align="right">171596574</td>
+<td align="right">5227679</td>
+<td align="left">Alpenschneehuhn</td>
+<td align="left">deu</td>
+<td align="left">Multilingual IOC World Bird List, v11.2</td>
+<td align="right">123212008</td>
+<td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 </tr>
 <tr class="even">
-<td align="right">2882482</td>
-<td align="left">Besenheide</td>
+<td align="right">5227679</td>
+<td align="left">Alpenschneehuhn</td>
 <td align="left">deu</td>
-<td align="left">Taxon list of vascular plants from Bavaria, Germany compiled in the context of the BFL project</td>
-<td align="right">116794811</td>
+<td align="left">Taxon list of animals with German names (worldwide) compiled at the SMNS</td>
+<td align="right">116803956</td>
 <td align="left">DE</td>
 <td align="left">NA</td>
+<td align="left">NA</td>
 </tr>
 <tr class="odd">
-<td align="right">2882482</td>
-<td align="left">Callune</td>
-<td align="left">fra</td>
-<td align="left">DAISIE - Inventory of alien invasive species in Europe</td>
-<td align="right">159511353</td>
+<td align="right">5227679</td>
+<td align="left">Alpenschneehuhn</td>
+<td align="left">deu</td>
+<td align="left">EUNIS Biodiversity Database</td>
+<td align="right">101137652</td>
+<td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 </tr>
 <tr class="even">
-<td align="right">2882482</td>
-<td align="left">Heather</td>
-<td align="left"></td>
-<td align="left">Catalogue of Life Checklist</td>
-<td align="right">171596574</td>
+<td align="right">5227679</td>
+<td align="left">Alpensneeuwhoen</td>
+<td align="left">nld</td>
+<td align="left">EUNIS Biodiversity Database</td>
+<td align="right">101137652</td>
+<td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 </tr>
 <tr class="odd">
-<td align="right">2882482</td>
-<td align="left">Heather</td>
-<td align="left">eng</td>
-<td align="left">Checklist of Vermont Species</td>
-<td align="right">160786202</td>
-<td align="left">US</td>
+<td align="right">5227679</td>
+<td align="left">Alpensneeuwhoen</td>
+<td align="left">nld</td>
+<td align="left">Multilingual IOC World Bird List, v11.2</td>
+<td align="right">123212008</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
 <td align="left">NA</td>
 </tr>
 <tr class="even">
-<td align="right">2882482</td>
-<td align="left">Heather</td>
-<td align="left">eng</td>
-<td align="left">Martha’s Vineyard species checklist</td>
-<td align="right">202603884</td>
+<td align="right">5227679</td>
+<td align="left">Fjeldrype</td>
+<td align="left">dan</td>
+<td align="left">Multilingual IOC World Bird List, v11.2</td>
+<td align="right">123212008</td>
+<td align="left">NA</td>
 <td align="left">NA</td>
 <td align="left">NA</td>
 </tr>

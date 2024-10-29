@@ -14,7 +14,7 @@ tags:
 subtitle: "Referencing GBIF Mediated Data"
 summary: 'A quick overview of data retrieval with `rgbif`.'
 authors: []
-lastmod: '2023-05-21T20:00:00+01:00'
+lastmod: '2023-11-06T20:00:00+01:00'
 featured: no
 image:
   caption: ''
@@ -41,7 +41,7 @@ weight: 8
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, tidy='styler', tidy.opts=list(strict=TRUE), fig.width = 15, fig.height = 8)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, tidy = "styler", tidy.opts = list(strict = TRUE), fig.width = 15, fig.height = 8)
 options(width = 90)
 source("PersonalSettings.R")
 # htmlwidgets::onStaticRenderComplete('$.each( document.getElementsByTagName("svg"), function( index, value ){value.setAttribute("viewBox", null);});')
@@ -52,7 +52,7 @@ source("PersonalSettings.R")
   <summary>Preamble, Package-Loading, and GBIF API Credential Registering (click here):</summary>
 ```{r InstallAdvanced}
 ## Custom install & load function
-install.load.package <- function(x){
+install.load.package <- function(x) {
   if (!require(x, character.only = TRUE)) {
     install.packages(x, repos = "http://cran.us.r-project.org")
   }
@@ -76,47 +76,54 @@ options(gbif_pwd = "my gbif password")
 
 First, we obtain and load the data use for our publication like such:
 ```{r, echo = FALSE}
-if(file.exists(file.path(getwd(), "registereddownload.RData"))){
+sp_name <- "Lagopus muta"
+sp_backbone <- name_backbone(name = sp_name)
+sp_key <- sp_backbone$usageKey
+if (file.exists(file.path(getwd(), "registereddownload.RData"))) {
   load(file.path(getwd(), "registereddownload.RData"))
-}else{
+} else {
   res <- occ_download(
-  pred("taxonKey", sp_key),
-  pred_in("basisOfRecord", c('HUMAN_OBSERVATION')),
-  pred("country", "NO"),
-  pred_gte("year", 2000),
-  pred_lte("year", 2022)
-)
+    pred("taxonKey", sp_key),
+    pred_in("basisOfRecord", c("HUMAN_OBSERVATION")),
+    pred("country", "NO"),
+    pred_gte("year", 2000),
+    pred_lte("year", 2020)
+  )
   save(res, file = "registereddownload.RData")
 }
 res_meta <- occ_download_wait(res, status_ping = 5, curlopts = list(), quiet = FALSE)
 res_get <- occ_download_get(res)
 res_data <- occ_download_import(res_get)
 # Limiting data according to quality control
-preci_data <- res_data[which(res_data$coordinateUncertaintyInMeters < 10), ]
+preci_data <- res_data[which(res_data$coordinateUncertaintyInMeters < 200), ]
 # Subsetting data for desired variables and data markers
-data_subset <- preci_data[ ,
-                        c("scientificName", "decimalLongitude","decimalLatitude", "basisOfRecord", "year", "month", "day", "eventDate", "countryCode", "municipality", "taxonKey", "species", "catalogNumber", "hasGeospatialIssues", "hasCoordinate", "datasetKey")]
+data_subset <- preci_data[
+  ,
+  c("scientificName", "decimalLongitude", "decimalLatitude", "basisOfRecord", "year", "month", "day", "eventDate", "countryCode", "municipality", "taxonKey", "species", "catalogNumber", "hasGeospatialIssues", "hasCoordinate", "datasetKey")
+]
 ```
 
 ```{r searchandgetkey, eval=FALSE}
 # Download query
 res <- occ_download(
   pred("taxonKey", sp_key),
-  pred_in("basisOfRecord", c('HUMAN_OBSERVATION')),
+  pred_in("basisOfRecord", c("HUMAN_OBSERVATION")),
   pred("country", "NO"),
   pred("hasCoordinate", TRUE),
   pred_gte("year", 2000),
-  pred_lte("year", 2022)
+  pred_lte("year", 2020)
 )
 # Downloading and Loading
 res_meta <- occ_download_wait(res, status_ping = 5, curlopts = list(), quiet = FALSE)
 res_get <- occ_download_get(res)
 res_data <- occ_download_import(res_get)
 # Limiting data according to quality control
-preci_data <- res_data[which(res_data$coordinateUncertaintyInMeters < 10), ]
+preci_data <- res_data[which(res_data$coordinateUncertaintyInMeters < 200), ]
 # Subsetting data for desired variables and data markers
-data_subset <- preci_data[ ,
-                        c("scientificName", "decimalLongitude","decimalLatitude", "basisOfRecord", "year", "month", "day", "eventDate", "countryCode", "municipality", "taxonKey", "species", "catalogNumber", "hasGeospatialIssues", "hasCoordinate", "datasetKey")]
+data_subset <- preci_data[
+  ,
+  c("scientificName", "decimalLongitude", "decimalLatitude", "basisOfRecord", "year", "month", "day", "eventDate", "countryCode", "municipality", "taxonKey", "species", "catalogNumber", "hasGeospatialIssues", "hasCoordinate", "datasetKey")
+]
 ```
 
 Now all we need to worry about is properly accrediting data sources to make our data usage fair and reproducible.
@@ -131,7 +138,7 @@ Much like previous steps of this workshop, identifying the correct citation for 
 
 To figure out how to reference a GBIF mediated set of data records you may head to the [download tab](https://www.gbif.org/user/download) of the GBIF portal where, once in the detailed overview of an individual download job, you will find proper accrediation instructions right at the top:
 
-<img src="/courses/gbif/gbif-download4.png" width="100%"/></a>
+<img src="/courses/gbif/gbif-download4.jpeg" width="100%"/></a>
 
 I would like to caution against this practise as the download tab can become a bit cluttered when having a long history of asking GBIF for similar downloads.
 
@@ -143,11 +150,8 @@ This is the **preferred way of figuring out correct GBIF mediated data citation*
 
 To avoid the pitfalls of manual data citation discovery, `rgbif` download metadata make available to us directly a DOI which can be used for refrencing our data:
 
-```{r citation, eval=FALSE}
+```{r citation}
 paste("GBIF Occurrence Download", occ_download_meta(res)$doi, "accessed via GBIF.org on", Sys.Date())
-```
-```
-## [1] "GBIF Occurrence Download 10.15468/dl.awgk9s accessed via GBIF.org on 2023-05-22"
 ```
 
 With this, you are ready to reference the data you use.
@@ -168,7 +172,7 @@ For our purposes, we have used a heavily subsetted data download - just look at 
 ggplot(data.frame(
   Records = c(nrow(data_subset), nrow(res_data)),
   Data = c("Subset", "Original")
-  ), aes (y = Data, x = Records)) +
+), aes(y = Data, x = Records)) +
   geom_bar(stat = "identity", fill = "#4f004e") +
   theme_bw(base_size = 12)
 ```
@@ -190,26 +194,37 @@ length(unique(data_subset$datasetKey))
 ```
 
 There is a signifcant decrease in number of datasets which make up our final data product post-subsetting. Let us visualise how the data records are spread across the individual datasets per data product we have handled:
+
 ```{r}
 ## Originally downloaded abundances per dataset
 plot_data <- data.frame(table(res_data$datasetKey))
-ggplot(plot_data, 
-       aes(x = factor(Var1, levels = plot_data$Var1[order(plot_data$Freq, decreasing = TRUE)]), 
-           y = Freq))+
-  geom_col(color='black',fill='forestgreen') +
-  labs(y = "Abundance", x = "Dataset", 
-       title = paste0("Originally downloaded abundances per dataset (", occ_download_meta(res)$doi, ")")) + 
+ggplot(
+  plot_data,
+  aes(
+    x = factor(Var1, levels = plot_data$Var1[order(plot_data$Freq, decreasing = TRUE)]),
+    y = Freq
+  )
+) +
+  geom_col(color = "black", fill = "forestgreen") +
+  labs(
+    y = "Abundance", x = "Dataset",
+    title = paste0("Originally downloaded abundances per dataset (", occ_download_meta(res)$doi, ")")
+  ) +
   theme_bw(base_size = 21) +
-  theme(axis.text.x=element_blank(), axis.ticks.x=element_blank())
+  theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
 ## Subsetted abundances per dataset
 plot_subset <- data.frame(table(data_subset$datasetKey))
-ggplot(plot_subset, 
-       aes(x = factor(Var1, levels = plot_subset$Var1[order(plot_subset$Freq, decreasing = TRUE)]), 
-           y = Freq))+
-  geom_col(color='black',fill='darkred') +
+ggplot(
+  plot_subset,
+  aes(
+    x = factor(Var1, levels = plot_subset$Var1[order(plot_subset$Freq, decreasing = TRUE)]),
+    y = Freq
+  )
+) +
+  geom_col(color = "black", fill = "darkred") +
   labs(y = "Abundance", x = "Dataset", title = "Subsetted abundances per dataset") +
   theme_bw(base_size = 21) +
-  theme(axis.text.x=element_blank(), axis.ticks.x=element_blank())
+  theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())
 ```
 
 Subsequently, to prepare a potential query to GBIF to establish a derived data set for us, we can tabulate the counts of records per dataset key as follows:

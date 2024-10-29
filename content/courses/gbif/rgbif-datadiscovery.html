@@ -14,7 +14,7 @@ tags:
 subtitle: "Searching and Finding GBIF Mediated Data"
 summary: 'A quick overview of data discovery with `rgbif`.'
 authors: []
-lastmod: '2023-05-21T20:00:00+01:00'
+lastmod: '2024-11-06T20:00:00+01:00'
 featured: no
 image:
   caption: ''
@@ -80,21 +80,21 @@ options(gbif_email = &quot;my registred gbif e-mail&quot;)
 options(gbif_pwd = &quot;my gbif password&quot;)</code></pre>
 </details>
 <p>{{% /alert %}}</p>
-<p>First, we need to register the correct <strong>usageKey</strong> for <em>Calluna vulgaris</em>:</p>
-<pre class="r"><code>sp_name &lt;- &quot;Calluna vulgaris&quot;
+<p>First, we need to register the correct <strong>usageKey</strong> for <em>Lagopus muta</em>:</p>
+<pre class="r"><code>sp_name &lt;- &quot;Lagopus muta&quot;
 sp_backbone &lt;- name_backbone(name = sp_name)
 sp_key &lt;- sp_backbone$usageKey</code></pre>
 <p>With usageKey in hand, we are now ready to discover relevant data for our study needs. Doing so is a complex task mediated through rigurous metadata standards on GBIF.</p>
 <p>{{% alert danger %}}
 GBIF hosts tons of data. Finding the right subset thereof can be difficult.
 {{% /alert %}}</p>
-<p>Data on GBIF is indexed according to the <a href="https://dwc.tdwg.org/list/">Darwin Core Standard</a>. Any discovery of data can be augmented by matching terms of the Darwin Core with desired subset characteristics. Here, I will show how we can build an increasingly complex query for <em>Calluna vulgaris</em> records.</p>
+<p>Data on GBIF is indexed according to the <a href="https://dwc.tdwg.org/list/">Darwin Core Standard</a>. Any discovery of data can be augmented by matching terms of the Darwin Core with desired subset characteristics. Here, I will show how we can build an increasingly complex query for <em>Lagopus muta</em> records.</p>
 <p>At base, we will start with the functions <code>occc_count(...)</code> and <code>occ_search(...)</code>:</p>
 <pre class="r"><code>occ_count(taxonKey = sp_key)</code></pre>
-<pre><code>## [1] 882471</code></pre>
+<pre><code>## [1] 107525</code></pre>
 <pre class="r"><code>occ_search(taxonKey = sp_key, limit = 0)$meta$count</code></pre>
-<pre><code>## [1] 882471</code></pre>
-<p>Using both of these, we obtain the same output of <span class="math inline">\(8.82471\times 10^{5}\)</span> <em>Calluna vulgaris</em> records mediated by GBIF. Note that this number will likely be higher for you as data is continually added to the GBIF indexing and this document here is frozen in time (it was last updated on 2023-05-24).</p>
+<pre><code>## [1] 107525</code></pre>
+<p>Using both of these, we obtain the same output of <span class="math inline">\(1.07525\times 10^{5}\)</span> <em>Lagopus muta</em> records mediated by GBIF. Note that this number will likely be higher for you as data is continually added to the GBIF indexing and this document here is frozen in time (it was last updated on 2024-10-29).</p>
 <p>{{% alert warning %}}
 When wanting to discover data matching Darwin Core Terms with multiple characteristics, these can be fed to the <code>occ_search(...)</code> function as strings with semicolons separating desired characteristics (e.g., <code>year = "2000;2001"</code>).
 {{% /alert %}}</p>
@@ -105,11 +105,11 @@ By default, discovery of data through GBIF considers the entire Earth. However, 
 {{% /alert %}}</p>
 <div id="by-country-code" class="section level3">
 <h3>By Country Code</h3>
-<p>First, let’s limit our search by a specific region. In this case, we are interested in occurrences of <em>Calluna vulgaris</em> across Norway. Countries are indexed according to ISO2 names (two-letter codes, see <code>enumeration_country()</code>):</p>
+<p>First, let’s limit our search by a specific region. In this case, we are interested in occurrences of <em>Lagopus muta</em> across Norway. Countries are indexed according to ISO2 names (two-letter codes, see <code>enumeration_country()</code>):</p>
 <pre class="r"><code>occ_NO &lt;- occ_search(taxonKey = sp_key, country = &quot;NO&quot;)
 occ_NO$meta$count</code></pre>
-<pre><code>## [1] 36503</code></pre>
-Here is how <em>Caluna vulgaris</em> records are distributed across countries according to GBIF on 2023-05-24:
+<pre><code>## [1] 17015</code></pre>
+Here is how <em>Lagopus muta</em> records are distributed across countries according to GBIF on 2024-10-29:
 <details>
 <summary>
 Click here for code necessary to create the figure below.
@@ -164,14 +164,14 @@ SN &lt;- sankeyNetwork(
 )
 networkD3::saveNetwork(network = SN, file = &quot;SankeyCountry.html&quot;, selfcontained = TRUE)</code></pre>
 </details>
-<iframe seamless width="100%" height="600px" src="/courses/gbif/SankeyCountry.html" title="Sankey diagram of Calluna vulgaris records by country">
+<iframe seamless width="100%" height="600px" src="/courses/gbif/SankeyCountry.html" title="Sankey diagram of Lagopus muta records by country">
 </iframe>
-<p>As it turns out, roughly 4.14% of <em>Calluna vulgaris</em> records mediated by GBIF fall within Norway.</p>
+<p>As it turns out, roughly 15.82% of <em>Lagopus muta</em> records mediated by GBIF fall within Norway.</p>
 </div>
 <div id="by-shapefile-polygon" class="section level3">
 <h3>By Shapefile / Polygon</h3>
 <p>Oftentimes, you won’t be interested in occurrences according to a specific country, but rather a specific area on Earth as identified through a shapefile. To demonstrate data discovery by shapefile, let’s obtain the shapefile for Norway from <a href="https://www.naturalearthdata.com/">naturalearth</a>:</p>
-<pre class="r"><code>NO_shp &lt;- rnaturalearth::ne_countries(country = &quot;Norway&quot;, scale = 110, returnclass = &quot;sf&quot;)</code></pre>
+<pre class="r"><code>NO_shp &lt;- rnaturalearth::ne_countries(country = &quot;Norway&quot;, scale = &quot;small&quot;, returnclass = &quot;sf&quot;)[, 1] # I am extracting only the first column for ease of use, I don&#39;t need additional information</code></pre>
 <p>This shapefile subsequently looks like this:</p>
 <details>
 <summary>
@@ -184,14 +184,27 @@ saveWidget(shape_leaflet, &quot;leaflet_shape.html&quot;, selfcontained = TRUE)<
 </details>
 <iframe width="100%" height="600px" src="/courses/gbif/leaflet_shape.html">
 </iframe>
+<p>Let’s focus on just continental Norway:</p>
+<pre class="r"><code>NO_shp &lt;- st_crop(NO_shp, xmin = 4.98, xmax = 31.3, ymin = 58, ymax = 71.14)</code></pre>
+<details>
+<summary>
+Click here for code necessary to create the figure below.
+</summary>
+<pre class="r"><code>shape_leaflet &lt;- leaflet(NO_shp) %&gt;%
+  addTiles() %&gt;%
+  addPolygons(col = &quot;red&quot;)
+saveWidget(shape_leaflet, &quot;leaflet_shapeCrop.html&quot;, selfcontained = TRUE)</code></pre>
+</details>
+<iframe width="100%" height="600px" src="/courses/gbif/leaflet_shapeCrop.html">
+</iframe>
 <p>Unfortunately, <code>rgbif</code> prefers to be told about shapefiles in Well Known Text (WKT) format so we need to reformat our polygon data frame obtained above. We do so like such:</p>
 <pre class="r"><code>NO_wkt &lt;- st_as_text(st_geometry(NO_shp))</code></pre>
 <p>We can now pass this information into the <code>occ_search(...)</code> function using the <code>geometry</code> argument:</p>
 <pre class="r"><code>occ_wkt &lt;- occ_search(taxonKey = sp_key, geometry = NO_wkt)
 occ_wkt$meta$count</code></pre>
-<pre><code>## [1] 29070</code></pre>
-<p>Finally, we find that there are fewer records available when using the shapefile for data discovery. Why would that be? In this case, you will find that we are using a pretty coarse shapefile for Norway which probably cuts off some obersvations of <em>Calluna vulgaris</em> that do belong rightfully into Norway.</p>
-<!-- When searching for data by country code (or continent code for that matter), the returned data need not necessarily contain coordinates so long as a record is assigned to the relevant country code. While all records whose coordinates fall within a certain country are assigned the corresponding country code, not all records with a country code have coordinates attached. Additionally, the polygon defintion used by GBIF may be different to the one used by naturalearth. -->
+<pre><code>## [1] 14739</code></pre>
+<p>Finally, we find that there are fewer records available when using the shapefile for data discovery. Why would that be? In this case, you will find that we are using a pretty coarse shapefile for Norway which probably cuts off some obersvations of <em>Lagopus muta</em> that do belong rightfully into Norway.</p>
+<p>When searching for data by country code (or continent code for that matter), the returned data need not necessarily contain coordinates so long as a record is assigned to the relevant country code. While all records whose coordinates fall within a certain country are assigned the corresponding country code, not all records with a country code have coordinates attached. Additionally, the polygon defintion used by GBIF may be different to the one used by naturalearth.</p>
 </div>
 </div>
 <div id="by-time-frame" class="section level2">
@@ -201,14 +214,14 @@ By default, discovery of data through GBIF considers records obtained at any tim
 {{% /alert %}}</p>
 <div id="single-year" class="section level3">
 <h3>Single-Year</h3>
-<p>When interested in a single year or month of records being obtained, we can use the <code>year</code> and <code>month</code> arguments, respectively. Both take numeric inputs. Here, we are just looking at occurrences of <em>Caluna vulgaris</em> throughout the year 2022:</p>
+<p>When interested in a single year or month of records being obtained, we can use the <code>year</code> and <code>month</code> arguments, respectively. Both take numeric inputs. Here, we are just looking at occurrences of <em>Lagopus muta</em> throughout the year 2020:</p>
 <pre class="r"><code>occ_year &lt;- occ_search(
   taxonKey = sp_key,
   country = &quot;NO&quot;,
-  year = 2022
+  year = 2020
 )
 occ_year$meta$count</code></pre>
-<pre><code>## [1] 2545</code></pre>
+<pre><code>## [1] 1031</code></pre>
 </div>
 <div id="time-window" class="section level3">
 <h3>Time-Window</h3>
@@ -216,27 +229,27 @@ occ_year$meta$count</code></pre>
 <pre class="r"><code>occ_window &lt;- occ_search(
   taxonKey = sp_key,
   country = &quot;NO&quot;,
-  year = 2000:2022
+  year = 2000:2020
 )</code></pre>
 <p>This returns a list of discovered data with each list element corresponding to one year worth of data. To sum up how many records are available in the time-window we thus need to run the following:</p>
 <pre class="r"><code>sum(unlist(lapply(occ_window, FUN = function(x) {
   x$meta$count
 })))</code></pre>
-<pre><code>## [1] 24748</code></pre>
+<pre><code>## [1] 10866</code></pre>
 <p>Using the <code>occ_count(...)</code> is easier in this example:</p>
 <pre class="r"><code>occ_count(
   taxonKey = sp_key,
   country = &quot;NO&quot;,
-  year = &quot;2000,2022&quot;
+  year = &quot;2000,2020&quot;
 )</code></pre>
-<pre><code>## [1] 24748</code></pre>
+<pre><code>## [1] 10866</code></pre>
 Through time, the number of records develops like this:
 <details>
 <summary>
 Click here for code necessary to create the figure below.
 </summary>
 <pre class="r"><code>plot_df &lt;- data.frame(
-  Year = 2000:2022,
+  Year = 2000:2020,
   Records = unlist(lapply(occ_window, FUN = function(x) {
     x$meta$count
   })),
@@ -253,7 +266,7 @@ ggplot(data = plot_df, aes(x = as.factor(Year), y = Cumulative)) +
     values = c(&quot;black&quot; = &quot;black&quot;, &quot;forestgreen&quot; = &quot;forestgreen&quot;), labels = c(&quot;Cumulative Total&quot;, &quot;New per Year&quot;)
   ) +
   theme(legend.position = c(0.15, 0.8), legend.key.size = unit(2, &quot;cm&quot;), legend.text = element_text(size = 20), legend.title = element_text(size = 25)) +
-  labs(x = &quot;Year&quot;, y = &quot;Records of Caluna vulgaris throughout Norway starting 2000&quot;)</code></pre>
+  labs(x = &quot;Year&quot;, y = &quot;Records of Lagopus muta throughout Norway starting 2000&quot;)</code></pre>
 </details>
 <p><img src="/courses/gbif/rgbif-datadiscovery_files/figure-html/Time-1.png" width="100%" /></p>
 </div>
@@ -265,24 +278,24 @@ Records indexed by GBIF can come from multiple sources of recording. Some may be
 {{% /alert %}}</p>
 <div id="human-observation" class="section level3">
 <h3>Human Observation</h3>
-<p>First, let’s look at <em>Caluna vulgaris</em> occurrences identified by human observation:</p>
+<p>First, let’s look at <em>Lagopus muta</em> occurrences identified by human observation:</p>
 <pre class="r"><code>occ_human &lt;- occ_search(
   taxonKey = sp_key,
   country = &quot;NO&quot;,
-  year = 2022,
+  year = 2020,
   basisOfRecord = &quot;HUMAN_OBSERVATION&quot;
 )
 occ_human$meta$count</code></pre>
-<pre><code>## [1] 2543</code></pre>
-<p>These account for 99.92% of all <em>Caluna vulgaris</em> observations in Norway throughout the year 2022. So, what might be the basis of record for the remaining 2 records?</p>
+<pre><code>## [1] 1021</code></pre>
+<p>These account for 99.03% of all <em>Lagopus muta</em> observations in Norway throughout the year 2020. So, what might be the basis of record for the remaining 10 records?</p>
 </div>
 <div id="preserved-specimen" class="section level3">
 <h3>Preserved Specimen</h3>
-<p>As it turns out, the remaining 2 records are based on preserved specimen:</p>
+<p>As it turns out, the remaining 10 records are based on preserved specimen:</p>
 <pre class="r"><code>occ_preserved &lt;- occ_search(
   taxonKey = sp_key,
   country = &quot;NO&quot;,
-  year = 2022,
+  year = 2020,
   basisOfRecord = &quot;PRESERVED_SPECIMEN&quot;
 )
 occ_preserved$meta$count</code></pre>
@@ -303,7 +316,7 @@ occ_preserved$meta$count</code></pre>
 <li>“PRESERVED_SPECIMEN”.</li>
 <li>“OCCURRENCE”.</li>
 </ul>
-Per country containing records of <em>Caluna vulgaris</em>, the data split ends up looking like this:
+Per country containing records of <em>Lagopus muta</em>, the data split ends up looking like this:
 <details>
 <summary>
 Click here for code necessary to create the figure below.
@@ -378,7 +391,7 @@ SN &lt;- sankeyNetwork(
 )
 networkD3::saveNetwork(network = SN, file = &quot;SankeyBasis.html&quot;, selfcontained = TRUE)</code></pre>
 </details>
-<iframe seamless width="100%" height="600px" src="/courses/gbif/SankeyBasis.html" title="Sankey diagram of Calluna vulgaris records by country and basis of record">
+<iframe seamless width="100%" height="600px" src="/courses/gbif/SankeyBasis.html" title="Sankey diagram of Lagopus muta records by country and basis of record">
 </iframe>
 <p>As should be plain to see from the list above, there exists some ambiguity in regards to which basis of record may apply to any single occurrence record. It is thus always best to carefully examine on which basis of record research projects should be based.</p>
 </div>
@@ -395,12 +408,12 @@ networkD3::saveNetwork(network = SN, file = &quot;SankeyBasis.html&quot;, selfco
 <pre class="r"><code>occ_present &lt;- occ_search(
   taxonKey = sp_key,
   country = &quot;NO&quot;,
-  year = 2022,
+  year = 2020,
   basisOfRecord = &quot;HUMAN_OBSERVATION&quot;,
   occurrenceStatus = &quot;PRESENT&quot;
 )
 occ_present$meta$count</code></pre>
-<pre><code>## [1] 2543</code></pre>
+<pre><code>## [1] 1021</code></pre>
 <p>Well, that is all of them.</p>
 </div>
 <div id="absent" class="section level3">
@@ -409,20 +422,20 @@ occ_present$meta$count</code></pre>
 <pre class="r"><code>occ_absent &lt;- occ_search(
   taxonKey = sp_key,
   country = &quot;NO&quot;,
-  year = 2022,
+  year = 2020,
   basisOfRecord = &quot;HUMAN_OBSERVATION&quot;,
   occurrenceStatus = &quot;ABSENT&quot;
 )
 occ_absent$meta$count</code></pre>
 <pre><code>## [1] 0</code></pre>
 <p>That is indeed true.</p>
-<p>Are there even any records of absences of <em>Caluna vulgaris</em>? Let’s check:</p>
+<p>Are there even any records of absences of <em>Lagopus muta</em>? Let’s check:</p>
 <pre class="r"><code>occ_absent &lt;- occ_search(
   taxonKey = sp_key,
   occurrenceStatus = &quot;ABSENT&quot;
 )
 occ_absent$meta$count</code></pre>
-<pre><code>## [1] 1220</code></pre>
+<pre><code>## [1] 2316</code></pre>
 <p>Yes, there are, but there are far fewer reported absences than presences.</p>
 <p>Let me visualise this one final time on a country-by-country basis:</p>
 <details>
@@ -479,7 +492,7 @@ SN &lt;- sankeyNetwork(
 networkD3::saveNetwork(network = SN, file = &quot;SankeyFinal.html&quot;, selfcontained = TRUE)</code></pre>
 <p><img src="/courses/gbif/SankeyFinal.png" width="900"/></a></p>
 </details>
-<iframe seamless width="100%" height="600px" src="/courses/gbif/SankeyFinal.html" title="Sankey diagram of Calluna vulgaris records by country and basis of record and whether presence or absence is recorded">
+<iframe seamless width="100%" height="600px" src="/courses/gbif/SankeyFinal.html" title="Sankey diagram of Lagopus muta records by country and basis of record and whether presence or absence is recorded">
 </iframe>
 <p><strong>Note for Firefox users:</strong> Sankey diagrams are contained in a viewbox which scales poorly on Firefox. You can open this webpage in a different browser to avoid this issue. Alternatively, I have included a .png of this particular diagram in the code-fold above it.</p>
 </div>
@@ -487,14 +500,14 @@ networkD3::saveNetwork(network = SN, file = &quot;SankeyFinal.html&quot;, selfco
 <div id="data-discovery-beyond-counts" class="section level2">
 <h2>Data Discovery Beyond Counts</h2>
 <p>The <code>occ_search(...)</code> function is useful for much more than “just” finding out how many GBIF mediated records fit your requirements.</p>
-<p>Let me demonstrate the richness of the output returned by <code>occ_search(...)</code> with a simple example of <em>Calluna vulgaris</em> focussed on Norway:</p>
+<p>Let me demonstrate the richness of the output returned by <code>occ_search(...)</code> with a simple example of <em>Lagopus muta</em> focussed on Norway:</p>
 <pre class="r"><code>occ_meta &lt;- occ_search(taxonKey = sp_key, country = &quot;NO&quot;)</code></pre>
 <p>Now let’s look at the structure of this object:</p>
 <pre class="r"><code>str(occ_meta, max.level = 1)</code></pre>
 <pre><code>## List of 5
 ##  $ meta     :List of 4
 ##  $ hierarchy:List of 1
-##  $ data     : tibble [500 × 92] (S3: tbl_df/tbl/data.frame)
+##  $ data     : tibble [500 × 111] (S3: tbl_df/tbl/data.frame)
 ##  $ media    :List of 500
 ##  $ facets   : Named list()
 ##  - attr(*, &quot;class&quot;)= chr &quot;gbif&quot;
@@ -521,11 +534,11 @@ You are now <strong>ready</strong> to discover any data you require through <cod
 </div>
 <div id="building-a-final-data-discovery-query" class="section level2">
 <h2>Building a Final Data Discovery Query</h2>
-<p>To facilitate the rest of this workshop, let’s assume we are interested in all records of <em>Calluna vulgaris</em> across Norway which have been made by humans and found our study organism to be present between and including 2000 and 2022.</p>
+<p>To facilitate the rest of this workshop, let’s assume we are interested in all records of <em>Lagopus muta</em> across Norway which have been made by humans and found our study organism to be present between and including 2000 and 2020.</p>
 <pre class="r"><code>occ_final &lt;- occ_search(
   taxonKey = sp_key,
   country = &quot;NO&quot;,
-  year = &quot;2000,2022&quot;,
+  year = &quot;2000,2020&quot;,
   facet = c(&quot;year&quot;), # facetting by year will break up the occurrence record counts
   year.facetLimit = 23, # this must either be the same number as facets needed or larger
   basisOfRecord = &quot;HUMAN_OBSERVATION&quot;,
@@ -534,9 +547,7 @@ You are now <strong>ready</strong> to discover any data you require through <cod
 knitr::kable(t(occ_final$facet$year))</code></pre>
 <table style="width:100%;">
 <colgroup>
-<col width="4%" />
-<col width="4%" />
-<col width="4%" />
+<col width="5%" />
 <col width="4%" />
 <col width="4%" />
 <col width="4%" />
@@ -562,55 +573,51 @@ knitr::kable(t(occ_final$facet$year))</code></pre>
 <tbody>
 <tr class="odd">
 <td align="left">name</td>
-<td align="left">2022</td>
-<td align="left">2020</td>
-<td align="left">2021</td>
-<td align="left">2019</td>
 <td align="left">2018</td>
+<td align="left">2019</td>
+<td align="left">2020</td>
 <td align="left">2017</td>
 <td align="left">2016</td>
 <td align="left">2015</td>
 <td align="left">2014</td>
+<td align="left">2012</td>
+<td align="left">2013</td>
 <td align="left">2011</td>
 <td align="left">2010</td>
 <td align="left">2009</td>
-<td align="left">2012</td>
-<td align="left">2013</td>
 <td align="left">2008</td>
-<td align="left">2004</td>
-<td align="left">2006</td>
-<td align="left">2005</td>
 <td align="left">2007</td>
-<td align="left">2002</td>
-<td align="left">2003</td>
+<td align="left">2005</td>
+<td align="left">2006</td>
+<td align="left">2004</td>
 <td align="left">2001</td>
+<td align="left">2003</td>
 <td align="left">2000</td>
+<td align="left">2002</td>
 </tr>
 <tr class="even">
 <td align="left">count</td>
-<td align="left">2543</td>
-<td align="left">2419</td>
-<td align="left">2246</td>
-<td align="left">1930</td>
-<td align="left">1809</td>
-<td align="left">1457</td>
-<td align="left">1272</td>
-<td align="left">1115</td>
-<td align="left">1031</td>
-<td align="left">932</td>
-<td align="left">919</td>
-<td align="left">802</td>
-<td align="left">784</td>
-<td align="left">752</td>
-<td align="left">734</td>
-<td align="left">628</td>
-<td align="left">606</td>
-<td align="left">437</td>
-<td align="left">401</td>
-<td align="left">391</td>
-<td align="left">386</td>
-<td align="left">378</td>
-<td align="left">375</td>
+<td align="left">1156</td>
+<td align="left">1100</td>
+<td align="left">1021</td>
+<td align="left">865</td>
+<td align="left">842</td>
+<td align="left">841</td>
+<td align="left">774</td>
+<td align="left">757</td>
+<td align="left">691</td>
+<td align="left">600</td>
+<td align="left">503</td>
+<td align="left">354</td>
+<td align="left">269</td>
+<td align="left">148</td>
+<td align="left">114</td>
+<td align="left">110</td>
+<td align="left">102</td>
+<td align="left">95</td>
+<td align="left">92</td>
+<td align="left">89</td>
+<td align="left">83</td>
 </tr>
 </tbody>
 </table>
@@ -618,18 +625,18 @@ knitr::kable(t(occ_final$facet$year))</code></pre>
 <pre class="r"><code>occ_count(
   taxonKey = sp_key,
   country = &quot;NO&quot;,
-  year = &quot;2000,2022&quot;, # the comma here is an alternative way of specifying a range
+  year = &quot;2000,2020&quot;, # the comma here is an alternative way of specifying a range
   basisOfRecord = &quot;HUMAN_OBSERVATION&quot;,
   occurrenceStatus = &quot;PRESENT&quot;
 )</code></pre>
-<pre><code>## [1] 24347</code></pre>
+<pre><code>## [1] 10606</code></pre>
 <p>We could have also just summed up the facet counts, but it is good to remember this more direct function exists.</p>
 <p>Note that we have to change the qay we sum the number of records as data discovery for any argument being matched by multiple characteristics generates an output of type list:</p>
 <pre class="r"><code>str(occ_final, max.level = 1)</code></pre>
 <pre><code>## List of 5
 ##  $ meta     :List of 4
 ##  $ hierarchy:List of 1
-##  $ data     : tibble [500 × 95] (S3: tbl_df/tbl/data.frame)
+##  $ data     : tibble [500 × 117] (S3: tbl_df/tbl/data.frame)
 ##  $ media    :List of 500
 ##  $ facets   :List of 2
 ##  - attr(*, &quot;class&quot;)= chr &quot;gbif&quot;
@@ -638,16 +645,15 @@ knitr::kable(t(occ_final$facet$year))</code></pre>
 </div>
 <div id="session-info" class="section level2">
 <h2>Session Info</h2>
-<pre><code>## R version 4.3.0 (2023-04-21)
-## Platform: x86_64-apple-darwin20 (64-bit)
-## Running under: macOS Ventura 13.3.1
+<pre><code>## R version 4.4.0 (2024-04-24 ucrt)
+## Platform: x86_64-w64-mingw32/x64
+## Running under: Windows 11 x64 (build 22631)
 ## 
 ## Matrix products: default
-## BLAS:   /Library/Frameworks/R.framework/Versions/4.3-x86_64/Resources/lib/libRblas.0.dylib 
-## LAPACK: /Library/Frameworks/R.framework/Versions/4.3-x86_64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0
+## 
 ## 
 ## locale:
-## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## [1] C
 ## 
 ## time zone: Europe/Oslo
 ## tzcode source: internal
@@ -656,28 +662,28 @@ knitr::kable(t(occ_final$facet$year))</code></pre>
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] pbapply_1.7-0       leaflet_2.1.2       htmlwidgets_1.6.2   networkD3_0.4      
-## [5] ggplot2_3.4.2       sf_1.0-12           rnaturalearth_0.3.2 knitr_1.42         
-## [9] rgbif_3.7.7        
+## [1] pbapply_1.7-2       leaflet_2.2.2       htmlwidgets_1.6.4   networkD3_0.4      
+## [5] ggplot2_3.5.1       sf_1.0-17           rnaturalearth_1.0.1 knitr_1.48         
+## [9] rgbif_3.8.1        
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gtable_0.3.3       xfun_0.39          bslib_0.4.2        lattice_0.21-8    
-##  [5] vctrs_0.6.2        tools_4.3.0        crosstalk_1.2.0    generics_0.1.3    
-##  [9] curl_5.0.0         parallel_4.3.0     tibble_3.2.1       proxy_0.4-27      
-## [13] fansi_1.0.4        highr_0.10         pkgconfig_2.0.3    R.oo_1.25.0       
-## [17] KernSmooth_2.23-20 data.table_1.14.8  lifecycle_1.0.3    R.cache_0.16.0    
-## [21] farver_2.1.1       compiler_4.3.0     stringr_1.5.0      munsell_0.5.0     
-## [25] htmltools_0.5.5    class_7.3-21       sass_0.4.6         yaml_2.3.7        
-## [29] lazyeval_0.2.2     pillar_1.9.0       jquerylib_0.1.4    whisker_0.4.1     
-## [33] ellipsis_0.3.2     R.utils_2.12.2     classInt_0.4-9     cachem_1.0.8      
-## [37] styler_1.9.1       tidyselect_1.2.0   digest_0.6.31      stringi_1.7.12    
-## [41] dplyr_1.1.2        purrr_1.0.1        bookdown_0.34      labeling_0.4.2    
-## [45] fastmap_1.1.1      grid_4.3.0         colorspace_2.1-0   cli_3.6.1         
-## [49] magrittr_2.0.3     triebeard_0.4.1    crul_1.4.0         utf8_1.2.3        
-## [53] e1071_1.7-13       withr_2.5.0        scales_1.2.1       sp_1.6-0          
-## [57] oai_0.4.0          rmarkdown_2.21     httr_1.4.5         igraph_1.4.2      
-## [61] blogdown_1.16      R.methodsS3_1.8.2  evaluate_0.20      urltools_1.7.3    
-## [65] rlang_1.1.1        Rcpp_1.0.10        httpcode_0.3.0     glue_1.6.2        
-## [69] DBI_1.1.3          xml2_1.3.4         rstudioapi_0.14    jsonlite_1.8.4    
-## [73] R6_2.5.1           plyr_1.8.8         units_0.8-2</code></pre>
+##  [1] gtable_0.3.6       xfun_0.47          bslib_0.8.0        vctrs_0.6.5       
+##  [5] tools_4.4.0        crosstalk_1.2.1    generics_0.1.3     curl_5.2.2        
+##  [9] parallel_4.4.0     tibble_3.2.1       proxy_0.4-27       fansi_1.0.6       
+## [13] highr_0.11         pkgconfig_2.0.3    R.oo_1.26.0        KernSmooth_2.23-22
+## [17] data.table_1.16.0  lifecycle_1.0.4    R.cache_0.16.0     farver_2.1.2      
+## [21] compiler_4.4.0     stringr_1.5.1      munsell_0.5.1      terra_1.7-78      
+## [25] codetools_0.2-20   htmltools_0.5.8.1  class_7.3-22       sass_0.4.9        
+## [29] yaml_2.3.10        lazyeval_0.2.2     pillar_1.9.0       jquerylib_0.1.4   
+## [33] whisker_0.4.1      R.utils_2.12.3     classInt_0.4-10    cachem_1.1.0      
+## [37] wk_0.9.4           styler_1.10.3      tidyselect_1.2.1   digest_0.6.37     
+## [41] stringi_1.8.4      dplyr_1.1.4        purrr_1.0.2        bookdown_0.40     
+## [45] labeling_0.4.3     fastmap_1.2.0      grid_4.4.0         colorspace_2.1-1  
+## [49] cli_3.6.3          magrittr_2.0.3     triebeard_0.4.1    crul_1.5.0        
+## [53] utf8_1.2.4         e1071_1.7-16       withr_3.0.1        scales_1.3.0      
+## [57] oai_0.4.0          rmarkdown_2.28     httr_1.4.7         igraph_2.1.1      
+## [61] blogdown_1.19      R.methodsS3_1.8.2  evaluate_0.24.0    s2_1.1.7          
+## [65] urltools_1.7.3     rlang_1.1.4        Rcpp_1.0.13        httpcode_0.3.0    
+## [69] glue_1.7.0         DBI_1.2.3          xml2_1.3.6         jsonlite_1.8.8    
+## [73] R6_2.5.1           plyr_1.8.9         units_0.8-5</code></pre>
 </div>

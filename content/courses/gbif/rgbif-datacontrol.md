@@ -14,7 +14,7 @@ tags:
 subtitle: "Quality Assurance of GBIF Mediated Data and Referencing it"
 summary: 'A quick overview of data retrieval with `rgbif`.'
 authors: []
-lastmod: '2023-05-21T20:00:00+01:00'
+lastmod: '2023-11-06T20:00:00+01:00'
 featured: no
 image:
   caption: ''
@@ -46,7 +46,7 @@ weight: 7
 <details>
   <summary>Preamble, Package-Loading, and GBIF API Credential Registering (click here):</summary>
 
-```r
+``` r
 ## Custom install & load function
 install.load.package <- function(x) {
   if (!require(x, character.only = TRUE)) {
@@ -61,8 +61,6 @@ package_vec <- c(
   "sp", # for spatialobject creation
   "sf", # an alternative spatial object library
   "ggplot2", # for visualistion
-  "maptools", # for visualisation
-  "rgeos", # for visualisation
   "raster", # for setting and reading CRS
   "rnaturalearth" # for shapefiles of naturalearth
 )
@@ -71,13 +69,13 @@ sapply(package_vec, install.load.package)
 ```
 
 ```
-##         rgbif         knitr            sp            sf       ggplot2      maptools 
+##         rgbif         knitr            sp            sf       ggplot2        raster 
 ##          TRUE          TRUE          TRUE          TRUE          TRUE          TRUE 
-##         rgeos        raster rnaturalearth 
-##          TRUE          TRUE          TRUE
+## rnaturalearth 
+##          TRUE
 ```
 
-```r
+``` r
 options(gbif_user = "my gbif username")
 options(gbif_email = "my registred gbif e-mail")
 options(gbif_pwd = "my gbif password")
@@ -89,7 +87,7 @@ First, we obtain and load the data we are interested in like such:
 
 
 
-```r
+``` r
 # Download query
 res <- occ_download(
   pred("taxonKey", sp_key),
@@ -97,7 +95,7 @@ res <- occ_download(
   pred("country", "NO"),
   pred("hasCoordinate", TRUE),
   pred_gte("year", 2000),
-  pred_lte("year", 2022)
+  pred_lte("year", 2020)
 )
 # Downloading and Loading
 res_meta <- occ_download_wait(res, status_ping = 5, curlopts = list(), quiet = FALSE)
@@ -126,7 +124,7 @@ As a matter of fact, we have already used the functionality by which to control 
 For this exercise, let's focus on some data markers that are contained in our already downloaded data set which we may want to use for further limiting of our data set for subsequent analyses. To do so, let's consider the `coordinateUncertaintyInMeters` field by visualising the values we have obtained for each record in our occurrence data:
 
 
-```r
+``` r
 ggplot(res_data, aes(x = coordinateUncertaintyInMeters)) +
   geom_histogram(bins = 1e2) +
   theme_bw() +
@@ -135,74 +133,90 @@ ggplot(res_data, aes(x = coordinateUncertaintyInMeters)) +
 
 <img src="rgbif-datacontrol_files/figure-html/unnamed-chunk-2-1.png" width="1440" />
 
-**Note:** The y-axis on the above plot is log-transformed and 1053 of the underlying records do not report a value for `coordinateUncertaintyInMeters` thus being removed from the above visualisation.
+**Note:** The y-axis on the above plot is log-transformed and 439 of the underlying records do not report a value for `coordinateUncertaintyInMeters` thus being removed from the above visualisation.
 
-What we find is that there exists considerable variation in confidence of individual occurrence locations and we probably want to remove those records which are assigned a certain level of `coordinateUncertaintyInMeters`. Let's say 10 metres:
+What we find is that there exists considerable variation in confidence of individual occurrence locations and we probably want to remove those records which are assigned a certain level of `coordinateUncertaintyInMeters`. Let's say 200 metres (after all, we are dealing with a mobile organism):
 
 
-```r
-preci_data <- res_data[which(res_data$coordinateUncertaintyInMeters < 10), ]
+``` r
+preci_data <- res_data[which(res_data$coordinateUncertaintyInMeters < 200), ]
 ```
 
-This quality control leaves us with 6802 *Calluna vulgaris* records. A significant drop in data points which may well change our analyses and their outcomes drastically.
+This quality control leaves us with 2721 *Lagopus muta* records. A significant drop in data points which may well change our analyses and their outcomes drastically.
 
 ### Extract a Subset of Cata-Columns
 
 GBIF mediated data comes with a lot of attributes. These can be assessed readily via the Darwin Core or, within `R` via: `colnames(...)` (here with `...`  = `res_data`). Rarely will we need all of them for our analyses. For now, we will simply subset the data for a smaller set of columns which are often relevant for end-users:
 
 
-```r
+``` r
 data_subset <- preci_data[
   ,
-  c("scientificName", "decimalLongitude", "decimalLatitude", "basisOfRecord", "year", "month", "day", "eventDate", "countryCode", "municipality", "taxonKey", "species", "catalogNumber", "hasGeospatialIssues", "hasCoordinate", "datasetKey")
+  c("scientificName", "decimalLongitude", "decimalLatitude", "basisOfRecord", "year", "month", "day", "eventDate", "countryCode", "municipality", "stateProvince", "taxonKey", "species", "catalogNumber", "hasGeospatialIssues", "hasCoordinate", "mediaType", "datasetKey")
 ]
 knitr::kable(head(data_subset))
 ```
 
 
 
-|scientificName             | decimalLongitude| decimalLatitude|basisOfRecord     | year| month| day|eventDate  |countryCode |municipality | taxonKey|species          |catalogNumber |hasGeospatialIssues |hasCoordinate |datasetKey                           |
-|:--------------------------|----------------:|---------------:|:-----------------|----:|-----:|---:|:----------|:-----------|:------------|--------:|:----------------|:-------------|:-------------------|:-------------|:------------------------------------|
-|Calluna vulgaris (L.) Hull |         6.704158|        62.66793|HUMAN_OBSERVATION | 2012|     9|  28|2012-09-28 |NO          |             |  2882482|Calluna vulgaris |30179         |FALSE               |TRUE          |09c38deb-8674-446e-8be8-3347f6c094ef |
-|Calluna vulgaris (L.) Hull |         6.868125|        62.72794|HUMAN_OBSERVATION | 2012|     9|  28|2012-09-28 |NO          |             |  2882482|Calluna vulgaris |30076         |FALSE               |TRUE          |09c38deb-8674-446e-8be8-3347f6c094ef |
-|Calluna vulgaris (L.) Hull |         6.883944|        62.74096|HUMAN_OBSERVATION | 2012|     9|  28|2012-09-28 |NO          |             |  2882482|Calluna vulgaris |29952         |FALSE               |TRUE          |09c38deb-8674-446e-8be8-3347f6c094ef |
-|Calluna vulgaris (L.) Hull |         6.614745|        62.68688|HUMAN_OBSERVATION | 2012|     9|  22|2012-09-22 |NO          |             |  2882482|Calluna vulgaris |29905         |FALSE               |TRUE          |09c38deb-8674-446e-8be8-3347f6c094ef |
-|Calluna vulgaris (L.) Hull |         6.544501|        62.65040|HUMAN_OBSERVATION | 2012|     9|  22|2012-09-22 |NO          |             |  2882482|Calluna vulgaris |29879         |FALSE               |TRUE          |09c38deb-8674-446e-8be8-3347f6c094ef |
-|Calluna vulgaris (L.) Hull |         6.548010|        62.64857|HUMAN_OBSERVATION | 2012|     9|  22|2012-09-22 |NO          |             |  2882482|Calluna vulgaris |29814         |FALSE               |TRUE          |09c38deb-8674-446e-8be8-3347f6c094ef |
+|scientificName              | decimalLongitude| decimalLatitude|basisOfRecord     | year| month| day|eventDate        |countryCode |municipality |stateProvince | taxonKey|species      |catalogNumber |hasGeospatialIssues |hasCoordinate |mediaType  |datasetKey                           |
+|:---------------------------|----------------:|---------------:|:-----------------|----:|-----:|---:|:----------------|:-----------|:------------|:-------------|--------:|:------------|:-------------|:-------------------|:-------------|:----------|:------------------------------------|
+|Lagopus muta (Montin, 1781) |         7.679194|        59.81584|HUMAN_OBSERVATION | 2008|     5|   3|2008-05-03       |NO          |Vinje        |Telemark      |  5227679|Lagopus muta |34904134      |FALSE               |TRUE          |           |b124e1e0-4755-430f-9eab-894f25a9b59c |
+|Lagopus muta (Montin, 1781) |        28.961315|        70.46989|HUMAN_OBSERVATION | 2017|     6|   5|2017-06-05       |NO          |             |Finnmark      |  5227679|Lagopus muta |              |FALSE               |TRUE          |           |8a863029-f435-446a-821e-275f4f641165 |
+|Lagopus muta (Montin, 1781) |        23.689751|        70.68865|HUMAN_OBSERVATION | 2015|     6|  22|2015-06-22       |NO          |             |Finnmark      |  5227679|Lagopus muta |              |FALSE               |TRUE          |StillImage |8a863029-f435-446a-821e-275f4f641165 |
+|Lagopus muta (Montin, 1781) |         8.628497|        60.65505|HUMAN_OBSERVATION | 2000|     6|   5|2000-06-05       |NO          |             |Buskerud      |  5227679|Lagopus muta |              |FALSE               |TRUE          |StillImage |8a863029-f435-446a-821e-275f4f641165 |
+|Lagopus muta (Montin, 1781) |        24.720209|        71.10924|HUMAN_OBSERVATION | 2019|     7|  18|2019-07-18T10:41 |NO          |             |Finnmark      |  5227679|Lagopus muta |214152489     |FALSE               |TRUE          |StillImage |50c9509d-22c7-4a22-a47d-8c48425ef4a7 |
+|Lagopus muta (Montin, 1781) |        24.729996|        71.11087|HUMAN_OBSERVATION | 2017|     7|  14|2017-07-14T10:26 |NO          |             |Finnmark      |  5227679|Lagopus muta |214152361     |FALSE               |TRUE          |StillImage |50c9509d-22c7-4a22-a47d-8c48425ef4a7 |
 
 ## Explore the Occurrence Data
 Now that we have the data we might use for analyses ready, we can explore what the data itself contains.
 
 ### Data Contents
 
-Here are a few overviews of *Calluna vulgaris* abundances across different data attributes:
+Here are a few overviews of *Lagopus muta* abundances across different data attributes:
 
-```r
+``` r
 table(data_subset$year)
 ```
 
 ```
 ## 
 ## 2000 2001 2002 2003 2004 2005 2006 2007 2008 2009 2010 2011 2012 2013 2014 2015 2016 2017 
-##    2    5    1   11    4    8    8   12   37  313  509  380  255  255  349  404  505  502 
-## 2018 2019 2020 2021 2022 
-##  256  369  427 1022 1168
+##    4    4   12    6    7   23    7   17   34   59   87  119  291  144  147  181  254  255 
+## 2018 2019 2020 
+##  372  382  316
 ```
 
-```r
+``` r
 table(data_subset$stateProvince)
 ```
 
 ```
-## < table of extent 0 >
+## 
+##                                     Agder           Aust-Agder             Buskerud 
+##                  149                  116                    2                   15 
+##             Finnmark              Hedmark            Hordaland            Innlandet 
+##                  127                  284                  269                  122 
+##      Møre og Romsdal                 Nord       Nord-Trøndelag             Nordland 
+##                   70                    8                  160                  309 
+##              Oppland             Rogaland     Sogn og Fjordane                  Sør 
+##                   77                   36                    3                    8 
+##        Sør-Trøndelag             Telemark                Troms    Troms og Finnmark 
+##                  150                    2                   40                  128 
+##            Trøndelag           Vest-Agder Vestfold og Telemark             Vestland 
+##                  405                   36                   25                  134 
+##                Viken              Østfold 
+##                   45                    1
 ```
 
-```r
+``` r
 table(data_subset$mediaType)
 ```
 
 ```
-## < table of extent 0 >
+## 
+##            StillImage 
+##       2606        115
 ```
 
 ### Spatial Data Handling
@@ -210,15 +224,15 @@ Most use-cases of GBIF make use of the geolocation references for data records e
 
 #### Make `SpatialPointsDataFrame`
 
-First, we can use the `sp` package to create `SpatialPoints` from our geo-referenced occurrence data:
+First, we can use the `sf` package to create `SpatialPoints` from our geo-referenced occurrence data:
 
-```r
+``` r
 options(digits = 8) ## set 8 digits (ie. all digits, not decimals) for the type cast as.double to keep decimals
 data_subset <- as.data.frame(data_subset)
 data_subset$lon <- as.double(data_subset$decimalLongitude) ## cast lon from char to double
 data_subset$lat <- as.double(data_subset$decimalLatitude) ## cast lat from char to double
-coordinates(data_subset) <- ~ lon + lat ## make data_subset into SpatialPointsDataFrame
-proj4string(data_subset) <- CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0") ## set CRS
+data_sf <- st_as_sf(data_subset, coords = c("lon", "lat"), remove = FALSE)
+st_crs(data_sf) <- CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0")
 ```
 
 This data format lends itself well for analysing where occurrence have been recorded in relation to study parameters of choice (e.g., climatic conditions, land-use, political boundaries, etc.).
@@ -227,16 +241,15 @@ This data format lends itself well for analysing where occurrence have been reco
 
 In first instance, `SpatialPoints` can easily be used to create initial visualisations of spatial patterns:
 
-```r
-## Data Handling
-data_xy <- data_subset[c("decimalLongitude", "decimalLatitude")] ## Extract only the coordinates
-data(wrld_simpl)
-norway_mask <- subset(wrld_simpl, NAME == "Norway")
-## Plotting
-plot(norway_mask, axes = TRUE)
-title("Calluna vulgaris presences recorded by human observation between 2000 and 2022 across Norway")
-points(data_xy, col = "red", pch = 20, cex = 1) # plot species occurrence points to the map
-legend("bottomright", title = "Legend", legend = "Occurrences", pch = 20, col = "red", cex = 0.9)
+``` r
+## get background map
+NO_shp <- rnaturalearth::ne_countries(country = "Norway", scale = "medium", returnclass = "sf")[, 1]
+## make plot
+ggplot() +
+  geom_sf(data = NO_shp) +
+  geom_sf(data = data_sf[, 1]) +
+  theme_bw() +
+  labs(title = "Occurrences of Lagopus muta recorded by human observations between 2000 and 2022")
 ```
 
 <img src="rgbif-datacontrol_files/figure-html/unnamed-chunk-7-1.png" width="1440" />
@@ -248,89 +261,234 @@ Each spatial object in `R` is assigned a  [Coordinate Reference System (CRS)](ht
 In `R`, we can assess the CRS of most spatial objects as follows:
 
 
-```r
-raster::crs(wrld_simpl)
+``` r
+st_crs(data_sf)
 ```
 
 ```
 ## Coordinate Reference System:
-## Deprecated Proj.4 representation:
-##  +proj=longlat +ellps=WGS84 +towgs84=0,0,0,0,0,0,0 +no_defs 
-## WKT2 2019 representation:
-## GEOGCRS["unknown",
-##     DATUM["World Geodetic System 1984",
-##         ELLIPSOID["WGS 84",6378137,298.257223563,
-##             LENGTHUNIT["metre",1]],
-##         ID["EPSG",6326]],
-##     PRIMEM["Greenwich",0,
-##         ANGLEUNIT["degree",0.0174532925199433],
-##         ID["EPSG",8901]],
-##     CS[ellipsoidal,2],
-##         AXIS["longitude",east,
-##             ORDER[1],
-##             ANGLEUNIT["degree",0.0174532925199433,
-##                 ID["EPSG",9122]]],
-##         AXIS["latitude",north,
-##             ORDER[2],
-##             ANGLEUNIT["degree",0.0174532925199433,
-##                 ID["EPSG",9122]]]]
+##   User input: BOUNDCRS[
+##     SOURCECRS[
+##         GEOGCRS["unknown",
+##             DATUM["World Geodetic System 1984",
+##                 ELLIPSOID["WGS 84",6378137,298.257223563,
+##                     LENGTHUNIT["metre",1]],
+##                 ID["EPSG",6326]],
+##             PRIMEM["Greenwich",0,
+##                 ANGLEUNIT["degree",0.0174532925199433],
+##                 ID["EPSG",8901]],
+##             CS[ellipsoidal,2],
+##                 AXIS["longitude",east,
+##                     ORDER[1],
+##                     ANGLEUNIT["degree",0.0174532925199433,
+##                         ID["EPSG",9122]]],
+##                 AXIS["latitude",north,
+##                     ORDER[2],
+##                     ANGLEUNIT["degree",0.0174532925199433,
+##                         ID["EPSG",9122]]]]],
+##     TARGETCRS[
+##         GEOGCRS["WGS 84",
+##             DATUM["World Geodetic System 1984",
+##                 ELLIPSOID["WGS 84",6378137,298.257223563,
+##                     LENGTHUNIT["metre",1]]],
+##             PRIMEM["Greenwich",0,
+##                 ANGLEUNIT["degree",0.0174532925199433]],
+##             CS[ellipsoidal,2],
+##                 AXIS["latitude",north,
+##                     ORDER[1],
+##                     ANGLEUNIT["degree",0.0174532925199433]],
+##                 AXIS["longitude",east,
+##                     ORDER[2],
+##                     ANGLEUNIT["degree",0.0174532925199433]],
+##             ID["EPSG",4326]]],
+##     ABRIDGEDTRANSFORMATION["Transformation from unknown to WGS84",
+##         METHOD["Geocentric translations (geog2D domain)",
+##             ID["EPSG",9603]],
+##         PARAMETER["X-axis translation",0,
+##             ID["EPSG",8605]],
+##         PARAMETER["Y-axis translation",0,
+##             ID["EPSG",8606]],
+##         PARAMETER["Z-axis translation",0,
+##             ID["EPSG",8607]]]] 
+##   wkt:
+## BOUNDCRS[
+##     SOURCECRS[
+##         GEOGCRS["unknown",
+##             DATUM["World Geodetic System 1984",
+##                 ELLIPSOID["WGS 84",6378137,298.257223563,
+##                     LENGTHUNIT["metre",1]],
+##                 ID["EPSG",6326]],
+##             PRIMEM["Greenwich",0,
+##                 ANGLEUNIT["degree",0.0174532925199433],
+##                 ID["EPSG",8901]],
+##             CS[ellipsoidal,2],
+##                 AXIS["longitude",east,
+##                     ORDER[1],
+##                     ANGLEUNIT["degree",0.0174532925199433,
+##                         ID["EPSG",9122]]],
+##                 AXIS["latitude",north,
+##                     ORDER[2],
+##                     ANGLEUNIT["degree",0.0174532925199433,
+##                         ID["EPSG",9122]]]]],
+##     TARGETCRS[
+##         GEOGCRS["WGS 84",
+##             DATUM["World Geodetic System 1984",
+##                 ELLIPSOID["WGS 84",6378137,298.257223563,
+##                     LENGTHUNIT["metre",1]]],
+##             PRIMEM["Greenwich",0,
+##                 ANGLEUNIT["degree",0.0174532925199433]],
+##             CS[ellipsoidal,2],
+##                 AXIS["geodetic latitude (Lat)",north,
+##                     ORDER[1],
+##                     ANGLEUNIT["degree",0.0174532925199433]],
+##                 AXIS["geodetic longitude (Lon)",east,
+##                     ORDER[2],
+##                     ANGLEUNIT["degree",0.0174532925199433]],
+##             ID["EPSG",4326]]],
+##     ABRIDGEDTRANSFORMATION["Transformation from unknown to WGS84",
+##         METHOD["Geocentric translations (geog2D domain)",
+##             ID["EPSG",9603]],
+##         PARAMETER["X-axis translation",0,
+##             ID["EPSG",8605]],
+##         PARAMETER["Y-axis translation",0,
+##             ID["EPSG",8606]],
+##         PARAMETER["Z-axis translation",0,
+##             ID["EPSG",8607]]]]
 ```
 
-```r
-raster::crs(data_subset)
+``` r
+st_crs(NO_shp)
 ```
 
 ```
 ## Coordinate Reference System:
-## Deprecated Proj.4 representation: +proj=longlat +datum=WGS84 +no_defs 
-## WKT2 2019 representation:
-## GEOGCRS["unknown",
+##   User input: WGS 84 
+##   wkt:
+## GEOGCRS["WGS 84",
 ##     DATUM["World Geodetic System 1984",
 ##         ELLIPSOID["WGS 84",6378137,298.257223563,
-##             LENGTHUNIT["metre",1]],
-##         ID["EPSG",6326]],
+##             LENGTHUNIT["metre",1]]],
 ##     PRIMEM["Greenwich",0,
-##         ANGLEUNIT["degree",0.0174532925199433],
-##         ID["EPSG",8901]],
+##         ANGLEUNIT["degree",0.0174532925199433]],
 ##     CS[ellipsoidal,2],
-##         AXIS["longitude",east,
-##             ORDER[1],
-##             ANGLEUNIT["degree",0.0174532925199433,
-##                 ID["EPSG",9122]]],
 ##         AXIS["latitude",north,
+##             ORDER[1],
+##             ANGLEUNIT["degree",0.0174532925199433]],
+##         AXIS["longitude",east,
 ##             ORDER[2],
-##             ANGLEUNIT["degree",0.0174532925199433,
-##                 ID["EPSG",9122]]]]
+##             ANGLEUNIT["degree",0.0174532925199433]],
+##     ID["EPSG",4326]]
 ```
 
-When dealing with data in specific areas of the world or wanting to match occurrence data to other products with specific CRSs, it may be prudent to reproject the `SpatialPoints` occurrence data object.  We can use `sp:spTransform()` to do so (this is reprojecting to the same CRS the data is already in):
+When dealing with data in specific areas of the world or wanting to match occurrence data to other products with specific CRSs, it may be prudent to reproject the `SpatialPoints` occurrence data object.  We can use `sf::st_transform)` to do so (this is reprojecting to the same CRS the data is already in):
 
 
-```r
-sp::spTransform(data_subset, CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0"))
+``` r
+sf::st_transform(data_sf, CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0"))
 ```
 
 ```
-## class       : SpatialPointsDataFrame 
-## features    : 6802 
-## extent      : 4.619497, 30.051781, 57.969404, 70.981838  (xmin, xmax, ymin, ymax)
-## crs         : +proj=longlat +datum=WGS84 +no_defs 
-## variables   : 16
-## names       :             scientificName, decimalLongitude, decimalLatitude,     basisOfRecord, year, month, day,  eventDate, countryCode, municipality, taxonKey,          species, catalogNumber, hasGeospatialIssues, hasCoordinate, ... 
-## min values  : Calluna vulgaris (L.) Hull,         4.619497,       57.969404, HUMAN_OBSERVATION, 2000,     1,   1,  961891200,          NO,             ,  2882482, Calluna vulgaris,              ,                   0,             1, ... 
-## max values  : Calluna vulgaris (L.) Hull,        30.051781,       70.981838, HUMAN_OBSERVATION, 2022,    12,  31, 1671235200,          NO,         Voss,  2882482, Calluna vulgaris, OBS.259608743,                   0,             1, ...
+## Simple feature collection with 2721 features and 20 fields
+## Geometry type: POINT
+## Dimension:     XY
+## Bounding box:  xmin: 5.488913 ymin: 58.065259 xmax: 31.020815 ymax: 71.170652
+## Geodetic CRS:  BOUNDCRS[
+##     SOURCECRS[
+##         GEOGCRS["unknown",
+##             DATUM["World Geodetic System 1984",
+##                 ELLIPSOID["WGS 84",6378137,298.257223563,
+##                     LENGTHUNIT["metre",1]],
+##                 ID["EPSG",6326]],
+##             PRIMEM["Greenwich",0,
+##                 ANGLEUNIT["degree",0.0174532925199433],
+##                 ID["EPSG",8901]],
+##             CS[ellipsoidal,2],
+##                 AXIS["longitude",east,
+##                     ORDER[1],
+##                     ANGLEUNIT["degree",0.0174532925199433,
+##                         ID["EPSG",9122]]],
+##                 AXIS["latitude",north,
+##                     ORDER[2],
+##                     ANGLEUNIT["degree",0.0174532925199433,
+##                         ID["EPSG",9122]]]]],
+##     TARGETCRS[
+##         GEOGCRS["WGS 84",
+##             DATUM["World Geodetic System 1984",
+##                 ELLIPSOID["WGS 84",6378137,298.257223563,
+##                     LENGTHUNIT["metre",1]]],
+##             PRIMEM["Greenwich",0,
+##                 ANGLEUNIT["degree",0.0174532925199433]],
+##             CS[ellipsoidal,2],
+##                 AXIS["latitude",north,
+##                     ORDER[1],
+##                     ANGLEUNIT["degree",0.0174532925199433]],
+##                 AXIS["longitude",east,
+##                     ORDER[2],
+##                     ANGLEUNIT["degree",0.0174532925199433]],
+##             ID["EPSG",4326]]],
+##     ABRIDGEDTRANSFORMATION["Transformation from unknown to WGS84",
+##         METHOD["Geocentric translations (geog2D domain)",
+##             ID["EPSG",9603]],
+##         PARAMETER["X-axis translation",0,
+##             ID["EPSG",8605]],
+##         PARAMETER["Y-axis translation",0,
+##             ID["EPSG",8606]],
+##         PARAMETER["Z-axis translation",0,
+##             ID["EPSG",8607]]]]
+## First 10 features:
+##                 scientificName decimalLongitude decimalLatitude     basisOfRecord year
+## 1  Lagopus muta (Montin, 1781)         7.679194       59.815843 HUMAN_OBSERVATION 2008
+## 2  Lagopus muta (Montin, 1781)        28.961315       70.469890 HUMAN_OBSERVATION 2017
+## 3  Lagopus muta (Montin, 1781)        23.689751       70.688646 HUMAN_OBSERVATION 2015
+## 4  Lagopus muta (Montin, 1781)         8.628497       60.655046 HUMAN_OBSERVATION 2000
+## 5  Lagopus muta (Montin, 1781)        24.720209       71.109243 HUMAN_OBSERVATION 2019
+## 6  Lagopus muta (Montin, 1781)        24.729996       71.110875 HUMAN_OBSERVATION 2017
+## 7  Lagopus muta (Montin, 1781)        14.563245       67.088208 HUMAN_OBSERVATION 2017
+## 8  Lagopus muta (Montin, 1781)         9.291491       62.433117 HUMAN_OBSERVATION 2020
+## 9  Lagopus muta (Montin, 1781)         9.466869       62.722573 HUMAN_OBSERVATION 2004
+## 10 Lagopus muta (Montin, 1781)        11.736154       62.914320 HUMAN_OBSERVATION 2002
+##    month day        eventDate countryCode municipality stateProvince taxonKey
+## 1      5   3       2008-05-03          NO        Vinje      Telemark  5227679
+## 2      6   5       2017-06-05          NO                   Finnmark  5227679
+## 3      6  22       2015-06-22          NO                   Finnmark  5227679
+## 4      6   5       2000-06-05          NO                   Buskerud  5227679
+## 5      7  18 2019-07-18T10:41          NO                   Finnmark  5227679
+## 6      7  14 2017-07-14T10:26          NO                   Finnmark  5227679
+## 7      6  17       2017-06-17          NO       Beiarn      Nordland  5227679
+## 8      7  31       2020-07-31          NO       Oppdal    Trøndelag  5227679
+## 9      9  11       2004-09-11          NO       Oppdal    Trøndelag  5227679
+## 10     7  27       2002-07-27          NO                 Trøndelag  5227679
+##         species  catalogNumber hasGeospatialIssues hasCoordinate  mediaType
+## 1  Lagopus muta       34904134               FALSE          TRUE           
+## 2  Lagopus muta                              FALSE          TRUE           
+## 3  Lagopus muta                              FALSE          TRUE StillImage
+## 4  Lagopus muta                              FALSE          TRUE StillImage
+## 5  Lagopus muta      214152489               FALSE          TRUE StillImage
+## 6  Lagopus muta      214152361               FALSE          TRUE StillImage
+## 7  Lagopus muta       34314978               FALSE          TRUE           
+## 8  Lagopus muta       33833573               FALSE          TRUE StillImage
+## 9  Lagopus muta       32243615               FALSE          TRUE           
+## 10 Lagopus muta BA00022793-106               FALSE          TRUE           
+##                              datasetKey       lon       lat                    geometry
+## 1  b124e1e0-4755-430f-9eab-894f25a9b59c  7.679194 59.815843  POINT (7.679194 59.815843)
+## 2  8a863029-f435-446a-821e-275f4f641165 28.961315 70.469890  POINT (28.961315 70.46989)
+## 3  8a863029-f435-446a-821e-275f4f641165 23.689751 70.688646 POINT (23.689751 70.688646)
+## 4  8a863029-f435-446a-821e-275f4f641165  8.628497 60.655046  POINT (8.628497 60.655046)
+## 5  50c9509d-22c7-4a22-a47d-8c48425ef4a7 24.720209 71.109243 POINT (24.720209 71.109243)
+## 6  50c9509d-22c7-4a22-a47d-8c48425ef4a7 24.729996 71.110875 POINT (24.729996 71.110875)
+## 7  b124e1e0-4755-430f-9eab-894f25a9b59c 14.563245 67.088208 POINT (14.563245 67.088208)
+## 8  b124e1e0-4755-430f-9eab-894f25a9b59c  9.291491 62.433117  POINT (9.291491 62.433117)
+## 9  b124e1e0-4755-430f-9eab-894f25a9b59c  9.466869 62.722573  POINT (9.466869 62.722573)
+## 10 492d63a8-4978-4bc7-acd8-7d0e3ac0e744 11.736154 62.914320  POINT (11.736154 62.91432)
 ```
 
 #### Classifying Spatial Data
 
-Moving from the relatively limited `sp` package to the more functional `sf` package enables more advanced visualisations of additional spatial considerations of our data.
-
-For example, consider we want to quantify abundances of *Calluna vulgaris* across political regions in Norway:
+Let's say, for example, we want to quantify abundances of *Lagopus muta* across political regions in Norway:
 
 
-```r
+``` r
 ## Obtain sf object
-data_sf <- st_as_sf(data_subset) # make sp into sf
 NO_municip <- rnaturalearth::ne_states(country = "Norway", returnclass = "sf") # get shapefiles for Norwegian states
 NO_municip <- sf::st_crop(NO_municip, extent(4.5, 31.5, 50, 71.5)) # crop shapefile to continental Norway
 ## Identify overlap of points and polygons
@@ -338,25 +496,20 @@ cover_sf <- st_intersects(NO_municip, data_sf)
 names(cover_sf) <- NO_municip$name
 ## report abundances
 abundances_municip <- unlist(lapply(cover_sf, length))
-sort(abundances_municip, decreasing = TRUE)
+knitr::kable(t(sort(abundances_municip, decreasing = TRUE)))
 ```
 
-```
-##          Østfold  Møre og Romsdal         Buskerud       Vest-Agder         Telemark 
-##             1838             1173              366              315              283 
-##         Rogaland         Akershus        Hordaland       Aust-Agder    Sør-Trøndelag 
-##              263              199              197              172              150 
-##         Nordland          Hedmark Sogn og Fjordane             Oslo          Oppland 
-##              129              127              115              106              104 
-##         Vestfold   Nord-Trøndelag         Finnmark            Troms 
-##               82               31               28               12
-```
 
-Looks like there are hotspots for *Calluna vulgaris* in Østfold and Møre og Romsdal - could this be sampling bias or effects of bioclimatic niche preferences and local environmental conditions? Questions like these you will be able to answer with additional analyses which are beyond the scope of this workshop.
+
+| Sør-Trøndelag| Hordaland| Hedmark| Nord-Trøndelag| Nordland| Oppland| Finnmark| Troms| Vest-Agder| Buskerud| Møre og Romsdal| Rogaland| Telemark| Sogn og Fjordane| Aust-Agder| Akershus| Østfold| Oslo| Vestfold|
+|-------------:|---------:|-------:|--------------:|--------:|-------:|--------:|-----:|----------:|--------:|---------------:|--------:|--------:|----------------:|----------:|--------:|-------:|----:|--------:|
+|           489|       361|     348|            340|      286|     168|      160|   132|        122|       79|              78|       33|       28|               27|         25|        0|       0|    0|        0|
+
+Looks like there are hotspots for *Lagopus muta* in SørTrøndelag and Hordaland - could this be sampling bias or effects of bioclimatic niche preferences and local environmental conditions? Questions like these you will be able to answer with additional analyses which are beyond the scope of this workshop.
 
 Let's visualise these abundances:
 
-```r
+``` r
 NO_municip$abundances <- abundances_municip
 ggplot(data = NO_municip) +
   geom_sf(aes(fill = abundances)) +
@@ -368,15 +521,20 @@ ggplot(data = NO_municip) +
 
 Finally, let's consider wanting to identify for each data record and attach to the data itself which state it falls into. We can do so as follows (not necessarily the most elegant way:
 
-```r
+``` r
 ## create a dataframe of occurrence records by rownumber in original data (data_subset) and state-membership
 cover_ls <- lapply(names(cover_sf), FUN = function(x) {
+  if (length(cover_sf[[x]]) == 0) {
+    points <- NA
+  } else {
+    points <- cover_sf[[x]]
+  }
   data.frame(
     municip = x,
-    points = cover_sf[[x]]
+    points = points
   )
 })
-cover_df <- do.call(rbind, cover_ls)
+cover_df <- na.omit(do.call(rbind, cover_ls))
 ## attach state-membership to original data, NAs for points without state-membership
 data_subset$municip <- NA
 data_subset$municip[cover_df$points] <- cover_df$municip
@@ -384,7 +542,7 @@ data_subset$municip[cover_df$points] <- cover_df$municip
 ggplot(data = NO_municip) +
   geom_sf(fill = "white") +
   geom_point(
-    data = data_subset@data, size = 1,
+    data = data_subset, size = 1,
     aes(x = decimalLongitude, y = decimalLatitude, col = municip)
   ) +
   scale_colour_viridis_d() +
@@ -402,16 +560,15 @@ Now that you can **handle GBIF data locally**, you are ready to pipe these data 
 ## Session Info
 
 ```
-## R version 4.3.0 (2023-04-21)
-## Platform: x86_64-apple-darwin20 (64-bit)
-## Running under: macOS Ventura 13.3.1
+## R version 4.4.0 (2024-04-24 ucrt)
+## Platform: x86_64-w64-mingw32/x64
+## Running under: Windows 11 x64 (build 22631)
 ## 
 ## Matrix products: default
-## BLAS:   /Library/Frameworks/R.framework/Versions/4.3-x86_64/Resources/lib/libRblas.0.dylib 
-## LAPACK: /Library/Frameworks/R.framework/Versions/4.3-x86_64/Resources/lib/libRlapack.dylib;  LAPACK version 3.11.0
+## 
 ## 
 ## locale:
-## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## [1] C
 ## 
 ## time zone: Europe/Oslo
 ## tzcode source: internal
@@ -420,36 +577,47 @@ Now that you can **handle GBIF data locally**, you are ready to pipe these data 
 ## [1] stats     graphics  grDevices utils     datasets  methods   base     
 ## 
 ## other attached packages:
-## [1] rnaturalearth_0.3.2 raster_3.6-20       rgeos_0.6-2         maptools_1.1-6     
-## [5] ggplot2_3.4.2       sf_1.0-12           sp_1.6-0            knitr_1.42         
-## [9] rgbif_3.7.7        
+## [1] rnaturalearth_1.0.1 raster_3.6-26       ggplot2_3.5.1       sf_1.0-17          
+## [5] sp_2.1-4            knitr_1.48          rgbif_3.8.1        
 ## 
 ## loaded via a namespace (and not attached):
-##  [1] gtable_0.3.3             xfun_0.39                bslib_0.4.2             
-##  [4] lattice_0.21-8           vctrs_0.6.2              tools_4.3.0             
-##  [7] generics_0.1.3           curl_5.0.0               tibble_3.2.1            
-## [10] proxy_0.4-27             fansi_1.0.4              highr_0.10              
-## [13] pkgconfig_2.0.3          R.oo_1.25.0              KernSmooth_2.23-20      
-## [16] data.table_1.14.8        lifecycle_1.0.3          R.cache_0.16.0          
-## [19] farver_2.1.1             compiler_4.3.0           stringr_1.5.0           
-## [22] munsell_0.5.0            terra_1.7-29             codetools_0.2-19        
-## [25] htmltools_0.5.5          class_7.3-21             sass_0.4.6              
-## [28] yaml_2.3.7               lazyeval_0.2.2           pillar_1.9.0            
-## [31] jquerylib_0.1.4          whisker_0.4.1            R.utils_2.12.2          
-## [34] classInt_0.4-9           cachem_1.0.8             wk_0.7.2                
-## [37] styler_1.9.1             tidyselect_1.2.0         digest_0.6.31           
-## [40] stringi_1.7.12           dplyr_1.1.2              purrr_1.0.1             
-## [43] bookdown_0.34            labeling_0.4.2           fastmap_1.1.1           
-## [46] grid_4.3.0               colorspace_2.1-0         cli_3.6.1               
-## [49] magrittr_2.0.3           triebeard_0.4.1          crul_1.4.0              
-## [52] utf8_1.2.3               e1071_1.7-13             foreign_0.8-84          
-## [55] withr_2.5.0              scales_1.2.1             bit64_4.0.5             
-## [58] oai_0.4.0                rmarkdown_2.21           httr_1.4.5              
-## [61] bit_4.0.5                blogdown_1.16            rnaturalearthhires_0.2.1
-## [64] R.methodsS3_1.8.2        evaluate_0.20            rgdal_1.6-6             
-## [67] viridisLite_0.4.2        s2_1.1.3                 urltools_1.7.3          
-## [70] rlang_1.1.1              Rcpp_1.0.10              httpcode_0.3.0          
-## [73] glue_1.6.2               DBI_1.1.3                xml2_1.3.4              
-## [76] rstudioapi_0.14          jsonlite_1.8.4           R6_2.5.1                
-## [79] plyr_1.8.8               units_0.8-2
+##  [1] gtable_0.3.6                  xfun_0.47                    
+##  [3] bslib_0.8.0                   lattice_0.22-6               
+##  [5] vctrs_0.6.5                   tools_4.4.0                  
+##  [7] generics_0.1.3                curl_5.2.2                   
+##  [9] tibble_3.2.1                  proxy_0.4-27                 
+## [11] fansi_1.0.6                   highr_0.11                   
+## [13] pkgconfig_2.0.3               R.oo_1.26.0                  
+## [15] KernSmooth_2.23-22            data.table_1.16.0            
+## [17] lifecycle_1.0.4               R.cache_0.16.0               
+## [19] farver_2.1.2                  compiler_4.4.0               
+## [21] stringr_1.5.1                 munsell_0.5.1                
+## [23] terra_1.7-78                  codetools_0.2-20             
+## [25] htmltools_0.5.8.1             class_7.3-22                 
+## [27] sass_0.4.9                    yaml_2.3.10                  
+## [29] lazyeval_0.2.2                pillar_1.9.0                 
+## [31] jquerylib_0.1.4               whisker_0.4.1                
+## [33] R.utils_2.12.3                classInt_0.4-10              
+## [35] cachem_1.1.0                  wk_0.9.4                     
+## [37] rnaturalearthdata_1.0.0       styler_1.10.3                
+## [39] tidyselect_1.2.1              digest_0.6.37                
+## [41] stringi_1.8.4                 dplyr_1.1.4                  
+## [43] purrr_1.0.2                   bookdown_0.40                
+## [45] labeling_0.4.3                fastmap_1.2.0                
+## [47] grid_4.4.0                    colorspace_2.1-1             
+## [49] cli_3.6.3                     magrittr_2.0.3               
+## [51] triebeard_0.4.1               crul_1.5.0                   
+## [53] utf8_1.2.4                    e1071_1.7-16                 
+## [55] withr_3.0.1                   scales_1.3.0                 
+## [57] bit64_4.0.5                   oai_0.4.0                    
+## [59] rmarkdown_2.28                httr_1.4.7                   
+## [61] bit_4.0.5                     blogdown_1.19                
+## [63] rnaturalearthhires_1.0.0.9000 R.methodsS3_1.8.2            
+## [65] evaluate_0.24.0               viridisLite_0.4.2            
+## [67] s2_1.1.7                      urltools_1.7.3               
+## [69] rlang_1.1.4                   Rcpp_1.0.13                  
+## [71] httpcode_0.3.0                glue_1.7.0                   
+## [73] DBI_1.2.3                     xml2_1.3.6                   
+## [75] jsonlite_1.8.8                R6_2.5.1                     
+## [77] plyr_1.8.9                    units_0.8-5
 ```

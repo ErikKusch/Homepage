@@ -14,7 +14,7 @@ tags:
 subtitle: "Name Resolving GBIF for Mediated Data"
 summary: 'A quick overview of name resolution with `rgbif`.'
 authors: []
-lastmod: '2023-05-21T20:00:00+01:00'
+lastmod: '2024-11-06T20:00:00+01:00'
 featured: no
 image:
   caption: ''
@@ -46,7 +46,7 @@ weight: 4
 <details>
   <summary>Preamble, Package-Loading, and GBIF API Credential Registering (click here):</summary>
 
-```r
+``` r
 ## Custom install & load function
 install.load.package <- function(x) {
   if (!require(x, character.only = TRUE)) {
@@ -57,20 +57,18 @@ install.load.package <- function(x) {
 ## names of packages we want installed (if not installed yet) and loaded
 package_vec <- c(
   "rgbif",
-  "knitr", # for rmarkdown table visualisations
-  "rnaturalearth", # for shapefile access
-  "wicket" # for transforming polygons into wkt format; may have to run: remotes::install_version("wicket", "0.4.0")
+  "knitr" # for rmarkdown table visualisations
 )
 ## executing install & load for each package
 sapply(package_vec, install.load.package)
 ```
 
 ```
-##         rgbif         knitr rnaturalearth        wicket 
-##          TRUE          TRUE          TRUE          TRUE
+## rgbif knitr 
+##  TRUE  TRUE
 ```
 
-```r
+``` r
 options(gbif_user = "my gbif username")
 options(gbif_email = "my registred gbif e-mail")
 options(gbif_pwd = "my gbif password")
@@ -90,24 +88,24 @@ Matching between what you require and how GBIF indexes its data is therefore vit
 
 ## Finding the **taxonKeys**
 
-To identify the relevant taxonKeys for our [study organism](/courses/gbif/#study-organism) (*Calluna vulgaris*), we will use the `name_backbone(...)` function to match our binomial species name to the GBIF backbone as follows:
+To identify the relevant taxonKeys for our [study organism](/courses/gbif/#study-organism) (*Lagopus muta*), we will use the `name_backbone(...)` function to match our binomial species name to the GBIF backbone as follows:
 
 
-```r
-sp_name <- "Calluna vulgaris"
+``` r
+sp_name <- "Lagopus muta"
 sp_backbone <- name_backbone(name = sp_name)
 ```
 Let's look at the output of this function call:
 
-```r
+``` r
 knitr::kable(sp_backbone)
 ```
 
 
 
-| usageKey|scientificName             |canonicalName    |rank    |status   | confidence|matchType |kingdom |phylum       |order    |family    |genus   |species          | kingdomKey| phylumKey| classKey| orderKey| familyKey| genusKey| speciesKey|synonym |class         |verbatim_name    |
-|--------:|:--------------------------|:----------------|:-------|:--------|----------:|:---------|:-------|:------------|:--------|:---------|:-------|:----------------|----------:|---------:|--------:|--------:|---------:|--------:|----------:|:-------|:-------------|:----------------|
-|  2882482|Calluna vulgaris (L.) Hull |Calluna vulgaris |SPECIES |ACCEPTED |         97|EXACT     |Plantae |Tracheophyta |Ericales |Ericaceae |Calluna |Calluna vulgaris |          6|   7707728|      220|     1353|      2505|  2882481|    2882482|FALSE   |Magnoliopsida |Calluna vulgaris |
+| usageKey|scientificName              |canonicalName |rank    |status   | confidence|matchType |kingdom  |phylum   |order       |family      |genus   |species      | kingdomKey| phylumKey| classKey| orderKey| familyKey| genusKey| speciesKey|synonym |class |verbatim_name |
+|--------:|:---------------------------|:-------------|:-------|:--------|----------:|:---------|:--------|:--------|:-----------|:-----------|:-------|:------------|----------:|---------:|--------:|--------:|---------:|--------:|----------:|:-------|:-----|:-------------|
+|  5227679|Lagopus muta (Montin, 1781) |Lagopus muta  |SPECIES |ACCEPTED |         99|EXACT     |Animalia |Chordata |Galliformes |Phasianidae |Lagopus |Lagopus muta |          1|        44|      212|      723|      9331|  2473369|    5227679|FALSE   |Aves  |Lagopus muta  |
 
 The data frame / `tibble` returned by the `name_backbone(...)` function contains important information regarding the confidence and type of match achieved between the input species name and the GBIF backbone. In addition, it lists all relevant taxonKeys. Of particular to most use-cases are the following columns:
 
@@ -118,19 +116,19 @@ The data frame / `tibble` returned by the `name_backbone(...)` function contains
   - HIGHERRANK: binomial input is not a species-level name, but indexes a higher-rank taxonomic group
   - NONE: no match could be made
 
-Let's extract the `usageKey` of *Calluna vulgaris* in the GBIF backbone for later use in this workshop.
+Let's extract the `usageKey` of *Lagopus muta* in the GBIF backbone for later use in this workshop.
 
-```r
+``` r
 sp_key <- sp_backbone$usageKey
 sp_key
 ```
 
 ```
-## [1] 2882482
+## [1] 5227679
 ```
 
 {{% alert success %}}
-We now have a unique identifier for *Caluna vulgaris* which we can use to query GBIF for data.
+We now have a unique identifier for *Lagpus muta* which we can use to query GBIF for data.
 {{% /alert %}}
 
 ## Resolving Taxonomic Names
@@ -139,11 +137,26 @@ Not all species identities are as straightforwardly matched to the GBIF backbone
 
 ### Matching Input to Backbone
 
-To widen the backbone matching, we can set `verbose = TRUE` in the `name_backbone(...)` function. Doing so for *Calluna vulgaris*, we obtain the following:
+To widen the backbone matching, we can set `verbose = TRUE` in the `name_backbone(...)` function. Doing so for *Lagopus muta*, we obtain the following:
 
-```r
+``` r
 sp_backbone <- name_backbone(name = sp_name, verbose = TRUE)
-knitr::kable(t(sp_backbone))
+knitr::kable(sp_backbone)
+```
+
+
+
+| usageKey|scientificName              |canonicalName |rank    |status   | confidence|matchType |kingdom  |phylum   |order       |family      |genus   |species      | kingdomKey| phylumKey| classKey| orderKey| familyKey| genusKey| speciesKey|synonym |class |verbatim_name |
+|--------:|:---------------------------|:-------------|:-------|:--------|----------:|:---------|:--------|:--------|:-----------|:-----------|:-------|:------------|----------:|---------:|--------:|--------:|---------:|--------:|----------:|:-------|:-----|:-------------|
+|  5227679|Lagopus muta (Montin, 1781) |Lagopus muta  |SPECIES |ACCEPTED |         99|EXACT     |Animalia |Chordata |Galliformes |Phasianidae |Lagopus |Lagopus muta |          1|        44|      212|      723|      9331|  2473369|    5227679|FALSE   |Aves  |Lagopus muta  |
+
+Seems like, even with widened backbone matching, *Lagopus muta* is precise enough of a specification for there to be one direct match.
+
+To demonstrate how this widened backbone matching can result in multiple matches, let's consider *Calluna vulgaris* - the common heather and my favourite plant:
+
+``` r
+sp_backbone2 <- name_backbone(name = "Calluna vulgaris", verbose = TRUE)
+knitr::kable(t(sp_backbone2))
 ```
 
 
@@ -175,25 +188,32 @@ knitr::kable(t(sp_backbone))
 |acceptedUsageKey |NA                         |2882482                        |NA                  |NA                     |
 |verbatim_name    |Calluna vulgaris           |Calluna vulgaris               |Calluna vulgaris    |Calluna vulgaris       |
 
-Here, you can see how fuzzy matching has resulted in an erroneous match with a different plant: *Carlina vulgaris* - the thistle - also a neat plant, but not the one we are after here.
+Here, you can see how fuzzy matching has resulted in an erroneous match with a different plant: *Carlina vulgaris* - the thistle - also a neat plant, but not the one I was after here.
 
 ### Competing Name Matches
 
-By horribly misspelling our binomial input, we can coerce an output of HIGHERRANK match which now indexes the Genus itself:
+By horribly misspelling our binomial input, we can coerce an output of match type FUZZY (a match achieved with deviations to the supplied string) or HIGHERRANK  (a match indexing the Genus itself):
 
-```r
-knitr::kable(name_backbone("Calluna vul", verbose = TRUE))
+``` r
+knitr::kable(name_backbone("Lagopus mut", verbose = TRUE))
 ```
 
 
 
-| usageKey|scientificName  |canonicalName |rank  |status   | confidence|matchType  |kingdom |phylum       |order    |family    |genus   | kingdomKey| phylumKey| classKey| orderKey| familyKey| genusKey|synonym |class         |verbatim_name |
-|--------:|:---------------|:-------------|:-----|:--------|----------:|:----------|:-------|:------------|:--------|:---------|:-------|----------:|---------:|--------:|--------:|---------:|--------:|:-------|:-------------|:-------------|
-|  2882481|Calluna Salisb. |Calluna       |GENUS |ACCEPTED |         94|HIGHERRANK |Plantae |Tracheophyta |Ericales |Ericaceae |Calluna |          6|   7707728|      220|     1353|      2505|  2882481|FALSE   |Magnoliopsida |Calluna vul   |
+| confidence|matchType |synonym | usageKey|scientificName                 |canonicalName |rank  |status   |kingdom  |phylum       |order       |family         |genus        | kingdomKey| phylumKey| classKey| orderKey| familyKey| genusKey|class         | acceptedUsageKey|verbatim_name |
+|----------:|:---------|:-------|--------:|:------------------------------|:-------------|:-----|:--------|:--------|:------------|:-----------|:--------------|:------------|----------:|---------:|--------:|--------:|---------:|--------:|:-------------|----------------:|:-------------|
+|        100|NONE      |FALSE   |       NA|NA                             |NA            |NA    |NA       |NA       |NA           |NA          |NA             |NA           |         NA|        NA|       NA|       NA|        NA|       NA|NA            |               NA|Lagopus mut   |
+|         69|EXACT     |FALSE   |  2473369|Lagopus Brisson, 1760          |Lagopus       |GENUS |ACCEPTED |Animalia |Chordata     |Galliformes |Phasianidae    |Lagopus      |          1|        44|      212|      723|      9331|  2473369|Aves          |               NA|Lagopus mut   |
+|         68|EXACT     |TRUE    |  3233696|Lagopus (Gren. & Godr.) Fourr. |Lagopus       |GENUS |SYNONYM  |Plantae  |Tracheophyta |Lamiales    |Plantaginaceae |Plantago     |          6|   7707728|      220|      408|      2420|  3189695|Magnoliopsida |          3189695|Lagopus mut   |
+|         68|EXACT     |TRUE    |  3233247|Lagopus Bernh.                 |Lagopus       |GENUS |SYNONYM  |Plantae  |Tracheophyta |Fabales     |Fabaceae       |Trifolium    |          6|   7707728|      220|     1370|      5386|  2973363|Magnoliopsida |          2973363|Lagopus mut   |
+|         68|EXACT     |TRUE    |  8132572|Lagopus Hill                   |Lagopus       |GENUS |SYNONYM  |Plantae  |Tracheophyta |Fabales     |Fabaceae       |Trifolium    |          6|   7707728|      220|     1370|      5386|  2973363|Magnoliopsida |          2973363|Lagopus mut   |
+|         68|EXACT     |TRUE    |  6007644|Lagopus Reichenbach, 1817      |Lagopus       |GENUS |SYNONYM  |Animalia |Arthropoda   |Lepidoptera |Noctuidae      |Callopistria |          1|        54|      216|      797|      7015|  8875134|Insecta       |          8875134|Lagopus mut   |
+|         43|FUZZY     |TRUE    |  4825684|Lagomus McEnery, 1859          |Lagomus       |GENUS |SYNONYM  |Animalia |Chordata     |Lagomorpha  |Prolagidae     |Prolagus     |          1|        44|      359|      785|      5468|  2436678|Mammalia      |          2436678|Lagopus mut   |
+|         38|FUZZY     |FALSE   |  4834660|Lagodus Pomel, 1852            |Lagodus       |GENUS |DOUBTFUL |Animalia |Chordata     |NA          |NA             |Lagodus      |          1|        44|      359|       NA|        NA|  4834660|Mammalia      |               NA|Lagopus mut   |
 
-To truly see how competing name identifiers can cause us to struggle identifying the correct `usageKey` we must turn away from *Calluna vulgaris*. Instead, let us look at *Glocianus punctiger* - a species of weevil:
+To truly see how competing name identifiers can cause us to struggle identifying the correct `usageKey` we must turn away from *Lagopus muta*. Instead, let us look at *Glocianus punctiger* - a species of weevil:
 
-```r
+``` r
 knitr::kable(name_backbone("Glocianus punctiger", verbose = TRUE))
 ```
 
@@ -202,26 +222,26 @@ knitr::kable(name_backbone("Glocianus punctiger", verbose = TRUE))
 | usageKey|scientificName                           |canonicalName       |rank    |status   | confidence|matchType  |kingdom  |phylum     |order      |family        | kingdomKey| phylumKey| classKey| orderKey| familyKey|synonym |class   | acceptedUsageKey|genus          |species                  | genusKey| speciesKey|verbatim_name       |
 |--------:|:----------------------------------------|:-------------------|:-------|:--------|----------:|:----------|:--------|:----------|:----------|:-------------|----------:|---------:|--------:|--------:|---------:|:-------|:-------|----------------:|:--------------|:------------------------|--------:|----------:|:-------------------|
 |     4239|Curculionidae                            |Curculionidae       |FAMILY  |ACCEPTED |         97|HIGHERRANK |Animalia |Arthropoda |Coleoptera |Curculionidae |          1|        54|      216|     1470|      4239|FALSE   |Insecta |               NA|NA             |NA                       |       NA|         NA|Glocianus punctiger |
-|  4464480|Glocianus punctiger (C.R.Sahlberg, 1835) |Glocianus punctiger |SPECIES |SYNONYM  |         97|EXACT      |Animalia |Arthropoda |Coleoptera |Curculionidae |          1|        54|      216|     1470|      4239|TRUE    |Insecta |          1187423|Rhynchaenus    |Rhynchaenus punctiger    |  1187150|    1187423|Glocianus punctiger |
-| 11356251|Glocianus punctiger (Gyllenhal, 1837)    |Glocianus punctiger |SPECIES |SYNONYM  |         97|EXACT      |Animalia |Arthropoda |Coleoptera |Curculionidae |          1|        54|      216|     1470|      4239|TRUE    |Insecta |          1178810|Ceuthorhynchus |Ceuthorhynchus punctiger |  8265946|    1178810|Glocianus punctiger |
+| 11356251|Glocianus punctiger (C.R.Sahlberg, 1835) |Glocianus punctiger |SPECIES |SYNONYM  |         97|EXACT      |Animalia |Arthropoda |Coleoptera |Curculionidae |          1|        54|      216|     1470|      4239|TRUE    |Insecta |          1187423|Rhynchaenus    |Rhynchaenus punctiger    |  1187150|    1187423|Glocianus punctiger |
+|  4464480|Glocianus punctiger (Gyllenhal, 1837)    |Glocianus punctiger |SPECIES |SYNONYM  |         97|EXACT      |Animalia |Arthropoda |Coleoptera |Curculionidae |          1|        54|      216|     1470|      4239|TRUE    |Insecta |          1178810|Ceuthorhynchus |Ceuthorhynchus punctiger |  8265946|    1178810|Glocianus punctiger |
 
-Here, we find that there exist two competing identifiers for *Glocianus punctiger* in the GBIF backbone in accordance with their competing descriptors. To query data for all *Glocianus punctiger* records, we should thus always use the keys 4464480 and 11356251.
+Here, we find that there exist two competing identifiers for *Glocianus punctiger* in the GBIF backbone in accordance with their competing descriptors. To query data for all *Glocianus punctiger* records, we should thus always use the keys 11356251 and 4464480.
 
 ### Matching Names and Backbone for several Species
 
-The above use of `name_backbone(...)` can be executed for multiple species at once using instead the `name_backbone_checklist(...)` function:
+The above use of `name_backbone(...)` can be executed for multiple species at once using instead the `name_backbone_checklist(...)` function. So let's do so for our target species as well as my favourite plant:
 
-```r
-checklist_df <- name_backbone_checklist(c(sp_name, "Glocianus punctiger"))
+``` r
+checklist_df <- name_backbone_checklist(c(sp_name, "Calluna vulgaris"))
 knitr::kable(checklist_df)
 ```
 
 
 
-| usageKey|scientificName             |canonicalName    |rank    |status   | confidence|matchType  |kingdom  |phylum       |order      |family        |genus   |species          | kingdomKey| phylumKey| classKey| orderKey| familyKey| genusKey| speciesKey|synonym |class         |verbatim_name       | verbatim_index|
-|--------:|:--------------------------|:----------------|:-------|:--------|----------:|:----------|:--------|:------------|:----------|:-------------|:-------|:----------------|----------:|---------:|--------:|--------:|---------:|--------:|----------:|:-------|:-------------|:-------------------|--------------:|
-|  2882482|Calluna vulgaris (L.) Hull |Calluna vulgaris |SPECIES |ACCEPTED |         97|EXACT      |Plantae  |Tracheophyta |Ericales   |Ericaceae     |Calluna |Calluna vulgaris |          6|   7707728|      220|     1353|      2505|  2882481|    2882482|FALSE   |Magnoliopsida |Calluna vulgaris    |              1|
-|     4239|Curculionidae              |Curculionidae    |FAMILY  |ACCEPTED |         97|HIGHERRANK |Animalia |Arthropoda   |Coleoptera |Curculionidae |NA      |NA               |          1|        54|      216|     1470|      4239|       NA|         NA|FALSE   |Insecta       |Glocianus punctiger |              2|
+| usageKey|scientificName              |canonicalName    |rank    |status   | confidence|matchType |kingdom  |phylum       |order       |family      |genus   |species          | kingdomKey| phylumKey| classKey| orderKey| familyKey| genusKey| speciesKey|synonym |class         |verbatim_name    | verbatim_index|
+|--------:|:---------------------------|:----------------|:-------|:--------|----------:|:---------|:--------|:------------|:-----------|:-----------|:-------|:----------------|----------:|---------:|--------:|--------:|---------:|--------:|----------:|:-------|:-------------|:----------------|--------------:|
+|  5227679|Lagopus muta (Montin, 1781) |Lagopus muta     |SPECIES |ACCEPTED |         99|EXACT     |Animalia |Chordata     |Galliformes |Phasianidae |Lagopus |Lagopus muta     |          1|        44|      212|      723|      9331|  2473369|    5227679|FALSE   |Aves          |Lagopus muta     |              1|
+|  2882482|Calluna vulgaris (L.) Hull  |Calluna vulgaris |SPECIES |ACCEPTED |         97|EXACT     |Plantae  |Tracheophyta |Ericales    |Ericaceae   |Calluna |Calluna vulgaris |          6|   7707728|      220|     1353|      2505|  2882481|    2882482|FALSE   |Magnoliopsida |Calluna vulgaris |              2|
 
 {{% alert success %}}
 It is best practise to carefully investigate the match between your binomial input and the GBIF backbone.
@@ -231,54 +251,57 @@ It is best practise to carefully investigate the match between your binomial inp
 
 To catch other commonly used or relevant names for a species of interest, you can use the `name_suggest(...)` function. This is particularly useful when data mining publications or data sets for records which can be grouped to the same species although they might be recorded with different names:
 
-```r
+``` r
 sp_suggest <- name_suggest(sp_name)$data
 knitr::kable(t(head(sp_suggest)))
 ```
 
 
 
-|              |                 |                 |                           |                         |                          |                         |
-|:-------------|:----------------|:----------------|:--------------------------|:------------------------|:-------------------------|:------------------------|
-|key           |2882482          |8208549          |11077703                   |7953575                  |12164569                  |9270560                  |
-|canonicalName |Calluna vulgaris |Calluna vulgaris |Calluna vulgaris albiflora |Calluna vulgaris hirsuta |Calluna vulgaris pubesens |Calluna vulgaris hirsuta |
-|rank          |SPECIES          |SPECIES          |VARIETY                    |VARIETY                  |VARIETY                   |VARIETY                  |
+|              |             |                       |                      |                       |                       |                      |
+|:-------------|:------------|:----------------------|:---------------------|:----------------------|:----------------------|:---------------------|
+|key           |5227679      |5227710                |7397817               |5227690                |5227698                |5227695               |
+|canonicalName |Lagopus muta |Lagopus muta pyrenaica |Lagopus muta macruros |Lagopus muta evermanni |Lagopus muta atkhensis |Lagopus muta ridgwayi |
+|rank          |SPECIES      |SUBSPECIES             |SUBSPECIES            |SUBSPECIES             |SUBSPECIES             |SUBSPECIES            |
+
 To trawl GBIF mediated data sets for records of a specific species, one may use the `name_lookup(...)` function:
 
-```r
+
+``` r
 sp_lookup <- name_lookup(sp_name)$data
 knitr::kable(head(sp_lookup))
 ```
 
 
 
-|       key|scientificName             |datasetKey                           |  nubKey| parentKey|parent    |genus   |  genusKey|canonicalName    |nameType   |taxonomicStatus |origin | numDescendants| numOccurrences|habitats    |nomenclaturalStatus |threatStatuses |synonym | nameKey|kingdom |phylum       |order    |family    |species          | kingdomKey| phylumKey|  classKey|  orderKey| familyKey| speciesKey|authorship |rank    |class         |constituentKey | acceptedKey|accepted |publishedIn | basionymKey|basionym |accordingTo |
-|---------:|:--------------------------|:------------------------------------|-------:|---------:|:---------|:-------|---------:|:----------------|:----------|:---------------|:------|--------------:|--------------:|:-----------|:-------------------|:--------------|:-------|-------:|:-------|:------------|:--------|:---------|:----------------|----------:|---------:|---------:|---------:|---------:|----------:|:----------|:-------|:-------------|:--------------|-----------:|:--------|:-----------|-----------:|:--------|:-----------|
-| 164940665|Calluna vulgaris           |e1fd4493-a11a-438d-a27f-ca3ca5152f6b | 2882482| 209476827|Calluna   |Calluna | 209476827|Calluna vulgaris |SCIENTIFIC |ACCEPTED        |SOURCE |              0|              0|NA          |NA                  |NA             |FALSE   |      NA|NA      |NA           |NA       |NA        |NA               |         NA|        NA|        NA|        NA|        NA|         NA|NA         |NA      |NA            |NA             |          NA|NA       |NA          |          NA|NA       |NA          |
-| 164940660|Calluna vulgaris           |e1fd4493-a11a-438d-a27f-ca3ca5152f6b | 2882482| 209476827|Calluna   |Calluna | 209476827|Calluna vulgaris |SCIENTIFIC |ACCEPTED        |SOURCE |              0|              0|NA          |NA                  |NA             |FALSE   |      NA|NA      |NA           |NA       |NA        |NA               |         NA|        NA|        NA|        NA|        NA|         NA|NA         |NA      |NA            |NA             |          NA|NA       |NA          |          NA|NA       |NA          |
-| 164940666|Calluna vulgaris           |e1fd4493-a11a-438d-a27f-ca3ca5152f6b | 2882482| 209476827|Calluna   |Calluna | 209476827|Calluna vulgaris |SCIENTIFIC |ACCEPTED        |SOURCE |              0|              0|NA          |NA                  |NA             |FALSE   |      NA|NA      |NA           |NA       |NA        |NA               |         NA|        NA|        NA|        NA|        NA|         NA|NA         |NA      |NA            |NA             |          NA|NA       |NA          |          NA|NA       |NA          |
-| 100222089|Calluna vulgaris           |b351a324-77c4-41c9-a909-f30f77268bc4 | 2882482|        NA|NA        |NA      |        NA|Calluna vulgaris |SCIENTIFIC |ACCEPTED        |SOURCE |              0|              0|NA          |NA                  |NA             |FALSE   |      NA|NA      |NA           |NA       |NA        |NA               |         NA|        NA|        NA|        NA|        NA|         NA|NA         |NA      |NA            |NA             |          NA|NA       |NA          |          NA|NA       |NA          |
-| 162496909|Calluna vulgaris (L.) Hull |15147db1-27c3-49b5-9c69-c78d55a4b8ff | 2882482| 201308749|Ericaceae |NA      |        NA|Calluna vulgaris |SCIENTIFIC |ACCEPTED        |SOURCE |              0|              0|TERRESTRIAL |NA                  |NA             |FALSE   | 1843465|Plantae |Tracheophyta |Ericales |Ericaceae |Calluna vulgaris |  201308187| 201308188| 201308206| 201308743| 201308749|  162496909|(L.) Hull  |SPECIES |Magnoliopsida |NA             |          NA|NA       |NA          |          NA|NA       |NA          |
-| 196388823|Calluna vulgaris (L.) Hull |b95e74e0-b772-430c-a729-9d56ce0182e2 | 2882482| 201288386|Ericaceae |NA      |        NA|Calluna vulgaris |SCIENTIFIC |ACCEPTED        |SOURCE |              0|              0|TERRESTRIAL |NA                  |NA             |FALSE   | 1843465|Plantae |Tracheophyta |Ericales |Ericaceae |Calluna vulgaris |  201288193| 201288216| 201288343| 201288379| 201288386|  196388823|(L.) Hull  |SPECIES |Magnoliopsida |NA             |          NA|NA       |NA          |          NA|NA       |NA          |
+|       key|scientificName | nameKey|datasetKey                           |  nubKey| parentKey|parent      |kingdom  |order       |family      |species      | kingdomKey|  classKey|  orderKey| familyKey| speciesKey|canonicalName |authorship |nameType   |taxonomicStatus |rank    |origin | numDescendants| numOccurrences|taxonID |extinct |habitats |nomenclaturalStatus |threatStatuses |synonym |class |phylum   |genus   | phylumKey|  genusKey|constituentKey |publishedIn |accordingTo | acceptedKey|accepted | basionymKey|basionym |
+|---------:|:--------------|-------:|:------------------------------------|-------:|---------:|:-----------|:--------|:-----------|:-----------|:------------|----------:|---------:|---------:|---------:|----------:|:-------------|:----------|:----------|:---------------|:-------|:------|--------------:|--------------:|:-------|:-------|:--------|:-------------------|:--------------|:-------|:-----|:--------|:-------|---------:|---------:|:--------------|:-----------|:-----------|-----------:|:--------|-----------:|:--------|
+| 133167086|Lagopus muta   | 5972798|47f16512-bf31-410f-b272-d151c996b2f6 | 5227679| 135274878|Phasianidae |Animalia |Galliformes |Phasianidae |Lagopus muta |  135274602| 135274603| 135274874| 135274878|  133167086|Lagopus muta  |           |SCIENTIFIC |ACCEPTED        |SPECIES |SOURCE |              0|              0|1613    |FALSE   |NA       |NA                  |NA             |FALSE   |Aves  |NA       |NA      |        NA|        NA|NA             |NA          |NA          |          NA|NA       |          NA|NA       |
+| 114449074|Lagopus muta   | 5972798|3772da2f-daa1-4f07-a438-15a881a2142c | 5227679| 183207232|Lagopus     |Animalia |Galliformes |Tetraonidae |NA           |  183203277| 183206633| 183207227| 183207228|         NA|Lagopus muta  |           |SCIENTIFIC |ACCEPTED        |NA      |SOURCE |              0|              0|NA      |NA      |NA       |NA                  |NA             |FALSE   |Aves  |Chordata |Lagopus | 183205906| 183207232|NA             |NA          |NA          |          NA|NA       |          NA|NA       |
+| 104151733|Lagopus muta   |      NA|fab88965-e69d-4491-a04d-e3198b626e52 | 5227679| 104151714|Lagopus     |Metazoa  |Galliformes |Phasianidae |Lagopus muta |  103832354| 104106614| 104149839| 104150497|  104151733|Lagopus muta  |NA         |SCIENTIFIC |ACCEPTED        |SPECIES |SOURCE |              0|              0|64668   |NA      |NA       |NA                  |NA             |FALSE   |Aves  |Chordata |Lagopus | 103882489| 104151714|NA             |NA          |NA          |          NA|NA       |          NA|NA       |
+| 100160233|Lagopus muta   | 5972798|d7435f14-dfc9-4aaa-bef3-5d1ed22d65bf | 5227679| 128727594|Lagopus     |Animalia |NA          |Phasianidae |Lagopus muta |  128725468| 128725469|        NA| 128727593|  100160233|Lagopus muta  |           |SCIENTIFIC |ACCEPTED        |SPECIES |SOURCE |              0|              0|NA      |NA      |NA       |NA                  |NA             |FALSE   |Aves  |NA       |Lagopus |        NA| 128727594|NA             |NA          |NA          |          NA|NA       |          NA|NA       |
+| 123212008|Lagopus muta   | 5972798|a5dd063e-f45b-4a54-8b94-8fa3adf7f1e1 | 5227679| 167183824|Phasianidae |Animalia |Galliformes |Phasianidae |Lagopus muta |  167183684|        NA| 167183822| 167183824|  123212008|Lagopus muta  |           |SCIENTIFIC |ACCEPTED        |SPECIES |SOURCE |              0|              0|NA      |NA      |NA       |NA                  |NA             |FALSE   |NA    |NA       |NA      |        NA|        NA|NA             |NA          |NA          |          NA|NA       |          NA|NA       |
+| 177659687|Lagopus muta   | 5972798|6b6b2923-0a10-4708-b170-5b7c611aceef | 5227679| 177659682|Lagopus     |Metazoa  |Galliformes |Phasianidae |Lagopus muta |  177651702| 177656782| 177659367| 177659587|  177659687|Lagopus muta  |           |SCIENTIFIC |ACCEPTED        |SPECIES |SOURCE |              4|              0|NA      |NA      |NA       |NA                  |NA             |FALSE   |Aves  |Chordata |Lagopus | 177654008| 177659682|NA             |NA          |NA          |          NA|NA       |          NA|NA       |
 
-Here, we see clearly that *Calluna vulgaris* is recorded slightly differently in the datasets mediated by GBIF, but are indexed just fine for GBIF to find them for us.
+Here, we see clearly that *Lagopus muta* is recorded slightly differently in the datasets mediated by GBIF, but are indexed just fine for GBIF to find them for us.
 
 Lastly, to gain a better understanding of the variety of vernacular names by which our species is know, we can use the `name_usage(..., data = "vernacularnames")` function as follows:
 
-```r
+
+``` r
 sp_usage <- name_usage(key = sp_key, data = "vernacularNames")$data
 knitr::kable(head(sp_usage))
 ```
 
 
 
-| taxonKey|vernacularName |language |source                                                                                         | sourceTaxonKey|country |area |
-|--------:|:--------------|:--------|:----------------------------------------------------------------------------------------------|--------------:|:-------|:----|
-|  2882482|Besenheide     |         |Catalogue of Life Checklist                                                                    |      171596574|NA      |NA   |
-|  2882482|Besenheide     |deu      |Taxon list of vascular plants from Bavaria, Germany compiled in the context of the BFL project |      116794811|DE      |NA   |
-|  2882482|Callune        |fra      |DAISIE - Inventory of alien invasive species in Europe                                         |      159511353|NA      |NA   |
-|  2882482|Heather        |         |Catalogue of Life Checklist                                                                    |      171596574|NA      |NA   |
-|  2882482|Heather        |eng      |Checklist of Vermont Species                                                                   |      160786202|US      |NA   |
-|  2882482|Heather        |eng      |Martha's Vineyard species checklist                                                            |      202603884|NA      |NA   |
+| taxonKey|vernacularName  |language |source                                                                   | sourceTaxonKey|country |area |preferred |
+|--------:|:---------------|:--------|:------------------------------------------------------------------------|--------------:|:-------|:----|:---------|
+|  5227679|Alpenschneehuhn |deu      |Multilingual IOC World Bird List, v11.2                                  |      123212008|NA      |NA   |NA        |
+|  5227679|Alpenschneehuhn |deu      |Taxon list of animals with German names (worldwide) compiled at the SMNS |      116803956|DE      |NA   |NA        |
+|  5227679|Alpenschneehuhn |deu      |EUNIS Biodiversity Database                                              |      101137652|NA      |NA   |NA        |
+|  5227679|Alpensneeuwhoen |nld      |EUNIS Biodiversity Database                                              |      101137652|NA      |NA   |NA        |
+|  5227679|Alpensneeuwhoen |nld      |Multilingual IOC World Bird List, v11.2                                  |      123212008|NA      |NA   |NA        |
+|  5227679|Fjeldrype       |dan      |Multilingual IOC World Bird List, v11.2                                  |      123212008|NA      |NA   |NA        |
 
 `name_usage(...)` can be tuned to output different information and its documentation gives a good overview of this. Simply call `?name_usage` to look for yourself.

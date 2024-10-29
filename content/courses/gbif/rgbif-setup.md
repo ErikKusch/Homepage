@@ -48,13 +48,13 @@ weight: 3
 
 Before we can use the `R` package, we need to install it. In the simplest way this can be done with the `install.packages(...)` command:
 
-```r
+``` r
 install.packages("rgbif")
 ```
 
 Following successful installation of `rgbif`, we simply need to load it into our `R` session to make its functionality available to use via the `library(...)` command:
 
-```r
+``` r
 library(rgbif)
 ```
 
@@ -74,7 +74,7 @@ I **strongly** suggest **never** installing and loading packages this way in a s
   <summary>For a user-defined function that avoids these issues, click here:</summary>
     Below, I create a user defined function called `install.load.package(...)`. This function takes as an input the name of an `R` package just like the `install.packages(...)` function does. Instead of simply forcing package installation, however, `install.load.package(...)` checks whether the package in question is already installed and only carries out installation if it isn't. Before concluding, `install.load.package(...)` loads the package.
 
-```r
+``` r
 ## Custom install & load function
 install.load.package <- function(x) {
   if (!require(x, character.only = TRUE)) {
@@ -85,7 +85,7 @@ install.load.package <- function(x) {
 ```
   To further streamline package installation and loading, we can use `sapply(...)` to execute the `install.load.package(...)` function sequentially for all the packages we desire or require:
 
-```r
+``` r
 ## names of packages we want installed (if not installed yet) and loaded
 package_vec <- c(
   "rgbif"
@@ -127,7 +127,7 @@ Connect your [ORCID](https://orcid.org/). This step is not strictly necessary, b
 Lastly, we need to tell your `R` session about your GBIF credentials. This can either be done for each individual function call executed from `rgbif` to the GBIF API, or set once per `R` session. I prefer the latter, so let's register your GBIF credentials as follows:
 
 
-```r
+``` r
 options(gbif_user = "my gbif username")
 options(gbif_email = "my registred gbif e-mail")
 options(gbif_pwd = "my gbif password")

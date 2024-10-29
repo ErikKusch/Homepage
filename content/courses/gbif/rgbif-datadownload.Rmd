@@ -14,7 +14,7 @@ tags:
 subtitle: "Obtaining GBIF Mediated Data"
 summary: 'A quick overview of data retrieval with `rgbif`.'
 authors: []
-lastmod: '2023-05-21T20:00:00+01:00'
+lastmod: '2023-11-06T20:00:00+01:00'
 featured: no
 image:
   caption: ''
@@ -41,7 +41,7 @@ weight: 6
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, tidy='styler', tidy.opts=list(strict=TRUE), fig.width = 15, fig.height = 8)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, tidy = "styler", tidy.opts = list(strict = TRUE), fig.width = 15, fig.height = 8)
 options(width = 90)
 source("PersonalSettings.R")
 ```
@@ -51,7 +51,7 @@ source("PersonalSettings.R")
   <summary>Preamble, Package-Loading, and GBIF API Credential Registering (click here):</summary>
 ```{r InstallAdvanced}
 ## Custom install & load function
-install.load.package <- function(x){
+install.load.package <- function(x) {
   if (!require(x, character.only = TRUE)) {
     install.packages(x, repos = "http://cran.us.r-project.org")
   }
@@ -74,20 +74,22 @@ options(gbif_pwd = "my gbif password")
 </details> 
 {{% /alert %}}
 
-First, we need to register the correct **usageKey** for *Calluna vulgaris*:
+First, we need to register the correct **usageKey** for *Lagopus muta*:
 ```{r}
-sp_name <- "Calluna vulgaris"
+sp_name <- "Lagopus muta"
 sp_backbone <- name_backbone(name = sp_name)
 sp_key <- sp_backbone$usageKey
 ```
 
 Second, this is the specific data we are interested in obtaining:
 ```{r}
-occ_final <- occ_search(taxonKey = sp_key,
-                        country = "NO",
-                        year = "2000,2022",
-                        basisOfRecord = "HUMAN_OBSERVATION",
-                        occurrenceStatus = "PRESENT")
+occ_final <- occ_search(
+  taxonKey = sp_key,
+  country = "NO",
+  year = "2000,2020",
+  basisOfRecord = "HUMAN_OBSERVATION",
+  occurrenceStatus = "PRESENT"
+)
 ```
 
 Finally, we are ready to obtain GBIF mediated data we may want to use in downstream analyses and applications. This can be done in one of two ways - either via:
@@ -112,7 +114,7 @@ As a matter of fact, we have already executed one of these through our call to `
 NI_occ <- occ_data(
   taxonKey = sp_key,
   country = "NO",
-  year = "2000,2022",
+  year = "2000,2020",
   basisOfRecord = "HUMAN_OBSERVATION",
   occurrenceStatus = "PRESENT"
 )
@@ -170,16 +172,16 @@ Finally, the relevant functions and how the relate `key` to `value` are:
 
 Let us use these to query the data we are interested in:
 ```{r, echo = FALSE}
-if(file.exists(file.path(getwd(), "registereddownload.RData"))){
+if (file.exists(file.path(getwd(), "registereddownload.RData"))) {
   load(file.path(getwd(), "registereddownload.RData"))
-}else{
+} else {
   res <- occ_download(
-  pred("taxonKey", sp_key),
-  pred("basisOfRecord", 'HUMAN_OBSERVATION'),
-  pred("country", "NO"),
-  pred_gte("year", 2000),
-  pred_lte("year", 2022)
-)
+    pred("taxonKey", sp_key),
+    pred("basisOfRecord", "HUMAN_OBSERVATION"),
+    pred("country", "NO"),
+    pred_gte("year", 2000),
+    pred_lte("year", 2020)
+  )
   save(res, file = "registereddownload.RData")
 }
 ```
@@ -187,11 +189,11 @@ if(file.exists(file.path(getwd(), "registereddownload.RData"))){
 ```{r searchandgetkey, eval=FALSE}
 res <- occ_download(
   pred("taxonKey", sp_key),
-  pred("basisOfRecord", 'HUMAN_OBSERVATION'),
+  pred("basisOfRecord", "HUMAN_OBSERVATION"),
   pred("country", "NO"),
   pred("hasCoordinate", TRUE),
   pred_gte("year", 2000),
-  pred_lte("year", 2022)
+  pred_lte("year", 2020)
 )
 ```
 
@@ -214,43 +216,18 @@ This is done according to the underlying structure of the metadata:
 str(occ_download_meta(res), max.level = 1)
 ```
 
-**Note:** You will find that the number of records in our query made via `occ_download(...)` here and `occ_search(...)` above are different:
+**Note:** You will find that the number of records in our query made via `occ_download(...)` here and `occ_search(...)` above are different. This is due to different ways data ranges are handled. 
+
 ```{r}
 occ_download_meta(res)$totalRecords
 ```
 
-```{r, eval = FALSE}
-NI_occ$meta$count
-```
-```
-## [1] 24347
-```
-
-This is due to different ways data ranges are handled. Running `occ_search(...)` instead like so fixes the mismatch:
-
-```{r, eval = FALSE}
-occ_search(
-  taxonKey = sp_key,
-  country = "NO",
-  year = "2000,2023", # we need to expand the upper range limit here
-  basisOfRecord = "HUMAN_OBSERVATION",
-  occurrenceStatus = "PRESENT",
-  hasGeospatialIssue = FALSE,
-  hasCoordinate = TRUE
-)$meta$count
-```
-```
-## [1] 24904
-```
-Now the data products match.
-
 ## Data Download
 
-Now that the download request is registered with GBIF, it is time to actually obtain the data you have queried. To facilitate this, there are three distinct ways to obtain the data itself:
+Now that the download request is registered with GBIF, it is time to actually obtain the data you have queried. To facilitate this, there are two distinct ways to obtain the data itself:
 
 1. Webportal
 2. `rgbif`
-3. File download with `R`
 
 Personally, I can not recommend any of these methods over the `rgbif`-internal download method. However, in case you might prefer other options, I will quickly show how these work, too.
 
@@ -262,6 +239,8 @@ At the most basic level, you may obtain data through the [GBIF portal](https://w
 
 There, you will see a breakdown of your download request and also whether it is still being processed or already finished:
 <img src="/courses/gbif/gbif-download2.jpeg" width="100%"/></a>
+
+Note that the DOI differs here from the other images and the data product we are working with ultimately. This is because I had to requeue the download to get this screenshot.
 
 Upon completion of your request on the GBIF end, a "DOWNLOAD" button will appear on the specific download request overview page:
 <img src="/courses/gbif/gbif-download3.jpeg" width="100%"/></a>
@@ -298,64 +277,6 @@ knitr::kable(head(res_data))
 
 Note that the structure of this data set is different to that obtained with `occ_search(...)` hence enforcing that you **should always stage downloads whose data are used in publications with `occ_download(...)`!**
 
-### File Download Method
-
-If, for some reason, you prefer a programmatic solution that does not use `rgbif`, you can also use base `R` functions to (1) wait for your download to be ready, (2) obtain your data and (3) load it into `R`.
-
-To this end, we can code our own function:
-```{r download3, eval=TRUE}
-#------------------------------------------------------------------------------
-# Asyncronous download from the GBIF API. 
-# The function tries, with given time interval to download data generated 
-# by the download key as object given by "occ_download" function of the "rgbif" 
-# library. 
-#
-# Input:
-# download_url: GBIF API download url (e.g. from occ_download in rgbif package)
-# n_try: Number of times the function should keep trying
-# Sys.sleep_duration: Time interval between each try (in seconds)
-#
-# Output: 
-# Downloaded dwc-archive, named with the download key and written to the 
-# the current R session working directory.
-#------------------------------------------------------------------------------
-download_GBIF_API <- function(download_url, n_try = 10, Sys.sleep_duration = 60, destfile_name){
-  # Download waiting and downloading
-  n_try_count <- 1
-  try_download <- try(download.file(url=download_url,destfile=destfile_name,
-                                    quiet=TRUE),silent = TRUE)
-  while (inherits(try_download, "try-error") & n_try_count < n_try) {   
-    Sys.sleep(Sys.sleep_duration)
-    n_try_count <- n_try_count+1
-    try_download <- try(download.file(url=download_url,destfile=destfile_name,
-                      quiet=TRUE),silent = TRUE)
-    print(paste("trying... Download link not ready. Time elapsed (min):",
-                round(as.numeric(paste(difftime(Sys.time(),start_time, units = "mins"))),2)))
-  }
-  
-  # Data Loading
-  archive_files <- unzip(destfile_name, files = "NULL", list = TRUE)
-  occurrence_data <- rio::import(unzip(destfile_name, files = "occurrence.txt"), header = TRUE, sep = "\t")
-
-  # Retunring data
-  return(occurrence_data)
-}
-
-# call function
-occurrence_data <- download_GBIF_API(download_url = occ_download_meta(res)$downloadLink,
-                                     destfile_name = tempfile(), 
-                                     n_try = 5, Sys.sleep_duration = 30)
-                  
-```
-*Note:* The current script is set up to store the downloaded data to a temporary file. If you work with large datasets you probably want to store the data on disk for re-use in later sessions.  
-
-Now to test if that works the same as the more streamlined `rgbif` implementation:
-
-```{r}
-all.equal(data.frame(occurrence_data), data.frame(res_data))
-```
-
-That worked!
 
 {{% alert success %}}
 You now have the means of **obtaining GBIF mediated data**. Next, you will need to work with that data locally.

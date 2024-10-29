@@ -2,11 +2,11 @@
 title: Accessing, handling, and referencing open biodiversity data using the Global Biodiversity Information Facility (GBIF)
 linktitle: Motivation & Workshop
 slug: overview
-date: 2021-01-01
+date: 2024-11-06
 authors:
 - ErikKusch
 external_link: ""
-summary: Workshop material introducing concepts and giving practical examples for obtaining GBIF data using `rgbif`. Presented at the Living Norway Colloquium 2023 in Trondheim.
+summary: Workshop material introducing concepts and giving practical examples for obtaining GBIF data using `rgbif`.
 categories:
   - GBIF
   - Biodiversity
@@ -46,12 +46,12 @@ Throughout this workshop, you will be introduced to:
 - Data handling practices in `R`
 
 ## Study Organism
-Most of the time, GBIF users query data for individual species so we will establish a comparable use-case here. For most of this material, I will be focussing on *Calluna vulgaris* - the common heather. It is my favourite plant and lends itself well to a demonstration of `rgbif` functionality.
+Most of the time, GBIF users query data for individual species so we will establish a comparable use-case here. For most of this material, I will be focussing on *Lagopus muta* - the rock ptarmigan (see below). I have particularly fond memories of these birds flying alongside an uncle of mine and I on a topptur-ski trip in Lofoten earlier this year. It also lends itself well to a demonstration of `rgbif` functionality.
 
-<img src="/courses/gbif/Calluna.png" width="900"/>
+<img src="/courses/gbif/Lagopus.png" width="900"/>
 
 ## Disclaimer
 If you find any typos in my material, are unhappy with some of what or how I am presenting or simply unclear about thing, do not hesitate to [contact me](/about/#contact).
 
-All the best,  
+All the best, 
 Erik
