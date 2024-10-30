@@ -1,0 +1,1876 @@
+<!DOCTYPE html><html lang="en-gb" >
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.8.0">
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Erik Kusch">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Answers and solutions to the exercises belonging to chapter 16 in [Satistical Rethinking 2](https://xcelab.net/rm/statistical-rethinking/) by Richard McElreath.">
+
+  
+  <link rel="alternate" hreflang="en-gb" href="https://www.erikkusch.com/courses/rethinking/chapter-16/">
+
+  
+
+
+  
+  
+  
+  <meta name="theme-color" content="#858383">
+  
+
+  
+  
+  
+  <script src="/js/mathjax-config.js"></script>
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-1/css/all.min.css" integrity="sha256-4w9DunooKSr3MFXHXWyFER38WmPdm361bQS/2KUWZbU=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.css" integrity="sha256-SHMGCYmST46SoyGgo4YR/9AlK1vf3ff84Aq9yK4hdqM=" crossorigin="anonymous">
+    
+
+    
+
+    
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.1.2/lazysizes.min.js" integrity="sha256-Md1qLToewPeKjfAHU1zyPwOutccPAm5tahnaw7Osw0A=" crossorigin="anonymous" async></script>
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" integrity="" crossorigin="anonymous" async></script>
+      
+    
+      
+
+      
+      
+
+      
+    
+
+  
+
+  
+  
+  
+    
+      
+      
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cutive+Mono%7CLora:400,700%7CRoboto:400,700&display=swap">
+    
+  
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/academic.css">
+
+  
+
+
+
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-186216138-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+
+  function gtag() {
+      dataLayer.push(arguments);
+  }
+
+  function trackOutboundLink(url, target) {
+    gtag('event', 'click', {
+         'event_category': 'outbound',
+         'event_label': url,
+         'transport_type': 'beacon',
+         'event_callback': function () {
+           if (target !== '_blank') {
+             document.location = url;
+           }
+         }
+    });
+    console.debug("Outbound link clicked: " + url);
+  }
+
+  function onClickCallback(event) {
+    if ((event.target.tagName !== 'A') || (event.target.host === window.location.host)) {
+      return;
+    }
+    trackOutboundLink(event.target, event.target.getAttribute('target'));  
+  }
+
+  gtag('js', new Date());
+  gtag('config', 'UA-186216138-1', {});
+
+  
+  document.addEventListener('click', onClickCallback, false);
+</script>
+
+
+  
+
+
+  
+  
+
+  
+
+  <link rel="manifest" href="/index.webmanifest">
+  <link rel="icon" type="image/png" href="/images/icon_hu7658c99d512131214e4d6c003a3f85f7_112593_32x32_fill_lanczos_center_2.png">
+  <link rel="apple-touch-icon" type="image/png" href="/images/icon_hu7658c99d512131214e4d6c003a3f85f7_112593_192x192_fill_lanczos_center_2.png">
+
+  <link rel="canonical" href="https://www.erikkusch.com/courses/rethinking/chapter-16/">
+
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  <meta property="twitter:card" content="summary_large_image">
+  
+  <meta property="twitter:site" content="@ErikKusch">
+  <meta property="twitter:creator" content="@ErikKusch">
+  
+  <meta property="og:site_name" content="Erik Kusch">
+  <meta property="og:url" content="https://www.erikkusch.com/courses/rethinking/chapter-16/">
+  <meta property="og:title" content="Chapter 16 | Erik Kusch">
+  <meta property="og:description" content="Answers and solutions to the exercises belonging to chapter 16 in [Satistical Rethinking 2](https://xcelab.net/rm/statistical-rethinking/) by Richard McElreath."><meta property="og:image" content="https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg">
+  <meta property="twitter:image" content="https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg"><meta property="og:locale" content="en-gb">
+  
+    
+      <meta property="article:published_time" content="2021-05-13T00:00:00&#43;00:00">
+    
+    <meta property="article:modified_time" content="2021-05-13T18:00:00&#43;01:00">
+  
+
+  
+
+
+
+  
+
+
+  
+
+
+  
+
+
+
+
+
+  <title>Chapter 16 | Erik Kusch</title>
+
+</head>
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search" class="form-control">
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+<nav class="navbar navbar-expand-lg navbar-light compensate-for-scrollbar" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="d-none d-lg-inline-flex">
+      <a class="navbar-brand" href="/"><img src="/images/logo_huab2266ff59bbac6a094b6da1268adcf9_208479_0x70_resize_lanczos_2.png" alt="Erik Kusch"></a>
+    </div>
+    
+
+    
+    <button type="button" class="navbar-toggler" data-toggle="collapse"
+            data-target="#navbar-content" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+    <span><i class="fas fa-bars"></i></span>
+    </button>
+    
+
+    
+    <div class="navbar-brand-mobile-wrapper d-inline-flex d-lg-none">
+      <a class="navbar-brand" href="/"><img src="/images/logo_huab2266ff59bbac6a094b6da1268adcf9_208479_0x70_resize_lanczos_2.png" alt="Erik Kusch"></a>
+    </div>
+    
+
+    
+    
+    <div class="navbar-collapse main-menu-item collapse justify-content-center" id="navbar-content">
+
+      
+      <ul class="navbar-nav d-md-inline-flex">
+        
+
+        
+
+        
+        
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link  active" href="/"><span>Home</span></a>
+        </li>
+
+        
+        
+
+        
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"><span>Courses & Workshops</span><span class="caret"></span>
+          </a>
+          <div class="dropdown-menu">
+            
+              <a class="dropdown-item" href="/courses/krigr/"><span>KrigR - State-of-the-Art Climate Data within R</span></a>
+            
+              <a class="dropdown-item" href="/courses/gbif/"><span>Accessing and Referencing GBIF Data for Research</span></a>
+            
+              <a class="dropdown-item" href="/courses/rethinking/"><span>Statistical Rethinking - Introduction to Bayesian Statistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/bayes-nets/"><span>Bayesian Networks - Causality through Bayesian Approaches</span></a>
+            
+              <a class="dropdown-item" href="/courses/biostat101/"><span>Biostats 101 - An Introduction to Biostatistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/excursions-into-biostatistics/"><span>Biostats 301 - Excursions into Biostatistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/bftp-biome-detection/"><span>BFTP - First Steps in Macroecology in R</span></a>
+            
+          </div>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#projects"><span>Projects</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#featured"><span>Publications</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#talks"><span>Talks</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/about"><span>Contact</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+            
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/media/CV_ErikKusch.html" target="_blank" rel="noopener"><span>CV</span></a>
+        </li>
+
+        
+        
+
+      
+
+        
+      </ul>
+    </div>
+
+    <ul class="nav-icons navbar-nav flex-row ml-auto d-flex pl-md-2">
+      
+      <li class="nav-item">
+        <a class="nav-link js-search" href="#" aria-label="Search"><i class="fas fa-search" aria-hidden="true"></i></a>
+      </li>
+      
+
+      
+      <li class="nav-item dropdown theme-dropdown">
+        <a href="#" class="nav-link js-theme-selector" data-toggle="dropdown" aria-haspopup="true">
+          <i class="fas fa-palette" aria-hidden="true"></i>
+        </a>
+        <div class="dropdown-menu">
+          <a href="#" class="dropdown-item js-set-theme-light">
+            <span>Light</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-dark">
+            <span>Dark</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-auto">
+            <span>Automatic</span>
+          </a>
+        </div>
+      </li>
+      
+
+      
+
+    </ul>
+
+  </div>
+</nav>
+
+
+  
+
+<div class="container-fluid docs">
+  <div class="row flex-xl-nowrap">
+    <div class="col-12 col-md-3 col-xl-2 docs-sidebar">
+      
+
+
+
+
+
+  
+    
+  
+
+
+
+
+<form class="docs-search d-flex align-items-center">
+  <button class="btn docs-toggle d-md-none p-0 mr-3" type="button" data-toggle="collapse" data-target="#docs-nav" aria-controls="docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    <span><i class="fas fa-bars"></i></span>
+  </button>
+
+  
+  <input name="q" type="search" class="form-control" placeholder="Search..." autocomplete="off">
+  
+</form>
+
+<nav class="collapse docs-links" id="docs-nav">
+  
+
+  
+  
+  
+  
+  <div class="docs-toc-item">
+    <a class="docs-toc-link" href="/courses/rethinking/">Overview</a>
+
+  </div>
+  
+  <div class="docs-toc-item">
+    <a class="docs-toc-link" href="/courses/rethinking/chapter-02/">Seminars</a>
+    <ul class="nav docs-sidenav">
+      
+      <li >
+        <a href="/courses/rethinking/chapter-02/">Chapter 01 &amp; 02</a>
+      </li>
+      
+      <li >
+        <a href="/courses/rethinking/chapter-03/">Chapter 03</a>
+      </li>
+      
+      <li >
+        <a href="/courses/rethinking/chapter-04/">Chapter 04</a>
+      </li>
+      
+      <li >
+        <a href="/courses/rethinking/chapter-04b/">Chapter 04 (Extra Material)</a>
+      </li>
+      
+      <li >
+        <a href="/courses/rethinking/chapter-05/">Chapter 05</a>
+      </li>
+      
+      <li >
+        <a href="/courses/rethinking/chapter-06/">Chapter 06</a>
+      </li>
+      
+      <li >
+        <a href="/courses/rethinking/chapter-07/">Chapter 07</a>
+      </li>
+      
+      <li >
+        <a href="/courses/rethinking/chapter-08/">Chapter 08</a>
+      </li>
+      
+      <li >
+        <a href="/courses/rethinking/chapter-09/">Chapter 09</a>
+      </li>
+      
+      <li >
+        <a href="/courses/rethinking/chapter-11/">Chapter 10 &amp; 11</a>
+      </li>
+      
+      <li >
+        <a href="/courses/rethinking/chapter-12/">Chapter 12</a>
+      </li>
+      
+      <li >
+        <a href="/courses/rethinking/chapter-13/">Chapter 13</a>
+      </li>
+      
+      <li >
+        <a href="/courses/rethinking/chapter-14/">Chapter 14</a>
+      </li>
+      
+      <li >
+        <a href="/courses/rethinking/chapter-15/">Chapter 15</a>
+      </li>
+      
+      <li class="active">
+        <a href="/courses/rethinking/chapter-16/">Chapter 16</a>
+      </li>
+      
+    </ul>
+    
+
+  </div>
+  
+  
+</nav>
+
+    </div>
+
+    
+    <div class="d-none d-xl-block col-xl-2 docs-toc">
+      <ul class="nav toc-top">
+        <li><a href="#" id="back_to_top" class="docs-toc-title">Contents</a></li>
+      </ul>
+
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#material">Material</a></li>
+    <li><a href="#introduction">Introduction</a></li>
+    <li><a href="#r-environment"><code>R</code> Environment</a></li>
+    <li><a href="#easy-exercises">Easy Exercises</a></li>
+    <li><a href="#medium-exercises">Medium Exercises</a>
+      <ul>
+        <li><a href="#practice-m1">Practice M1</a></li>
+        <li><a href="#practice-m2">Practice M2</a></li>
+        <li><a href="#practice-m3">Practice M3</a></li>
+      </ul>
+    </li>
+    <li><a href="#hard-exercises">Hard Exercises</a>
+      <ul>
+        <li><a href="#practice-h1">Practice H1</a></li>
+        <li><a href="#practice-h2">Practice H2</a></li>
+        <li><a href="#practice-h3">Practice H3</a></li>
+        <li><a href="#practice-h4">Practice H4</a></li>
+        <li><a href="#practice-h5">Practice H5</a></li>
+      </ul>
+    </li>
+    <li><a href="#session-info">Session Info</a></li>
+  </ul>
+</nav>
+
+      
+    </div>
+    
+
+    <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 docs-content" role="main">
+
+      <article class="article">
+
+        <div class="docs-article-container">
+          <h1>Chapter 16</h1>
+
+          <div class="article-style">
+            <h1 id="generalised-linear-madness">Generalised Linear Madness</h1>
+<h2 id="material">Material</h2>
+<ul>
+<li>
+<a href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/rethinking/19__14-05-2021_SUMMARY_-GLM.html" target="_blank" rel="noopener">Slides Chapter 16</a></li>
+</ul>
+<h2 id="introduction">Introduction</h2>
+<p>These are answers and solutions to the exercises at the end of chapter 15 in 
+<a href="https://xcelab.net/rm/statistical-rethinking/" target="_blank" rel="noopener">Satistical Rethinking 2</a> by Richard McElreath. I have created these notes as a part of my ongoing involvement in the 
+<a href="/project/aubayes/">AU Bayes Study Group</a>. Much of my inspiration for these solutions, where necessary, has been obtained from</p>
+<!-- [Taras Svirskyi](https://github.com/jffist/statistical-rethinking-solutions/blob/master/ch10_hw.R), [William Wolf](https://github.com/cavaunpeu/statistical-rethinking/blob/master/chapter-10/homework.R), and [Corrie Bartelheimer](https://www.samples-of-thoughts.com/projects/statistical-rethinking/chapter_10/chp10-ex/) as well as  -->
+<p>the solutions provided to instructors by Richard McElreath himself.</p>
+<h2 id="r-environment"><code>R</code> Environment</h2>
+<p>For today&rsquo;s exercise, I load the following packages:</p>
+<pre><code class="language-r">library(rethinking)
+library(ggplot2)
+</code></pre>
+<h2 id="easy-exercises">Easy Exercises</h2>
+<p>Unfortunately, the PDF version of 
+<a href="https://xcelab.net/rm/statistical-rethinking/" target="_blank" rel="noopener">Satistical Rethinking 2</a>, I am working with does not list any easy practice exercises for this chapter.</p>
+<h2 id="medium-exercises">Medium Exercises</h2>
+<h3 id="practice-m1">Practice M1</h3>
+<p><strong>Question:</strong>  Modify the cylinder height model, <code>m16.1</code>, so that the exponent 3 on height is instead a free parameter. Do you recover the value of 3 or not? Plot the posterior predictions for the new model. How do they differ from those of <code>m16.1</code>?</p>
+<p><strong>Answer:</strong> Before we move on, let me just remind all of us of the model itself:</p>
+<p>$W_i ∼ Log-Normal(µ_i, σ)$ [Distribution for weight]<br>
+$exp(µ_i) = kπp^2h^3_i$ [expected median of weight]<br>
+$k ∼ Beta(2, 18)$ [prior relation between weight and volume]<br>
+$p ∼ Exponential(0.5)$ [prior proportionality of radius to height]<br>
+$σ ∼ Exponential(1)$ [our old friend, sigma]</p>
+<p>As for the exercise, I start by loading the data and rescaling the <code>weight</code> and <code>height</code> variables as was done in the chapter:</p>
+<pre><code class="language-r">data(&quot;Howell1&quot;)
+d &lt;- Howell1
+d$w &lt;- d$weight / mean(d$weight)
+d$h &lt;- d$height / mean(d$height)
+</code></pre>
+<p>Now that the data is prepared, we can run the model. Before we run the model that we are asked for, however, I want to run the model from the chapter for later comparison:</p>
+<pre><code class="language-r">m16.1 &lt;- ulam(
+  alist(
+    w ~ dlnorm(mu, sigma),
+    exp(mu) &lt;- 3.141593 * k * p^2 * h^3,
+    p ~ beta(2, 18),
+    k ~ exponential(0.5),
+    sigma ~ exponential(1)
+  ),
+  data = d, chains = 4, cores = 4, log_lik = TRUE
+)
+</code></pre>
+<p>I run this model as well as the subsequent one with <code>log_lik = TRUE</code> to allow for model comparison with WAIC.</p>
+<p>To assign a free parameter to the exponent 3 of the chapter, I simply substitute the value 3 in the model code with a letter (<code>e</code>) to indicate a parameter. I also have to define a prior (I reckon the exponent should definitely be positive) for this new parameter, of course:</p>
+<pre><code class="language-r">m_M1 &lt;- ulam(
+  alist(
+    w ~ dlnorm(mu, sigma),
+    exp(mu) &lt;- 3.141593 * k * p^2 * h^e,
+    p ~ beta(2, 18),
+    k ~ exponential(0.5),
+    sigma ~ exponential(1),
+    e ~ exponential(1)
+  ),
+  data = d, chains = 4, cores = 4, log_lik = TRUE
+)
+</code></pre>
+<pre><code class="language-r">precis(m_M1)
+</code></pre>
+<pre><code>##            mean          sd      5.5%      94.5%     n_eff    Rhat4
+## p     0.2440124 0.056092318 0.1699713  0.3450251  692.9784 1.002353
+## k     5.7390657 2.482731435 2.5008291 10.2474462  812.8841 1.003970
+## sigma 0.1263219 0.003660893 0.1206056  0.1321993 1004.6100 1.000673
+## e     2.3234522 0.022774994 2.2877691  2.3598172 1108.6018 1.003564
+</code></pre>
+<p>With the new model, we obtain an estimates of 2.32 for the exponent rather than the value of 3 that was assumed in the chapter.</p>
+<p>So let&rsquo;s get started with model comparison:</p>
+<pre><code class="language-r">compare(m16.1, m_M1)
+</code></pre>
+<pre><code>##            WAIC       SE    dWAIC      dSE    pWAIC        weight
+## m_M1  -845.6597 36.86898   0.0000       NA 3.441582  1.000000e+00
+## m16.1 -310.4014 44.39907 535.2583 54.80355 3.775032 5.890284e-117
+</code></pre>
+<p>Seems like model comparison strongly favours our new model <code>m_M1</code>. What brings this difference about? Let&rsquo;s look at the posterior predictions for the answer:</p>
+<pre><code class="language-r">## Getting the data
+h_seq &lt;- seq(from = 0, to = max(d$h), length.out = nrow(d))
+# m_M1
+w_sim &lt;- sim(m_M1, data = list(h = h_seq))
+m1_mean &lt;- apply(w_sim, 2, mean)
+m1_CI &lt;- apply(w_sim, 2, PI)
+# m16.1
+w_sim &lt;- sim(m16.1, data = list(h = h_seq))
+m16.1_mean &lt;- apply(w_sim, 2, mean)
+m16.1_CI &lt;- apply(w_sim, 2, PI)
+## Making a data frame for plotting
+plot_df &lt;- data.frame(
+  seq = rep(h_seq, 2),
+  mean = c(m1_mean, m16.1_mean),
+  CI_l = c(m1_CI[1, ], m16.1_CI[1, ]),
+  CI_U = c(m1_CI[2, ], m16.1_CI[2, ]),
+  y = rep(d$w, 2),
+  x = rep(d$h, 2),
+  model = rep(c(&quot;m_M1&quot;, &quot;m16.1&quot;), each = length(h_seq))
+)
+## Plotting posterior
+ggplot(plot_df, aes(x = x, y = y)) +
+  geom_point(col = &quot;blue&quot;) +
+  geom_line(aes(x = seq, y = mean)) +
+  geom_ribbon(aes(x = seq, ymin = CI_l, ymax = CI_U), alpha = 0.2) +
+  labs(x = &quot;height (scaled)&quot;, y = &quot;weight (scaled)&quot;) +
+  facet_wrap(~model) +
+  theme_bw()
+</code></pre>
+<p><img src="2021-05-13-statistical-rethinking-chapter-16_files/figure-html/unnamed-chunk-9-1.png" width="1440" /></p>
+<p>Compared to the original model <code>m16.1</code>, the new model <code>m_M1</code> fits shorter individuals much better than the original model which comes at the detriment of fitting taller individuals correctly. Overall, the posterior uncertainty is tighter for our new model <code>m_M1</code>.</p>
+<h3 id="practice-m2">Practice M2</h3>
+<p><strong>Question:</strong> Conduct a prior predictive simulation for the cylinder height model. Begin with the priors in the chapter. Do these produce reasonable prior height distributions? If not, which modifications do you suggest?</p>
+<p><strong>Answer:</strong> Remember our priors from the chapter:</p>
+<p>$$p ∼ Beta(2, 18)$$
+$$k ∼ Exponential(0.5)$$
+$$\sigma \sim Exponential(1)$$
+Now let&rsquo;s simulate priors for a number of <code>N</code> cases:</p>
+<pre><code class="language-r">N &lt;- 1e2
+p &lt;- rbeta(N, 2, 18) # p ~ Beta(2, 18)
+k &lt;- rexp(N, 0.5) # k ~ Exponential(0.5)
+sigma &lt;- rexp(N, 1)
+prior &lt;- list(p = p, k = k, sigma = sigma)
+</code></pre>
+<p>The priors are all compiled into one list, now all we have to do is run the prior predictive check:</p>
+<pre><code class="language-r">## Making a data frame for plotting
+plot_df &lt;- with(prior, 3.141593 * k[1] * p[1]^2 * d$h^3)
+for (i in 2:N) {
+  plot_df &lt;- c(plot_df, with(prior, 3.141593 * k[i] * p[i]^2 * d$h^3))
+}
+plot_df &lt;- data.frame(
+  w = plot_df,
+  seq = rep(d$h, N),
+  prior = rep(1:N, each = nrow(d))
+)
+## Plotting
+ggplot() +
+  geom_point(data = d, aes(x = h, y = w), col = &quot;blue&quot;) +
+  geom_line(data = plot_df, aes(x = seq, y = w, group = prior)) +
+  labs(x = &quot;height (scaled)&quot;, y = &quot;weight (scaled)&quot;) +
+  theme_bw()
+</code></pre>
+<p><img src="2021-05-13-statistical-rethinking-chapter-16_files/figure-html/unnamed-chunk-12-1.png" width="1440" /></p>
+<p>The combination of these priors seems to be too flat - weight is not increasing fast enough with height. Either $p$ or $k$ need to be larger on average:</p>
+<pre><code class="language-r">## New priors
+p &lt;- rbeta(N, 4, 18)
+k &lt;- rexp(N, 1 / 4)
+sigma &lt;- rexp(N, 1)
+prior &lt;- list(p = p, k = k, sigma = sigma)
+## Making a data frame for plotting
+plot_df &lt;- with(prior, 3.141593 * k[1] * p[1]^2 * d$h^3)
+for (i in 2:N) {
+  plot_df &lt;- c(plot_df, with(prior, 3.141593 * k[i] * p[i]^2 * d$h^3))
+}
+plot_df &lt;- data.frame(
+  w = plot_df,
+  seq = rep(d$h, N),
+  prior = rep(1:N, each = nrow(d))
+)
+## Plotting
+ggplot() +
+  geom_point(data = d, aes(x = h, y = w), col = &quot;blue&quot;) +
+  geom_line(data = plot_df, aes(x = seq, y = w, group = prior)) +
+  labs(x = &quot;height (scaled)&quot;, y = &quot;weight (scaled)&quot;) +
+  theme_bw()
+</code></pre>
+<p><img src="2021-05-13-statistical-rethinking-chapter-16_files/figure-html/unnamed-chunk-13-1.png" width="1440" />
+There are some prior combinations here that are definitely way too extreme, but most priors still bunch up too much along the x-axis. Let&rsquo;s alter the prior for $k$ (the density) some more by making it log-Normal:</p>
+<pre><code class="language-r">## New priors
+N &lt;- 1e2
+p &lt;- rbeta(N, 4, 18)
+k &lt;- rlnorm(N, log(7), 0.2) # median of log(7)
+sigma &lt;- rexp(N, 1)
+prior &lt;- list(p = p, k = k, sigma = sigma)
+## Making a data frame for plotting
+plot_df &lt;- with(prior, 3.141593 * k[1] * p[1]^2 * d$h^3)
+for (i in 2:N) {
+  plot_df &lt;- c(plot_df, with(prior, 3.141593 * k[i] * p[i]^2 * d$h^3))
+}
+plot_df &lt;- data.frame(
+  w = plot_df,
+  seq = rep(d$h, N),
+  prior = rep(1:N, each = nrow(d))
+)
+## Plotting
+ggplot() +
+  geom_point(data = d, aes(x = h, y = w), col = &quot;blue&quot;) +
+  geom_line(data = plot_df, aes(x = seq, y = w, group = prior)) +
+  labs(x = &quot;height (scaled)&quot;, y = &quot;weight (scaled)&quot;) +
+  theme_bw()
+</code></pre>
+<p><img src="2021-05-13-statistical-rethinking-chapter-16_files/figure-html/unnamed-chunk-14-1.png" width="1440" /></p>
+<p>This is much better! Remember - priors are not about fitting the data exactly but informing the model about plausibility.</p>
+<h3 id="practice-m3">Practice M3</h3>
+<p><strong>Question:</strong>  Use prior predictive simulations to investigate the Lynx-hare model. Begin with the priors in the chapter. Which population dynamics do these produce? Can you suggest any improvements to the priors, on the basis of your simulations?</p>
+<p><strong>Answer:</strong> Again, let me remind us of the model in the chapter:</p>
+<p>$h_t ∼ LogNormal(log(p_HH_t), σ_H)$ [Probability of observed hare pelts]<br>
+$ℓ_t ∼ LogNormal(log(p_LL_t), σ_L)$ [Probability observed lynx pelts]<br>
+$H_1 ∼ LogNormal(log(10), 1)$ [Prior for initial hare population]<br>
+$L_1 ∼ LogNormal(log(10), 1)$ [Prior for initial lynx population]<br>
+$H_{T&gt;1} = H_1 + \int_1^TH_t(b_H −m_HL_t)d_t$ [Model for hare population]<br>
+$L_{T&gt;1} = L_1 + \int_1^T L_t(b_LH_t −m_L)d_t$ [Model for lynx population]<br>
+$σ_H ∼ Exponential(1)$ [Prior for measurement dispersion]<br>
+$σ_L ∼ Exponential(1)$ [Prior for measurement dispersion]<br>
+$p_H ∼ Beta(α_H, β_H)$ [Prior for hare trap probability]<br>
+$p_L ∼ Beta(α_L, β_L)$ [Prior for lynx trap probability]<br>
+$b_H ∼ HalfNormal(1, 0.5)$ [Prior hare birth rate]<br>
+$b_L ∼ HalfNormal(0.05, 0.05)$ [Prior lynx birth rate]<br>
+$m_H ∼ HalfNormal(0.05, 0.05)$ [Prior hare mortality rate]<br>
+$m_L ∼ HalfNormal(1, 0.5)$ [Prior lynx mortality rate]</p>
+<p>Let&rsquo;s get started on our exercise now by loading the data and preparing our priors. Here, we simply just draw theta parameters (these define halfnormal distributions) from normal distributions as defined above:</p>
+<pre><code class="language-r">data(Lynx_Hare)
+N &lt;- 12
+theta &lt;- matrix(NA, nrow = N, ncol = 4)
+theta[, 1] &lt;- rnorm(N, 1, 0.5) # b_H
+theta[, 2] &lt;- rnorm(N, 0.05, 0.05) # b_L
+theta[, 3] &lt;- rnorm(N, 1, 0.5) # m_L
+theta[, 4] &lt;- rnorm(N, 0.05, 0.05) # m_H
+</code></pre>
+<p>We can now use these priors in combination with the <code>sim_lynx_hare()</code> function from the book:</p>
+<pre><code class="language-r">sim_lynx_hare &lt;- function(n_steps, init, theta, dt = 0.002) {
+  L &lt;- rep(NA, n_steps)
+  H &lt;- rep(NA, n_steps)
+  L[1] &lt;- init[1]
+  H[1] &lt;- init[2]
+  for (i in 2:n_steps) {
+    H[i] &lt;- H[i - 1] + dt * H[i - 1] * (theta[1] - theta[2] * L[i - 1])
+    L[i] &lt;- L[i - 1] + dt * L[i - 1] * (theta[3] * H[i - 1] - theta[4])
+  }
+  return(cbind(L, H))
+}
+</code></pre>
+<p>With the above function registered in our <code>R</code> environment, we are ready to simulate with our priors and produce some plots:</p>
+<pre><code class="language-r">## Simulate for first prior
+plot_df &lt;- sim_lynx_hare(1e4, as.numeric(Lynx_Hare[1, 2:3]), theta[1, ])
+plot_df &lt;- data.frame(plot_df)
+plot_df$prior &lt;- rep(1, 1e4)
+## simulate for all other priors
+for (i in 2:N) {
+  z &lt;- sim_lynx_hare(1e4, as.numeric(Lynx_Hare[1, 2:3]), theta[i, ])
+  z &lt;- data.frame(z)
+  z$prior &lt;- rep(i, 1e4)
+  plot_df &lt;- rbind(plot_df, z)
+}
+plot_df$seq &lt;- rep(1:1e4, N)
+## Plotting
+ggplot(plot_df, aes(x = seq)) +
+  geom_line(aes(y = L), col = &quot;brown&quot;) +
+  geom_line(aes(y = H), col = &quot;blue&quot;) +
+  facet_wrap(~prior, scales = &quot;free&quot;) +
+  theme_bw() +
+  labs(x = &quot;Time&quot;, y = &quot;Population&quot;) +
+  theme(axis.text.y = element_blank())
+</code></pre>
+<p><img src="2021-05-13-statistical-rethinking-chapter-16_files/figure-html/unnamed-chunk-18-1.png" width="1440" /></p>
+<p>Hare population estimates are shown in blue while Lynx population estimates are portrayed in brown. Nevermind that, however, these priors are clearly not good as far as building biological plausibility into our model. Why? There is no cycling in the blue trends depending on the brown trends (lynx eat hares and are thus coupled to them). In addition to that, although I have hidden the actual population estimates, I think it is evident from these plots that some of the prior estimates are just outlandish in terms of population size.</p>
+<p>Let&rsquo;s see if we can do better. How would we do that? By making our priors more informative, of course. We should probably take this step-by-step:</p>
+<ol>
+<li><em>Hare birth rate</em> - $b_H$:</li>
+</ol>
+<p>I want to make this more conservative by lowering the expected birth rate of hares. To do so, the theta parameter for my halfnormal distribution will now be drawn from $Normal(0.5, 0.1)$ as opposed to the previous $Normal(1, 0.5)$.</p>
+<p>$$b_H ∼ HalfNormal(0.5, 0.1)$$</p>
+<ol start="2">
+<li><em>Lynx birth rate</em> - $b_L$:</li>
+</ol>
+<p>This one, I keep as it was previously. I strongly suspect that the base birth rate of lynx should be much smaller than that of hares. The new prior reflects that:</p>
+<p>$$b_L ∼ HalfNormal(0.05, 0.05)$$</p>
+<ol start="3">
+<li><em>Lynx mortality rate</em> - $m_L$:</li>
+</ol>
+<p>I want to drastically decrease the estimated lynx mortality rate since lynx don&rsquo;t die as much as hares do (longer life, no predators, etc.):</p>
+<p>$$m_H ∼ HalfNormal(0.025, 0.05)$$</p>
+<ol start="4">
+<li><em>Hare mortality rate</em> - $m_H$:</li>
+</ol>
+<p>I increase the mortality rate of hares to reflect that they die much more frequently than lynx do for the aforementioned reasons:</p>
+<p>$$m_L ∼ HalfNormal(0.5, 0.1)$$</p>
+<p>Let&rsquo;s simulate with these priors</p>
+<pre><code class="language-r">## New priors
+N &lt;- 12
+theta &lt;- matrix(NA, nrow = N, ncol = 4)
+theta[, 1] &lt;- rnorm(N, 0.5, 0.1) # b_H
+theta[, 2] &lt;- rnorm(N, 0.05, 0.05) # b_L
+theta[, 3] &lt;- rnorm(N, 0.025, 0.05) # m_L
+theta[, 4] &lt;- rnorm(N, 0.5, 0.1) # m_H
+## Simulate for first prior
+plot_df &lt;- sim_lynx_hare(1e4, as.numeric(Lynx_Hare[1, 2:3]), theta[1, ])
+plot_df &lt;- data.frame(plot_df)
+plot_df$prior &lt;- rep(1, 1e4)
+## simulate for all other priors
+for (i in 2:N) {
+  z &lt;- sim_lynx_hare(1e4, as.numeric(Lynx_Hare[1, 2:3]), theta[i, ])
+  z &lt;- data.frame(z)
+  z$prior &lt;- rep(i, 1e4)
+  plot_df &lt;- rbind(plot_df, z)
+}
+plot_df$seq &lt;- rep(1:1e4, N)
+## Plotting
+ggplot(plot_df, aes(x = seq)) +
+  geom_line(aes(y = L), col = &quot;brown&quot;) +
+  geom_line(aes(y = H), col = &quot;blue&quot;) +
+  facet_wrap(~prior, scales = &quot;free&quot;) +
+  theme_bw() +
+  labs(x = &quot;Time&quot;, y = &quot;Population&quot;) +
+  theme(axis.text.y = element_blank())
+</code></pre>
+<p><img src="2021-05-13-statistical-rethinking-chapter-16_files/figure-html/unnamed-chunk-19-1.png" width="1440" /></p>
+<p>Still, there are some populations here that experience explosive growth, but at least we now have properly cycling population trends for both species!</p>
+<h2 id="hard-exercises">Hard Exercises</h2>
+<h3 id="practice-h1">Practice H1</h3>
+<p><strong>Question:</strong>  Modify the Panda nut opening model so that male and female chimpanzees have different maximum adult body mass. The <code>sex</code> variable in <code>data(Panda_nuts)</code> provides the information you need. Be sure to incorporate the fact that you know, prior to seeing the data, that males are on average larger than females at maturity.</p>
+<p><strong>Answer:</strong> Once more, let me include the model specification from the chapter:</p>
+<p>$$n_i ∼ Poisson(λ_i)$$ 
+$$λ_i = d_iϕ(1 − exp(−kt_i))^θ$$
+$$ϕ ∼ LogNormal(log(1), 0.1)$$ 
+$$k ∼ LogNormal(log(2), 0.25)$$ 
+$$θ ∼ LogNormal(log(5), 0.25)$$</p>
+<p>Once more, we move on to loading the data as was done in the chapter and creating an index variable for male individuals:</p>
+<pre><code class="language-r">data(Panda_nuts)
+dat_list &lt;- list(
+  n = as.integer(Panda_nuts$nuts_opened),
+  age = Panda_nuts$age / max(Panda_nuts$age),
+  seconds = Panda_nuts$seconds
+)
+dat_list$male_id &lt;- ifelse(Panda_nuts$sex == &quot;m&quot;, 1L, 0L)
+</code></pre>
+<p>We need to alter the model above to allow for the effect of sex to take hold. How do we go about this? Well, the exercise states that the effect of sex is supposed to come about through the effect of body mass which, in turn, is included in the model through $\phi$ which handles the conversion of body mass into strength. We can add the effect of sex to the model as such:</p>
+<p>$$n_i ∼ Poisson(λ_i)$$ 
+$$λ_i = d_i<em>p_mS</em>ϕ(1 − exp(−kt_i))^θ$$
+$$p_m ∼ Exponential(2)$$ 
+$$ϕ ∼ LogNormal(log(1), 0.1)$$ 
+$$k ∼ LogNormal(log(2), 0.25)$$ 
+$$θ ∼ LogNormal(log(5), 0.25)$$</p>
+<p>where $S$ stands for the maleness indicator we built above:</p>
+<pre><code class="language-r">m_H1 &lt;- ulam(
+  alist(
+    n ~ poisson(lambda),
+    lambda &lt;- seconds * (1 + pm * male_id) * phi * (1 - exp(-k * age))^theta, # 1+ addedd for baseline of effect of sex
+    phi ~ lognormal(log(1), 0.1),
+    pm ~ exponential(2),
+    k ~ lognormal(log(2), 0.25),
+    theta ~ lognormal(log(5), 0.25)
+  ),
+  data = dat_list, chains = 4, cores = 4
+)
+</code></pre>
+<pre><code class="language-r">precis(m_H1)
+</code></pre>
+<pre><code>##            mean         sd      5.5%      94.5%    n_eff     Rhat4
+## phi   0.5996689 0.04786004 0.5284066  0.6779957 976.2037 1.0013342
+## pm    0.6681319 0.13966484 0.4576800  0.9047816 991.7476 0.9993602
+## k     5.1615999 0.66777159 4.0568926  6.2455157 743.6989 1.0060706
+## theta 7.5940540 1.82343038 4.9655187 10.9163027 819.2285 1.0040457
+</code></pre>
+<p>Due to how we built our model, the interpretation of $p_m$ is as follows: &ldquo;Males are 0.67 times stronger than their female counterparts at maximum.&rdquo;</p>
+<p>How does this look when we plot it? I use the plotting scheme outlined by Richard McElreath in the chapter and modified in his solutions:</p>
+<pre><code class="language-r">post &lt;- extract.samples(m_H1)
+plot(NULL, xlim = c(0, 1), ylim = c(0, 1.5), xlab = &quot;age&quot;, ylab = &quot;nuts per second&quot;, xaxt = &quot;n&quot;)
+at &lt;- c(0, 0.25, 0.5, 0.75, 1, 1.25, 1.5)
+axis(1, at = at, labels = round(at * max(Panda_nuts$age)))
+pts &lt;- dat_list$n / dat_list$seconds
+point_size &lt;- normalize(dat_list$seconds)
+points(jitter(dat_list$age), pts,
+  lwd = 2, cex = point_size * 3,
+  col = ifelse(dat_list$male_id == 1, &quot;black&quot;, &quot;red&quot;)
+)
+# 10 female curves
+for (i in 1:10) {
+  with(
+    post,
+    curve(phi[i] * (1 - exp(-k[i] * x))^theta[i], add = TRUE, col = &quot;red&quot;)
+  )
+}
+# 10 male curves
+for (i in 1:10) {
+  with(
+    post,
+    curve((1 + pm[i]) * phi[i] * (1 - exp(-k[i] * x))^theta[i], add = TRUE, col = grau())
+  )
+}
+</code></pre>
+<p><img src="2021-05-13-statistical-rethinking-chapter-16_files/figure-html/unnamed-chunk-25-1.png" width="1440" /></p>
+<p>There is clearly quite the difference between males (black) and females (red) here. Males benefit more from age in opening nuts most likely due to their higher strength at maximum body mass. It is also worth pointing out that females have not been observed often or for long in this study as is apparent by the few, small circles in red.</p>
+<h3 id="practice-h2">Practice H2</h3>
+<p><strong>Question:</strong>  Now return to the Panda nut model and try to incorporate individual differences. There are two parameters, $ϕ$ and $k$, which plausibly vary by individual. Pick one of these, allow it to vary by individual, and use partial pooling to avoid overfitting. The variable chimpanzee in <code>data(Panda_nuts)</code> tells you which observations belong to which individuals.</p>
+<p><strong>Answer:</strong> This works off of the same model as we just used:</p>
+<p>$$n_i ∼ Poisson(λ_i)$$ 
+$$λ_i = d_iϕ(1 − exp(−kt_i))^θ$$
+$$ϕ ∼ LogNormal(log(1), 0.1)$$ 
+$$k ∼ LogNormal(log(2), 0.25)$$ 
+$$θ ∼ LogNormal(log(5), 0.25)$$</p>
+<p>To incorporate individual effects here, we need to add our data about individuals into our data list:</p>
+<pre><code class="language-r">dat_list$id &lt;- Panda_nuts$chimpanzee
+</code></pre>
+<p>To incorporate this ID variable into our model, we want to create a different mass-strength conversion parameter $\phi$ for each individual. Importantly, the average expected rate of opened nuts ($\lambda$) has to stay positive for each individual - otherwise, Poisson will fail us. For this reason, we will want to use a distribution for our individual, varying intercepts that is constrained to be positive. Here, I settle on the exponential. Consequently, I envision to alter the model like this:</p>
+<p>$$n_i ∼ Poisson(λ_i)$$ 
+$$λ_i = d_i*(ϕz_{ID}*\tau)*(1 − exp(−kt_i))^θ$$
+$$z_{ID} ~ Exponential(1)$$
+$$\tau ~ Exponential(1)$$
+$$ϕ ∼ LogNormal(log(1), 0.1)$$ 
+$$k ∼ LogNormal(log(2), 0.25)$$ 
+$$θ ∼ LogNormal(log(5), 0.25)$$</p>
+<p>Given our linear model and our constraint for positive values of $z_{ID}$ with a mean of 1, each value of $z_{ID}$ is a multiplicative effect with $\phi$. Due to the mean of 1, we expect on average no effect of individuals. The data may tell us otherwise.</p>
+<p>The model below bears two more important oddities:</p>
+<ul>
+<li>It is parametrised in a <strong>non-centred</strong> form to allow for more effective sampling of the posterior.</li>
+<li>The <code>gq&gt;</code> part rescales our non-centred estimates of <code>z</code> and <code>tau</code> back to our scale of origin for better interpretation</li>
+</ul>
+<p>Let&rsquo;s run this model:</p>
+<pre><code class="language-r">m_H2 &lt;- ulam(
+  alist(
+    n ~ poisson(lambda),
+    lambda &lt;- seconds * (phi * z[id] * tau) * (1 - exp(-k * age))^theta,
+    phi ~ lognormal(log(1), 0.1),
+    z[id] ~ exponential(1),
+    tau ~ exponential(1),
+    k ~ lognormal(log(2), 0.25),
+    theta ~ lognormal(log(5), 0.25),
+    gq &gt; vector[id]:zz &lt;&lt;- z * tau # rescaled
+  ),
+  data = dat_list, chains = 4, cores = 4,
+  control = list(adapt_delta = 0.99), iter = 4000
+)
+</code></pre>
+<pre><code class="language-r">precis(m_H2)
+</code></pre>
+<pre><code>##            mean        sd      5.5%    94.5%    n_eff     Rhat4
+## phi   1.0013518 0.1004075 0.8481803 1.169319 8877.555 0.9998477
+## tau   0.6519607 0.2101021 0.3852493 1.030786 1702.305 1.0006857
+## k     3.0816213 0.7406724 2.0076499 4.342410 3954.259 1.0007966
+## theta 3.1730030 0.6639074 2.2740025 4.341821 5314.860 1.0009539
+</code></pre>
+<p><code>tau</code> tells us whether there are individual differences or not and it firmly identifies that there are some. To understand these effects, it is easiest to use our rescaled estimates stored in <code>zz</code>:</p>
+<pre><code class="language-r">plot(precis(m_H2, 2, pars = &quot;zz&quot;))
+abline(v = 1, lty = 2)
+</code></pre>
+<p><img src="2021-05-13-statistical-rethinking-chapter-16_files/figure-html/unnamed-chunk-31-1.png" width="1440" />
+Above, we see the proportion of $\phi$ for each individual. Average values are found at 1. Values above 1 indicate stronger-than-average individuals.</p>
+<h3 id="practice-h3">Practice H3</h3>
+<p><strong>Question:</strong>  The chapter asserts that a typical, geocentric time series model might be one that uses lag variables. Here you’ll fit such a model and compare it to ODE model in the chapter. An autoregressive time series uses earlier values of the state variables to predict new values of the same variables. These earlier values are called <em>lag variables</em>. You can construct the lag variables here with:</p>
+<pre><code class="language-r">data(Lynx_Hare)
+dat_ar1 &lt;- list(
+  L = Lynx_Hare$Lynx[2:21],
+  L_lag1 = Lynx_Hare$Lynx[1:20],
+  H = Lynx_Hare$Hare[2:21],
+  H_lag1 = Lynx_Hare$Hare[1:20]
+)
+</code></pre>
+<p>Now you can use <code>L_lag1</code> and <code>H_lag1</code> as predictors of the outcomes <code>L</code> and <code>H</code>. Like this:</p>
+<p>$$L_t ∼ LogNormal(log (µ_{L,t}), σ_L)$$
+$$µ_{L,t} = α_L + β_{LL}L_{t−1} + β_{LH}H_{t−1}$$ 
+$$H_t ∼ LogNormal(log(µ_{H,t}), σ_H)$$ 
+$$µ_{H,t} = α_H + β_{HH}H_{t−1} + β_{HL}L_{t−1}$$</p>
+<p>where $L_{t−1}$ and $H_{t−1}$ are the lag variables. Use <code>ulam()</code> to fit this model. Be careful of the priors of the $α$ and $β$ parameters. Compare the posterior predictions of the autoregressive model to the ODE model in the chapter. How do the predictions differ? Can you explain why, using the structures of the models?</p>
+<p><strong>Answer:</strong> Let&rsquo;s quickly complete the model above in mathematical notation before we code it:</p>
+<p>$$H_t ∼ LogNormal(log(µ_{H,t}), σ_H)$$ 
+$$L_t ∼ LogNormal(log (µ_{L,t}), σ_L)$$
+$$µ_{H,t} = α_H + β_{HH}H_{t−1} + β_{HL}L_{t−1}$$
+$$µ_{L,t} = α_L + β_{LL}L_{t−1} + β_{LH}H_{t−1}$$</p>
+<p>$$H_{T&gt;1} = H_1 + \int_1^TH_t(b_H −m_HL_t)d_t$$
+$$L_{T&gt;1} = L_1 + \int_1^T L_t(b_LH_t −m_L)d_t$$</p>
+<p>Now on to the priors:</p>
+<ol>
+<li>
+<p><em>Mean population size of hares</em> - $\alpha_H$. I don&rsquo;t have any strong idea about this one except for the fact that it has to be positive:<br>
+$$\alpha_H ∼ Exponential(1)$$</p>
+</li>
+<li>
+<p><em>Mean population size of lynx</em> - $\alpha_L$. Same as above - must be positive:</p>
+</li>
+</ol>
+<p>$$\alpha_L ∼ Exponential(1)$$</p>
+<ol start="3">
+<li><em>Effect of hares on hares through lag</em> - $\beta_{HH}$. This one is probably rather positive than negative, but negative values are thinkable:</li>
+</ol>
+<p>$$\beta_{HH} \sim Normal(1, 0.5)$$</p>
+<ol start="4">
+<li><em>Effect of lynx on hares</em> - $\beta_{HL}$. Lynx eat hares, therefore I assume lynx have a negative effect on hare populations:</li>
+</ol>
+<p>$$\beta_{HL} \sim Normal(-1, 0.5)$$</p>
+<ol start="5">
+<li><em>Effect of lynx on lynx through lag</em> - $\beta_{LL}$. This one is probably rather positive than negative, but negative values are thinkable:</li>
+</ol>
+<p>$$\beta_{LL} \sim Normal(1, 0.5)$$</p>
+<ol start="6">
+<li><em>Effect of hares on lynx</em> - $\beta_{HL}$. Lynx eat hares, therefore I assume lynx populations grow when hares are abundant:</li>
+</ol>
+<p>$$\beta_{LH} \sim Normal(1, 0.5)$$</p>
+<p>Let&rsquo;s put this all into effect in a model:</p>
+<pre><code class="language-r">m_H3_A &lt;- ulam(
+  alist(
+    H ~ lognormal(log(muh), sigmah),
+    L ~ lognormal(log(mul), sigmal),
+    muh &lt;- ah + b_hh * H_lag1 + b_hl * L_lag1,
+    mul &lt;- al + b_ll * L_lag1 + b_lh * H_lag1,
+    c(ah, al) ~ normal(0, 1),
+    b_hh ~ normal(1, 0.5),
+    b_hl ~ normal(-1, 0.5),
+    b_ll ~ normal(1, 0.5),
+    b_lh ~ normal(1, 0.5),
+    c(sigmah, sigmal) ~ exponential(1)
+  ),
+  data = dat_ar1, chains = 4, cores = 4
+)
+</code></pre>
+<pre><code class="language-r">precis(m_H3_A)
+</code></pre>
+<pre><code>##              mean         sd       5.5%       94.5%     n_eff     Rhat4
+## al     -0.9086472 0.92283343 -2.3478379  0.58408534 1766.8222 0.9994495
+## ah      0.8030823 1.01577410 -0.7686795  2.39673796 1543.2587 1.0012806
+## b_hh    1.1575260 0.15494168  0.9220842  1.41288452 1165.4372 0.9993601
+## b_hl   -0.1898141 0.10424140 -0.3427948 -0.01818273  955.5289 1.0004735
+## b_ll    0.5386323 0.09142832  0.3991584  0.68642887 1275.2896 1.0007976
+## b_lh    0.2555668 0.05003324  0.1773263  0.33463902 1033.0136 1.0021123
+## sigmal  0.3102309 0.06066444  0.2289059  0.42422181 1117.1826 1.0024006
+## sigmah  0.4482276 0.08050156  0.3354154  0.58483481 1407.6199 1.0005659
+</code></pre>
+<p>Turns out, the data agree with my prior intuition here. The implied time-series looks like this:</p>
+<pre><code class="language-r">post &lt;- extract.samples(m_H3_A)
+plot(dat_ar1$H, pch = 16, xlab = &quot;Year&quot;, ylab = &quot;pelts (thousands)&quot;, ylim = c(0, 100))
+points(dat_ar1$L, pch = 16, col = rangi2)
+mu &lt;- link(m_H3_A)
+for (s in 1:21) {
+  lines(1:20, mu$muh[s, ], col = col.alpha(&quot;black&quot;, 0.2), lwd = 2) # hares
+  lines(1:20, mu$mul[s, ], col = col.alpha(rangi2, 0.4), lwd = 2) # lynx
+}
+</code></pre>
+<p><img src="2021-05-13-statistical-rethinking-chapter-16_files/figure-html/unnamed-chunk-37-1.png" width="1440" /></p>
+<p>Lynx are portrayed in blue while hares are shown in black. The model in the chapter clearly does a better job at replicating these time-series, particularly that of lynx. Why is that? For starters, our model fails to appreciate measurement error on reported population sizes. Secondly, the effects are modelled as linear when we know them not to be.</p>
+<p>What about a lagged interaction model to resolve the issue of linear effects? Let&rsquo;s try it by modelling as follows:</p>
+<p>$$µ_{H,t} = α_H + β_{HH}H_{t−1} + β_{HL}L_{t−1}H_{t−1}$$
+$$µ_{L,t} = α_L + β_{LL}L_{t−1} + β_{LH}H_{t−1}L_{t−1}$$</p>
+<pre><code class="language-r">m_H3_B &lt;- ulam(
+  alist(
+    H ~ lognormal(log(muh), sigmah),
+    L ~ lognormal(log(mul), sigmal),
+    muh &lt;- ah + b_hh * H_lag1 + b_hl * L_lag1 * H_lag1, # interaction here
+    mul &lt;- al + b_ll * L_lag1 + b_lh * H_lag1 * L_lag1, # interaction here
+    c(ah, al) ~ normal(0, 1),
+    b_hh ~ normal(1, 0.5),
+    b_hl ~ normal(-1, 0.5),
+    b_ll ~ normal(1, 0.5),
+    b_lh ~ normal(1, 0.5),
+    c(sigmah, sigmal) ~ exponential(1)
+  ),
+  data = dat_ar1, chains = 4, cores = 4
+)
+</code></pre>
+<pre><code class="language-r">post &lt;- extract.samples(m_H3_B)
+plot(dat_ar1$H, pch = 16, xlab = &quot;Year&quot;, ylab = &quot;pelts (thousands)&quot;, ylim = c(0, 100))
+points(dat_ar1$L, pch = 16, col = rangi2)
+mu &lt;- link(m_H3_B)
+for (s in 1:21) {
+  lines(1:20, mu$muh[s, ], col = col.alpha(&quot;black&quot;, 0.2), lwd = 2) # hares
+  lines(1:20, mu$mul[s, ], col = col.alpha(rangi2, 0.4), lwd = 2) # lynx
+}
+</code></pre>
+<p><img src="2021-05-13-statistical-rethinking-chapter-16_files/figure-html/unnamed-chunk-40-1.png" width="1440" /></p>
+<p>That&rsquo;s already a lot better, but our lines now overshoot the peaks of lynx populations. I will leave it at that for this exercise although this model is far from perfect. The better model is in the book.</p>
+<h3 id="practice-h4">Practice H4</h3>
+<p><strong>Question:</strong>  Adapt the autoregressive model to use a two-step lag variable. This means that $L_{t−2}$ and $H_{t−2}$, in addition to $L_{t−1}$ and $H_{t−1}$, will appear in the equation for $µ$. This implies that prediction depends upon not only what happened just before now, but also on what happened two time steps ago. How does this model perform, compared to the ODE model?</p>
+<p><strong>Answer:</strong> Let&rsquo;s prepare the data:</p>
+<pre><code class="language-r">dat_ar2 &lt;- list(
+  L = Lynx_Hare$Lynx[3:21],
+  L_lag1 = Lynx_Hare$Lynx[2:20],
+  L_lag2 = Lynx_Hare$Lynx[1:19],
+  H = Lynx_Hare$Hare[3:21],
+  H_lag1 = Lynx_Hare$Hare[2:20],
+  H_lag2 = Lynx_Hare$Hare[1:19]
+)
+</code></pre>
+<p>Starting off with the basic, linear model we used above:</p>
+<pre><code class="language-r">m_H4_A &lt;- ulam(
+  alist(
+    H ~ lognormal(log(muh), sigmah),
+    L ~ lognormal(log(mul), sigmal),
+    muh &lt;- ah + phi_hh * H_lag1 + phi_hl * L_lag1 +
+      phi2_hh * H_lag2 + phi2_hl * L_lag2,
+    mul &lt;- al + phi_ll * L_lag1 + phi_lh * H_lag1 +
+      phi2_ll * L_lag2 + phi2_lh * H_lag2,
+    c(ah, al) ~ normal(0, 1),
+    phi_hh ~ normal(1, 0.5),
+    phi_hl ~ normal(-1, 0.5),
+    phi_ll ~ normal(1, 0.5),
+    phi_lh ~ normal(1, 0.5),
+    phi2_hh ~ normal(0, 0.5),
+    phi2_hl ~ normal(0, 0.5),
+    phi2_ll ~ normal(0, 0.5),
+    phi2_lh ~ normal(0, 0.5),
+    c(sigmah, sigmal) ~ exponential(1)
+  ),
+  data = dat_ar2, chains = 4, cores = 4
+)
+</code></pre>
+<pre><code class="language-r">precis(m_H4_A)
+</code></pre>
+<pre><code>##               mean         sd       5.5%       94.5%     n_eff     Rhat4
+## al      -0.4183636 0.91246723 -1.8486107  1.05960250 1606.2951 0.9992228
+## ah       0.3719553 0.99475941 -1.1590825  1.95140989 1990.4075 1.0009188
+## phi_hh   1.0099326 0.19248834  0.7119274  1.32914392 1045.2694 1.0034079
+## phi_hl  -0.7399365 0.32827054 -1.2783735 -0.20488913  877.9196 1.0017976
+## phi_ll   0.9271154 0.24347415  0.5527803  1.31868956  939.7483 1.0037273
+## phi_lh   0.3897833 0.13124341  0.1862378  0.60413394  950.0423 1.0039032
+## phi2_hh  0.1847126 0.27004715 -0.2318049  0.62006465  917.6192 1.0019516
+## phi2_hl  0.3975250 0.15804542  0.1439605  0.64872790  998.1928 1.0016893
+## phi2_ll -0.1939459 0.10830081 -0.3702380 -0.02048142 1180.9072 1.0017758
+## phi2_lh -0.2402054 0.20086962 -0.5597479  0.06914398  876.4958 1.0041831
+## sigmal   0.3020739 0.06006007  0.2193412  0.40635405 1238.3004 0.9997003
+## sigmah   0.3949292 0.07801180  0.2906307  0.53267445 1440.4280 1.0019419
+</code></pre>
+<p>All of these make sense still. As does the implied time-series:</p>
+<pre><code class="language-r">plot(dat_ar2$H, pch = 16, xlab = &quot;Year&quot;, ylab = &quot;pelts (thousands)&quot;, ylim = c(0, 100))
+points(dat_ar2$L, pch = 16, col = rangi2)
+mu &lt;- link(m_H4_A)
+for (s in 1:21) {
+  lines(1:19, mu$muh[s, ], col = col.alpha(&quot;black&quot;, 0.2), lwd = 2)
+  lines(1:19, mu$mul[s, ], col = col.alpha(rangi2, 0.4), lwd = 2)
+}
+</code></pre>
+<p><img src="2021-05-13-statistical-rethinking-chapter-16_files/figure-html/unnamed-chunk-46-1.png" width="1440" /></p>
+<p>This time-series hasn&rsquo;t benefited much from including the second-order time-lag.</p>
+<p>Let&rsquo;s try the interaction effect model with two lags:</p>
+<pre><code class="language-r">m_H4_B &lt;- ulam(
+  alist(
+    H ~ lognormal(log(muh), sigmah),
+    L ~ lognormal(log(mul), sigmal),
+    muh &lt;- ah + phi_hh * H_lag1 + phi_hl * L_lag1 * H_lag1 +
+      phi2_hh * H_lag2 + phi2_hl * L_lag2 * H_lag2,
+    mul &lt;- al + phi_ll * L_lag1 + phi_lh * H_lag1 * L_lag1 +
+      phi2_ll * L_lag2 + phi2_lh * H_lag2 * L_lag2,
+    c(ah, al) ~ normal(0, 1),
+    phi_hh ~ normal(1, 0.5),
+    phi_hl ~ normal(-1, 0.5),
+    phi_ll ~ normal(1, 0.5),
+    phi_lh ~ normal(1, 0.5),
+    phi2_hh ~ normal(0, 0.5),
+    phi2_hl ~ normal(0, 0.5),
+    phi2_ll ~ normal(0, 0.5),
+    phi2_lh ~ normal(0, 0.5),
+    c(sigmah, sigmal) ~ exponential(1)
+  ),
+  data = dat_ar2, chains = 4, cores = 4
+)
+</code></pre>
+<pre><code class="language-r">plot(dat_ar2$H, pch = 16, xlab = &quot;Year&quot;, ylab = &quot;pelts (thousands)&quot;, ylim = c(0, 100))
+points(dat_ar2$L, pch = 16, col = rangi2)
+mu &lt;- link(m_H4_B)
+for (s in 1:21) {
+  lines(1:19, mu$muh[s, ], col = col.alpha(&quot;black&quot;, 0.2), lwd = 2)
+  lines(1:19, mu$mul[s, ], col = col.alpha(rangi2, 0.4), lwd = 2)
+}
+</code></pre>
+<p><img src="2021-05-13-statistical-rethinking-chapter-16_files/figure-html/unnamed-chunk-50-1.png" width="1440" /></p>
+<p>This time-series also didn&rsquo;t gain anything from adding second-order lag effects, I&rsquo;m afraid.</p>
+<p>I reckon this exercise was designed to highlight that higher-order lag effects don&rsquo;t have any causal meaning.</p>
+<h3 id="practice-h5">Practice H5</h3>
+<p><strong>Question:</strong>  Population dynamic models are typically very difficult to fit to empirical data. The Lynx-hare example in the chapter was easy, partly because the data are unusually simple and partly because the chapter did the difficult prior selection for you. Here’s another data set that will impress upon you both how hard the task can be and how badly Lotka-Volterra fits empirical data in general. The data in <code>data(Mites)</code> are numbers of predator and prey mites living on fruit. Model these data using the same Lotka-Volterra ODE system from the chapter. These data are actual counts of individuals, not just their pelts. You will need to adapt the Stan code in <code>data(Lynx_Hare_model)</code>. Note that the priors will need to be rescaled, because the outcome variables are on a different scale. Prior predictive simulation will help. Keep in mind as well that the time variable and the birth and death parameters go together. If you rescale the time dimension, that implies you must also rescale the parameters.</p>
+<p><strong>Answer:</strong> We have not worked with this data set before and so bet practise would have us load and plot it:</p>
+<pre><code class="language-r">data(Mites)
+plot(Mites$day, Mites$prey)
+points(Mites$day, Mites$predator, pch = 16)
+</code></pre>
+<p><img src="2021-05-13-statistical-rethinking-chapter-16_files/figure-html/unnamed-chunk-52-1.png" width="1440" />
+Open circles show prey. Closed circles show predators. One could definitely argue that there are cycles here.</p>
+<p>Luckily, so the solutions by McElreath tell me, there is no measurement error here. Thank the heavens!</p>
+<p>For prior predictive checks of our upcoming model and its priors we will want to repurpose the simulation function from the chapter that I used above:</p>
+<pre><code class="language-r">sim_mites &lt;- function(n_steps, init, theta, dt = 0.002) {
+  L &lt;- rep(NA, n_steps)
+  H &lt;- rep(NA, n_steps)
+  L[1] &lt;- init[1]
+  H[1] &lt;- init[2]
+  for (i in 2:n_steps) {
+    L[i] &lt;- L[i - 1] + dt * L[i - 1] * (theta[3] * H[i - 1] - theta[4])
+    H[i] &lt;- H[i - 1] + dt * H[i - 1] * (theta[1] - theta[2] * L[i - 1])
+  }
+  return(cbind(L, H))
+}
+</code></pre>
+<p>Now we need to define some priors for:  (1) prey birth rate <code>theta[1]</code>, (2) prey mortality rate <code>theta[2]</code>, (3) predator mortality rate <code>theta[3]</code>, and (4) predator birth rate <code>theta[4]</code>. Unfortunately, I lack a good understanding of mites and their prey to build intuitive priors.</p>
+<p>Playing around with the code below will lead you to identifying some priors that look right (the code below just report what we settle on for this exercise):</p>
+<pre><code class="language-r">set.seed(41)
+## Priors
+N &lt;- 16
+theta &lt;- matrix(NA, N, 4)
+theta[, 1] &lt;- rnorm(N, 1.5, 1) # prey birth rate
+theta[, 2] &lt;- rnorm(N, 0.005, 0.1) # prey mortality rate
+theta[, 3] &lt;- rnorm(N, 0.0005, 0.1) # predator mortality rate
+theta[, 4] &lt;- rnorm(N, 0.5, 1) # predator birth rate
+## Simulate for first prior
+plot_df &lt;- sim_mites(1e4, as.numeric(Mites[1, 3:2]), theta[1, ])
+plot_df &lt;- data.frame(plot_df)
+plot_df$prior &lt;- rep(1, 1e4)
+## simulate for all other priors
+for (i in 2:N) {
+  z &lt;- sim_mites(1e4, as.numeric(Mites[1, 3:2]), theta[i, ])
+  z &lt;- data.frame(z)
+  z$prior &lt;- rep(i, 1e4)
+  plot_df &lt;- rbind(plot_df, z)
+}
+plot_df$seq &lt;- rep(1:1e4, N)
+## Plotting
+ggplot(plot_df, aes(x = seq)) +
+  geom_line(aes(y = L), col = &quot;brown&quot;) +
+  geom_line(aes(y = H), col = &quot;blue&quot;) +
+  facet_wrap(~prior, scales = &quot;free&quot;) +
+  theme_bw() +
+  labs(x = &quot;Time&quot;, y = &quot;Population&quot;) +
+  theme(axis.text.y = element_blank())
+</code></pre>
+<p><img src="2021-05-13-statistical-rethinking-chapter-16_files/figure-html/unnamed-chunk-55-1.png" width="1440" /></p>
+<p>These are decent enough, some show nice cycles for a few.</p>
+<p>Let&rsquo;s run with these anyways and take them forward to a model. The model below is just a broken-back version of the STAN model in the chapter:</p>
+<pre><code class="language-r">Mites_STAN &lt;- &quot;// Mites model, L is the predator, H is the prey
+functions{
+  real[] dpop_dt(real t,                    // time
+                  real[] pop_init,          // initial state{lynx, hares}
+                  real[] theta,             // parameters
+                  real[] x_r, int[] x_i){   // unused
+    real L = pop_init[1];                   // prey population initialisation
+    real H = pop_init[2];                   // predator population initialisation
+    real bh = theta[1];                     // prey birth rate
+    real mh = theta[2];                     // prey mortality
+    real ml = theta[3];                     // predator mortality
+    real bl = theta[4];                     // predator birth rate
+    // differential equations
+    real dH_dt = (bh - mh * L) * H;
+    real dL_dt = (bl * H - ml) * L;
+    return{ dL_dt, dH_dt };
+  }
+}
+data{
+  int&lt;lower=0&gt; N;            // number of measurement times
+  int&lt;lower=0&gt; mites[N,2];   // measured populations
+  real&lt;lower=0&gt; days[N];     // days from start of experiment
+}
+parameters{
+  real&lt;lower=0&gt; theta[4];     //{ bh, mh, ml, bl }
+  real&lt;lower=0&gt; pop_init[2];  // initial population state
+  real&lt;lower=0&gt; sigma[2];     // measurement errors
+}
+transformed parameters{
+  real pop[N, 2];
+  pop[1,1] = pop_init[1];     // prey population initialisation
+  pop[1,2] = pop_init[2];     // predator population initialisation
+  pop[2:N,1:2] = integrate_ode_rk45(
+    dpop_dt, pop_init, 0, days[2:N], theta,
+    rep_array(0.0, 0), rep_array(0, 0), 1e-5, 1e-3, 5e2);
+}
+model{
+  // priors
+  theta[1] ~ normal(1.5, 1);       // prey birth rate
+  theta[2] ~ normal(0.005, 0.1);     // prey mortality
+  theta[3] ~ normal(0.0005, 0.1);   // predator mortality
+  theta[4] ~ normal(0.5, 1);       // predator birth rate
+  sigma ~ exponential(1);
+  pop_init[1] ~ normal(mites[1,1], 50);
+  pop_init[2] ~ normal(mites[1,2], 50);
+  // observation model
+  // connect latent population state to observed pelts
+  for (t in 1:N)
+    for (k in 1:2)
+      mites[t,k] ~ lognormal(log(pop[t,k]), sigma[k]);
+  }
+generated quantities{
+  real mites_pred[N,2];
+  for (t in 1:N)
+    for (k in 1:2)
+      mites_pred[t,k] = lognormal_rng(log(pop[t,k]), sigma[k]);
+}&quot;
+</code></pre>
+<p>Preparing the data and running the model is quite straight-forward now:</p>
+<pre><code class="language-r">dat_mites &lt;- list(
+  N = nrow(Mites),
+  mites = as.matrix(Mites[, 3:2]),
+  days = Mites[, 1] / 7
+)
+m_H5 &lt;- stan(
+  model_code = Mites_STAN, data = dat_mites, chains = 4, cores = 4, iter = 2000,
+  control = list(adapt_delta = 0.99)
+)
+</code></pre>
+<pre><code class="language-r">precis(m_H5, 2)
+</code></pre>
+<pre><code>##                     mean           sd         5.5%        94.5%    n_eff     Rhat4
+## theta[1]    1.288983e+00 3.126271e-01 9.175982e-01 1.852993e+00  984.656 1.0012770
+## theta[2]    6.533764e-03 2.216549e-03 3.977740e-03 1.067107e-02 1095.219 1.0010345
+## theta[3]    3.250613e-01 7.149778e-02 2.071048e-01 4.392285e-01 1218.141 1.0008058
+## theta[4]    4.802551e-04 1.592542e-04 2.589479e-04 7.581328e-04 1473.000 1.0011075
+## pop_init[1] 1.164473e+02 1.961122e+01 8.879640e+01 1.502520e+02 1822.214 1.0000536
+## pop_init[2] 2.481791e+02 3.982614e+01 1.866272e+02 3.136870e+02 2611.777 0.9994916
+## sigma[1]    7.293284e-01 1.209180e-01 5.645224e-01 9.408383e-01 1600.917 1.0004918
+## sigma[2]    1.071276e+00 1.464701e-01 8.665494e-01 1.327090e+00 2048.149 1.0016011
+</code></pre>
+<p>Without trying to interpret the parameters here, let&rsquo;s just jump straight into the posterior predictions:</p>
+<pre><code class="language-r">post &lt;- extract.samples(m_H5)
+mites &lt;- dat_mites$mites
+plot(dat_mites$days, mites[, 2],
+  pch = 16, ylim = c(0, 3000),
+  xlab = &quot;time (week)&quot;, ylab = &quot;mites&quot;
+)
+points(dat_mites$days, mites[, 1], col = rangi2, pch = 16)
+for (s in 1:21) {
+  lines(dat_mites$days, post$pop[s, , 2], col = col.alpha(&quot;black&quot;, 0.2), lwd = 2)
+  lines(dat_mites$days, post$pop[s, , 1], col = col.alpha(rangi2, 0.3), lwd = 2)
+}
+</code></pre>
+<p><img src="2021-05-13-statistical-rethinking-chapter-16_files/figure-html/unnamed-chunk-61-1.png" width="1440" /></p>
+<p>Yet again, our model struggles to reconstruct the underlying time-series. This is certainly what McElreath referred to in the chapter when he said we would come face-to-face with the limitations of Lotka-Volterra models in the exercises. Why does the model do so baldy then? Well, it assumes equal cycle times which the data does not support. In addition our model is purely deterministic and lacks stochasticity which could help fit closer to the underlying cycles.</p>
+<p>I would have loved to end this series of blogposts on a more upbeat note, I must say. If you have found any use out of this series of posts and/or my summary slides linked at the top of these, then I am very happy. I must say I personally enjoyed working through this book a lot and hope my posts will come in handy for others looking to validate their solutions. Take care!</p>
+<h2 id="session-info">Session Info</h2>
+<pre><code class="language-r">sessionInfo()
+</code></pre>
+<pre><code>## R version 4.0.5 (2021-03-31)
+## Platform: x86_64-w64-mingw32/x64 (64-bit)
+## Running under: Windows 10 x64 (build 19043)
+## 
+## Matrix products: default
+## 
+## locale:
+## [1] LC_COLLATE=English_United Kingdom.1252  LC_CTYPE=English_United Kingdom.1252    LC_MONETARY=English_United Kingdom.1252 LC_NUMERIC=C                           
+## [5] LC_TIME=English_United Kingdom.1252    
+## 
+## attached base packages:
+## [1] parallel  stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+## [1] rethinking_2.13      rstan_2.21.2         ggplot2_3.3.6        StanHeaders_2.21.0-7
+## 
+## loaded via a namespace (and not attached):
+##  [1] Rcpp_1.0.7         mvtnorm_1.1-1      lattice_0.20-41    prettyunits_1.1.1  ps_1.6.0           assertthat_0.2.1   digest_0.6.27      utf8_1.2.1         V8_3.4.1           R6_2.5.0          
+## [11] backports_1.2.1    stats4_4.0.5       evaluate_0.14      coda_0.19-4        highr_0.9          blogdown_1.3       pillar_1.6.0       rlang_0.4.11       curl_4.3.2         callr_3.7.0       
+## [21] jquerylib_0.1.4    R.utils_2.10.1     R.oo_1.24.0        rmarkdown_2.7      styler_1.4.1       labeling_0.4.2     stringr_1.4.0      loo_2.4.1          munsell_0.5.0      compiler_4.0.5    
+## [31] xfun_0.22          pkgconfig_2.0.3    pkgbuild_1.2.0     shape_1.4.5        htmltools_0.5.1.1  tidyselect_1.1.0   tibble_3.1.1       gridExtra_2.3      bookdown_0.22      codetools_0.2-18  
+## [41] matrixStats_0.61.0 fansi_0.4.2        crayon_1.4.1       dplyr_1.0.5        withr_2.4.2        MASS_7.3-53.1      R.methodsS3_1.8.1  grid_4.0.5         jsonlite_1.7.2     gtable_0.3.0      
+## [51] lifecycle_1.0.0    DBI_1.1.1          magrittr_2.0.1     scales_1.1.1       RcppParallel_5.1.2 cli_3.0.0          stringi_1.5.3      farver_2.1.0       bslib_0.2.4        ellipsis_0.3.2    
+## [61] generics_0.1.0     vctrs_0.3.7        rematch2_2.1.2     tools_4.0.5        R.cache_0.14.0     glue_1.4.2         purrr_0.3.4        processx_3.5.1     yaml_2.2.1         inline_0.3.17     
+## [71] colorspace_2.0-0   knitr_1.33         sass_0.3.1
+</code></pre>
+
+          </div>
+
+          
+
+<div class="article-tags">
+  
+  <a class="badge badge-light" href="/tag/statistics/">Statistics</a>
+  
+  <a class="badge badge-light" href="/tag/bayes/">Bayes</a>
+  
+  <a class="badge badge-light" href="/tag/bayesian-statistics/">Bayesian Statistics</a>
+  
+  <a class="badge badge-light" href="/tag/au-bayes-study-group/">AU Bayes Study Group</a>
+  
+</div>
+
+
+
+          
+          <div class="article-widget">
+            
+<div class="post-nav">
+  
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">Previous</div>
+    <a href="/courses/rethinking/chapter-15/" rel="next">Chapter 15</a>
+  </div>
+  
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">Next</div>
+    <a href="/courses/rethinking/" rel="prev">Statistical Rethinking</a>
+  </div>
+  
+</div>
+
+          </div>
+          
+        </div>
+
+        <div class="body-footer">
+          <p>Last updated on 2021-05-13</p>
+
+          
+
+
+
+
+
+          
+
+
+          
+
+
+  
+  
+  <div class="article-widget content-widget-hr">
+    <h3>Related</h3>
+    <ul>
+      
+      <li><a href="/courses/rethinking/chapter-15/">Chapter 15</a></li>
+      
+      <li><a href="/courses/rethinking/chapter-14/">Chapter 14</a></li>
+      
+      <li><a href="/courses/rethinking/chapter-13/">Chapter 13</a></li>
+      
+      <li><a href="/courses/rethinking/chapter-12/">Chapter 12</a></li>
+      
+      <li><a href="/courses/rethinking/chapter-11/">Chapter 10 &amp; 11</a></li>
+      
+    </ul>
+  </div>
+  
+
+
+
+        </div>
+
+      </article>
+
+      <footer class="site-footer">
+  
+  <p class="powered-by">
+    
+      <a href="/privacy/">Privacy Policy</a>
+    
+    
+       &middot; 
+      <a href="/terms/">Terms</a>
+    
+  </p>
+  
+
+  <p class="powered-by">
+    © 2024
+  </p>
+
+  
+  
+
+
+
+
+
+
+  <p class="powered-by">
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+  </p>
+</footer>
+
+
+    </main>
+  </div>
+</div>
+
+
+      
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js" integrity="sha256-eOgo0OtLL4cdq7RdwRUiGKLX9XsIJ7nGhWEKbohmVAQ=" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/languages/r.min.js"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/languages/latex.min.js"></script>
+        
+      
+
+    
+
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.js" integrity="sha256-EErZamuLefUnbMBQbsEqu1USa+btR2oIlCpBJbyD4/g=" crossorigin="anonymous"></script>
+    
+
+    
+    
+    <script>const code_highlighting = true;</script>
+    
+
+    
+    
+    <script>const isSiteThemeDark = false;</script>
+    
+
+    
+    
+    
+    
+    
+    
+    <script>
+      const search_config = {"indexURI":"/index.json","minLength":1,"threshold":0.3};
+      const i18n = {"no_results":"No results found","placeholder":"Search...","results":"results found"};
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks",
+        'slides' : "Slides"
+        };
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.1/anchor.min.js" integrity="sha256-pB/deHc9CGfFpJRjC43imB29Rse8tak+5eXqntO94ck=" crossorigin="anonymous"></script>
+    <script>
+      anchors.add();
+    </script>
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+      <div class="search-hit-content">
+        <div class="search-hit-name">
+          <a href="{{relpermalink}}">{{title}}</a>
+          <div class="article-metadata search-hit-type">{{type}}</div>
+          <p class="search-hit-description">{{snippet}}</p>
+        </div>
+      </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="/js/academic.min.66c553246b0f279a03be6e5597f72b52.js"></script>
+
+    
+
+
+
+
+
+
+  
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en-us" >
+<!DOCTYPE html><html lang="en-gb" >
 
 <head>
 
@@ -20,7 +20,7 @@
   
   
 
-  <meta name="author" content="Nelson Bighetti">
+  <meta name="author" content="Erik Kusch">
 
   
   
@@ -30,7 +30,7 @@
   <meta name="description" content="&hellip;">
 
   
-  <link rel="alternate" hreflang="en-us" href="/terms/">
+  <link rel="alternate" hreflang="en-gb" href="https://www.erikkusch.com/terms/">
 
   
 
@@ -38,7 +38,7 @@
   
   
   
-  <meta name="theme-color" content="#2962ff">
+  <meta name="theme-color" content="#858383">
   
 
   
@@ -194,7 +194,7 @@
     
       
       
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700%7CRoboto:400,400italic,700%7CRoboto+Mono&display=swap">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cutive+Mono%7CLora:400,700%7CRoboto:400,700&display=swap">
     
   
 
@@ -209,6 +209,44 @@
 
 
 
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-186216138-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+
+  function gtag() {
+      dataLayer.push(arguments);
+  }
+
+  function trackOutboundLink(url, target) {
+    gtag('event', 'click', {
+         'event_category': 'outbound',
+         'event_label': url,
+         'transport_type': 'beacon',
+         'event_callback': function () {
+           if (target !== '_blank') {
+             document.location = url;
+           }
+         }
+    });
+    console.debug("Outbound link clicked: " + url);
+  }
+
+  function onClickCallback(event) {
+    if ((event.target.tagName !== 'A') || (event.target.host === window.location.host)) {
+      return;
+    }
+    trackOutboundLink(event.target, event.target.getAttribute('target'));  
+  }
+
+  gtag('js', new Date());
+  gtag('config', 'UA-186216138-1', {});
+
+  
+  document.addEventListener('click', onClickCallback, false);
+</script>
+
+
   
 
 
@@ -218,10 +256,10 @@
   
 
   <link rel="manifest" href="/index.webmanifest">
-  <link rel="icon" type="image/png" href="/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_32x32_fill_lanczos_center_2.png">
-  <link rel="apple-touch-icon" type="image/png" href="/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_192x192_fill_lanczos_center_2.png">
+  <link rel="icon" type="image/png" href="/images/icon_hu7658c99d512131214e4d6c003a3f85f7_112593_32x32_fill_lanczos_center_2.png">
+  <link rel="apple-touch-icon" type="image/png" href="/images/icon_hu7658c99d512131214e4d6c003a3f85f7_112593_192x192_fill_lanczos_center_2.png">
 
-  <link rel="canonical" href="/terms/">
+  <link rel="canonical" href="https://www.erikkusch.com/terms/">
 
   
   
@@ -231,16 +269,18 @@
   
   
     
-    
   
   
-  <meta property="twitter:card" content="summary">
+  <meta property="twitter:card" content="summary_large_image">
   
-  <meta property="og:site_name" content="Academic">
-  <meta property="og:url" content="/terms/">
-  <meta property="og:title" content="Terms | Academic">
-  <meta property="og:description" content="&hellip;"><meta property="og:image" content="/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_2.png">
-  <meta property="twitter:image" content="/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_2.png"><meta property="og:locale" content="en-us">
+  <meta property="twitter:site" content="@ErikKusch">
+  <meta property="twitter:creator" content="@ErikKusch">
+  
+  <meta property="og:site_name" content="Erik Kusch">
+  <meta property="og:url" content="https://www.erikkusch.com/terms/">
+  <meta property="og:title" content="Terms | Erik Kusch">
+  <meta property="og:description" content="&hellip;"><meta property="og:image" content="https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg">
+  <meta property="twitter:image" content="https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg"><meta property="og:locale" content="en-gb">
   
     
       <meta property="article:published_time" content="2018-06-28T00:00:00&#43;01:00">
@@ -264,7 +304,7 @@
 
 
 
-  <title>Terms | Academic</title>
+  <title>Terms | Erik Kusch</title>
 
 </head>
 <body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" >
@@ -310,13 +350,15 @@
 
 
 
+  
+
 
 <nav class="navbar navbar-expand-lg navbar-light compensate-for-scrollbar" id="navbar-main">
   <div class="container">
 
     
     <div class="d-none d-lg-inline-flex">
-      <a class="navbar-brand" href="/">Academic</a>
+      <a class="navbar-brand" href="/"><img src="/images/logo_huab2266ff59bbac6a094b6da1268adcf9_208479_0x70_resize_lanczos_2.png" alt="Erik Kusch"></a>
     </div>
     
 
@@ -329,13 +371,13 @@
 
     
     <div class="navbar-brand-mobile-wrapper d-inline-flex d-lg-none">
-      <a class="navbar-brand" href="/">Academic</a>
+      <a class="navbar-brand" href="/"><img src="/images/logo_huab2266ff59bbac6a094b6da1268adcf9_208479_0x70_resize_lanczos_2.png" alt="Erik Kusch"></a>
     </div>
     
 
     
     
-    <div class="navbar-collapse main-menu-item collapse justify-content-start" id="navbar-content">
+    <div class="navbar-collapse main-menu-item collapse justify-content-center" id="navbar-content">
 
       
       <ul class="navbar-nav d-md-inline-flex">
@@ -346,54 +388,42 @@
         
         
         
-          
-        
 
         
         
         
         
         
-        
-          
-          
-          
-            
-          
-          
         
 
         <li class="nav-item">
-          <a class="nav-link " href="/#hero"><span>Demo</span></a>
+          <a class="nav-link  active" href="/"><span>Home</span></a>
         </li>
 
         
         
 
         
-
-        
-        
-        
-          
-        
-
-        
-        
-        
-        
-        
-        
-          
-          
-          
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"><span>Courses & Workshops</span><span class="caret"></span>
+          </a>
+          <div class="dropdown-menu">
             
-          
-          
-        
-
-        <li class="nav-item">
-          <a class="nav-link " href="/#posts"><span>Posts</span></a>
+              <a class="dropdown-item" href="/courses/krigr/"><span>KrigR - State-of-the-Art Climate Data within R</span></a>
+            
+              <a class="dropdown-item" href="/courses/gbif/"><span>Accessing and Referencing GBIF Data for Research</span></a>
+            
+              <a class="dropdown-item" href="/courses/rethinking/"><span>Statistical Rethinking - Introduction to Bayesian Statistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/bayes-nets/"><span>Bayesian Networks - Causality through Bayesian Approaches</span></a>
+            
+              <a class="dropdown-item" href="/courses/biostat101/"><span>Biostats 101 - An Introduction to Biostatistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/excursions-into-biostatistics/"><span>Biostats 301 - Excursions into Biostatistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/bftp-biome-detection/"><span>BFTP - First Steps in Macroecology in R</span></a>
+            
+          </div>
         </li>
 
         
@@ -471,9 +501,16 @@
         
         
         
+          
+          
+          
+            
+          
+          
+        
 
         <li class="nav-item">
-          <a class="nav-link " href="/courses/"><span>Courses</span></a>
+          <a class="nav-link " href="/#talks"><span>Talks</span></a>
         </li>
 
         
@@ -493,16 +530,33 @@
         
         
         
-          
-          
+
+        <li class="nav-item">
+          <a class="nav-link " href="/about"><span>Contact</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
           
             
           
-          
+        
+
+        
+        
+        
+        
+        
         
 
         <li class="nav-item">
-          <a class="nav-link " href="/#contact"><span>Contact</span></a>
+          <a class="nav-link " href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/media/CV_ErikKusch.html" target="_blank" rel="noopener"><span>CV</span></a>
         </li>
 
         
@@ -672,6 +726,8 @@
         
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/languages/r.min.js"></script>
         
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/languages/latex.min.js"></script>
+        
       
 
     
@@ -783,7 +839,7 @@
   
 
   <p class="powered-by">
-    
+    © 2024
   </p>
 
   

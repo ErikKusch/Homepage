@@ -1,0 +1,1033 @@
+<!DOCTYPE html><html lang="en-gb" >
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.8.0">
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Erik Kusch">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Workshop material for getting started and becoming adept at using the `R` Package `KrigR`.">
+
+  
+  <link rel="alternate" hreflang="en-gb" href="https://www.erikkusch.com/courses/krigr/">
+
+  
+
+
+  
+  
+  
+  <meta name="theme-color" content="#858383">
+  
+
+  
+  
+  
+  <script src="/js/mathjax-config.js"></script>
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-1/css/all.min.css" integrity="sha256-4w9DunooKSr3MFXHXWyFER38WmPdm361bQS/2KUWZbU=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.css" integrity="sha256-SHMGCYmST46SoyGgo4YR/9AlK1vf3ff84Aq9yK4hdqM=" crossorigin="anonymous">
+    
+
+    
+
+    
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.1.2/lazysizes.min.js" integrity="sha256-Md1qLToewPeKjfAHU1zyPwOutccPAm5tahnaw7Osw0A=" crossorigin="anonymous" async></script>
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" integrity="" crossorigin="anonymous" async></script>
+      
+    
+      
+
+      
+      
+
+      
+    
+
+  
+
+  
+  
+  
+    
+      
+      
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cutive+Mono%7CLora:400,700%7CRoboto:400,700&display=swap">
+    
+  
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/academic.css">
+
+  
+
+
+
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-186216138-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+
+  function gtag() {
+      dataLayer.push(arguments);
+  }
+
+  function trackOutboundLink(url, target) {
+    gtag('event', 'click', {
+         'event_category': 'outbound',
+         'event_label': url,
+         'transport_type': 'beacon',
+         'event_callback': function () {
+           if (target !== '_blank') {
+             document.location = url;
+           }
+         }
+    });
+    console.debug("Outbound link clicked: " + url);
+  }
+
+  function onClickCallback(event) {
+    if ((event.target.tagName !== 'A') || (event.target.host === window.location.host)) {
+      return;
+    }
+    trackOutboundLink(event.target, event.target.getAttribute('target'));  
+  }
+
+  gtag('js', new Date());
+  gtag('config', 'UA-186216138-1', {});
+
+  
+  document.addEventListener('click', onClickCallback, false);
+</script>
+
+
+  
+
+
+  
+  
+
+  
+  <link rel="alternate" href="/courses/krigr/index.xml" type="application/rss+xml" title="Erik Kusch">
+  
+
+  <link rel="manifest" href="/index.webmanifest">
+  <link rel="icon" type="image/png" href="/images/icon_hu7658c99d512131214e4d6c003a3f85f7_112593_32x32_fill_lanczos_center_2.png">
+  <link rel="apple-touch-icon" type="image/png" href="/images/icon_hu7658c99d512131214e4d6c003a3f85f7_112593_192x192_fill_lanczos_center_2.png">
+
+  <link rel="canonical" href="https://www.erikkusch.com/courses/krigr/">
+
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  <meta property="twitter:card" content="summary_large_image">
+  
+  <meta property="twitter:site" content="@ErikKusch">
+  <meta property="twitter:creator" content="@ErikKusch">
+  
+  <meta property="og:site_name" content="Erik Kusch">
+  <meta property="og:url" content="https://www.erikkusch.com/courses/krigr/">
+  <meta property="og:title" content="KrigR Workshop | Erik Kusch">
+  <meta property="og:description" content="Workshop material for getting started and becoming adept at using the `R` Package `KrigR`."><meta property="og:image" content="https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg">
+  <meta property="twitter:image" content="https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg"><meta property="og:locale" content="en-gb">
+  
+    <meta property="og:updated_time" content="2021-01-01T00:00:00&#43;00:00">
+  
+
+  
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+  <title>KrigR Workshop | Erik Kusch</title>
+
+</head>
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search" class="form-control">
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+<nav class="navbar navbar-expand-lg navbar-light compensate-for-scrollbar" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="d-none d-lg-inline-flex">
+      <a class="navbar-brand" href="/"><img src="/images/logo_huab2266ff59bbac6a094b6da1268adcf9_208479_0x70_resize_lanczos_2.png" alt="Erik Kusch"></a>
+    </div>
+    
+
+    
+    <button type="button" class="navbar-toggler" data-toggle="collapse"
+            data-target="#navbar-content" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+    <span><i class="fas fa-bars"></i></span>
+    </button>
+    
+
+    
+    <div class="navbar-brand-mobile-wrapper d-inline-flex d-lg-none">
+      <a class="navbar-brand" href="/"><img src="/images/logo_huab2266ff59bbac6a094b6da1268adcf9_208479_0x70_resize_lanczos_2.png" alt="Erik Kusch"></a>
+    </div>
+    
+
+    
+    
+    <div class="navbar-collapse main-menu-item collapse justify-content-center" id="navbar-content">
+
+      
+      <ul class="navbar-nav d-md-inline-flex">
+        
+
+        
+
+        
+        
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link  active" href="/"><span>Home</span></a>
+        </li>
+
+        
+        
+
+        
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"><span>Courses & Workshops</span><span class="caret"></span>
+          </a>
+          <div class="dropdown-menu">
+            
+              <a class="dropdown-item" href="/courses/krigr/"><span>KrigR - State-of-the-Art Climate Data within R</span></a>
+            
+              <a class="dropdown-item" href="/courses/gbif/"><span>Accessing and Referencing GBIF Data for Research</span></a>
+            
+              <a class="dropdown-item" href="/courses/rethinking/"><span>Statistical Rethinking - Introduction to Bayesian Statistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/bayes-nets/"><span>Bayesian Networks - Causality through Bayesian Approaches</span></a>
+            
+              <a class="dropdown-item" href="/courses/biostat101/"><span>Biostats 101 - An Introduction to Biostatistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/excursions-into-biostatistics/"><span>Biostats 301 - Excursions into Biostatistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/bftp-biome-detection/"><span>BFTP - First Steps in Macroecology in R</span></a>
+            
+          </div>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#projects"><span>Projects</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#featured"><span>Publications</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#talks"><span>Talks</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/about"><span>Contact</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+            
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/media/CV_ErikKusch.html" target="_blank" rel="noopener"><span>CV</span></a>
+        </li>
+
+        
+        
+
+      
+
+        
+      </ul>
+    </div>
+
+    <ul class="nav-icons navbar-nav flex-row ml-auto d-flex pl-md-2">
+      
+      <li class="nav-item">
+        <a class="nav-link js-search" href="#" aria-label="Search"><i class="fas fa-search" aria-hidden="true"></i></a>
+      </li>
+      
+
+      
+      <li class="nav-item dropdown theme-dropdown">
+        <a href="#" class="nav-link js-theme-selector" data-toggle="dropdown" aria-haspopup="true">
+          <i class="fas fa-palette" aria-hidden="true"></i>
+        </a>
+        <div class="dropdown-menu">
+          <a href="#" class="dropdown-item js-set-theme-light">
+            <span>Light</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-dark">
+            <span>Dark</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-auto">
+            <span>Automatic</span>
+          </a>
+        </div>
+      </li>
+      
+
+      
+
+    </ul>
+
+  </div>
+</nav>
+
+
+  
+
+<div class="container-fluid docs">
+  <div class="row flex-xl-nowrap">
+    <div class="col-12 col-md-3 col-xl-2 docs-sidebar">
+      
+
+
+
+
+
+  
+    
+  
+
+
+
+
+<form class="docs-search d-flex align-items-center">
+  <button class="btn docs-toggle d-md-none p-0 mr-3" type="button" data-toggle="collapse" data-target="#docs-nav" aria-controls="docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    <span><i class="fas fa-bars"></i></span>
+  </button>
+
+  
+  <input name="q" type="search" class="form-control" placeholder="Search..." autocomplete="off">
+  
+</form>
+
+<nav class="collapse docs-links" id="docs-nav">
+  
+
+  
+  
+  
+  
+  <div class="docs-toc-item">
+    <a class="docs-toc-link" href="/courses/krigr/">Introduction</a>
+    <ul class="nav docs-sidenav">
+      
+      <li class="active">
+        <a href="/courses/krigr/">Motivation &amp; Workshop</a>
+      </li>
+      
+      <li >
+        <a href="/courses/krigr/background/">The Theory Behind KrigR</a>
+      </li>
+      
+    </ul>
+    
+
+  </div>
+  
+  <div class="docs-toc-item">
+    <a class="docs-toc-link" href="/courses/krigr/setup/">Quick Start</a>
+    <ul class="nav docs-sidenav">
+      
+      <li >
+        <a href="/courses/krigr/setup/">Setting up KrigR</a>
+      </li>
+      
+      <li >
+        <a href="/courses/krigr/quickstart/">Quick Guide</a>
+      </li>
+      
+    </ul>
+    
+
+  </div>
+  
+  <div class="docs-toc-item">
+    <a class="docs-toc-link" href="/courses/krigr/prep/">Workshop</a>
+    <ul class="nav docs-sidenav">
+      
+      <li >
+        <a href="/courses/krigr/prep/">Preparing the Workshop</a>
+      </li>
+      
+      <li >
+        <a href="/courses/krigr/download/">Downloading &amp; Processing</a>
+      </li>
+      
+      <li >
+        <a href="/courses/krigr/kriging/">Statistical Downscaling</a>
+      </li>
+      
+      <li >
+        <a href="/courses/krigr/bioclim/">Bioclimatic Variables</a>
+      </li>
+      
+      <li >
+        <a href="/courses/krigr/third-party/">Third-Party Data</a>
+      </li>
+      
+      <li >
+        <a href="/courses/krigr/projections/">Projection Downscaling</a>
+      </li>
+      
+    </ul>
+    
+
+  </div>
+  
+  
+</nav>
+
+    </div>
+
+    
+    <div class="d-none d-xl-block col-xl-2 docs-toc">
+      <ul class="nav toc-top">
+        <li><a href="#" id="back_to_top" class="docs-toc-title">Contents</a></li>
+      </ul>
+
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#learning-goals">Learning Goals</a></li>
+    <li><a href="#issues--feature-requests">Issues &amp; Feature Requests</a></li>
+    <li><a href="#disclaimer">Disclaimer</a></li>
+  </ul>
+</nav>
+
+      
+    </div>
+    
+
+    <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 docs-content" role="main">
+
+      <article class="article">
+
+        <div class="docs-article-container">
+          <h1>KrigR Workshop</h1>
+
+          <div class="article-style">
+            <div class="alert alert-danger">
+  <div>
+    Please note that <code>KrigR</code> is currently undergoing major redevelopment with respect to updating functionality to remove deprecated dependencies and to enable operations targeting the new CDS. The workshop material presented here is being redeveloped at the same time. At present, I recommend to use the development version of <code>KrigR</code> - the workshop material detailing setup and quickguide have already been reworked to reference this version of the package which will soon become the new main version of <code>KrigR</code>.
+  </div>
+</div>
+<p><img align="right" width="90" src="overview/CDSLogo.png" /></p>
+<p>The 
+<a href="https://cds.climate.copernicus.eu/" target="_blank" rel="noopener">Copernicus Climate Data Store (CDS)</a> host a variety of data products - like world-leading climate reanalysis products - which provide more accurate environmental information at higher temporal resolution than traditional climate data products used in downstream applications in ecology, anthropology, macroeconomics, epidemeology, and many others.</p>
+<p><img align="left" width="125" src="overview/KrigRLogo.png" /></p>
+<p>The <code>KrigR</code> R-package reduces barriers for users to (a) download CDS-hosted data (b) aggregate these data to desired temporal resolutions and metrics, (c) acquire and prepare co-variates matching these products, and (d) statistically downscale spatial data using co-variates via kriging which allows for integration of data uncertainty with interpolation uncertainty for improved data reliability indicators.</p>
+<p>The <code>KrigR</code> workflow allows highly flexible data product creation for unparalleled aligning of data set specifications with research objectives. Climate and weather products obtained through <code>KrigR</code> offer great potential for quantification of exposure to extreme events due to their combinations of high spatial and temporal resolutions. Lastly, <code>KrigR</code> can incorporate third-party data which enables generation of high-resolution, bias-corrected climate projection data allowing for forecasting at high-resolution.</p>
+<p>I have created <code>KrigR</code> for download, temporal aggregation, masking, and statistically interpolating ERA5(-Land) data. We first presented the R-Package (<code>KrigR</code>) itself in 
+<a href="https://doi.org/10.1088/1748-9326/ac48b3" target="_blank" rel="noopener">Kusch,Davy, 2022</a>. In 
+<a href="https://doi.org/10.1088/1748-9326/ac39bf" target="_blank" rel="noopener">Davy, Kusch, 2021</a> published previously my colleague and I demonstrated how data obtained through the <code>KrigR</code> framework relate to previously offered ready-made data sets and why we strongly believe that data handling pipelines (rather than ready-made data sets) are the way forward for downstream analyses.</p>
+<p>Throughout this workshop material, I walk you through the functionality, use-cases, and quality of life aspects with <code>KrigR</code>.</p>
+<!-- ## Recording Availability
+A recording of me presenting an earlier version of this workshop (with much of the contents herein) can be found on [YouTube](https://www.youtube.com/watch?v=wwb107L4wVw&ab_channel=ErikKusch). --->
+<h2 id="learning-goals">Learning Goals</h2>
+<p>Throughout this workshop, you will learn how to:</p>
+<ul>
+<li>Query downloads of state-of-the-art climate data using <code>KrigR</code></li>
+<li>Use the data processing functionality contained in <code>KrigR</code> to achieve data at desired spatial scales and temporal resolutions</li>
+<li>Obtain and process covariate data for use in statistical interpolation via kriging</li>
+<li>Carry out kriging using the <code>KrigR</code> package</li>
+</ul>
+<!-- - Use `KrigR` to obtain bioclimatic data and what to consider in doing so
+- Use third-party data with the `KrigR` toolbox  
+- Establish high spatial resolution, bias-corrected climate projections using `KrigR` --->
+<h2 id="issues--feature-requests">Issues &amp; Feature Requests</h2>
+<p>If you run into any error messages, bugs, want to inquire about some <code>KrigR</code> functionality, or request new functionality, please do so by registering an 
+<a href="https://github.com/ErikKusch/KrigR/issues/new/choose" target="_blank" rel="noopener">issue on the <code>KrigR</code> GitHub</a>. Please, <strong>refrain from sending these via E-mail</strong>.</p>
+<h2 id="disclaimer">Disclaimer</h2>
+<p>If you find any typos in my material, are unhappy with some of what or how I am presenting or simply unclear about thing, do not hesitate to 
+<a href="/about/#contact">contact me</a>.</p>
+<p>All the best,<br>
+Erik</p>
+
+          </div>
+
+          
+
+<div class="article-tags">
+  
+  <a class="badge badge-light" href="/tag/climate-data/">Climate Data</a>
+  
+  <a class="badge badge-light" href="/tag/statistical-downscaling/">Statistical Downscaling</a>
+  
+  <a class="badge badge-light" href="/tag/krigr/">KrigR</a>
+  
+</div>
+
+
+
+          
+          <div class="article-widget">
+            
+<div class="post-nav">
+  
+  
+</div>
+
+          </div>
+          
+        </div>
+
+        <div class="body-footer">
+          <p>Last updated on 2021-01-01</p>
+
+          
+
+
+
+
+
+          
+
+
+          
+
+
+  
+  
+  <div class="article-widget content-widget-hr">
+    <h3>Related</h3>
+    <ul>
+      
+      <li><a href="/courses/krigr/">KrigR Workshop</a></li>
+      
+      <li><a href="/courses/krigr/bioclim/">Bioclimatic Variables</a></li>
+      
+      <li><a href="/courses/krigr/download/">Downloading &amp; Processing</a></li>
+      
+      <li><a href="/courses/krigr/prep/">Preparing the Workshop</a></li>
+      
+      <li><a href="/courses/krigr/projections/">Projection Downscaling</a></li>
+      
+    </ul>
+  </div>
+  
+
+
+
+        </div>
+
+      </article>
+
+      <footer class="site-footer">
+  
+  <p class="powered-by">
+    
+      <a href="/privacy/">Privacy Policy</a>
+    
+    
+       &middot; 
+      <a href="/terms/">Terms</a>
+    
+  </p>
+  
+
+  <p class="powered-by">
+    © 2024
+  </p>
+
+  
+  
+
+
+
+
+
+
+  <p class="powered-by">
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+  </p>
+</footer>
+
+
+    </main>
+  </div>
+</div>
+
+
+      
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js" integrity="sha256-eOgo0OtLL4cdq7RdwRUiGKLX9XsIJ7nGhWEKbohmVAQ=" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/languages/r.min.js"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/languages/latex.min.js"></script>
+        
+      
+
+    
+
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.js" integrity="sha256-EErZamuLefUnbMBQbsEqu1USa+btR2oIlCpBJbyD4/g=" crossorigin="anonymous"></script>
+    
+
+    
+    
+    <script>const code_highlighting = true;</script>
+    
+
+    
+    
+    <script>const isSiteThemeDark = false;</script>
+    
+
+    
+    
+    
+    
+    
+    
+    <script>
+      const search_config = {"indexURI":"/index.json","minLength":1,"threshold":0.3};
+      const i18n = {"no_results":"No results found","placeholder":"Search...","results":"results found"};
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks",
+        'slides' : "Slides"
+        };
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.1/anchor.min.js" integrity="sha256-pB/deHc9CGfFpJRjC43imB29Rse8tak+5eXqntO94ck=" crossorigin="anonymous"></script>
+    <script>
+      anchors.add();
+    </script>
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+      <div class="search-hit-content">
+        <div class="search-hit-name">
+          <a href="{{relpermalink}}">{{title}}</a>
+          <div class="article-metadata search-hit-type">{{type}}</div>
+          <p class="search-hit-description">{{snippet}}</p>
+        </div>
+      </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="/js/academic.min.66c553246b0f279a03be6e5597f72b52.js"></script>
+
+    
+
+
+
+
+
+
+  
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

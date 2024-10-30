@@ -1,0 +1,1260 @@
+<!DOCTYPE html><html lang="en-gb" >
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.8.0">
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Erik Kusch">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Answers and solutions to the exercises belonging to Part 2 in [Bayesian Networks with Examples in R](https://www.bnlearn.com/book-crc/) by M. Scutari and J.-B. Denis.">
+
+  
+  <link rel="alternate" hreflang="en-gb" href="https://www.erikkusch.com/courses/bayes-nets/part-2/">
+
+  
+
+
+  
+  
+  
+  <meta name="theme-color" content="#858383">
+  
+
+  
+  
+  
+  <script src="/js/mathjax-config.js"></script>
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-1/css/all.min.css" integrity="sha256-4w9DunooKSr3MFXHXWyFER38WmPdm361bQS/2KUWZbU=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.css" integrity="sha256-SHMGCYmST46SoyGgo4YR/9AlK1vf3ff84Aq9yK4hdqM=" crossorigin="anonymous">
+    
+
+    
+
+    
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.1.2/lazysizes.min.js" integrity="sha256-Md1qLToewPeKjfAHU1zyPwOutccPAm5tahnaw7Osw0A=" crossorigin="anonymous" async></script>
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" integrity="" crossorigin="anonymous" async></script>
+      
+    
+      
+
+      
+      
+
+      
+    
+
+  
+
+  
+  
+  
+    
+      
+      
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cutive+Mono%7CLora:400,700%7CRoboto:400,700&display=swap">
+    
+  
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/academic.css">
+
+  
+
+
+
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-186216138-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+
+  function gtag() {
+      dataLayer.push(arguments);
+  }
+
+  function trackOutboundLink(url, target) {
+    gtag('event', 'click', {
+         'event_category': 'outbound',
+         'event_label': url,
+         'transport_type': 'beacon',
+         'event_callback': function () {
+           if (target !== '_blank') {
+             document.location = url;
+           }
+         }
+    });
+    console.debug("Outbound link clicked: " + url);
+  }
+
+  function onClickCallback(event) {
+    if ((event.target.tagName !== 'A') || (event.target.host === window.location.host)) {
+      return;
+    }
+    trackOutboundLink(event.target, event.target.getAttribute('target'));  
+  }
+
+  gtag('js', new Date());
+  gtag('config', 'UA-186216138-1', {});
+
+  
+  document.addEventListener('click', onClickCallback, false);
+</script>
+
+
+  
+
+
+  
+  
+
+  
+
+  <link rel="manifest" href="/index.webmanifest">
+  <link rel="icon" type="image/png" href="/images/icon_hu7658c99d512131214e4d6c003a3f85f7_112593_32x32_fill_lanczos_center_2.png">
+  <link rel="apple-touch-icon" type="image/png" href="/images/icon_hu7658c99d512131214e4d6c003a3f85f7_112593_192x192_fill_lanczos_center_2.png">
+
+  <link rel="canonical" href="https://www.erikkusch.com/courses/bayes-nets/part-2/">
+
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  <meta property="twitter:card" content="summary_large_image">
+  
+  <meta property="twitter:site" content="@ErikKusch">
+  <meta property="twitter:creator" content="@ErikKusch">
+  
+  <meta property="og:site_name" content="Erik Kusch">
+  <meta property="og:url" content="https://www.erikkusch.com/courses/bayes-nets/part-2/">
+  <meta property="og:title" content="Gaussian Bayesian Networks | Erik Kusch">
+  <meta property="og:description" content="Answers and solutions to the exercises belonging to Part 2 in [Bayesian Networks with Examples in R](https://www.bnlearn.com/book-crc/) by M. Scutari and J.-B. Denis."><meta property="og:image" content="https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg">
+  <meta property="twitter:image" content="https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg"><meta property="og:locale" content="en-gb">
+  
+    
+      <meta property="article:published_time" content="2021-06-01T00:00:00&#43;00:00">
+    
+    <meta property="article:modified_time" content="2021-06-01T20:00:00&#43;01:00">
+  
+
+  
+
+
+
+  
+
+
+  
+
+
+  
+
+
+
+
+
+  <title>Gaussian Bayesian Networks | Erik Kusch</title>
+
+</head>
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search" class="form-control">
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+<nav class="navbar navbar-expand-lg navbar-light compensate-for-scrollbar" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="d-none d-lg-inline-flex">
+      <a class="navbar-brand" href="/"><img src="/images/logo_huab2266ff59bbac6a094b6da1268adcf9_208479_0x70_resize_lanczos_2.png" alt="Erik Kusch"></a>
+    </div>
+    
+
+    
+    <button type="button" class="navbar-toggler" data-toggle="collapse"
+            data-target="#navbar-content" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+    <span><i class="fas fa-bars"></i></span>
+    </button>
+    
+
+    
+    <div class="navbar-brand-mobile-wrapper d-inline-flex d-lg-none">
+      <a class="navbar-brand" href="/"><img src="/images/logo_huab2266ff59bbac6a094b6da1268adcf9_208479_0x70_resize_lanczos_2.png" alt="Erik Kusch"></a>
+    </div>
+    
+
+    
+    
+    <div class="navbar-collapse main-menu-item collapse justify-content-center" id="navbar-content">
+
+      
+      <ul class="navbar-nav d-md-inline-flex">
+        
+
+        
+
+        
+        
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link  active" href="/"><span>Home</span></a>
+        </li>
+
+        
+        
+
+        
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"><span>Courses & Workshops</span><span class="caret"></span>
+          </a>
+          <div class="dropdown-menu">
+            
+              <a class="dropdown-item" href="/courses/krigr/"><span>KrigR - State-of-the-Art Climate Data within R</span></a>
+            
+              <a class="dropdown-item" href="/courses/gbif/"><span>Accessing and Referencing GBIF Data for Research</span></a>
+            
+              <a class="dropdown-item" href="/courses/rethinking/"><span>Statistical Rethinking - Introduction to Bayesian Statistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/bayes-nets/"><span>Bayesian Networks - Causality through Bayesian Approaches</span></a>
+            
+              <a class="dropdown-item" href="/courses/biostat101/"><span>Biostats 101 - An Introduction to Biostatistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/excursions-into-biostatistics/"><span>Biostats 301 - Excursions into Biostatistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/bftp-biome-detection/"><span>BFTP - First Steps in Macroecology in R</span></a>
+            
+          </div>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#projects"><span>Projects</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#featured"><span>Publications</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#talks"><span>Talks</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/about"><span>Contact</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+            
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/media/CV_ErikKusch.html" target="_blank" rel="noopener"><span>CV</span></a>
+        </li>
+
+        
+        
+
+      
+
+        
+      </ul>
+    </div>
+
+    <ul class="nav-icons navbar-nav flex-row ml-auto d-flex pl-md-2">
+      
+      <li class="nav-item">
+        <a class="nav-link js-search" href="#" aria-label="Search"><i class="fas fa-search" aria-hidden="true"></i></a>
+      </li>
+      
+
+      
+      <li class="nav-item dropdown theme-dropdown">
+        <a href="#" class="nav-link js-theme-selector" data-toggle="dropdown" aria-haspopup="true">
+          <i class="fas fa-palette" aria-hidden="true"></i>
+        </a>
+        <div class="dropdown-menu">
+          <a href="#" class="dropdown-item js-set-theme-light">
+            <span>Light</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-dark">
+            <span>Dark</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-auto">
+            <span>Automatic</span>
+          </a>
+        </div>
+      </li>
+      
+
+      
+
+    </ul>
+
+  </div>
+</nav>
+
+
+  
+
+<div class="container-fluid docs">
+  <div class="row flex-xl-nowrap">
+    <div class="col-12 col-md-3 col-xl-2 docs-sidebar">
+      
+
+
+
+
+
+  
+    
+  
+
+
+
+
+<form class="docs-search d-flex align-items-center">
+  <button class="btn docs-toggle d-md-none p-0 mr-3" type="button" data-toggle="collapse" data-target="#docs-nav" aria-controls="docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    <span><i class="fas fa-bars"></i></span>
+  </button>
+
+  
+  <input name="q" type="search" class="form-control" placeholder="Search..." autocomplete="off">
+  
+</form>
+
+<nav class="collapse docs-links" id="docs-nav">
+  
+
+  
+  
+  
+  
+  <div class="docs-toc-item">
+    <a class="docs-toc-link" href="/courses/bayes-nets/">Overview</a>
+
+  </div>
+  
+  <div class="docs-toc-item">
+    <a class="docs-toc-link" href="/courses/bayes-nets/introduction/">1 - Theory</a>
+    <ul class="nav docs-sidenav">
+      
+      <li >
+        <a href="/courses/bayes-nets/introduction/">Graph Theory &amp; Bayes</a>
+      </li>
+      
+      <li >
+        <a href="/courses/bayes-nets/networksr/">(Bayesian) Networks &amp; R</a>
+      </li>
+      
+    </ul>
+    
+
+  </div>
+  
+  <div class="docs-toc-item">
+    <a class="docs-toc-link" href="/courses/bayes-nets/part-1/">2 - Static Networks</a>
+    <ul class="nav docs-sidenav">
+      
+      <li >
+        <a href="/courses/bayes-nets/part-1/">Multinomial Bayesian Networks</a>
+      </li>
+      
+      <li class="active">
+        <a href="/courses/bayes-nets/part-2/">Gaussian Bayesian Networks</a>
+      </li>
+      
+      <li >
+        <a href="/courses/bayes-nets/part-3/">Hybrid Bayesian Networks</a>
+      </li>
+      
+      <li >
+        <a href="/courses/bayes-nets/static/">Additional Static Exercises</a>
+      </li>
+      
+    </ul>
+    
+
+  </div>
+  
+  <div class="docs-toc-item">
+    <a class="docs-toc-link" href="/courses/bayes-nets/dynamic/">3 - Dynamic Networks</a>
+    <ul class="nav docs-sidenav">
+      
+      <li >
+        <a href="/courses/bayes-nets/dynamic/">Dynamic Bayesian Networks</a>
+      </li>
+      
+    </ul>
+    
+
+  </div>
+  
+  <div class="docs-toc-item">
+    <a class="docs-toc-link" href="/courses/bayes-nets/inference/">4 - Network Inference</a>
+    <ul class="nav docs-sidenav">
+      
+      <li >
+        <a href="/courses/bayes-nets/inference/">Bayesian Network Inference</a>
+      </li>
+      
+    </ul>
+    
+
+  </div>
+  
+  
+</nav>
+
+    </div>
+
+    
+    <div class="d-none d-xl-block col-xl-2 docs-toc">
+      <ul class="nav toc-top">
+        <li><a href="#" id="back_to_top" class="docs-toc-title">Contents</a></li>
+      </ul>
+
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#material">Material</a></li>
+    <li><a href="#exercises">Exercises</a>
+      <ul>
+        <li><a href="#r-environment"><code>R</code> Environment</a></li>
+        <li><a href="#scutari-21">Scutari 2.1</a></li>
+        <li><a href="#scutari-22">Scutari 2.2</a></li>
+        <li><a href="#scutari-23">Scutari 2.3</a></li>
+        <li><a href="#scutari-24">Scutari 2.4</a></li>
+        <li><a href="#scutari-25">Scutari 2.5</a></li>
+        <li><a href="#scutari-26">Scutari 2.6</a></li>
+        <li><a href="#scutari-27">Scutari 2.7</a></li>
+        <li><a href="#scutari-28">Scutari 2.8</a></li>
+      </ul>
+    </li>
+    <li><a href="#session-info">Session Info</a></li>
+  </ul>
+</nav>
+
+      
+    </div>
+    
+
+    <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 docs-content" role="main">
+
+      <article class="article">
+
+        <div class="docs-article-container">
+          <h1>Gaussian Bayesian Networks</h1>
+
+          <div class="article-style">
+            <style>
+
+blockquote{
+color:#633a00;
+}
+
+</style>
+<h2 id="material">Material</h2>
+<ul>
+<li>
+<a href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/content/courses/bayes-nets/4-Gaussian-Networks_11-10-22.html" target="_blank" rel="noopener">Gaussian Bayesian Networks</a></li>
+</ul>
+<h2 id="exercises">Exercises</h2>
+<p>These are answers and solutions to the exercises at the end of Part 2 in 
+<a href="https://www.bnlearn.com/book-crc/" target="_blank" rel="noopener">Bayesian Networks with Examples in R</a> by M. Scutari and J.-B. Denis. Much of my inspiration for these solutions, where necessary, by consulting the solutions provided by the authors themselves as in the appendix.</p>
+<h3 id="r-environment"><code>R</code> Environment</h3>
+<p>For today&rsquo;s exercise, I load the following packages:</p>
+<pre><code class="language-r">library(bnlearn)
+library(ggplot2)
+library(tidyr)
+library(tidybayes)
+</code></pre>
+<h3 id="scutari-21">Scutari 2.1</h3>
+<blockquote>
+<p>Prove that Equation (2.2) implies Equation (2.3).</p>
+</blockquote>
+<p>Equation 2.2 reads:</p>
+<p>$$f(C | G = g) \neq f(C)$$</p>
+<p>Equation 2.3 reads:</p>
+<p>$$f(G | C = c) \neq f(G)$$</p>
+<p>So how do we go about demonstrating that the first implies the latter? Well, we are using Bayesian theory here so why not use the Bayes' theorem? So let&rsquo;s start by rewriting equation 2.2:</p>
+<p>$$f(C | G) = \frac{f(C, G)}{f(G)} = \frac{f(G | C) f(C)}{f(G)}$$
+So how does this relate to the question that equation 2.2 implies equation 2.3? Well, if $f(C|G) = f(C)$ then this equation would reveal that $f(G|C) = f(G)$ (so that the $f(G)$ terms factor out). Our proof stipulates that these statements aren&rsquo;t true, but one still implies the other and we land of quod erat demonstrandum.</p>
+<h3 id="scutari-22">Scutari 2.2</h3>
+<blockquote>
+<p>Within the context of the DAG shown in Figure 2.1, prove that Equation (2.5) is true using Equation (2.6).</p>
+</blockquote>
+<p>This is the DAG in question:</p>
+<img src="/courses/networksscutari/Screenshot 2021-06-02 135704.png" width="900"/>
+<p>The equation to prove (2.5) is:</p>
+<p>$$f(N, W | V = v) = f(N | V = v) f(W | V = v)$$</p>
+<p>and we use this equation (2.6) for our proof:</p>
+<p>$$f(G, E, V, N, W, C) = f(G) f(E) f(V | G, E) f(N | V) f(W | V) f(C | N, W)$$</p>
+<p>Let&rsquo;s start the proof by integrating over all variables that aren&rsquo;t $N$, $W$, and $V$ (the variables contained in the equation we are tasked to prove):</p>
+<p>$$f(V, W, N) = \int_G \int_E \int_Cf(G,E,V,N,W,C)$$</p>
+<p>We do this to remove all but the variables we are after from our equation so let&rsquo;s follow this rationale:</p>
+<p>$$
+\begin{aligned}
+\int_G \int_E \int_Cf(G,E,V,N,W,C) = &amp;f(V) f(N|V) f(W|V)  \newline
+&amp;\times \left( \int_G \int_E f(G) f(E) f(V|G,E) \right) \newline
+&amp;\left( \int_C f(C|N,W) \right)
+\end{aligned}
+$$</p>
+<p>Simplifying this mess, we arrive at:</p>
+<p>$$f(V, W, N) = f(V) f(N|V) f(W|V)$$</p>
+<p>Finally, we can obtain our original formula:</p>
+<p>$$f(W,N|V) = \frac{f(V,W,N)}{f(V)} = \frac{f(V) f(N|V) f(W|V)}{f(V)} = f(N|V) f(W|N)$$</p>
+<p>Another case of the quod erat demonstrandums.</p>
+<h3 id="scutari-23">Scutari 2.3</h3>
+<blockquote>
+<p>Compute the marginal variance of the two nodes with two parents from the local distributions proposed in Table 2.1. Why is it much more complicated for C than for V?</p>
+</blockquote>
+<p>Table 2.1 is hardly a table at all, but I did locate it. Basically, it is an amalgamation of the probability distributions proposed for the DAG from the previous exercise:</p>
+<img src="/courses/networksscutari/Screenshot 2021-06-02 141404.png" width="900"/>
+<p>Note that the parameter $07v$ in the second-to-last row should read $0.7v$.</p>
+<p>The two nodes we are after are $V$ and $C$. Since the task already tells us that the computation of the marginal variance for $V$ is easier than for $C$, I start with this one.</p>
+<ol>
+<li>Computation for $V$</li>
+</ol>
+<p>Simply translating the probability distribution into a linear model, we receive:</p>
+<p>$$V = -10.35534 + 0.5G + 0.70711E + \epsilon_V$$</p>
+<p>with the variances of our independent variables $G$, $E$, and $\epsilon_V$ being $10^2$, $10^2$, and $5^2$ respectively. Consequently the variance of $V$ can be calculated as follows:</p>
+<p>$$VAR(V) = 0.5^2VAR(G) + 0.70711^2VAR(E) + VAR(\epsilon_V)$$
+$$VAR(V) = 0.5^210^2+0.70711^210^2+5^2 = 10$$</p>
+<ol start="2">
+<li>Computation for $C$</li>
+</ol>
+<p>For $C$, we can transform our portability distribution into a linear model again:</p>
+<p>$$C = 0.3N+0.7W+\epsilon_C$$</p>
+<p>this time, however the <strong>predictors variables</strong> are <strong>not independent</strong> since they share node $V$ as their parent. Consequently, we have to compute their covariance:</p>
+<p>$$COV(N,W) = COV(0.1V, 0.7V) = 0.1 * 0.7 * Var(V) = 0.1 * 0.7 * 10^2$$</p>
+<p>So we actually needed to calculate the variance for $V$ to even be able to calculate the variance for $C$. Let&rsquo;s round this out now, then:</p>
+<p>$$
+\begin{aligned}
+Var(C) &amp;= 0.3^2 * VAR(N) + 0.7^2VAR(W) \newline
+&amp;+ VAR(\epsilon_C) + 2 * 0.3 * 0.7 * COV(N,W)
+\end{aligned}
+$$</p>
+<p>Now, I simply plug the values into the formula and arrive at:</p>
+<p>$$
+\begin{aligned}
+Var(C) &amp;= 0.3^2 * 9.949874^2+0.7^2 * 7.141428 \newline
+&amp;+6.25^2+2 * 0.3 * 0.7 * 0.1 * 0.7 * 10^2  \newline
+&amp; = 54.4118
+\end{aligned}
+$$</p>
+<p>Curiously, the book suggest this as the solution:</p>
+<p>$$Var(C) = (0.3^2+0.7^2+0.3 * 0.7 * 0.14)10^2+6.25^2 = 100.0024$$</p>
+<p>I am not sure where the values for VAR(N) and VAR(W) have gone here. If anyone who is reading this knows the answer to it, please contact me and let me know as well.</p>
+<h3 id="scutari-24">Scutari 2.4</h3>
+<blockquote>
+<p>Write an R script using only the <code>rnorm</code> and <code>cbind</code> functions to create a 100 × 6 matrix of 100 observations simulated from the BN defined in Table 2.1. Compare the result with those produced by a call to <code>cpdist</code> function.</p>
+</blockquote>
+<p>To simulate a table of observation using the formulae in the probability distribution collection from the previous question (Table 1), we simply select random values for all parent nodes according to their distributions and let the distributions for all offspring nodes do the rest. One important note here, is that the <code>rnorm()</code> function in <code>R</code> takes as an argument of variation the standard deviation $\sigma$ rather than the variance $\sigma^2$:</p>
+<pre><code class="language-r">set.seed(42) # making things reproducible
+n &lt;- 1e2 # number of replicates
+G &lt;- rnorm(n, 50, 10)
+E &lt;- rnorm(n, 50, 10)
+V &lt;- rnorm(n, -10.35534 + 0.5 * G + 0.70711 * E, 5)
+N &lt;- rnorm(n, 45 + 0.1 * V, 9.949874)
+W &lt;- rnorm(n, 15 + 0.7 * V, 7.141428)
+C &lt;- rnorm(n, 0.3 * N + 0.7 * W, 6.25)
+sim1 &lt;- data.frame(cbind(G, E, V, N, W, C))
+</code></pre>
+<p>Now we do this using the <code>cpdist()</code> function. To do so, we first have to create our Bayesian Network:</p>
+<pre><code class="language-r">dag.bnlearn &lt;- model2network(&quot;[G][E][V|G:E][N|V][W|V][C|N:W]&quot;)
+disE &lt;- list(coef = c(&quot;(Intercept)&quot; = 50), sd = 10)
+disG &lt;- list(coef = c(&quot;(Intercept)&quot; = 50), sd = 10)
+disV &lt;- list(coef = c(&quot;(Intercept)&quot; = -10.35534, E = 0.70711, G = 0.5), sd = 5)
+disN &lt;- list(coef = c(&quot;(Intercept)&quot; = 45, V = 0.1), sd = 9.949874)
+disW &lt;- list(coef = c(&quot;(Intercept)&quot; = 15, V = 0.7), sd = 7.141428)
+disC &lt;- list(coef = c(&quot;(Intercept)&quot; = 0, N = 0.3, W = 0.7), sd = 6.25)
+dis.list &lt;- list(E = disE, G = disG, V = disV, N = disN, W = disW, C = disC)
+gbn.bnlearn &lt;- custom.fit(dag.bnlearn, dist = dis.list)
+sim2 &lt;- data.frame(cpdist(gbn.bnlearn, nodes = nodes(gbn.bnlearn), evidence = TRUE))
+</code></pre>
+<p>this is pretty much exactly what is done in the chapter.</p>
+<p>So let&rsquo;s compare these simulation outputs:</p>
+<pre><code class="language-r"># preparing all data together in one data frame for plotting
+sim1$sim &lt;- 1
+sim2$sim &lt;- 2
+Plot_df &lt;- rbind(sim1, sim2[, match(colnames(sim1), colnames(sim2))])
+Plot_df &lt;- gather(data = Plot_df, key = &quot;node&quot;, value = &quot;value&quot;, G:C)
+Plot_df$sim &lt;- as.factor(Plot_df$sim)
+## plotting
+ggplot(Plot_df, aes(x = value, y = sim)) +
+  stat_halfeye() +
+  facet_wrap(~node, scales = &quot;free&quot;) +
+  theme_bw()
+</code></pre>
+<p><img src="2021-05-25-crc_part2_files/figure-html/unnamed-chunk-4-1.png" width="1440" /></p>
+<p>As is apparent from this, all results fall close to the expected values of roughly 50. There are noticeable differences between the simulations. I would suggest that these are due to the fairly low sample size for <code>sim1</code>.</p>
+<h3 id="scutari-25">Scutari 2.5</h3>
+<blockquote>
+<p>Imagine two ways other than changing the size of the points (as in Section 2.7.2) to introduce a third variable in the plot.</p>
+</blockquote>
+<p>The plot in question is this one:</p>
+<img src="/courses/networksscutari/Screenshot 2021-06-02 163301.png" width="900"/>
+<p>this plot is aimed at showing the distribution of $C$ when both $E$ and $V$ vary. Here, the variation in $V$ is shown along the x-axis, while the variation of $E$ is contained within the sizes of the circles. The y-axis represents the values of $C$ according to its distributions.</p>
+<p>So how else could we add information of $E$ to a plot of $V$ and $C$? I reckon we could:</p>
+<ul>
+<li>Make three scatter plots. One for each pairing of our variables.</li>
+<li>Represent the values of $E$ with a colour saturation gradient.</li>
+</ul>
+<h3 id="scutari-26">Scutari 2.6</h3>
+<blockquote>
+<p>Can GBNs be extended to log-normal distributions? If so how, if not, why?</p>
+</blockquote>
+<p>GBNs are Gaussian Bayesian Networks - Bayesian Networks where each node follows a Gaussian distribution.</p>
+<p>Yes, absolutely they can! We can simply take the logarithm of all initial variables and apply the GBN right away. Of course, all values that shall be transformed using the logarithm have to be positive.</p>
+<h3 id="scutari-27">Scutari 2.7</h3>
+<blockquote>
+<p>How can we generalise GBNs as defined in Section 2.3 in order to make each node’s variance depend on the node’s parents?</p>
+</blockquote>
+<p>I see absolutely no problem here. Let&rsquo;s say we have two nodes:</p>
+<ul>
+<li>$A$; parent node with a constant variance</li>
+<li>$B$; child node with a variance dependant the parent node</li>
+</ul>
+<p>Then we can easily define the variance of $B$ given $A$ ($VAR(B|A)$) as follows:</p>
+<p>$$VAR(B|A) = \left(A-E(A)\right)^2 * \sigma^2_B$$</p>
+<h3 id="scutari-28">Scutari 2.8</h3>
+<blockquote>
+<p>From the first three lines of Table 2.1, prove that the joint distribution of E, G and V is trivariate normal.</p>
+</blockquote>
+<p>This one is a doozy and I really needed to consult the solutions in the book for this one. Let&rsquo;s first remind ourselves of the first lines of said table:</p>
+<img src="/courses/networksscutari/Screenshot 2021-06-02 141404_2.png" width="900"/>
+<p>To approach this problem it is useful to point out that the logarithm of the density of a multivariate normal distribution is defined as such:</p>
+<p>$$f(x) \propto -\frac{1}{2}(x-\mu)^T\sum^{-2}(x-\mu)$$</p>
+<p>with $x$ being a random vector and $\mu$ denoting our expectation. $\sum$ identifies the covariance matrix.</p>
+<p>Simplifying this, we can transform our variables $G$, $E$, and $V$ to give them a zero marginal expectation and a unity marginal variance. That is a very long-winded way of saying: we normalise our variables:</p>
+<p>$$\overline G = \frac{G-E(G)}{\sqrt{VAR(G)}} = \frac{G-50}{10} \sim Normal(0, 1)$$
+$$\overline E = \frac{E-E(E)}{\sqrt{VAR(E)}} = \frac{E-50}{10} \sim Normal(0, 1)$$
+$$\overline V = \frac{V-E(V)}{\sqrt{VAR(V)}} = \frac{V-50}{10}$$
+Solving for $\overline V | \overline G, \overline E$, we obtain:</p>
+<p>\begin{equation}
+\overline V | \overline G, \overline E = Normal\left(\frac{1}{2} \overline G + \sqrt{\frac{1}{2}} \overline E , (\frac{1}{2})^2 \right)
+\end{equation}</p>
+<!-- $$\overline V | \overline G, \overline E = Normal\left(\frac{1}{2} \overline G + \sqrt{\frac{1}{2}} \overline E , (\frac{1}{2})^2 \right)$$ -->
+<p>I have to honestly that I don&rsquo;t quite understand how this happened and if anyone reading this has intuition for this solution, please let me know.</p>
+<p>Now, we can compute the joint density distribution of these three normalised variables:</p>
+<p>$$\begin{eqnarray}  f(\overline G, \overline E, \overline V) &amp;\propto&amp; f(\overline G)+f(\overline E)+f(\overline V | \overline G, \overline E) \newline 
+&amp;=&amp; -\frac{g^2}{2}-\frac{e^2}{2}-2 \left( v- \frac{1}{2}g - \sqrt{\frac{1}{2}}e \right)^2     \newline
+&amp;=&amp; -\begin{bmatrix} g \newline e \newline v\end{bmatrix}^T \begin{bmatrix} 1 &amp; \frac{\sqrt{2}}{2} &amp; -1\newline \frac{\sqrt{2}}{2} &amp; \frac{3}{2} &amp; -\sqrt{2} \newline -1 &amp; -\sqrt{2} &amp; 2 \end{bmatrix} \begin{bmatrix} g \newline e \newline v\end{bmatrix}  \newline
+&amp;=&amp; -\frac{1}{2} \begin{bmatrix} g \newline e \newline v\end{bmatrix}^T \begin{bmatrix} 1 &amp; 0 &amp; \frac{1}{2}\newline 0 &amp; 1 &amp; \frac{1}{2} \newline \frac{1}{2} &amp; \sqrt{\frac{1}{2}} &amp; 1 \end{bmatrix} \begin{bmatrix} g \newline e \newline v\end{bmatrix}  \newline
+\end{eqnarray}$$</p>
+<p>I have to admit that most of this is, as of right now, beyond me as I came to this book for the &ldquo;<em>applications in R</em>&rdquo; in the first place. The book concludes that this results in:</p>
+<p>$$VAR \left( \begin{bmatrix} \overline G \newline \overline E \newline \overline V\end{bmatrix} \right) = \begin{bmatrix} 1 &amp; 0 &amp; \frac{1}{2}\newline 0 &amp; 1 &amp; \frac{1}{2} \newline \frac{1}{2} &amp; \sqrt{\frac{1}{2}} &amp; 1 \end{bmatrix} $$</p>
+<p>which results in our proof.</p>
+<h2 id="session-info">Session Info</h2>
+<pre><code class="language-r">sessionInfo()
+</code></pre>
+<pre><code>## R version 4.2.1 (2022-06-23 ucrt)
+## Platform: x86_64-w64-mingw32/x64 (64-bit)
+## Running under: Windows 10 x64 (build 19044)
+## 
+## Matrix products: default
+## 
+## locale:
+## [1] LC_COLLATE=English_Germany.utf8  LC_CTYPE=English_Germany.utf8    LC_MONETARY=English_Germany.utf8 LC_NUMERIC=C                     LC_TIME=English_Germany.utf8    
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+## [1] tidybayes_3.0.2 tidyr_1.2.0     ggplot2_3.3.6   bnlearn_4.8.1  
+## 
+## loaded via a namespace (and not attached):
+##  [1] styler_1.8.0         tidyselect_1.1.2     xfun_0.33            bslib_0.4.0          purrr_0.3.4          lattice_0.20-45      colorspace_2.0-3     vctrs_0.4.1          generics_0.1.3      
+## [10] htmltools_0.5.3      yaml_2.3.5           utf8_1.2.2           rlang_1.0.5          R.oo_1.25.0          jquerylib_0.1.4      pillar_1.8.1         glue_1.6.2           withr_2.5.0         
+## [19] DBI_1.1.3            R.utils_2.12.0       distributional_0.3.1 R.cache_0.16.0       lifecycle_1.0.2      stringr_1.4.1        posterior_1.3.1      munsell_0.5.0        blogdown_1.13       
+## [28] gtable_0.3.1         R.methodsS3_1.8.2    coda_0.19-4          evaluate_0.16        labeling_0.4.2       knitr_1.40           fastmap_1.1.0        parallel_4.2.1       fansi_1.0.3         
+## [37] highr_0.9            arrayhelpers_1.1-0   backports_1.4.1      checkmate_2.1.0      scales_1.2.1         cachem_1.0.6         jsonlite_1.8.0       abind_1.4-5          farver_2.1.1        
+## [46] tensorA_0.36.2       digest_0.6.29        svUnit_1.0.6         stringi_1.7.8        bookdown_0.29        dplyr_1.0.9          grid_4.2.1           ggdist_3.2.0         cli_3.3.0           
+## [55] tools_4.2.1          magrittr_2.0.3       sass_0.4.2           tibble_3.1.8         pkgconfig_2.0.3      ellipsis_0.3.2       assertthat_0.2.1     rmarkdown_2.16       rstudioapi_0.14     
+## [64] R6_2.5.1             compiler_4.2.1
+</code></pre>
+
+          </div>
+
+          
+
+<div class="article-tags">
+  
+  <a class="badge badge-light" href="/tag/bayes/">Bayes</a>
+  
+  <a class="badge badge-light" href="/tag/networks/">Networks</a>
+  
+  <a class="badge badge-light" href="/tag/bayesian-statistics/">Bayesian Statistics</a>
+  
+  <a class="badge badge-light" href="/tag/statistics/">Statistics</a>
+  
+</div>
+
+
+
+          
+          <div class="article-widget">
+            
+<div class="post-nav">
+  
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">Previous</div>
+    <a href="/courses/bayes-nets/networksr/" rel="next">(Bayesian) Networks &amp; R</a>
+  </div>
+  
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">Next</div>
+    <a href="/courses/bayes-nets/part-3/" rel="prev">Hybrid Bayesian Networks</a>
+  </div>
+  
+</div>
+
+          </div>
+          
+        </div>
+
+        <div class="body-footer">
+          <p>Last updated on 2021-06-01</p>
+
+          
+
+
+
+
+
+          
+
+
+          
+
+
+  
+  
+  <div class="article-widget content-widget-hr">
+    <h3>Related</h3>
+    <ul>
+      
+      <li><a href="/courses/bayes-nets/inference/">Bayesian Network Inference</a></li>
+      
+      <li><a href="/courses/bayes-nets/dynamic/">Dynamic Bayesian Networks</a></li>
+      
+      <li><a href="/courses/bayes-nets/static/">Additional Static Exercises</a></li>
+      
+      <li><a href="/courses/bayes-nets/networksr/">(Bayesian) Networks &amp; R</a></li>
+      
+      <li><a href="/courses/bayes-nets/introduction/">Graph Theory &amp; Bayes</a></li>
+      
+    </ul>
+  </div>
+  
+
+
+
+        </div>
+
+      </article>
+
+      <footer class="site-footer">
+  
+  <p class="powered-by">
+    
+      <a href="/privacy/">Privacy Policy</a>
+    
+    
+       &middot; 
+      <a href="/terms/">Terms</a>
+    
+  </p>
+  
+
+  <p class="powered-by">
+    © 2024
+  </p>
+
+  
+  
+
+
+
+
+
+
+  <p class="powered-by">
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+  </p>
+</footer>
+
+
+    </main>
+  </div>
+</div>
+
+
+      
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js" integrity="sha256-eOgo0OtLL4cdq7RdwRUiGKLX9XsIJ7nGhWEKbohmVAQ=" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/languages/r.min.js"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/languages/latex.min.js"></script>
+        
+      
+
+    
+
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.js" integrity="sha256-EErZamuLefUnbMBQbsEqu1USa+btR2oIlCpBJbyD4/g=" crossorigin="anonymous"></script>
+    
+
+    
+    
+    <script>const code_highlighting = true;</script>
+    
+
+    
+    
+    <script>const isSiteThemeDark = false;</script>
+    
+
+    
+    
+    
+    
+    
+    
+    <script>
+      const search_config = {"indexURI":"/index.json","minLength":1,"threshold":0.3};
+      const i18n = {"no_results":"No results found","placeholder":"Search...","results":"results found"};
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks",
+        'slides' : "Slides"
+        };
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.1/anchor.min.js" integrity="sha256-pB/deHc9CGfFpJRjC43imB29Rse8tak+5eXqntO94ck=" crossorigin="anonymous"></script>
+    <script>
+      anchors.add();
+    </script>
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+      <div class="search-hit-content">
+        <div class="search-hit-name">
+          <a href="{{relpermalink}}">{{title}}</a>
+          <div class="article-metadata search-hit-type">{{type}}</div>
+          <p class="search-hit-description">{{snippet}}</p>
+        </div>
+      </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="/js/academic.min.66c553246b0f279a03be6e5597f72b52.js"></script>
+
+    
+
+
+
+
+
+
+  
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

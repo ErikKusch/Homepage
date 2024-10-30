@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>network science | Erik Kusch</title>
+    <link>https://www.erikkusch.com/tag/network-science/</link>
+      <atom:link href="https://www.erikkusch.com/tag/network-science/index.xml" rel="self" type="application/rss+xml" />
+    <description>network science</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-gb</language><copyright>© 2024</copyright><lastBuildDate>Fri, 02 Jun 2023 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg</url>
+      <title>network science</title>
+      <link>https://www.erikkusch.com/tag/network-science/</link>
+    </image>
+    
+    <item>
+      <title>NetworkExtinction - An R Package to Simulate Extinction Propagation and Rewiring Potential in Ecological Networks</title>
+      <link>https://www.erikkusch.com/publication/networkextinction-an-r-package-to-simulate-extinctions-propagation-and-rewiring-potential-in-ecological-networks/</link>
+      <pubDate>Fri, 02 Jun 2023 00:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/publication/networkextinction-an-r-package-to-simulate-extinctions-propagation-and-rewiring-potential-in-ecological-networks/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>NetworkExtinction - an R package to simulate extinction’s propagation and rewiring potential in ecological networks</title>
+      <link>https://www.erikkusch.com/publication/in-review/networkextinction-an-r-package-to-simulate-extinctions-propagation-and-rewiring-potential-in-ecological-networks/</link>
+      <pubDate>Mon, 05 Dec 2022 00:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/publication/in-review/networkextinction-an-r-package-to-simulate-extinctions-propagation-and-rewiring-potential-in-ecological-networks/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

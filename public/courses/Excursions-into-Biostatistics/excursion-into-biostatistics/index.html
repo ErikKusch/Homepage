@@ -1,0 +1,1813 @@
+<!DOCTYPE html><html lang="en-gb" >
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.8.0">
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Erik Kusch">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="These are exercises and solutions meant as a compendium to my talk on Model Selection and Model Building.">
+
+  
+  <link rel="alternate" hreflang="en-gb" href="https://www.erikkusch.com/courses/excursions-into-biostatistics/excursion-into-biostatistics/">
+
+  
+
+
+  
+  
+  
+  <meta name="theme-color" content="#858383">
+  
+
+  
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-1/css/all.min.css" integrity="sha256-4w9DunooKSr3MFXHXWyFER38WmPdm361bQS/2KUWZbU=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.css" integrity="sha256-SHMGCYmST46SoyGgo4YR/9AlK1vf3ff84Aq9yK4hdqM=" crossorigin="anonymous">
+    
+
+    
+
+    
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.1.2/lazysizes.min.js" integrity="sha256-Md1qLToewPeKjfAHU1zyPwOutccPAm5tahnaw7Osw0A=" crossorigin="anonymous" async></script>
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+        
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+
+  
+
+  
+  
+  
+    
+      
+      
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cutive+Mono%7CLora:400,700%7CRoboto:400,700&display=swap">
+    
+  
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/academic.css">
+
+  
+
+
+
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-186216138-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+
+  function gtag() {
+      dataLayer.push(arguments);
+  }
+
+  function trackOutboundLink(url, target) {
+    gtag('event', 'click', {
+         'event_category': 'outbound',
+         'event_label': url,
+         'transport_type': 'beacon',
+         'event_callback': function () {
+           if (target !== '_blank') {
+             document.location = url;
+           }
+         }
+    });
+    console.debug("Outbound link clicked: " + url);
+  }
+
+  function onClickCallback(event) {
+    if ((event.target.tagName !== 'A') || (event.target.host === window.location.host)) {
+      return;
+    }
+    trackOutboundLink(event.target, event.target.getAttribute('target'));  
+  }
+
+  gtag('js', new Date());
+  gtag('config', 'UA-186216138-1', {});
+
+  
+  document.addEventListener('click', onClickCallback, false);
+</script>
+
+
+  
+
+
+  
+  
+
+  
+
+  <link rel="manifest" href="/index.webmanifest">
+  <link rel="icon" type="image/png" href="/images/icon_hu7658c99d512131214e4d6c003a3f85f7_112593_32x32_fill_lanczos_center_2.png">
+  <link rel="apple-touch-icon" type="image/png" href="/images/icon_hu7658c99d512131214e4d6c003a3f85f7_112593_192x192_fill_lanczos_center_2.png">
+
+  <link rel="canonical" href="https://www.erikkusch.com/courses/excursions-into-biostatistics/excursion-into-biostatistics/">
+
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  <meta property="twitter:card" content="summary_large_image">
+  
+  <meta property="twitter:site" content="@ErikKusch">
+  <meta property="twitter:creator" content="@ErikKusch">
+  
+  <meta property="og:site_name" content="Erik Kusch">
+  <meta property="og:url" content="https://www.erikkusch.com/courses/excursions-into-biostatistics/excursion-into-biostatistics/">
+  <meta property="og:title" content="Model Selection | Erik Kusch">
+  <meta property="og:description" content="These are exercises and solutions meant as a compendium to my talk on Model Selection and Model Building."><meta property="og:image" content="https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg">
+  <meta property="twitter:image" content="https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg"><meta property="og:locale" content="en-gb">
+  
+    
+      <meta property="article:published_time" content="2021-02-27T00:00:00&#43;00:00">
+    
+    <meta property="article:modified_time" content="2020-02-27T00:00:00&#43;00:00">
+  
+
+  
+
+
+
+  
+
+
+  
+
+
+  
+
+
+
+
+
+  <title>Model Selection | Erik Kusch</title>
+
+</head>
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search" class="form-control">
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+<nav class="navbar navbar-expand-lg navbar-light compensate-for-scrollbar" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="d-none d-lg-inline-flex">
+      <a class="navbar-brand" href="/"><img src="/images/logo_huab2266ff59bbac6a094b6da1268adcf9_208479_0x70_resize_lanczos_2.png" alt="Erik Kusch"></a>
+    </div>
+    
+
+    
+    <button type="button" class="navbar-toggler" data-toggle="collapse"
+            data-target="#navbar-content" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+    <span><i class="fas fa-bars"></i></span>
+    </button>
+    
+
+    
+    <div class="navbar-brand-mobile-wrapper d-inline-flex d-lg-none">
+      <a class="navbar-brand" href="/"><img src="/images/logo_huab2266ff59bbac6a094b6da1268adcf9_208479_0x70_resize_lanczos_2.png" alt="Erik Kusch"></a>
+    </div>
+    
+
+    
+    
+    <div class="navbar-collapse main-menu-item collapse justify-content-center" id="navbar-content">
+
+      
+      <ul class="navbar-nav d-md-inline-flex">
+        
+
+        
+
+        
+        
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link  active" href="/"><span>Home</span></a>
+        </li>
+
+        
+        
+
+        
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"><span>Courses & Workshops</span><span class="caret"></span>
+          </a>
+          <div class="dropdown-menu">
+            
+              <a class="dropdown-item" href="/courses/krigr/"><span>KrigR - State-of-the-Art Climate Data within R</span></a>
+            
+              <a class="dropdown-item" href="/courses/gbif/"><span>Accessing and Referencing GBIF Data for Research</span></a>
+            
+              <a class="dropdown-item" href="/courses/rethinking/"><span>Statistical Rethinking - Introduction to Bayesian Statistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/bayes-nets/"><span>Bayesian Networks - Causality through Bayesian Approaches</span></a>
+            
+              <a class="dropdown-item" href="/courses/biostat101/"><span>Biostats 101 - An Introduction to Biostatistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/excursions-into-biostatistics/"><span>Biostats 301 - Excursions into Biostatistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/bftp-biome-detection/"><span>BFTP - First Steps in Macroecology in R</span></a>
+            
+          </div>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#projects"><span>Projects</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#featured"><span>Publications</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#talks"><span>Talks</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/about"><span>Contact</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+            
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/media/CV_ErikKusch.html" target="_blank" rel="noopener"><span>CV</span></a>
+        </li>
+
+        
+        
+
+      
+
+        
+      </ul>
+    </div>
+
+    <ul class="nav-icons navbar-nav flex-row ml-auto d-flex pl-md-2">
+      
+      <li class="nav-item">
+        <a class="nav-link js-search" href="#" aria-label="Search"><i class="fas fa-search" aria-hidden="true"></i></a>
+      </li>
+      
+
+      
+      <li class="nav-item dropdown theme-dropdown">
+        <a href="#" class="nav-link js-theme-selector" data-toggle="dropdown" aria-haspopup="true">
+          <i class="fas fa-palette" aria-hidden="true"></i>
+        </a>
+        <div class="dropdown-menu">
+          <a href="#" class="dropdown-item js-set-theme-light">
+            <span>Light</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-dark">
+            <span>Dark</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-auto">
+            <span>Automatic</span>
+          </a>
+        </div>
+      </li>
+      
+
+      
+
+    </ul>
+
+  </div>
+</nav>
+
+
+  
+
+<div class="container-fluid docs">
+  <div class="row flex-xl-nowrap">
+    <div class="col-12 col-md-3 col-xl-2 docs-sidebar">
+      
+
+
+
+
+
+  
+    
+  
+
+
+
+
+<form class="docs-search d-flex align-items-center">
+  <button class="btn docs-toggle d-md-none p-0 mr-3" type="button" data-toggle="collapse" data-target="#docs-nav" aria-controls="docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    <span><i class="fas fa-bars"></i></span>
+  </button>
+
+  
+  <input name="q" type="search" class="form-control" placeholder="Search..." autocomplete="off">
+  
+</form>
+
+<nav class="collapse docs-links" id="docs-nav">
+  
+
+  
+  
+  
+  
+  <div class="docs-toc-item">
+    <a class="docs-toc-link" href="/courses/excursions-into-biostatistics/">Overview</a>
+
+  </div>
+  
+  <div class="docs-toc-item">
+    <a class="docs-toc-link" href="/courses/excursions-into-biostatistics/1_biostatistics-wait.-what/">Seminars</a>
+    <ul class="nav docs-sidenav">
+      
+      <li >
+        <a href="/courses/excursions-into-biostatistics/1_biostatistics-wait.-what/">Biostatistics - Wait... What?!</a>
+      </li>
+      
+      <li >
+        <a href="/courses/excursions-into-biostatistics/2_statistical-terminology-the-basics-misconceptions-and-pedantics/">Statistical Terminology</a>
+      </li>
+      
+      <li >
+        <a href="/courses/excursions-into-biostatistics/3_coding-practices-life-with-r/">Coding Practices - Life with R</a>
+      </li>
+      
+      <li >
+        <a href="/courses/excursions-into-biostatistics/research-project/">Research Project for our Exercises</a>
+      </li>
+      
+      <li >
+        <a href="/courses/excursions-into-biostatistics/data-handling-and-data-assumptions/">Data Handling and Data Assumptions</a>
+      </li>
+      
+      <li >
+        <a href="/courses/excursions-into-biostatistics/classifications-order-from-chaos/">Classifications - Order from Chaos</a>
+      </li>
+      
+      <li >
+        <a href="/courses/excursions-into-biostatistics/regressions-correlations-for-the-advanced/">Regressions - Correlations for the Advanced</a>
+      </li>
+      
+      <li class="active">
+        <a href="/courses/excursions-into-biostatistics/excursion-into-biostatistics/">Model Selection and Statistical Significance</a>
+      </li>
+      
+      <li >
+        <a href="/courses/excursions-into-biostatistics/8_statistical-significance-in-biology-conventions-abstractions-and-the-future/">Statistical Significance in Biology</a>
+      </li>
+      
+      <li >
+        <a href="/courses/excursions-into-biostatistics/9_rmarkdown-manuscript-workflow-revisited/">RMarkdown - Manuscript Workflow Revisited</a>
+      </li>
+      
+      <li >
+        <a href="/courses/excursions-into-biostatistics/10_troubleshooting_r-isolating-issues-and-asking-questions/">Troubleshooting R - Isolating Issues and Asking Questions</a>
+      </li>
+      
+    </ul>
+    
+
+  </div>
+  
+  
+</nav>
+
+    </div>
+
+    
+    <div class="d-none d-xl-block col-xl-2 docs-toc">
+      <ul class="nav toc-top">
+        <li><a href="#" id="back_to_top" class="docs-toc-title">Contents</a></li>
+      </ul>
+
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#theory">Theory</a></li>
+    <li><a href="#r-environment"><code>R</code> Environment</a></li>
+    <li><a href="#our-resarch-project">Our Resarch Project</a>
+      <ul>
+        <li><a href="#the-data">The Data</a></li>
+        <li><a href="#reading-the-data-into-r">Reading the Data into <code>R</code></a></li>
+        <li><a href="#hypotheses">Hypotheses</a></li>
+      </ul>
+    </li>
+    <li><a href="#candidate-models">Candidate Models</a>
+      <ul>
+        <li><a href="#continuous-models">Continuous Models</a></li>
+        <li><a href="#categorical-models">Categorical Models</a></li>
+      </ul>
+    </li>
+    <li><a href="#model-comparisonselection">Model Comparison/Selection</a>
+      <ul>
+        <li><a href="#adjusted-coefficient-of-determination">(adjusted) Coefficient of Determination</a></li>
+        <li><a href="#anova">Anova</a></li>
+        <li><a href="#information-criteria">Information Criteria</a></li>
+        <li><a href="#summary-of-model-selection">Summary of Model Selection</a></li>
+      </ul>
+    </li>
+    <li><a href="#model-validation">Model Validation</a>
+      <ul>
+        <li><a href="#cross-validation">Cross-Validation</a></li>
+        <li><a href="#bootstrap">Bootstrap</a></li>
+      </ul>
+    </li>
+    <li><a href="#subset-selection">Subset Selection</a>
+      <ul>
+        <li><a href="#best-subset-selection">Best Subset Selection</a></li>
+        <li><a href="#forward-subset-selection">Forward Subset Selection</a></li>
+        <li><a href="#backward-subset-selection">Backward Subset Selection</a></li>
+        <li><a href="#forward--backward">Forward &amp; Backward</a></li>
+        <li><a href="#subset-selection-vs-our-intuition">Subset Selection vs. Our Intuition</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+      
+    </div>
+    
+
+    <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 docs-content" role="main">
+
+      <article class="article">
+
+        <div class="docs-article-container">
+          <h1>Model Selection</h1>
+
+          <div class="article-style">
+            <h2 id="theory">Theory</h2>
+<p>These are exercises and solutions meant as a compendium to my talk on Model Selection and Model Building.</p>
+<p>I have prepared some I have prepared some <a href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/Excursions-into-Biostatistics/Model-Selection-and-Statistical-Significance---Reporting-the-Best-Science.html" target="_blank"> Lecture Slides </a> for this session. For a more mathematical look at these concepts, I cannot recommend enough 
+<a href="https://bookdown.org/egarpor/PM-UC3M/lm-ii-modsel.html" target="_blank" rel="noopener">Eduardo García Portugués' blog</a>.</p>
+<h2 id="r-environment"><code>R</code> Environment</h2>
+<p>For this exercise, we will need the following packages:</p>
+<pre><code class="language-r">install.load.package &lt;- function(x) {
+  if (!require(x, character.only = TRUE)) {
+    install.packages(x, repos = &quot;http://cran.us.r-project.org&quot;)
+  }
+  require(x, character.only = TRUE)
+}
+package_vec &lt;- c(
+  &quot;ggplot2&quot;, # for visualisation
+  &quot;leaflet&quot;, # for maps
+  &quot;splitstackshape&quot;, # for stratified sampling
+  &quot;caret&quot;, # for cross-validation exercises
+  &quot;boot&quot;, # for bootstrap parameter estimates
+  &quot;tidyr&quot;, # for reshaping data frames
+  &quot;tidybayes&quot;, # for visualisation of bootstrap estimates
+  &quot;pROC&quot;, # for ROC-curves
+  &quot;olsrr&quot;, # for subset selection
+  &quot;MASS&quot;, # for stepwise subset selection
+  &quot;nlme&quot;, # for mixed effect models
+  &quot;mclust&quot;, # for k-means clustering,
+  &quot;randomForest&quot;, # for randomForest classifier
+  &quot;lmeresampler&quot; # for validation of lmer models
+)
+sapply(package_vec, install.load.package)
+</code></pre>
+<pre><code>##         ggplot2         leaflet splitstackshape           caret            boot           tidyr       tidybayes            pROC           olsrr            MASS            nlme          mclust 
+##            TRUE            TRUE            TRUE            TRUE            TRUE            TRUE            TRUE            TRUE            TRUE            TRUE            TRUE            TRUE 
+##    randomForest    lmeresampler 
+##            TRUE            TRUE
+</code></pre>
+<p>Using the above function is way more sophisticated than the usual <code>install.packages()</code> &amp; <code>library()</code> approach since it automatically detects which packages require installing and only install these thus not overwriting already installed packages.</p>
+<h2 id="our-resarch-project">Our Resarch Project</h2>
+<p>Today, we are looking at a big (and entirely fictional) data base of the common house sparrow (<em>Passer domesticus</em>). In particular, we are interested in the <strong>Evolution of <em>Passer domesticus</em> in Response to Climate Change</strong> which was previously explained <a href="/courses/excursions-into-biostatistics/research-project/" target="_blank"> here</a>.</p>
+<h3 id="the-data">The Data</h3>
+<p>I have created a large data set for this exercise which is available <a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/excursions-into-biostatistics/Data.rar" target="_blank"> here</a> and we previously cleaned up so that is now usable <a href="/courses/excursions-into-biostatistics/data-handling-and-data-assumptions/" target="_blank"> here</a>.</p>
+<h3 id="reading-the-data-into-r">Reading the Data into <code>R</code></h3>
+<p>Let&rsquo;s start by reading the data into <code>R</code> and taking an initial look at it:</p>
+<pre><code class="language-r">Sparrows_df &lt;- readRDS(file.path(&quot;Data&quot;, &quot;SparrowDataClimate.rds&quot;))
+head(Sparrows_df)
+</code></pre>
+<pre><code>##   Index Latitude Longitude     Climate Population.Status Weight Height Wing.Chord Colour    Sex Nesting.Site Nesting.Height Number.of.Eggs Egg.Weight Flock Home.Range Predator.Presence Predator.Type
+## 1    SI       60       100 Continental            Native  34.05  12.87       6.67  Brown   Male         &lt;NA&gt;             NA             NA         NA     B      Large               Yes         Avian
+## 2    SI       60       100 Continental            Native  34.86  13.68       6.79   Grey   Male         &lt;NA&gt;             NA             NA         NA     B      Large               Yes         Avian
+## 3    SI       60       100 Continental            Native  32.34  12.66       6.64  Black Female        Shrub          35.60              1       3.21     C      Large               Yes         Avian
+## 4    SI       60       100 Continental            Native  34.78  15.09       7.00  Brown Female        Shrub          47.75              0         NA     E      Large               Yes         Avian
+## 5    SI       60       100 Continental            Native  35.01  13.82       6.81   Grey   Male         &lt;NA&gt;             NA             NA         NA     B      Large               Yes         Avian
+## 6    SI       60       100 Continental            Native  32.36  12.67       6.64  Brown Female        Shrub          32.47              1       3.17     E      Large               Yes         Avian
+##       TAvg      TSD
+## 1 269.9596 15.71819
+## 2 269.9596 15.71819
+## 3 269.9596 15.71819
+## 4 269.9596 15.71819
+## 5 269.9596 15.71819
+## 6 269.9596 15.71819
+</code></pre>
+<h3 id="hypotheses">Hypotheses</h3>
+<p>Let&rsquo;s remember our hypotheses:</p>
+<ol>
+<li><strong>Sparrow Morphology</strong> is determined by:<br>
+A. <em>Climate Conditions</em> with sparrows in stable, warm environments fairing better than those in colder, less stable ones.<br>
+B. <em>Competition</em> with sparrows in small flocks doing better than those in big flocks.<br>
+C. <em>Predation</em> with sparrows under pressure of predation doing worse than those without.</li>
+<li><strong>Sites</strong>  accurately represent <strong>sparrow morphology</strong>. This may mean:<br>
+A. <em>Population status</em> as inferred through morphology.<br>
+B. <em>Site index</em> as inferred through morphology.<br>
+C. <em>Climate</em> as inferred through morphology.</li>
+</ol>
+<p>We have already built some models for these <a href="/courses/excursions-into-biostatistics/classifications-order-from-chaos/" target="_blank"> here</a> and <a href="/courses/excursions-into-biostatistics/regressions-correlations-for-the-advanced/" target="_blank"> here</a>.</p>
+<h2 id="candidate-models">Candidate Models</h2>
+<p>Before we can get started on model selection and validation, we need some actual models. Let&rsquo;s create some. Since the data set contains three variables pertaining to sparrow morphology (i.e. <code>Weight</code>, <code>Height</code>, <code>Wing.Chord</code>) and I don&rsquo;t want this exercise to spiral out of control with models that account for more than one response variable, we need to settle on one as our response variable in the first hypothesis. I am going with <code>Weight</code>.</p>
+<p>Additionally, because I am under a bit of time pressure in creating this material, I forego all checking of assumptions on any of the following candidate models as the goal with this material is model selection/validation and not model assumption checking.</p>
+<h3 id="continuous-models">Continuous Models</h3>
+<pre><code class="language-r">load(file = file.path(&quot;Data&quot;, &quot;H1_Models.RData&quot;))
+</code></pre>
+<p>This just loaded three objects into <code>R</code>:</p>
+<ul>
+<li><code>H1_ModelSparrows_ls</code> - a list of candidate models built for the entire <code>Sparrow_df</code> data set</li>
+<li><code>Sparrows_df</code> - the data frame used to build the global candidate models</li>
+<li><code>H1_ModelCNA_ls</code> - a list of candidate models built just for three coastal sites across Central and North America</li>
+<li><code>CentralNorthAm_df</code> - the data frame used to build the candidate model for Central and North America</li>
+</ul>
+<h4 id="global-models">Global Models</h4>
+<p>Global regression models include:</p>
+<pre><code class="language-r">sapply(H1_ModelSparrows_ls, &quot;[[&quot;, &quot;call&quot;)
+</code></pre>
+<pre><code>## $Null
+## lm(formula = Weight ~ 1, data = Sparrows_df)
+## 
+## $Comp_Flock.Size
+## lm(formula = Weight ~ Flock.Size, data = Sparrows_df)
+## 
+## $Comp_Full
+## lm(formula = Weight ~ Home.Range * Flock.Size, data = Sparrows_df)
+## 
+## $Full
+## lm(formula = Weight ~ Climate + TAvg + TSD + Home.Range * Flock.Size + 
+##     Predator.Type, data = Sparrows_df)
+## 
+## $Mixed_Full
+## lme.formula(fixed = Weight ~ Predator.Type + Flock.Size * Home.Range + 
+##     TAvg + TSD, data = Sparrows_df, random = list(Population.Status = ~1))
+</code></pre>
+<h4 id="local-models">Local Models</h4>
+<p>Local regression models for the region of Central/North America include:</p>
+<pre><code class="language-r">sapply(H1_ModelCNA_ls, &quot;[[&quot;, &quot;call&quot;)
+</code></pre>
+<pre><code>## $Null
+## lm(formula = Weight ~ 1, data = CentralNorthAm_df)
+## 
+## $Clim_TAvg
+## lm(formula = Weight ~ TAvg, data = CentralNorthAm_df)
+## 
+## $Clim_TSD
+## lm(formula = Weight ~ TSD, data = CentralNorthAm_df)
+## 
+## $Clim_Full
+## lm(formula = Weight ~ TAvg + TSD, data = CentralNorthAm_df)
+## 
+## $Pred_Pres
+## lm(formula = Weight ~ Predator.Presence, data = CentralNorthAm_df)
+## 
+## $Pred_Type
+## lm(formula = Weight ~ Predator.Type, data = CentralNorthAm_df)
+## 
+## $Full
+## lm(formula = Weight ~ TAvg + TSD + Home.Range * Flock.Size + 
+##     Predator.Type, data = CentralNorthAm_df)
+## 
+## $Mixed_Full
+## lme.formula(fixed = Weight ~ Flock.Size * Home.Range + TAvg + 
+##     TSD, data = CentralNorthAm_df, random = list(Index = ~1))
+</code></pre>
+<h3 id="categorical-models">Categorical Models</h3>
+<pre><code class="language-r">load(file = file.path(&quot;Data&quot;, &quot;H2_Models.RData&quot;))
+</code></pre>
+<p>This just loaded three objects into <code>R</code>:</p>
+<ul>
+<li><code>H2_PS_mclust</code> - a k-means classifier aiming to group <code>Population.Status</code> by <code>Weight</code>, <code>Height</code>, and <code>Wing.Chord</code></li>
+<li><code>H2_PS_RF</code> - a random forest classifier which identifies <code>Population.Status</code> by <code>Weight</code>, <code>Height</code>, and <code>Wing.Chord</code></li>
+<li><code>H2_Index_RF</code> - a random forest classifier which identifies <code>Index</code> of sites by <code>Weight</code>, <code>Height</code>, and <code>Wing.Chord</code></li>
+</ul>
+<h2 id="model-comparisonselection">Model Comparison/Selection</h2>
+<h3 id="adjusted-coefficient-of-determination">(adjusted) Coefficient of Determination</h3>
+<p>The coefficient of determination ($R^2$) measures the proportion of variation in our response (<code>Weight</code>) that can be explained by regression using our predictor(s). The higher this value, the better. Unfortunately, $R^2$ does not penalize complex models (i.e. those with multiple parameters) while the adjusted $R^2$ does. Extracting these for a model object is as easy as writing:</p>
+<pre><code class="language-r">ExampleModel &lt;- H1_ModelSparrows_ls$Comp_Flock.Size
+summary(ExampleModel)$r.squared
+</code></pre>
+<pre><code>## [1] 0.7837715
+</code></pre>
+<pre><code class="language-r">summary(ExampleModel)$adj.r.squared
+</code></pre>
+<pre><code>## [1] 0.7835683
+</code></pre>
+<p>This tells us that the flock size model explains roughly 0.784% of the variation in the <code>Weight</code> variable. That is pretty decent.</p>
+<p>To check for all other models, I have written a quick <code>sapply</code> function that does the extraction for us. Because obtaining (adjusted) $R^2$ requires additional packages, I am excluding these from this analysis:</p>
+<h4 id="global-regression-models">Global Regression Models</h4>
+<pre><code class="language-r">H1_Summary_ls &lt;- sapply(H1_ModelSparrows_ls[-length(H1_ModelSparrows_ls)], summary)
+R2_df &lt;- data.frame(
+  R2 = sapply(H1_Summary_ls, &quot;[[&quot;, &quot;r.squared&quot;),
+  Adj.R2 = sapply(H1_Summary_ls, &quot;[[&quot;, &quot;adj.r.squared&quot;)
+)
+R2_df
+</code></pre>
+<pre><code>##                        R2    Adj.R2
+## Null            0.0000000 0.0000000
+## Comp_Flock.Size 0.7837715 0.7835683
+## Comp_Full       0.8051421 0.8042229
+## Full            0.8460500 0.8444433
+</code></pre>
+<p>You can immediately see that some of our candidate models are doing quite well for themselves.</p>
+<h4 id="local-regression-models">Local Regression Models</h4>
+<pre><code class="language-r">H1_Summary_ls &lt;- sapply(H1_ModelCNA_ls[-length(H1_ModelCNA_ls)], summary)
+R2_df &lt;- data.frame(
+  R2 = sapply(H1_Summary_ls, &quot;[[&quot;, &quot;r.squared&quot;),
+  Adj.R2 = sapply(H1_Summary_ls, &quot;[[&quot;, &quot;adj.r.squared&quot;)
+)
+R2_df
+</code></pre>
+<pre><code>##                   R2     Adj.R2
+## Null      0.00000000 0.00000000
+## Clim_TAvg 0.23733707 0.23426182
+## Clim_TSD  0.32632351 0.32360707
+## Clim_Full 0.34671348 0.34142371
+## Pred_Pres 0.03710799 0.03322536
+## Pred_Type 0.34671348 0.34142371
+## Full      0.37651991 0.35848536
+</code></pre>
+<p>Oof! None of our locally fitted models did well at explaining the data to begin with. With that identified, we are sure not going to trust them when it comes to predictions and so we are scrapping all of them.</p>
+<p>Consequently, we can generalise our naming conventions a bit and now write:</p>
+<pre><code class="language-r">H1_Model_ls &lt;- H1_ModelSparrows_ls
+</code></pre>
+<h3 id="anova">Anova</h3>
+<p>Analysis of Variance (Anova) is another tool you will often run into when trying to understand explanatory power of a model. Here, I do something relatively complex to run an anova for all models in our list without having to type them all out. Again,we omit the mixed effect model:</p>
+<pre><code class="language-r">eval(parse(text = paste(&quot;anova(&quot;, paste(&quot;H1_Model_ls[[&quot;, 1:(length(H1_Model_ls) - 1), &quot;]]&quot;, sep = &quot;&quot;, collapse = &quot;,&quot;), &quot;)&quot;)))
+</code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## Model 1: Weight ~ 1
+## Model 2: Weight ~ Flock.Size
+## Model 3: Weight ~ Home.Range * Flock.Size
+## Model 4: Weight ~ Climate + TAvg + TSD + Home.Range * Flock.Size + Predator.Type
+##   Res.Df     RSS Df Sum of Sq        F    Pr(&gt;F)    
+## 1   1065 17627.2                                    
+## 2   1064  3811.5  1   13815.7 5365.996 &lt; 2.2e-16 ***
+## 3   1060  3434.8  4     376.7   36.578 &lt; 2.2e-16 ***
+## 4   1054  2713.7  6     721.1   46.678 &lt; 2.2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+</code></pre>
+<p>As you can see, according to this, all of our models are doing much better in explaining our underlying data when compared to the Null Model.</p>
+<h3 id="information-criteria">Information Criteria</h3>
+<p>Personally, I would like to have a model that&rsquo;s good at predicting things instead of &ldquo;just&rdquo; explaining things and so we step into <em>information criteria</em> next. These aim to provide us with exactly that information: &ldquo;How well will our model predict new data?&rdquo; Information criteria make use of information theory which allows us to make such statements with pretty decent certainty despite not having new data.</p>
+<h4 id="akaike-information-criterion-aic">Akaike Information Criterion (AIC)</h4>
+<p>Looking at the AIC:</p>
+<pre><code class="language-r">sapply(H1_Model_ls, AIC)
+</code></pre>
+<pre><code>##            Null Comp_Flock.Size       Comp_Full            Full      Mixed_Full 
+##        6019.872        4389.378        4286.445        4047.250        4162.779
+</code></pre>
+<p>Our full model is the clear favourite here.</p>
+<h4 id="bayesian-information-criterion-bic">Bayesian Information Criterion (BIC)</h4>
+<p>As far as the BIC is concerned:</p>
+<pre><code class="language-r">sapply(H1_Model_ls, BIC)
+</code></pre>
+<pre><code>##            Null Comp_Flock.Size       Comp_Full            Full      Mixed_Full 
+##        6029.815        4404.293        4321.247        4111.882        4222.326
+</code></pre>
+<p>Our full model wins again!</p>
+<h4 id="receiver-operator-characteristic-roc">Receiver-Operator Characteristic (ROC)</h4>
+<p>The Receiver-Operator Characteristic (ROC) shows the trade-off between <em>Sensitivity</em> (rate of true positives) and <em>Specificity</em> (rate of true negatives). It also provides an <em>Area under the Curve</em> which serves as a proxy of classification accuracy.</p>
+<p>First, we establish the ROC-Curve for our classification of <code>Population.Status</code> given sparrow Morphology and a k-means algorithm:</p>
+<pre><code class="language-r">Mclust_PS.roc &lt;- roc(
+  Sparrows_df$Population.Status, # known outcome
+  H2_PS_mclust$z[, 1] # probability of assigning one out of two outcomes
+)
+plot(Mclust_PS.roc)
+</code></pre>
+<p><img src="7_Model-Selection-and-Statistical-Significance---Reporting-the-Best-Science_files/figure-html/unnamed-chunk-14-1.png" width="1440" /></p>
+<pre><code class="language-r">auc(Mclust_PS.roc)
+</code></pre>
+<pre><code>## Area under the curve: 0.6341
+</code></pre>
+<p>Certainly, we could do better! Let&rsquo;s see what more advanced methods have to offer.</p>
+<p>With that, we turn to random forest:</p>
+<pre><code class="language-r">RF_PS.roc &lt;- roc(
+  Sparrows_df$Population.Status,
+  H2_PS_RF$votes[, 1]
+)
+plot(RF_PS.roc)
+</code></pre>
+<p><img src="7_Model-Selection-and-Statistical-Significance---Reporting-the-Best-Science_files/figure-html/unnamed-chunk-15-1.png" width="1440" /></p>
+<pre><code class="language-r">auc(RF_PS.roc)
+</code></pre>
+<pre><code>## Area under the curve: 0.9274
+</code></pre>
+<p>Now this is doing much better!</p>
+<p>Lastly, we want to look at the site <code>Index</code> as predicted by sparrow morphology given a random forest algorithm:</p>
+<pre><code class="language-r">RF_Index.roc &lt;- multiclass.roc(
+  Sparrows_df$Index, # known outcome
+  H2_Index_RF$votes # matrix of certainties of prediction
+)
+RF_Index.roc[[&quot;auc&quot;]] # average ROC-AUC
+</code></pre>
+<pre><code>## Multi-class area under the curve: 0.9606
+</code></pre>
+<pre><code class="language-r">## Plot ROC curve for each binary comparison
+rs &lt;- RF_Index.roc[[&quot;rocs&quot;]] ## extract comparisons
+plot.roc(rs[[1]][[1]]) # blot first comparison
+plot.roc(rs[[1]][[2]], add = TRUE) # plot first comparison, in opposite direction
+invisible(capture.output(sapply(2:length(rs), function(i) lines.roc(rs[[i]][[1]], col = i))))
+invisible(capture.output(sapply(2:length(rs), function(i) lines.roc(rs[[i]][[2]], col = i))))
+</code></pre>
+<p><img src="7_Model-Selection-and-Statistical-Significance---Reporting-the-Best-Science_files/figure-html/unnamed-chunk-16-1.png" width="1440" /></p>
+<p>This is certainly busy, but look at that average AUC of almost 1! That is the power of Random Forest.</p>
+<h3 id="summary-of-model-selection">Summary of Model Selection</h3>
+<h4 id="morphology-hypothesis">Morphology Hypothesis</h4>
+<p>Regarding our morphology hypothesis, we saw that most of our hypothesised effects can be detected. However, some models clearly perform better than others. Usual model selection exercises would have us discard all but the best model (<code>Full</code>, in this case) and leave the rest never to be spoken of again. Doing so would have us miss a pretty neat opportunity to do some <strong>model comparison</strong> which can already help us identify which effects to focus on in particular.</p>
+<p>To demonstrate some of this, allow me step into the local regression models:</p>
+<pre><code class="language-r">sapply(H1_ModelCNA_ls, AIC)
+</code></pre>
+<pre><code>##       Null  Clim_TAvg   Clim_TSD  Clim_Full  Pred_Pres  Pred_Type       Full Mixed_Full 
+##   948.7346   882.9998   851.9833   846.2997   941.2811   846.2997   844.6250   875.7659
+</code></pre>
+<p>as well as global regression models:</p>
+<pre><code class="language-r">sapply(H1_Model_ls, AIC)
+</code></pre>
+<pre><code>##            Null Comp_Flock.Size       Comp_Full            Full      Mixed_Full 
+##        6019.872        4389.378        4286.445        4047.250        4162.779
+</code></pre>
+<ol>
+<li><em>Climate</em> - interestingly,  temperature variability is much more informative than average temperature and even adding the two into the same model only marginally improves over the variability-only model. This tells us much about which effects are probably meaningful and which aren&rsquo;t.</li>
+<li><em>Competition</em> -  The competition models did well across the board, but were aided immensely by adding climate information and accounting for random effects.</li>
+<li><em>Predation</em> - predation effects were best explained by predation type with only a marginal improvement of adding predator presence. That is because predator type already contains all of the information that is within predator presence.</li>
+</ol>
+<p>What we can do so far, is remove some obviously erroneous models which in this case is the entirety of local regression models.</p>
+<h4 id="categorisation-hypothesis">Categorisation Hypothesis</h4>
+<p>As far as the categorisation hypotheses are concerned, we now have confirmation that population status and sparrow morphology are linked quite well.</p>
+<p>We have also learned that random forest is an incredibly powerful method for classification and variable selection.</p>
+<h2 id="model-validation">Model Validation</h2>
+<p>So far, we have not introduced our models to any new data. We have looked at <em>explanatory power</em> with (adjusted) $R^2$, and the Anova. We have also looked at <em>estimates of predictive power</em> with our information criteria (e.g. AIC, BIC).</p>
+<p>What about actually seeing how robust and accurate our models are? That&rsquo;s what Model Validation is for!</p>
+<h3 id="cross-validation">Cross-Validation</h3>
+<p>Before we get started, I remove the Null model from our model list. Doing cross-validation on this does not make any sense because there are no actual predictors in it which could be affected by cross-validation processes.</p>
+<pre><code class="language-r">H1_Model_ls &lt;- H1_Model_ls[-1]
+</code></pre>
+<h4 id="training-vs-test-data">Training vs. Test Data</h4>
+<p>The simplest example of cross-validation is the <em>validation data cross-validation</em> approach; also known as <strong>Training vs. Test Data</strong> approach.</p>
+<p>To make use of this approach, we need to (1) randomly split our data, (2) build our models using the training data, and (3) test our models on the test data.</p>
+<p>Since we have highly compartmentalised data at different sites, I am employing a stratified sampling scheme to ensure all of my sites are represented in each data set resulting from the split:</p>
+<pre><code class="language-r">set.seed(42) # make randomness reproducible
+Stratified_ls &lt;- stratified(Sparrows_df, # what to split
+  group = &quot;Index&quot;, # by which group to stratify
+  size = .7, # what proportion of each group shall be contained in the training data
+  bothSets = TRUE # save both training and test data
+)
+Train_df &lt;- Stratified_ls$SAMP1 # extract training data
+Test_df &lt;- Stratified_ls$SAMP2 # extract test data
+</code></pre>
+<p>Now that we have our training and test data, we are ready to run our pre-specified models on said data and subsequently test it&rsquo;s performance on the test data by predicting with the newly trained model and calculating mean squared test error.</p>
+<p>For a single model, we can do it like this:</p>
+<pre><code class="language-r">ExampleModel &lt;- H1_ModelSparrows_ls$Comp_Flock.Size # extract Model from list
+ExampleModel &lt;- update(ExampleModel, data = Train_df) # train model on training data
+Prediction &lt;- predict(ExampleModel, newdata = Test_df) # predict outcome for test data
+sum((Test_df$Weight - Prediction)^2) # Mean Squared Error
+</code></pre>
+<pre><code>## [1] 1133.996
+</code></pre>
+<p>Since we have multiple models stored in a list, here&rsquo;s a way to do the above for the entire list:</p>
+<pre><code class="language-r">H1_Train_ls &lt;- sapply(X = H1_Model_ls, FUN = function(x) update(x, data = Train_df))
+H1_Test_mat &lt;- sapply(X = H1_Train_ls, FUN = function(x) predict(x, newdata = Test_df))
+apply(H1_Test_mat, MARGIN = 2, FUN = function(x) sum((Test_df$Weight - x)^2))
+</code></pre>
+<pre><code>## Comp_Flock.Size       Comp_Full            Full      Mixed_Full 
+##       1133.9958       1026.2199        816.5166        866.2941
+</code></pre>
+<p>Again, our full model comes out on top!</p>
+<p>Unfortunately, this approach is fickle due to the randomness of the data split. How can we make this more robust? Easy. We split many, many times and average our mean squared errors out.</p>
+<p>This bring us to traditional Cross-Validation approaches. Luckily, the complex parts of cross-validation are already offered to us with the <code>caret</code> package in <code>R</code></p>
+<h4 id="leave-one-out-cross-validation-loocv">Leave-One-Out Cross-Validation (LOOCV)</h4>
+<p>Leave-One-Out Cross-Validation is a method within which we split our data into a training data set with $n-1$ observation and a test data set that contains just $1$ observation. We do training and testing as above on this split and then repeat this procedure until every observation has been left out once.</p>
+<p>For a simple model, this can be done like such:</p>
+<pre><code class="language-r">train(Weight ~ Climate,
+  data = Sparrows_df,
+  method = &quot;lm&quot;,
+  trControl = trainControl(method = &quot;LOOCV&quot;)
+)
+</code></pre>
+<pre><code>## Linear Regression 
+## 
+## 1066 samples
+##    1 predictor
+## 
+## No pre-processing
+## Resampling: Leave-One-Out Cross-Validation 
+## Summary of sample sizes: 1065, 1065, 1065, 1065, 1065, 1065, ... 
+## Resampling results:
+## 
+##   RMSE      Rsquared   MAE     
+##   3.628905  0.2036173  2.976221
+## 
+## Tuning parameter 'intercept' was held constant at a value of TRUE
+</code></pre>
+<p>Notice the RMSE (Residual mean squared error). That&rsquo;s what we use to compare models.</p>
+<p>Here, I create a function that automatically rebuilds our models for the LOOCV so we can run this on our list of models later.</p>
+<pre><code class="language-r">CV_LOOCV &lt;- function(x) {
+  if (length(x[[&quot;terms&quot;]][[3]]) == 1) {
+    Terms &lt;- paste(x[[&quot;terms&quot;]][[3]], collapse = &quot; + &quot;)
+  } else {
+    Terms &lt;- paste(x[[&quot;terms&quot;]][[3]][-1], collapse = &quot; + &quot;)
+  }
+  train(as.formula(paste(&quot;Weight ~&quot;, Terms)),
+    data = Sparrows_df,
+    method = &quot;lm&quot;,
+    trControl = trainControl(method = &quot;LOOCV&quot;)
+  )
+}
+</code></pre>
+<p>Unfortunately, this cannot be executed for mixed effect models, so for now, I only run this on all our models except the mixed effect model:</p>
+<pre><code class="language-r">Begin &lt;- Sys.time()
+H1_LOOCV_ls &lt;- sapply(H1_Model_ls[-length(H1_Model_ls)], CV_LOOCV)
+End &lt;- Sys.time()
+End - Begin
+</code></pre>
+<pre><code>## Time difference of 9.41841 secs
+</code></pre>
+<pre><code class="language-r">sapply(H1_LOOCV_ls, &quot;[[&quot;, &quot;results&quot;)[-1, ]
+</code></pre>
+<pre><code>##          Comp_Flock.Size Comp_Full Full     
+## RMSE     1.894279        1.865854  1.609296 
+## Rsquared 0.7829992       0.7894634 0.8433834
+## MAE      1.520181        1.492409  1.279003
+</code></pre>
+<p>Unsurprisingly, our full model has the lowest RMSE (which is the mark of a good model).</p>
+<p>So what about our mixed effect model? Luckily, doing LOOCV by hand isn&rsquo;t all that difficult and so we can still compute a RMSE for LOOCV for our mixed effect model:</p>
+<pre><code class="language-r">RMSE_LOOCV &lt;- rep(NA, nrow(Sparrows_df))
+for (Fold_Iter in 1:nrow(Sparrows_df)) {
+  Iter_mod &lt;- update(H1_Model_ls$Mixed_Full, data = Sparrows_df[-Fold_Iter, ])
+  Prediction &lt;- predict(Iter_mod, newdata = Sparrows_df[Fold_Iter, ])
+  RMSE_LOOCV[Fold_Iter] &lt;- (Sparrows_df[Fold_Iter, ]$Weight - Prediction)^2
+}
+mean(RMSE_LOOCV)
+</code></pre>
+<pre><code>## [1] 2.757373
+</code></pre>
+<p>Ouh&hellip; that is quite worse than out other models. Curious. This goes to show how much less robust a more complex model can be.</p>
+<h4 id="k-fold-cross-validation-k-fold-cv">k-Fold Cross-Validation (k-fold CV)</h4>
+<p>k-Fold Cross-Validation uses the same concept as all of the previous cross-validation methods, but at less of a computational cost than LOOCV and more robustly than the training/test data approach:</p>
+<p>Again, I write a function for this and run it on my list of models without the mixed effect model:</p>
+<pre><code class="language-r">CV_kFold &lt;- function(x) {
+  if (length(x[[&quot;terms&quot;]][[3]]) == 1) {
+    Terms &lt;- paste(x[[&quot;terms&quot;]][[3]], collapse = &quot; + &quot;)
+  } else {
+    Terms &lt;- paste(x[[&quot;terms&quot;]][[3]][-1], collapse = &quot; + &quot;)
+  }
+  train(as.formula(paste(&quot;Weight ~&quot;, Terms)),
+    data = Sparrows_df,
+    method = &quot;lm&quot;,
+    trControl = trainControl(method = &quot;cv&quot;, number = 15)
+  )
+}
+Begin &lt;- Sys.time()
+H1_kFold_ls &lt;- sapply(H1_Model_ls[-length(H1_Model_ls)], CV_kFold)
+End &lt;- Sys.time()
+End - Begin
+</code></pre>
+<pre><code>## Time difference of 0.3413441 secs
+</code></pre>
+<pre><code class="language-r">sapply(H1_kFold_ls, &quot;[[&quot;, &quot;results&quot;)[-1, ]
+</code></pre>
+<pre><code>##            Comp_Flock.Size Comp_Full  Full      
+## RMSE       1.889439        1.859135   1.603168  
+## Rsquared   0.7882333       0.7942782  0.8465977 
+## MAE        1.519962        1.491493   1.277595  
+## RMSESD     0.1408563       0.1520344  0.1491081 
+## RsquaredSD 0.03375562      0.03153792 0.03034729
+## MAESD      0.1382304       0.1122565  0.1150599
+</code></pre>
+<p>Full model performs best still and see how much quicker that was done!</p>
+<h3 id="bootstrap">Bootstrap</h3>
+<p>On to the Bootstrap. God, I love the boostrap.</p>
+<p>The idea here is to run a model multiple times on a random sample of the underlying data and then store all of the estimates or the parameters as well as avaerage out the RMSE:</p>
+<pre><code class="language-r">BootStrap &lt;- function(x) {
+  if (length(x[[&quot;terms&quot;]][[3]]) == 1) {
+    Terms &lt;- paste(x[[&quot;terms&quot;]][[3]], collapse = &quot; + &quot;)
+  } else {
+    Terms &lt;- paste(x[[&quot;terms&quot;]][[3]][-1], collapse = &quot; + &quot;)
+  }
+  train(as.formula(paste(&quot;Weight ~&quot;, Terms)),
+    data = Sparrows_df,
+    method = &quot;lm&quot;,
+    trControl = trainControl(method = &quot;boot&quot;, number = 100)
+  )
+}
+Begin &lt;- Sys.time()
+H1_BootStrap_ls &lt;- sapply(H1_Model_ls[-length(H1_Model_ls)], BootStrap)
+End &lt;- Sys.time()
+End - Begin
+</code></pre>
+<pre><code>## Time difference of 1.308739 secs
+</code></pre>
+<pre><code class="language-r">sapply(H1_BootStrap_ls, &quot;[[&quot;, &quot;results&quot;)[-1, ]
+</code></pre>
+<pre><code>##            Comp_Flock.Size Comp_Full  Full      
+## RMSE       1.893652        1.871873   1.622079  
+## Rsquared   0.7835412       0.7896534  0.8425108 
+## MAE        1.520457        1.498216   1.288087  
+## RMSESD     0.04675792      0.05178669 0.04885059
+## RsquaredSD 0.01243994      0.01318599 0.01092356
+## MAESD      0.04287091      0.04531032 0.03910463
+</code></pre>
+<p>The full model is still doing great, of course.</p>
+<p>But what about our mixed effect model? Luckily, there is a function that can do bootstrapping for us on our <code>lme</code> objects:</p>
+<pre><code class="language-r">## Bootstrap mixed model
+Mixed_boot &lt;- lmeresampler::bootstrap(H1_Model_ls[[length(H1_Model_ls)]], .f = fixef, type = &quot;parametric&quot;, B = 3e3)
+Mixed_boot
+</code></pre>
+<pre><code>## Bootstrap type: parametric 
+## 
+## Number of resamples: 3000 
+## 
+##                           term      observed      rep.mean          se          bias
+## 1                  (Intercept)  2.212717e+01 22.0672111291 2.853845096 -0.0599612233
+## 2       Predator.TypeNon-Avian  6.626664e-01  0.6580310750 0.161081567 -0.0046353000
+## 3            Predator.TypeNone  2.694373e-02  0.0212966961 0.152739708 -0.0056470340
+## 4                   Flock.Size  1.497092e-05  0.0005839265 0.019216411  0.0005689556
+## 5             Home.RangeMedium  1.261878e+00  1.2675791500 0.881426872  0.0057008365
+## 6              Home.RangeSmall  3.049068e+00  3.0583903125 0.417796779  0.0093225898
+## 7                         TAvg  3.015153e-02  0.0303345903 0.009892483  0.0001830556
+## 8                          TSD  1.983744e-01  0.1984962823 0.021196164  0.0001219321
+## 9  Flock.Size:Home.RangeMedium -1.208598e-01 -0.1213017777 0.057929474 -0.0004419594
+## 10  Flock.Size:Home.RangeSmall -2.110972e-01 -0.2117971129 0.019731749 -0.0006998822
+## 
+## There were 0 messages, 0 warnings, and 0 errors.
+</code></pre>
+<p>With this, we are getting into the heart of the bootstrap. Distributions of our parameter estimates. These give us an amazing understanding of just which parameter values our model sees as plausible given our data:</p>
+<pre><code class="language-r">Estimates_df &lt;- data.frame(Mixed_boot[[&quot;replicates&quot;]])
+## reshape estimates data frame for plotting
+Hist_df &lt;- data.frame(pivot_longer(
+  data = Estimates_df,
+  cols = colnames(Estimates_df)
+))
+## plot parameter estimate distributions
+ggplot(data = Hist_df, aes(x = value, group = name)) +
+  tidybayes::stat_pointinterval() +
+  tidybayes::stat_dots() +
+  facet_wrap(~name, scales = &quot;free&quot;) +
+  labs(
+    x = &quot;Parameter Estimate&quot;, y = &quot;Parameter&quot;,
+    title = paste(&quot;Bootstrap parameter estimates of&quot;, names(H1_Model_ls[[length(H1_Model_ls)]]), &quot;Model&quot;)
+  ) +
+  theme_bw()
+</code></pre>
+<p><img src="7_Model-Selection-and-Statistical-Significance---Reporting-the-Best-Science_files/figure-html/unnamed-chunk-30-1.png" width="1440" />
+As you can see for our mixed effect model, while most parameter estimates are nicely constrained, the Intercept estimate can vary wildly. This is likely to do with our model being very flexible and allowing for a bunch of different combinations of intercepts.</p>
+<p>Let&rsquo;s do the same for our remaining three candidate models:</p>
+<pre><code class="language-r">BootPlot_ls &lt;- as.list(rep(NA, (length(H1_Model_ls) - 1)))
+for (Model_Iter in 1:(length(H1_Model_ls) - 1)) { # loop over all models except the null model
+  ## Formula to compute coefficients
+  x &lt;- H1_Model_ls[[Model_Iter]]
+  if (length(x[[&quot;terms&quot;]][[3]]) == 1) {
+    Terms &lt;- as.character(x[[&quot;terms&quot;]][[3]])
+  } else {
+    Terms &lt;- paste(as.character(x[[&quot;terms&quot;]][[3]])[-1], collapse = as.character(x[[&quot;terms&quot;]][[3]])[1])
+  }
+  model_coef &lt;- function(data, index) {
+    coef(lm(as.formula(paste(&quot;Weight ~&quot;, Terms)), data = data, subset = index))
+  }
+  ## Bootstrapping
+  Boot_test &lt;- boot(data = Sparrows_df, statistic = model_coef, R = 3e3)
+  ## set column names of estimates to coefficients
+  colnames(Boot_test[[&quot;t&quot;]]) &lt;- names(H1_Model_ls[[Model_Iter]][[&quot;coefficients&quot;]])
+  ## make data frame of estimates
+  Estimates_df &lt;- data.frame(Boot_test[[&quot;t&quot;]])
+  ## reshape estimates data frame for plotting
+  Hist_df &lt;- data.frame(pivot_longer(
+    data = Estimates_df,
+    cols = colnames(Estimates_df)
+  ))
+  ## plot parameter estimate distributions
+  BootPlot_ls[[Model_Iter]] &lt;- ggplot(data = Hist_df, aes(x = value, group = name)) +
+    tidybayes::stat_pointinterval() +
+    tidybayes::stat_dots() +
+    facet_wrap(~name, scales = &quot;free&quot;) +
+    labs(
+      x = &quot;Parameter Estimate&quot;, y = &quot;Parameter&quot;,
+      title = paste(&quot;Bootstrap parameter estimates of&quot;, names(H1_Model_ls)[[Model_Iter]], &quot;Model&quot;),
+      subtitle = paste(&quot;Weight ~&quot;, Terms)
+    ) +
+    theme_bw()
+}
+BootPlot_ls[[1]]
+</code></pre>
+<p><img src="7_Model-Selection-and-Statistical-Significance---Reporting-the-Best-Science_files/figure-html/unnamed-chunk-31-1.png" width="1440" /></p>
+<pre><code class="language-r">BootPlot_ls[[2]]
+</code></pre>
+<p><img src="7_Model-Selection-and-Statistical-Significance---Reporting-the-Best-Science_files/figure-html/unnamed-chunk-31-2.png" width="1440" /></p>
+<pre><code class="language-r">BootPlot_ls[[3]]
+</code></pre>
+<p><img src="7_Model-Selection-and-Statistical-Significance---Reporting-the-Best-Science_files/figure-html/unnamed-chunk-31-3.png" width="1440" /></p>
+<h2 id="subset-selection">Subset Selection</h2>
+<p>So far, we have built our own models according to out intuition. Did we test all possible models? No. Should we go back and test all possible models by hand? Hell no! Can we let <code>R</code> do it for us? You bet we can!</p>
+<h3 id="best-subset-selection">Best Subset Selection</h3>
+<p>Let&rsquo;s start with best subset selection. Doing so asks us/<code>R</code> to establish all possible models and then select the one that performs best according to information criteria. Because our data set contains over 20 variables, including all of our variables would have us establish close to 1 million (you read that right) models. THat is, of course, infeasible.</p>
+<p>Therefore, let&rsquo;s just allow our subset selection to use all variables we have used ourselves thus far (with the exclusion of <code>Index</code> because it&rsquo;s an amazing, but ultimately useless shorthand):</p>
+<pre><code class="language-r">Reduced_df &lt;- Sparrows_df[, c(&quot;Weight&quot;, &quot;Climate&quot;, &quot;TAvg&quot;, &quot;TSD&quot;, &quot;Population.Status&quot;, &quot;Flock.Size&quot;, &quot;Predator.Type&quot;, &quot;Predator.Presence&quot;)] # reduce data
+model &lt;- lm(Weight ~ ., data = Reduced_df) # specify full model
+k &lt;- ols_step_best_subset(model) # create all models and select the best
+k # show us comparison of best subsets
+</code></pre>
+<pre><code>##                                   Best Subsets Regression                                   
+## --------------------------------------------------------------------------------------------
+## Model Index    Predictors
+## --------------------------------------------------------------------------------------------
+##      1         Flock.Size                                                                    
+##      2         Climate Flock.Size                                                            
+##      3         Climate TAvg Flock.Size                                                       
+##      4         Climate TAvg Flock.Size Predator.Type                                         
+##      5         Climate TAvg TSD Flock.Size Predator.Type                                     
+##      6         Climate TAvg TSD Population.Status Flock.Size Predator.Type                   
+##      7         Climate TAvg TSD Population.Status Flock.Size Predator.Type Predator.Presence 
+## --------------------------------------------------------------------------------------------
+## 
+##                                                     Subsets Regression Summary                                                    
+## ----------------------------------------------------------------------------------------------------------------------------------
+##                        Adj.        Pred                                                                                            
+## Model    R-Square    R-Square    R-Square      C(p)         AIC       SBIC       SBC         MSEP        FPE       HSP       APC  
+## ----------------------------------------------------------------------------------------------------------------------------------
+##   1        0.7838      0.7836       0.783    298.7733    4389.3782      NA    4404.2932    3818.6664    3.5890    0.0034    0.2170 
+##   2        0.8175      0.8169      0.8163     88.8025    4212.8692      NA    4237.7276    3226.8597    3.0384    0.0029    0.1836 
+##   3        0.8227      0.8220      0.8213     58.0852    4184.0693      NA    4213.8994    3137.9149    2.9575    0.0028    0.1787 
+##   4        0.8315      0.8305      0.8296      4.5702    4133.6815      NA    4173.4549    2984.6456    2.8183    0.0026    0.1701 
+##   5        0.8320      0.8309      0.8298      3.3977    4132.4880      NA    4177.2330    2978.5274    2.8151    0.0026    0.1699 
+##   6        0.8320      0.8308      0.8296      5.0000    4134.0870      NA    4183.8036    2980.2214    2.8194    0.0026    0.1702 
+##   7        0.8320      0.8308      0.8296      5.0000    4136.0870      NA    4190.7753    2980.2214    2.8194    0.0026    0.1702 
+## ----------------------------------------------------------------------------------------------------------------------------------
+## AIC: Akaike Information Criteria 
+##  SBIC: Sawa's Bayesian Information Criteria 
+##  SBC: Schwarz Bayesian Criteria 
+##  MSEP: Estimated error of prediction, assuming multivariate normality 
+##  FPE: Final Prediction Error 
+##  HSP: Hocking's Sp 
+##  APC: Amemiya Prediction Criteria
+</code></pre>
+<p>Model 5 (<code>Climate TAvg TSD Flock.Size Predator.Type </code>) is the one we want to go for here.</p>
+<p>Let&rsquo;s look at visualisation of our different model selection criteria:</p>
+<pre><code class="language-r">plot(k)
+</code></pre>
+<p><img src="7_Model-Selection-and-Statistical-Significance---Reporting-the-Best-Science_files/figure-html/unnamed-chunk-33-1.png" width="1440" /><img src="7_Model-Selection-and-Statistical-Significance---Reporting-the-Best-Science_files/figure-html/unnamed-chunk-33-2.png" width="1440" /></p>
+<h3 id="forward-subset-selection">Forward Subset Selection</h3>
+<p>Ok. So best subset selection can become intractable given a lot of variables. How about building our models up to be increasingly complex until we hit on gold?</p>
+<p>Unfortunately, doing so does not guarantee finding an optimal model and can easily get stuck, depending on what the model starts off with:</p>
+<pre><code class="language-r">model &lt;- lm(Weight ~ Climate, data = Reduced_df)
+step.model &lt;- stepAIC(model,
+  direction = &quot;forward&quot;,
+  trace = FALSE
+)
+summary(step.model)
+</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = Weight ~ Climate, data = Reduced_df)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -9.020 -2.033  1.050  2.640  6.610 
+## 
+## Coefficients:
+##                     Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)          28.3998     0.1248 227.628  &lt; 2e-16 ***
+## ClimateContinental    4.9785     0.3188  15.616  &lt; 2e-16 ***
+## ClimateSemi-Coastal   3.3400     0.4606   7.252  7.9e-13 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 3.629 on 1063 degrees of freedom
+## Multiple R-squared:  0.2059,	Adjusted R-squared:  0.2044 
+## F-statistic: 137.8 on 2 and 1063 DF,  p-value: &lt; 2.2e-16
+</code></pre>
+<p>We immediately remain on <code>Climate</code> as the only predictor in this example.</p>
+<p>What if we start with a true null model?</p>
+<pre><code class="language-r">model &lt;- lm(Weight ~ 1, data = Reduced_df)
+step.model &lt;- stepAIC(model,
+  direction = &quot;forward&quot;,
+  trace = FALSE
+)
+summary(step.model)
+</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = Weight ~ 1, data = Reduced_df)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -9.944 -1.452  1.291  2.913  7.336 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  29.3243     0.1246   235.3   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 4.068 on 1065 degrees of freedom
+</code></pre>
+<p>We even get stuck on our null model!</p>
+<h3 id="backward-subset-selection">Backward Subset Selection</h3>
+<p>So what about making our full model simpler?</p>
+<pre><code class="language-r">model &lt;- lm(Weight ~ ., data = Reduced_df)
+step.model &lt;- stepAIC(model,
+  direction = &quot;backward&quot;,
+  trace = FALSE
+)
+summary(step.model)
+</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = Weight ~ Climate + TAvg + TSD + Flock.Size + Predator.Type, 
+##     data = Reduced_df)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -5.2398 -1.1180  0.1215  1.1474  4.9151 
+## 
+## Coefficients:
+##                         Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)            53.505428   3.748484  14.274  &lt; 2e-16 ***
+## ClimateContinental      2.978894   0.301131   9.892  &lt; 2e-16 ***
+## ClimateSemi-Coastal    -0.640161   0.310970  -2.059   0.0398 *  
+## TAvg                   -0.068582   0.012713  -5.395 8.47e-08 ***
+## TSD                    -0.069306   0.038900  -1.782   0.0751 .  
+## Flock.Size             -0.189607   0.005122 -37.019  &lt; 2e-16 ***
+## Predator.TypeNon-Avian  0.379606   0.161332   2.353   0.0188 *  
+## Predator.TypeNone       1.258391   0.165347   7.611 6.02e-14 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.673 on 1058 degrees of freedom
+## Multiple R-squared:  0.832,	Adjusted R-squared:  0.8309 
+## F-statistic: 748.4 on 7 and 1058 DF,  p-value: &lt; 2.2e-16
+</code></pre>
+<p>Interesting. This time, we have hit on the same model that was identified by the best subset selection above.</p>
+<h3 id="forward--backward">Forward &amp; Backward</h3>
+<p>Can we combine the directions of stepwise model selection? Yes, we can:</p>
+<pre><code class="language-r">model &lt;- lm(Weight ~ ., data = Reduced_df)
+step.model &lt;- stepAIC(model,
+  direction = &quot;both&quot;,
+  trace = FALSE
+)
+summary(step.model)
+</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = Weight ~ Climate + TAvg + TSD + Flock.Size + Predator.Type, 
+##     data = Reduced_df)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -5.2398 -1.1180  0.1215  1.1474  4.9151 
+## 
+## Coefficients:
+##                         Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)            53.505428   3.748484  14.274  &lt; 2e-16 ***
+## ClimateContinental      2.978894   0.301131   9.892  &lt; 2e-16 ***
+## ClimateSemi-Coastal    -0.640161   0.310970  -2.059   0.0398 *  
+## TAvg                   -0.068582   0.012713  -5.395 8.47e-08 ***
+## TSD                    -0.069306   0.038900  -1.782   0.0751 .  
+## Flock.Size             -0.189607   0.005122 -37.019  &lt; 2e-16 ***
+## Predator.TypeNon-Avian  0.379606   0.161332   2.353   0.0188 *  
+## Predator.TypeNone       1.258391   0.165347   7.611 6.02e-14 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.673 on 1058 degrees of freedom
+## Multiple R-squared:  0.832,	Adjusted R-squared:  0.8309 
+## F-statistic: 748.4 on 7 and 1058 DF,  p-value: &lt; 2.2e-16
+</code></pre>
+<p>Again, we land on our best subset selection model!</p>
+<h3 id="subset-selection-vs-our-intuition">Subset Selection vs. Our Intuition</h3>
+<p>Given our best subset selection, we have a very good idea of which model to go for.</p>
+<p>To see how well said model shapes up against our full model, we can simply look at LOOCV:</p>
+<pre><code class="language-r">train(Weight ~ Climate + TAvg + TSD + Flock.Size + Predator.Type,
+  data = Sparrows_df,
+  method = &quot;lm&quot;,
+  trControl = trainControl(method = &quot;LOOCV&quot;)
+)
+</code></pre>
+<pre><code>## Linear Regression 
+## 
+## 1066 samples
+##    5 predictor
+## 
+## No pre-processing
+## Resampling: Leave-One-Out Cross-Validation 
+## Summary of sample sizes: 1065, 1065, 1065, 1065, 1065, 1065, ... 
+## Resampling results:
+## 
+##   RMSE      Rsquared   MAE     
+##   1.677673  0.8297908  1.338399
+## 
+## Tuning parameter 'intercept' was held constant at a value of TRUE
+</code></pre>
+<pre><code class="language-r">sapply(H1_LOOCV_ls, &quot;[[&quot;, &quot;results&quot;)[-1, ]
+</code></pre>
+<pre><code>##          Comp_Flock.Size Comp_Full Full     
+## RMSE     1.894279        1.865854  1.609296 
+## Rsquared 0.7829992       0.7894634 0.8433834
+## MAE      1.520181        1.492409  1.279003
+</code></pre>
+<p>And our full model still wins! But why? Didn&rsquo;t we test for all models? Yes, we tested for all additive models, but our Full model contains an interaction terms which the automated functions above just cannot handle, sadly.</p>
+<p>Let&rsquo;s ask a completely different question. Would we have even adopted the best subset selection model if we had thought of it given the assumptions of a linear regression?</p>
+<pre><code class="language-r">par(mfrow = c(2, 2))
+plot(lm(Weight ~ Climate + TAvg + TSD + Flock.Size + Predator.Type, data = Sparrows_df))
+</code></pre>
+<p><img src="7_Model-Selection-and-Statistical-Significance---Reporting-the-Best-Science_files/figure-html/unnamed-chunk-39-1.png" width="1440" /></p>
+<p>As it turns out, this is a perfectly reasonable model. It&rsquo;s just not as good as our full model.</p>
+
+          </div>
+
+          
+
+<div class="article-tags">
+  
+  <a class="badge badge-light" href="/tag/r/">R</a>
+  
+  <a class="badge badge-light" href="/tag/statistics/">Statistics</a>
+  
+</div>
+
+
+
+          
+          <div class="article-widget">
+            
+<div class="post-nav">
+  
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">Previous</div>
+    <a href="/courses/excursions-into-biostatistics/regressions-correlations-for-the-advanced/" rel="next">Regressions</a>
+  </div>
+  
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">Next</div>
+    <a href="/courses/excursions-into-biostatistics/8_statistical-significance-in-biology-conventions-abstractions-and-the-future/" rel="prev">Statistical Significance in Biology</a>
+  </div>
+  
+</div>
+
+          </div>
+          
+        </div>
+
+        <div class="body-footer">
+          <p>Last updated on 2020-02-27</p>
+
+          
+
+
+
+
+
+          
+
+
+          
+
+
+  
+  
+  <div class="article-widget content-widget-hr">
+    <h3>Related</h3>
+    <ul>
+      
+      <li><a href="/courses/excursions-into-biostatistics/classifications-order-from-chaos/">Classifications</a></li>
+      
+      <li><a href="/courses/excursions-into-biostatistics/data-handling-and-data-assumptions/">Data Handling and Data Assumptions</a></li>
+      
+      <li><a href="/courses/excursions-into-biostatistics/regressions-correlations-for-the-advanced/">Regressions</a></li>
+      
+      <li><a href="/courses/excursions-into-biostatistics/research-project/">Research Project</a></li>
+      
+      <li><a href="/courses/excursions-into-biostatistics/research-project/">Research Project</a></li>
+      
+    </ul>
+  </div>
+  
+
+
+
+        </div>
+
+      </article>
+
+      <footer class="site-footer">
+  
+  <p class="powered-by">
+    
+      <a href="/privacy/">Privacy Policy</a>
+    
+    
+       &middot; 
+      <a href="/terms/">Terms</a>
+    
+  </p>
+  
+
+  <p class="powered-by">
+    © 2024
+  </p>
+
+  
+  
+
+
+
+
+
+
+  <p class="powered-by">
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+  </p>
+</footer>
+
+
+    </main>
+  </div>
+</div>
+
+
+      
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js" integrity="sha256-eOgo0OtLL4cdq7RdwRUiGKLX9XsIJ7nGhWEKbohmVAQ=" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/languages/r.min.js"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/languages/latex.min.js"></script>
+        
+      
+
+    
+
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.js" integrity="sha256-EErZamuLefUnbMBQbsEqu1USa+btR2oIlCpBJbyD4/g=" crossorigin="anonymous"></script>
+    
+
+    
+    
+    <script>const code_highlighting = true;</script>
+    
+
+    
+    
+    <script>const isSiteThemeDark = false;</script>
+    
+
+    
+    
+    
+    
+    
+    
+    <script>
+      const search_config = {"indexURI":"/index.json","minLength":1,"threshold":0.3};
+      const i18n = {"no_results":"No results found","placeholder":"Search...","results":"results found"};
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks",
+        'slides' : "Slides"
+        };
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.1/anchor.min.js" integrity="sha256-pB/deHc9CGfFpJRjC43imB29Rse8tak+5eXqntO94ck=" crossorigin="anonymous"></script>
+    <script>
+      anchors.add();
+    </script>
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+      <div class="search-hit-content">
+        <div class="search-hit-name">
+          <a href="{{relpermalink}}">{{title}}</a>
+          <div class="article-metadata search-hit-type">{{type}}</div>
+          <p class="search-hit-description">{{snippet}}</p>
+        </div>
+      </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="/js/academic.min.66c553246b0f279a03be6e5597f72b52.js"></script>
+
+    
+
+
+
+
+
+
+  
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

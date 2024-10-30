@@ -1,0 +1,1436 @@
+<!DOCTYPE html><html lang="en-gb" >
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.8.0">
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Erik Kusch">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Welcome to our second practical experience in `R`. Throughout the following notes, I will introduce you to a couple nominal statistical test approaches that might be useful to you and are often used in biology. To do so, I will enlist the sparrow data set we handled in our last exercise.">
+
+  
+  <link rel="alternate" hreflang="en-gb" href="https://www.erikkusch.com/courses/an-introduction-to-biostatistics/nominal-tests/">
+
+  
+
+
+  
+  
+  
+  <meta name="theme-color" content="#858383">
+  
+
+  
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-1/css/all.min.css" integrity="sha256-4w9DunooKSr3MFXHXWyFER38WmPdm361bQS/2KUWZbU=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.css" integrity="sha256-SHMGCYmST46SoyGgo4YR/9AlK1vf3ff84Aq9yK4hdqM=" crossorigin="anonymous">
+    
+
+    
+
+    
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.1.2/lazysizes.min.js" integrity="sha256-Md1qLToewPeKjfAHU1zyPwOutccPAm5tahnaw7Osw0A=" crossorigin="anonymous" async></script>
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+        
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+
+  
+
+  
+  
+  
+    
+      
+      
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cutive+Mono%7CLora:400,700%7CRoboto:400,700&display=swap">
+    
+  
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/academic.css">
+
+  
+
+
+
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-186216138-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+
+  function gtag() {
+      dataLayer.push(arguments);
+  }
+
+  function trackOutboundLink(url, target) {
+    gtag('event', 'click', {
+         'event_category': 'outbound',
+         'event_label': url,
+         'transport_type': 'beacon',
+         'event_callback': function () {
+           if (target !== '_blank') {
+             document.location = url;
+           }
+         }
+    });
+    console.debug("Outbound link clicked: " + url);
+  }
+
+  function onClickCallback(event) {
+    if ((event.target.tagName !== 'A') || (event.target.host === window.location.host)) {
+      return;
+    }
+    trackOutboundLink(event.target, event.target.getAttribute('target'));  
+  }
+
+  gtag('js', new Date());
+  gtag('config', 'UA-186216138-1', {});
+
+  
+  document.addEventListener('click', onClickCallback, false);
+</script>
+
+
+  
+
+
+  
+  
+
+  
+
+  <link rel="manifest" href="/index.webmanifest">
+  <link rel="icon" type="image/png" href="/images/icon_hu7658c99d512131214e4d6c003a3f85f7_112593_32x32_fill_lanczos_center_2.png">
+  <link rel="apple-touch-icon" type="image/png" href="/images/icon_hu7658c99d512131214e4d6c003a3f85f7_112593_192x192_fill_lanczos_center_2.png">
+
+  <link rel="canonical" href="https://www.erikkusch.com/courses/an-introduction-to-biostatistics/nominal-tests/">
+
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  <meta property="twitter:card" content="summary_large_image">
+  
+  <meta property="twitter:site" content="@ErikKusch">
+  <meta property="twitter:creator" content="@ErikKusch">
+  
+  <meta property="og:site_name" content="Erik Kusch">
+  <meta property="og:url" content="https://www.erikkusch.com/courses/an-introduction-to-biostatistics/nominal-tests/">
+  <meta property="og:title" content="Nominal Tests | Erik Kusch">
+  <meta property="og:description" content="Welcome to our second practical experience in `R`. Throughout the following notes, I will introduce you to a couple nominal statistical test approaches that might be useful to you and are often used in biology. To do so, I will enlist the sparrow data set we handled in our last exercise."><meta property="og:image" content="https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg">
+  <meta property="twitter:image" content="https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg"><meta property="og:locale" content="en-gb">
+  
+    
+      <meta property="article:published_time" content="2020-06-10T00:00:00&#43;00:00">
+    
+    <meta property="article:modified_time" content="2020-06-10T00:00:00&#43;00:00">
+  
+
+  
+
+
+
+  
+
+
+  
+
+
+  
+
+
+
+
+
+  <title>Nominal Tests | Erik Kusch</title>
+
+</head>
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search" class="form-control">
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+<nav class="navbar navbar-expand-lg navbar-light compensate-for-scrollbar" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="d-none d-lg-inline-flex">
+      <a class="navbar-brand" href="/"><img src="/images/logo_huab2266ff59bbac6a094b6da1268adcf9_208479_0x70_resize_lanczos_2.png" alt="Erik Kusch"></a>
+    </div>
+    
+
+    
+    <button type="button" class="navbar-toggler" data-toggle="collapse"
+            data-target="#navbar-content" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+    <span><i class="fas fa-bars"></i></span>
+    </button>
+    
+
+    
+    <div class="navbar-brand-mobile-wrapper d-inline-flex d-lg-none">
+      <a class="navbar-brand" href="/"><img src="/images/logo_huab2266ff59bbac6a094b6da1268adcf9_208479_0x70_resize_lanczos_2.png" alt="Erik Kusch"></a>
+    </div>
+    
+
+    
+    
+    <div class="navbar-collapse main-menu-item collapse justify-content-center" id="navbar-content">
+
+      
+      <ul class="navbar-nav d-md-inline-flex">
+        
+
+        
+
+        
+        
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link  active" href="/"><span>Home</span></a>
+        </li>
+
+        
+        
+
+        
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"><span>Courses & Workshops</span><span class="caret"></span>
+          </a>
+          <div class="dropdown-menu">
+            
+              <a class="dropdown-item" href="/courses/krigr/"><span>KrigR - State-of-the-Art Climate Data within R</span></a>
+            
+              <a class="dropdown-item" href="/courses/gbif/"><span>Accessing and Referencing GBIF Data for Research</span></a>
+            
+              <a class="dropdown-item" href="/courses/rethinking/"><span>Statistical Rethinking - Introduction to Bayesian Statistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/bayes-nets/"><span>Bayesian Networks - Causality through Bayesian Approaches</span></a>
+            
+              <a class="dropdown-item" href="/courses/biostat101/"><span>Biostats 101 - An Introduction to Biostatistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/excursions-into-biostatistics/"><span>Biostats 301 - Excursions into Biostatistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/bftp-biome-detection/"><span>BFTP - First Steps in Macroecology in R</span></a>
+            
+          </div>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#projects"><span>Projects</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#featured"><span>Publications</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#talks"><span>Talks</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/about"><span>Contact</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+            
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/media/CV_ErikKusch.html" target="_blank" rel="noopener"><span>CV</span></a>
+        </li>
+
+        
+        
+
+      
+
+        
+      </ul>
+    </div>
+
+    <ul class="nav-icons navbar-nav flex-row ml-auto d-flex pl-md-2">
+      
+      <li class="nav-item">
+        <a class="nav-link js-search" href="#" aria-label="Search"><i class="fas fa-search" aria-hidden="true"></i></a>
+      </li>
+      
+
+      
+      <li class="nav-item dropdown theme-dropdown">
+        <a href="#" class="nav-link js-theme-selector" data-toggle="dropdown" aria-haspopup="true">
+          <i class="fas fa-palette" aria-hidden="true"></i>
+        </a>
+        <div class="dropdown-menu">
+          <a href="#" class="dropdown-item js-set-theme-light">
+            <span>Light</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-dark">
+            <span>Dark</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-auto">
+            <span>Automatic</span>
+          </a>
+        </div>
+      </li>
+      
+
+      
+
+    </ul>
+
+  </div>
+</nav>
+
+
+  
+
+<div class="container-fluid docs">
+  <div class="row flex-xl-nowrap">
+    <div class="col-12 col-md-3 col-xl-2 docs-sidebar">
+      
+
+
+
+
+
+  
+    
+  
+
+
+
+
+<form class="docs-search d-flex align-items-center">
+  <button class="btn docs-toggle d-md-none p-0 mr-3" type="button" data-toggle="collapse" data-target="#docs-nav" aria-controls="docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    <span><i class="fas fa-bars"></i></span>
+  </button>
+
+  
+  <input name="q" type="search" class="form-control" placeholder="Search..." autocomplete="off">
+  
+</form>
+
+<nav class="collapse docs-links" id="docs-nav">
+  
+
+  
+  
+  
+  
+  <div class="docs-toc-item">
+    <a class="docs-toc-link" href="/courses/an-introduction-to-biostatistics/">Overview</a>
+
+  </div>
+  
+  <div class="docs-toc-item">
+    <a class="docs-toc-link" href="/courses/an-introduction-to-biostatistics/01-an-introduction-to-basic-statistics-for-biologists/">Sessions</a>
+    <ul class="nav docs-sidenav">
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/01-an-introduction-to-basic-statistics-for-biologists/">01 - Basic Statistics for Biologists</a>
+      </li>
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/introduction-to-r/">02 - Introduction to R</a>
+      </li>
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/a-primer-for-statistical-tests/">03 - A Primer For Statistical Tests</a>
+      </li>
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/descriptive-statistics/">04 - Descriptive Statistics</a>
+      </li>
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/data-visualisation/">05 - Data Visualisation</a>
+      </li>
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/06-inferential-statistics-hypotheses-and-our-research-project/">06 - Inferential Statistics, Hypotheses And Our Research Project</a>
+      </li>
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/data-handling-and-data-mining/">07 - Data Handling and Data Mining</a>
+      </li>
+      
+      <li class="active">
+        <a href="/courses/an-introduction-to-biostatistics/nominal-tests/">08 - Nominal Tests</a>
+      </li>
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/correlation-tests/">09 - Correlation Tests</a>
+      </li>
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/ordinal-metric-tests-two-sample-situations/">10 - Ordinal &amp; Metric Tests (Two-Sample Situations)</a>
+      </li>
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/ordinal-metric-tests-more-than-two-sample-situations/">11 - Ordinal &amp; Metric Tests (More-Than-Two-Sample Situations)</a>
+      </li>
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/simple-parametric-tests/">12 - Simple Parametric Tests</a>
+      </li>
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/13-an-outlook-on-advanced-statistics/">13 - Closing &amp; Summary</a>
+      </li>
+      
+    </ul>
+    
+
+  </div>
+  
+  
+</nav>
+
+    </div>
+
+    
+    <div class="d-none d-xl-block col-xl-2 docs-toc">
+      <ul class="nav toc-top">
+        <li><a href="#" id="back_to_top" class="docs-toc-title">Contents</a></li>
+      </ul>
+
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#theory">Theory</a></li>
+    <li><a href="#data">Data</a></li>
+    <li><a href="#preparing-our-procedure">Preparing Our Procedure</a>
+      <ul>
+        <li><a href="#packages">Packages</a></li>
+        <li><a href="#loading-data">Loading Data</a></li>
+      </ul>
+    </li>
+    <li><a href="#binomial-test">Binomial Test</a>
+      <ul>
+        <li><a href="#sexual-dimorphism">Sexual Dimorphism</a></li>
+        <li><a href="#predation">Predation</a></li>
+      </ul>
+    </li>
+    <li><a href="#mcnemar">McNemar</a>
+      <ul>
+        <li><a href="#preparing-the-data">Preparing The Data</a></li>
+        <li><a href="#running-the-test">Running The Test</a></li>
+        <li><a href="#making-sense-of-the-results">Making Sense Of The Results</a></li>
+      </ul>
+    </li>
+    <li><a href="#cochrans-q">Cochran&rsquo;s Q</a>
+      <ul>
+        <li><a href="#preparing-the-data-1">Preparing The Data</a></li>
+        <li><a href="#runing-the-test">Runing The Test</a></li>
+        <li><a href="#making-sense-of-the-results-1">Making Sense Of The Results</a></li>
+      </ul>
+    </li>
+    <li><a href="#chi-squared">Chi-Squared</a>
+      <ul>
+        <li><a href="#one-sample-situation">One Sample Situation</a></li>
+        <li><a href="#two-sample-situation">Two Sample Situation</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+      
+    </div>
+    
+
+    <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 docs-content" role="main">
+
+      <article class="article">
+
+        <div class="docs-article-container">
+          <h1>Nominal Tests</h1>
+
+          <div class="article-style">
+            <h2 id="theory">Theory</h2>
+<p>Welcome to our second practical experience in <code>R</code>. Throughout the following notes, I will introduce you to a couple nominal statistical test approaches that might be useful to you and are often used in biology.<br>
+To do so, I will enlist the sparrow data set we handled in our last exercise.</p>
+<p>I have prepared some <a href="/courses/an-introduction-to-biostatistics/08---Nominal-Tests_Handout.html" target="_blank"> Lecture Slides </a> for this session.</p>
+<h2 id="data">Data</h2>
+<p>Find the data for this exercise <a href="/courses/an-introduction-to-biostatistics/Data/1%20-%20Sparrow_Data_READY.rds" target="_blank"> here</a>.</p>
+<h2 id="preparing-our-procedure">Preparing Our Procedure</h2>
+<p>To ensure others can reproduce our analysis we run the following three lines of code at the beginning of our <code>R</code> coding file.</p>
+<pre><code class="language-r">rm(list=ls()) # clearing environment
+Dir.Base &lt;- getwd() # soft-coding our working directory
+Dir.Data &lt;- paste(Dir.Base, &quot;Data&quot;, sep=&quot;/&quot;) # soft-coding our data directory 
+</code></pre>
+<h3 id="packages">Packages</h3>
+<p>Using the following, user-defined function, we install/load all the necessary packages into our current <code>R</code> session.</p>
+<pre><code class="language-r"># function to load packages and install them if they haven't been installed yet
+install.load.package &lt;- function(x) {
+  if (!require(x, character.only = TRUE))
+    install.packages(x)
+  require(x, character.only = TRUE)
+}
+package_vec &lt;- c(&quot;nonpar&quot;, # needed for Cochran's Q
+                 &quot;ggplot2&quot;) # data visualisation
+sapply(package_vec, install.load.package)
+</code></pre>
+<pre><code>## Loading required package: nonpar
+</code></pre>
+<pre><code>## Loading required package: ggplot2
+</code></pre>
+<pre><code>##  nonpar ggplot2 
+##    TRUE    TRUE
+</code></pre>
+<h3 id="loading-data">Loading Data</h3>
+<p>During our last exercise (Data Mining and Data Handling - Fixing The Sparrow Data Set) we saved our clean data set as an RDS file. To load this, we use the <code>readRDS()</code> command that comes with base <code>R</code>.</p>
+<pre><code class="language-r">Data_df_base &lt;- readRDS(file = paste(Dir.Data, &quot;/1 - Sparrow_Data_READY.rds&quot;, sep=&quot;&quot;))
+Data_df &lt;- Data_df_base # duplicate and save initial data on a new object
+</code></pre>
+<h2 id="binomial-test">Binomial Test</h2>
+<p>As the name would suggest, a binomial test can only accommodate variables on a binomial scale. A binomial test is used to test whether both values of the binomial variable are present in equal proportions within the data set. The only binomial variables contained within the <em>Passer domesticus</em> data set are <code>Sex</code> (Male, Female) and <code>Predator.Presence</code> (Yes, No). The <code>R</code> function to carry out a binomial test comes with base <code>R</code> and is called <code>binom.test()</code>. The <strong>Null Hypothesis</strong> we operate on is that <strong>both data values are equally likely to occur</strong> although one can specify a different expectations using the <code>p = </code> statement within the <code>binom.test()</code> function.</p>
+<h3 id="sexual-dimorphism">Sexual Dimorphism</h3>
+<p><strong>Are the sexes represented in equal proportions?</strong></p>
+<p>First, we want to test whether our data has a bias leaning towards either sex of the surveyed sparrows. To do so, we may wish to first convert the binomial data into count records using the <code>table()</code> command of R as follows. The result of this can then be feed to <code>binom.test()</code>.</p>
+<pre><code class="language-r">table(Data_df$Sex)
+</code></pre>
+<pre><code>## 
+## Female   Male 
+##    523    544
+</code></pre>
+<pre><code class="language-r">binom.test(table(Data_df$Sex))
+</code></pre>
+<pre><code>## 
+## 	Exact binomial test
+## 
+## data:  table(Data_df$Sex)
+## number of successes = 523, number of trials = 1067, p-value = 0.5404
+## alternative hypothesis: true probability of success is not equal to 0.5
+## 95 percent confidence interval:
+##  0.4597580 0.5206151
+## sample estimates:
+## probability of success 
+##              0.4901593
+</code></pre>
+<p>As we can see, there is no skew towards either male or female abundance of individuals of <em>Passer domesticus</em> and so we have to <strong>accept the null hypothesis</strong>. Note that, although our data is recorded in terms of Male and Female, the <code>binom.test()</code> function works with records of success and failure.</p>
+<p>This is to be expected. After all no bias for sex is known in <em>Passer domesticus</em> and indeed the species does reproduce monogamously so a skew between the sexes wouldn&rsquo;t go anywhere as far as evolution is concerned.</p>
+<h3 id="predation">Predation</h3>
+<p><strong>Are the sites dominated by predators?</strong></p>
+<p>Now, let&rsquo;s see if there is a skew towards predators being present at our sites or not. This time, however we make use of a different syntax for the <code>binom.test()</code> function. We do this for no reason of functionality but simply to show that there are multiple ways to using it.</p>
+<pre><code class="language-r">table(Data_df$Predator.Presence)
+</code></pre>
+<pre><code>## 
+##  No Yes 
+## 357 710
+</code></pre>
+<pre><code class="language-r">binom.test(x = sum(Data_df$Predator.Presence == &quot;Yes&quot;), n = length(Data_df$Predator.Presence))
+</code></pre>
+<pre><code>## 
+## 	Exact binomial test
+## 
+## data:  sum(Data_df$Predator.Presence == &quot;Yes&quot;) and length(Data_df$Predator.Presence)
+## number of successes = 710, number of trials = 1067, p-value &lt; 2.2e-16
+## alternative hypothesis: true probability of success is not equal to 0.5
+## 95 percent confidence interval:
+##  0.6362102 0.6937082
+## sample estimates:
+## probability of success 
+##              0.6654171
+</code></pre>
+<p>Quite obviously, these proportions aren&rsquo;t as equal as the ones of the sex example. In fact, they exhibit statistically significant proportion sizes within our data set (p $\approx$ 0).</p>
+<p>This is in concordance with what we&rsquo;d expect from the natural world since predation is common in nature after all and so we <strong>reject the null hypothesis</strong>.</p>
+<h2 id="mcnemar">McNemar</h2>
+<p>The McNemar Test (sometimes referred to as McNemar&rsquo;s Chi-Square test because the test statistic has a chi-square distribution) is used when you are interested in finding a change in proportion for paired data. This is very common in repeated sampling analyses.</p>
+<p>The <strong>null hypothesis</strong> reads: <strong>Class assignment probabilities do not change within different treatments</strong>.</p>
+<h3 id="preparing-the-data">Preparing The Data</h3>
+<p><strong>Do sex ratios change over time?</strong></p>
+<p>Unfortunately, our data does not allow for these types of analyses and so we will need to create some additional data here.</p>
+<p>Let&rsquo;s say we wanted to resample the sex ratio of <em>Passer domesticus</em> in Australia (AU) a year after our initial survey because of an especially hostile winter and we&rsquo;d like to see whether this resulted in an alteration of the sex ratio.</p>
+<p>What is our sex ratio before the winter?</p>
+<pre><code class="language-r">table(Data_df$Sex[which(Data_df$Index == &quot;AU&quot;)])
+</code></pre>
+<pre><code>## 
+## Female   Male 
+##     44     44
+</code></pre>
+<pre><code class="language-r">Sexes_AU_Now_vec &lt;- Data_df$Sex[which(Data_df$Index == &quot;AU&quot;)]
+</code></pre>
+<p>The sex ratio is not skewed. So let&rsquo;s hypothesise about what might happen to the sex ratio when a strong winter hits our population. The sex ratio could either (1) stay the same or (2) change. Although it would make sense to assume that the population would shrink, McNemar tests can&rsquo;t account for that and so we assume that our population size will stay the same and only the sex ratio might change. Let&rsquo;s create some new data for a changed sex ratio that is male biased:</p>
+<pre><code class="language-r">Sexes &lt;- c(&quot;Male&quot;, &quot;Female&quot;) # creating a vector of sexes to sample from
+set.seed(42) # making it reproducible
+Sexes_AU_Next_vec &lt;- sample(Sexes, sum(Data_df$Index==&quot;AU&quot;), replace = TRUE, prob = c(0.8,0.2))
+</code></pre>
+<p>Here&rsquo;s the data we will be testing:</p>
+<pre><code class="language-r">table(Sexes_AU_Now_vec) 
+</code></pre>
+<pre><code>## Sexes_AU_Now_vec
+## Female   Male 
+##     44     44
+</code></pre>
+<pre><code class="language-r">table(Sexes_AU_Next_vec)
+</code></pre>
+<pre><code>## Sexes_AU_Next_vec
+## Female   Male 
+##     21     67
+</code></pre>
+<h3 id="running-the-test">Running The Test</h3>
+<p>Now let&rsquo;s go on to test the unbiased vs. the male-skewed sex ratio:</p>
+<pre><code class="language-r">mcnemar_matrix_change &lt;- matrix(rbind(table(Sexes_AU_Now_vec), table(Sexes_AU_Next_vec)), 2)
+mcnemar.test(mcnemar_matrix_change)
+</code></pre>
+<pre><code>## 
+## 	McNemar's Chi-squared test with continuity correction
+## 
+## data:  mcnemar_matrix_change
+## McNemar's chi-squared = 7.4462, df = 1, p-value = 0.006357
+</code></pre>
+<p>Obviously, with this data we would record a statistically significant change and <strong>reject the null hypothesis</strong>.</p>
+<h3 id="making-sense-of-the-results">Making Sense Of The Results</h3>
+<p>Unfortunately, McNemar only tells us <em>that</em> there is a difference without any information about the <em>direction</em> of the difference. For now, we will have to settle on a visualisation of the sexes to shed some light on the difference.</p>
+<pre><code class="language-r"># preparing plotting
+plot_df &lt;- data.frame(Data = c(prop.table(mcnemar_matrix_change[1,]),
+                               prop.table(mcnemar_matrix_change[2,])),
+                      Identifiers = rep(c(&quot;Female&quot;, &quot;Male&quot;), 2),
+                      Year = rep(c(&quot;Now&quot;, &quot;Next Year&quot;), each = 2))
+# plotting
+ggplot(plot_df, aes(x = Year, y = Data, fill = Identifiers)) + geom_bar(stat=&quot;identity&quot;) +
+  ggtitle(label = &quot;Abundances of the sexes among study organisms&quot;) + theme_bw() +
+  ylab(&quot;Proportion&quot;)
+</code></pre>
+<p><img src="08---Nominal-Tests_files/figure-html/McNemar6-1.png" width="576" /></p>
+<p>The above plot is very crude and should only ever be used for data exploration and not for publishing purposes. Clearly, we can see the change in sex ratio towards a male-biased state (blue colour represents males).</p>
+<h2 id="cochrans-q">Cochran&rsquo;s Q</h2>
+<p>Cochran&rsquo;s Q is a non parametric test for finding differences in matched sets of three or more frequencies or proportions.</p>
+<p>As such, the Cochran&rsquo;s Q Test is an extension of the McNemar test - the two tests are equal if Cochran&rsquo;s Q is calculated for two groups.</p>
+<p>The <strong>null hypothesis</strong> for Cochran&rsquo;s Q postulates an <strong>equal proportion of class assignents for all treatments</strong>.</p>
+<h3 id="preparing-the-data-1">Preparing The Data</h3>
+<p><strong>Are colours related to sex or predator parameters?</strong></p>
+<p>When exploring our data, we can clearly see a pattern concerning the colour polymorphism of house sparrows arise which is dependant on the value of Predator Presence.</p>
+<pre><code class="language-r">counts &lt;- table(Data_df$Colour, Data_df$Predator.Presence)
+# preparing plotting
+plot_df &lt;- data.frame(Data = c(prop.table(counts[,1]), prop.table(counts[,2])),
+                      Identifiers = rep(c(&quot;Black&quot;, &quot;Brown&quot;, &quot;Grey&quot;), 2),
+                      Predation = rep(c(&quot;No&quot;, &quot;Yes&quot;), each = 3))
+# plotting
+ggplot(plot_df, aes(x = Predation, y = Data, fill = Identifiers)) + geom_bar(stat=&quot;identity&quot;) + ggtitle(label = &quot;Colour Variations of the common House Sparrow&quot;) + theme_bw() +ylab(&quot;Proportions&quot;) + scale_fill_manual(values=c(&quot;black&quot;, &quot;saddlebrown&quot;, &quot;grey&quot;))
+</code></pre>
+<p><img src="08---Nominal-Tests_files/figure-html/ChochranPrep-1.png" width="576" /></p>
+<p>This might lead us to believe that the presence of predators cause an evolutionary change of the plumage colour of <em>Passer domesticus</em> (we will have a more in-depth look on this in later seminars) and we might even postulate that &ldquo;Black&rdquo; and &ldquo;Grey&rdquo; serve as camouflage.</p>
+<p>Cochran&rsquo;s Q requires data to be delivered as binomial records. Therefore, we prepare colour as a binary variable of &ldquo;Brown&rdquo; and &ldquo;Camouflage&rdquo; (which we postulate to encompass &ldquo;Grey&rdquo; and &ldquo;Black&rdquo;). Since Colour is of type <code>factor</code> within our data set, we need to take some precautions in changing the data records. Predator Presence and Sex don&rsquo;t need any additional preparation.</p>
+<pre><code class="language-r"># Colour 
+CochColour &lt;- Data_df_base$Colour
+# adding new level to factor list
+levels(CochColour) &lt;- c(levels(CochColour), &quot;Camouflage&quot;) 
+# defining black and grey to be camouflage
+CochColour[which(CochColour == &quot;Grey&quot;)] &lt;- &quot;Camouflage&quot; 
+CochColour[which(CochColour == &quot;Black&quot;)] &lt;- &quot;Camouflage&quot; 
+# dropping unnecessary factor levels
+CochColour &lt;- droplevels(CochColour) 
+
+# Predator Presence
+CochPredator.Presence &lt;- factor(Data_df_base$Predator.Presence)
+
+# Sex
+CochSex &lt;- factor(Data_df_base$Sex)
+
+# Making vectors into a matrix
+CochMatrix &lt;- matrix(c(CochColour, CochPredator.Presence, CochSex), ncol = 3) - 1
+colnames(CochMatrix) &lt;- c(&quot;Colour&quot;, &quot;Predator Presence&quot;, &quot;Sex&quot;)
+head(CochMatrix)
+</code></pre>
+<pre><code>##      Colour Predator Presence Sex
+## [1,]      0                 1   1
+## [2,]      1                 1   1
+## [3,]      1                 1   0
+## [4,]      0                 1   0
+## [5,]      1                 1   1
+## [6,]      0                 1   0
+</code></pre>
+<h3 id="runing-the-test">Runing The Test</h3>
+<p>Now let&rsquo;s run our test using the <code>cochrans.q()</code> function that comes with the <code>nonpar</code> package:</p>
+<pre><code class="language-r">cochrans.q(CochMatrix)
+</code></pre>
+<pre><code>## 
+##  Cochran's Q Test 
+##  
+##  H0: There is no difference in the effectiveness of treatments. 
+##  HA: There is a difference in the effectiveness of treatments. 
+##  
+##  Q = 122.984939759036 
+##  
+##  Degrees of Freedom = 2 
+##  
+##  Significance Level = 0.05 
+##  The p-value is  0 
+##  There is enough evidence to conclude that the effectiveness of at least two treatments differ. 
+## 
+</code></pre>
+<p>As we can see, the output from this function is extremely user friendly. Additionally, as was to be expected the assignment probabilities for each class in each treatment are not equal thus forcing us to <strong>reject the null hypothesis</strong>.</p>
+<h3 id="making-sense-of-the-results-1">Making Sense Of The Results</h3>
+<p>Where are the differences coming from?</p>
+<p>As you may recall from just a few pages ago, using the binomial test, we can identify the assignment proportions for any binomial variable individually.</p>
+<p><em>Firstly</em>, let&rsquo;s test the <strong>binary version</strong> of the <strong>colour</strong> variable:</p>
+<pre><code class="language-r">table(CochColour)
+</code></pre>
+<pre><code>## CochColour
+##      Brown Camouflage 
+##        298        769
+</code></pre>
+<pre><code class="language-r">binom.test(table(CochColour))
+</code></pre>
+<pre><code>## 
+## 	Exact binomial test
+## 
+## data:  table(CochColour)
+## number of successes = 298, number of trials = 1067, p-value &lt; 2.2e-16
+## alternative hypothesis: true probability of success is not equal to 0.5
+## 95 percent confidence interval:
+##  0.2525387 0.3072599
+## sample estimates:
+## probability of success 
+##              0.2792877
+</code></pre>
+<p>Based on this result, we <strong>reject the null hypothesis</strong> of binary colour records being equally likely to occur.</p>
+<p><em>Secondly</em>, let&rsquo;s test the <strong>predator presence</strong> variable:</p>
+<pre><code class="language-r">table(CochPredator.Presence)
+</code></pre>
+<pre><code>## CochPredator.Presence
+##  No Yes 
+## 357 710
+</code></pre>
+<pre><code class="language-r">binom.test(table(CochPredator.Presence))
+</code></pre>
+<pre><code>## 
+## 	Exact binomial test
+## 
+## data:  table(CochPredator.Presence)
+## number of successes = 357, number of trials = 1067, p-value &lt; 2.2e-16
+## alternative hypothesis: true probability of success is not equal to 0.5
+## 95 percent confidence interval:
+##  0.3062918 0.3637898
+## sample estimates:
+## probability of success 
+##              0.3345829
+</code></pre>
+<p>Based on this result, we <strong>reject the null hypothesis</strong> of predator presence records being equally likely to occur.</p>
+<p><em>Lastly</em>, recall the binomial test run on the <strong>sex</strong> data records which exhibit an almost even 50/50 split.</p>
+<p>Whilst none of these test give us any idea about the overlap of similar assignments along these variable vectors, a 50/50 split (sex) can never link up comparably with a roughly 30/70 split (predator presence and binary colour). Therefore, we could hypothesize a linkage of predator presence and colour rather than sex and colour morphs.</p>
+<h2 id="chi-squared">Chi-Squared</h2>
+<p>The Chi-Squared (also known as $Chi^2$) Test can be regarded as a functional extension of the binomial test and is used to test the similarity of class assignment proportions for a categorical/nominal variable. Unlike the binomial test, however, this test is not constrained to binomial records alone.</p>
+<p>The null hypothesis states that: <strong>Every class assignment contained within a given variable is equally likely</strong>.</p>
+<p>The Chi-Squared Test can be applied in a one or two sample situation. One sample represents one variable in this setting.</p>
+<h3 id="one-sample-situation">One Sample Situation</h3>
+<h4 id="binary-colour">Binary Colour</h4>
+<p>Let&rsquo;s asses the proportions of one variable we have already looked at - the <strong>binary version</strong> of the <strong>colour</strong> variable:</p>
+<pre><code class="language-r">table(CochColour)
+</code></pre>
+<pre><code>## CochColour
+##      Brown Camouflage 
+##        298        769
+</code></pre>
+<pre><code class="language-r">chisq.test(table(CochColour))
+</code></pre>
+<pre><code>## 
+## 	Chi-squared test for given probabilities
+## 
+## data:  table(CochColour)
+## X-squared = 207.91, df = 1, p-value &lt; 2.2e-16
+</code></pre>
+<p>Based on this result, we <strong>reject the null hypothesis</strong> of binary colour records being equally likely to occur. Note how the Chi-Squared test returns the same p-value as the binomial test above (within the Cochran&rsquo;s Q section).</p>
+<h4 id="colour">Colour</h4>
+<p>Now let&rsquo;s run the same test on the non-binary <strong>colour</strong> data:</p>
+<pre><code class="language-r">table(Data_df$Colour)
+</code></pre>
+<pre><code>## 
+## Black Brown  Grey 
+##   356   298   413
+</code></pre>
+<pre><code class="language-r">chisq.test(table(Data_df$Colour))
+</code></pre>
+<pre><code>## 
+## 	Chi-squared test for given probabilities
+## 
+## data:  table(Data_df$Colour)
+## X-squared = 18.592, df = 2, p-value = 9.178e-05
+</code></pre>
+<p>Again, we <strong>reject the null hypothesis</strong> thus concluding differing class proportions for every possible class of &ldquo;Colour&rdquo;.</p>
+<h3 id="two-sample-situation">Two Sample Situation</h3>
+<p>The two sample Chi-Squared approach lets us identify whether class assignment proportions of one variable differ when they are considered in a dependency of another nominal variable.</p>
+<h4 id="sexual-dimorphism-1">Sexual Dimorphism</h4>
+<p><strong>Are colours of Passer domesticus related to their sexes?</strong></p>
+<p><em>Firstly</em>, let&rsquo;s see if males and females share the same likelihoods of being of a certain colour:</p>
+<pre><code class="language-r">table(Data_df$Colour, Data_df$Sex)
+</code></pre>
+<pre><code>##        
+##         Female Male
+##   Black    320   36
+##   Brown    122  176
+##   Grey      81  332
+</code></pre>
+<pre><code class="language-r">chisq.test(table(Data_df$Colour, Data_df$Sex))
+</code></pre>
+<pre><code>## 
+## 	Pearson's Chi-squared test
+## 
+## data:  table(Data_df$Colour, Data_df$Sex)
+## X-squared = 388.63, df = 2, p-value &lt; 2.2e-16
+</code></pre>
+<p>Clearly, they don&rsquo;t and we <strong>reject the null hypothesis</strong>.</p>
+<h4 id="predation-1">Predation</h4>
+<p><strong>Are colours of Passer domesticus related to predator parameters?</strong></p>
+<p><em>Secondly</em>, we test whether colour proportions change when considering predator presence. Although we partially considered this already in the Cochran&rsquo;s Q section. This time, however, we use a non-binary version of the colour variable:</p>
+<pre><code class="language-r">table(Data_df$Colour, Data_df$Predator.Presence)
+</code></pre>
+<pre><code>##        
+##          No Yes
+##   Black  64 292
+##   Brown 211  87
+##   Grey   82 331
+</code></pre>
+<pre><code class="language-r">chisq.test(table(Data_df$Colour, Data_df$Predator.Presence))
+</code></pre>
+<pre><code>## 
+## 	Pearson's Chi-squared test
+## 
+## data:  table(Data_df$Colour, Data_df$Predator.Presence)
+## X-squared = 259.34, df = 2, p-value &lt; 2.2e-16
+</code></pre>
+<p>The statement holds. Predator presence seems likely to be a driver of the colour polymorphism in <em>Passer domesticus</em> and we <strong>reject the null hypothesis</strong>.</p>
+<p>So what about a possible link of sparrow colour and predator type?</p>
+<pre><code class="language-r">table(Data_df$Colour, Data_df$Predator.Type)
+</code></pre>
+<pre><code>##        
+##         Avian Non-Avian
+##   Black   197        95
+##   Brown    60        27
+##   Grey    233        98
+</code></pre>
+<pre><code class="language-r">chisq.test(table(Data_df$Colour, Data_df$Predator.Type))
+</code></pre>
+<pre><code>## 
+## 	Pearson's Chi-squared test
+## 
+## data:  table(Data_df$Colour, Data_df$Predator.Type)
+## X-squared = 0.62164, df = 2, p-value = 0.7328
+</code></pre>
+<p>Nope, no link here. We have to <strong>accept the null hypothesis</strong> and conclude that there may be no causal link of predator type and sparrow colour.</p>
+<p><strong>Are nesting sites of Passer domesticus related to predator parameters?</strong></p>
+<p><em>Third</em>, let&rsquo;s test whether nesting site assignments might differ based on predator presence:</p>
+<pre><code class="language-r">table(Data_df$Nesting.Site, Data_df$Predator.Presence)
+</code></pre>
+<pre><code>##        
+##          No Yes
+##   Shrub  87 205
+##   Tree   94 137
+</code></pre>
+<pre><code class="language-r">chisq.test(table(Data_df$Nesting.Site, Data_df$Predator.Presence))
+</code></pre>
+<pre><code>## 
+## 	Pearson's Chi-squared test with Yates' continuity correction
+## 
+## data:  table(Data_df$Nesting.Site, Data_df$Predator.Presence)
+## X-squared = 6.2955, df = 1, p-value = 0.0121
+</code></pre>
+<p>There seems to be a link here and we <strong>reject the null hypothesis</strong>.</p>
+<p>So what about a link of predator type and nesting site?</p>
+<pre><code class="language-r">table(Data_df$Nesting.Site, Data_df$Predator.Type)
+</code></pre>
+<pre><code>##        
+##         Avian Non-Avian
+##   Shrub   182        23
+##   Tree     49        88
+</code></pre>
+<pre><code class="language-r">chisq.test(table(Data_df$Nesting.Site, Data_df$Predator.Type))
+</code></pre>
+<pre><code>## 
+## 	Pearson's Chi-squared test with Yates' continuity correction
+## 
+## data:  table(Data_df$Nesting.Site, Data_df$Predator.Type)
+## X-squared = 102.88, df = 1, p-value &lt; 2.2e-16
+</code></pre>
+<p>Apparently, there is a really strong one and we <strong>reject the null hypothesis</strong>.</p>
+
+          </div>
+
+          
+
+<div class="article-tags">
+  
+  <a class="badge badge-light" href="/tag/r/">R</a>
+  
+  <a class="badge badge-light" href="/tag/statistics/">Statistics</a>
+  
+</div>
+
+
+
+          
+          <div class="article-widget">
+            
+<div class="post-nav">
+  
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">Previous</div>
+    <a href="/courses/an-introduction-to-biostatistics/data-handling-and-data-mining/" rel="next">Data Handling and Data Mining</a>
+  </div>
+  
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">Next</div>
+    <a href="/courses/an-introduction-to-biostatistics/correlation-tests/" rel="prev">Correlation Tests</a>
+  </div>
+  
+</div>
+
+          </div>
+          
+        </div>
+
+        <div class="body-footer">
+          <p>Last updated on 2020-06-10</p>
+
+          
+
+
+
+
+
+          
+
+
+          
+
+
+  
+  
+  <div class="article-widget content-widget-hr">
+    <h3>Related</h3>
+    <ul>
+      
+      <li><a href="/courses/biostat101/nominal-tests/">Nominal Tests</a></li>
+      
+      <li><a href="/courses/biostat101/a-primer-for-statistical-tests/">A Primer For Statistical Tests</a></li>
+      
+      <li><a href="/courses/an-introduction-to-biostatistics/a-primer-for-statistical-tests/">A Primer For Statistical Tests</a></li>
+      
+      <li><a href="/courses/biostat101/correlation-tests/">Correlation Tests</a></li>
+      
+      <li><a href="/courses/an-introduction-to-biostatistics/correlation-tests/">Correlation Tests</a></li>
+      
+    </ul>
+  </div>
+  
+
+
+
+        </div>
+
+      </article>
+
+      <footer class="site-footer">
+  
+  <p class="powered-by">
+    
+      <a href="/privacy/">Privacy Policy</a>
+    
+    
+       &middot; 
+      <a href="/terms/">Terms</a>
+    
+  </p>
+  
+
+  <p class="powered-by">
+    © 2024
+  </p>
+
+  
+  
+
+
+
+
+
+
+  <p class="powered-by">
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+  </p>
+</footer>
+
+
+    </main>
+  </div>
+</div>
+
+
+      
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js" integrity="sha256-eOgo0OtLL4cdq7RdwRUiGKLX9XsIJ7nGhWEKbohmVAQ=" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/languages/r.min.js"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/languages/latex.min.js"></script>
+        
+      
+
+    
+
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.js" integrity="sha256-EErZamuLefUnbMBQbsEqu1USa+btR2oIlCpBJbyD4/g=" crossorigin="anonymous"></script>
+    
+
+    
+    
+    <script>const code_highlighting = true;</script>
+    
+
+    
+    
+    <script>const isSiteThemeDark = false;</script>
+    
+
+    
+    
+    
+    
+    
+    
+    <script>
+      const search_config = {"indexURI":"/index.json","minLength":1,"threshold":0.3};
+      const i18n = {"no_results":"No results found","placeholder":"Search...","results":"results found"};
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks",
+        'slides' : "Slides"
+        };
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.1/anchor.min.js" integrity="sha256-pB/deHc9CGfFpJRjC43imB29Rse8tak+5eXqntO94ck=" crossorigin="anonymous"></script>
+    <script>
+      anchors.add();
+    </script>
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+      <div class="search-hit-content">
+        <div class="search-hit-name">
+          <a href="{{relpermalink}}">{{title}}</a>
+          <div class="article-metadata search-hit-type">{{type}}</div>
+          <p class="search-hit-description">{{snippet}}</p>
+        </div>
+      </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="/js/academic.min.66c553246b0f279a03be6e5597f72b52.js"></script>
+
+    
+
+
+
+
+
+
+  
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

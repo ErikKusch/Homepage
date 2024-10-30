@@ -1,0 +1,1567 @@
+<!DOCTYPE html><html lang="en-gb" >
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.8.0">
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Erik Kusch">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Answers and solutions to the exercises belonging to chapter 8 in [Satistical Rethinking 2](https://xcelab.net/rm/statistical-rethinking/) by Richard McElreath.">
+
+  
+  <link rel="alternate" hreflang="en-gb" href="https://www.erikkusch.com/courses/rethinking/chapter-08/">
+
+  
+
+
+  
+  
+  
+  <meta name="theme-color" content="#858383">
+  
+
+  
+  
+  
+  <script src="/js/mathjax-config.js"></script>
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-1/css/all.min.css" integrity="sha256-4w9DunooKSr3MFXHXWyFER38WmPdm361bQS/2KUWZbU=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.css" integrity="sha256-SHMGCYmST46SoyGgo4YR/9AlK1vf3ff84Aq9yK4hdqM=" crossorigin="anonymous">
+    
+
+    
+
+    
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.1.2/lazysizes.min.js" integrity="sha256-Md1qLToewPeKjfAHU1zyPwOutccPAm5tahnaw7Osw0A=" crossorigin="anonymous" async></script>
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" integrity="" crossorigin="anonymous" async></script>
+      
+    
+      
+
+      
+      
+
+      
+    
+
+  
+
+  
+  
+  
+    
+      
+      
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cutive+Mono%7CLora:400,700%7CRoboto:400,700&display=swap">
+    
+  
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/academic.css">
+
+  
+
+
+
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-186216138-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+
+  function gtag() {
+      dataLayer.push(arguments);
+  }
+
+  function trackOutboundLink(url, target) {
+    gtag('event', 'click', {
+         'event_category': 'outbound',
+         'event_label': url,
+         'transport_type': 'beacon',
+         'event_callback': function () {
+           if (target !== '_blank') {
+             document.location = url;
+           }
+         }
+    });
+    console.debug("Outbound link clicked: " + url);
+  }
+
+  function onClickCallback(event) {
+    if ((event.target.tagName !== 'A') || (event.target.host === window.location.host)) {
+      return;
+    }
+    trackOutboundLink(event.target, event.target.getAttribute('target'));  
+  }
+
+  gtag('js', new Date());
+  gtag('config', 'UA-186216138-1', {});
+
+  
+  document.addEventListener('click', onClickCallback, false);
+</script>
+
+
+  
+
+
+  
+  
+
+  
+
+  <link rel="manifest" href="/index.webmanifest">
+  <link rel="icon" type="image/png" href="/images/icon_hu7658c99d512131214e4d6c003a3f85f7_112593_32x32_fill_lanczos_center_2.png">
+  <link rel="apple-touch-icon" type="image/png" href="/images/icon_hu7658c99d512131214e4d6c003a3f85f7_112593_192x192_fill_lanczos_center_2.png">
+
+  <link rel="canonical" href="https://www.erikkusch.com/courses/rethinking/chapter-08/">
+
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  <meta property="twitter:card" content="summary_large_image">
+  
+  <meta property="twitter:site" content="@ErikKusch">
+  <meta property="twitter:creator" content="@ErikKusch">
+  
+  <meta property="og:site_name" content="Erik Kusch">
+  <meta property="og:url" content="https://www.erikkusch.com/courses/rethinking/chapter-08/">
+  <meta property="og:title" content="Chapter 08 | Erik Kusch">
+  <meta property="og:description" content="Answers and solutions to the exercises belonging to chapter 8 in [Satistical Rethinking 2](https://xcelab.net/rm/statistical-rethinking/) by Richard McElreath."><meta property="og:image" content="https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg">
+  <meta property="twitter:image" content="https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg"><meta property="og:locale" content="en-gb">
+  
+    
+      <meta property="article:published_time" content="2021-02-18T00:00:00&#43;00:00">
+    
+    <meta property="article:modified_time" content="2021-02-18T20:00:00&#43;01:00">
+  
+
+  
+
+
+
+  
+
+
+  
+
+
+  
+
+
+
+
+
+  <title>Chapter 08 | Erik Kusch</title>
+
+</head>
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search" class="form-control">
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+<nav class="navbar navbar-expand-lg navbar-light compensate-for-scrollbar" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="d-none d-lg-inline-flex">
+      <a class="navbar-brand" href="/"><img src="/images/logo_huab2266ff59bbac6a094b6da1268adcf9_208479_0x70_resize_lanczos_2.png" alt="Erik Kusch"></a>
+    </div>
+    
+
+    
+    <button type="button" class="navbar-toggler" data-toggle="collapse"
+            data-target="#navbar-content" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+    <span><i class="fas fa-bars"></i></span>
+    </button>
+    
+
+    
+    <div class="navbar-brand-mobile-wrapper d-inline-flex d-lg-none">
+      <a class="navbar-brand" href="/"><img src="/images/logo_huab2266ff59bbac6a094b6da1268adcf9_208479_0x70_resize_lanczos_2.png" alt="Erik Kusch"></a>
+    </div>
+    
+
+    
+    
+    <div class="navbar-collapse main-menu-item collapse justify-content-center" id="navbar-content">
+
+      
+      <ul class="navbar-nav d-md-inline-flex">
+        
+
+        
+
+        
+        
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link  active" href="/"><span>Home</span></a>
+        </li>
+
+        
+        
+
+        
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"><span>Courses & Workshops</span><span class="caret"></span>
+          </a>
+          <div class="dropdown-menu">
+            
+              <a class="dropdown-item" href="/courses/krigr/"><span>KrigR - State-of-the-Art Climate Data within R</span></a>
+            
+              <a class="dropdown-item" href="/courses/gbif/"><span>Accessing and Referencing GBIF Data for Research</span></a>
+            
+              <a class="dropdown-item" href="/courses/rethinking/"><span>Statistical Rethinking - Introduction to Bayesian Statistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/bayes-nets/"><span>Bayesian Networks - Causality through Bayesian Approaches</span></a>
+            
+              <a class="dropdown-item" href="/courses/biostat101/"><span>Biostats 101 - An Introduction to Biostatistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/excursions-into-biostatistics/"><span>Biostats 301 - Excursions into Biostatistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/bftp-biome-detection/"><span>BFTP - First Steps in Macroecology in R</span></a>
+            
+          </div>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#projects"><span>Projects</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#featured"><span>Publications</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#talks"><span>Talks</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/about"><span>Contact</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+            
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/media/CV_ErikKusch.html" target="_blank" rel="noopener"><span>CV</span></a>
+        </li>
+
+        
+        
+
+      
+
+        
+      </ul>
+    </div>
+
+    <ul class="nav-icons navbar-nav flex-row ml-auto d-flex pl-md-2">
+      
+      <li class="nav-item">
+        <a class="nav-link js-search" href="#" aria-label="Search"><i class="fas fa-search" aria-hidden="true"></i></a>
+      </li>
+      
+
+      
+      <li class="nav-item dropdown theme-dropdown">
+        <a href="#" class="nav-link js-theme-selector" data-toggle="dropdown" aria-haspopup="true">
+          <i class="fas fa-palette" aria-hidden="true"></i>
+        </a>
+        <div class="dropdown-menu">
+          <a href="#" class="dropdown-item js-set-theme-light">
+            <span>Light</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-dark">
+            <span>Dark</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-auto">
+            <span>Automatic</span>
+          </a>
+        </div>
+      </li>
+      
+
+      
+
+    </ul>
+
+  </div>
+</nav>
+
+
+  
+
+<div class="container-fluid docs">
+  <div class="row flex-xl-nowrap">
+    <div class="col-12 col-md-3 col-xl-2 docs-sidebar">
+      
+
+
+
+
+
+  
+    
+  
+
+
+
+
+<form class="docs-search d-flex align-items-center">
+  <button class="btn docs-toggle d-md-none p-0 mr-3" type="button" data-toggle="collapse" data-target="#docs-nav" aria-controls="docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    <span><i class="fas fa-bars"></i></span>
+  </button>
+
+  
+  <input name="q" type="search" class="form-control" placeholder="Search..." autocomplete="off">
+  
+</form>
+
+<nav class="collapse docs-links" id="docs-nav">
+  
+
+  
+  
+  
+  
+  <div class="docs-toc-item">
+    <a class="docs-toc-link" href="/courses/rethinking/">Overview</a>
+
+  </div>
+  
+  <div class="docs-toc-item">
+    <a class="docs-toc-link" href="/courses/rethinking/chapter-02/">Seminars</a>
+    <ul class="nav docs-sidenav">
+      
+      <li >
+        <a href="/courses/rethinking/chapter-02/">Chapter 01 &amp; 02</a>
+      </li>
+      
+      <li >
+        <a href="/courses/rethinking/chapter-03/">Chapter 03</a>
+      </li>
+      
+      <li >
+        <a href="/courses/rethinking/chapter-04/">Chapter 04</a>
+      </li>
+      
+      <li >
+        <a href="/courses/rethinking/chapter-04b/">Chapter 04 (Extra Material)</a>
+      </li>
+      
+      <li >
+        <a href="/courses/rethinking/chapter-05/">Chapter 05</a>
+      </li>
+      
+      <li >
+        <a href="/courses/rethinking/chapter-06/">Chapter 06</a>
+      </li>
+      
+      <li >
+        <a href="/courses/rethinking/chapter-07/">Chapter 07</a>
+      </li>
+      
+      <li class="active">
+        <a href="/courses/rethinking/chapter-08/">Chapter 08</a>
+      </li>
+      
+      <li >
+        <a href="/courses/rethinking/chapter-09/">Chapter 09</a>
+      </li>
+      
+      <li >
+        <a href="/courses/rethinking/chapter-11/">Chapter 10 &amp; 11</a>
+      </li>
+      
+      <li >
+        <a href="/courses/rethinking/chapter-12/">Chapter 12</a>
+      </li>
+      
+      <li >
+        <a href="/courses/rethinking/chapter-13/">Chapter 13</a>
+      </li>
+      
+      <li >
+        <a href="/courses/rethinking/chapter-14/">Chapter 14</a>
+      </li>
+      
+      <li >
+        <a href="/courses/rethinking/chapter-15/">Chapter 15</a>
+      </li>
+      
+      <li >
+        <a href="/courses/rethinking/chapter-16/">Chapter 16</a>
+      </li>
+      
+    </ul>
+    
+
+  </div>
+  
+  
+</nav>
+
+    </div>
+
+    
+    <div class="d-none d-xl-block col-xl-2 docs-toc">
+      <ul class="nav toc-top">
+        <li><a href="#" id="back_to_top" class="docs-toc-title">Contents</a></li>
+      </ul>
+
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#material">Material</a></li>
+    <li><a href="#introduction">Introduction</a></li>
+    <li><a href="#r-environment"><code>R</code> Environment</a></li>
+    <li><a href="#easy-exercises">Easy Exercises</a>
+      <ul>
+        <li><a href="#practice-e1">Practice E1</a></li>
+        <li><a href="#practice-e2">Practice E2</a></li>
+        <li><a href="#practice-e3">Practice E3</a></li>
+      </ul>
+    </li>
+    <li><a href="#medium-exercises">Medium Exercises</a>
+      <ul>
+        <li><a href="#practice-m1">Practice M1</a></li>
+        <li><a href="#practice-m2">Practice M2</a></li>
+        <li><a href="#practice-m3">Practice M3</a></li>
+      </ul>
+    </li>
+    <li><a href="#hard-exercises">Hard Exercises</a>
+      <ul>
+        <li><a href="#practice-h1">Practice H1</a></li>
+        <li><a href="#practice-h2">Practice H2</a></li>
+        <li><a href="#practice-h3">Practice H3</a></li>
+        <li><a href="#practice-h4">Practice H4</a></li>
+      </ul>
+    </li>
+    <li><a href="#session-info">Session Info</a></li>
+  </ul>
+</nav>
+
+      
+    </div>
+    
+
+    <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 docs-content" role="main">
+
+      <article class="article">
+
+        <div class="docs-article-container">
+          <h1>Chapter 08</h1>
+
+          <div class="article-style">
+            <h1 id="conditional-manatees">Conditional Manatees</h1>
+<h2 id="material">Material</h2>
+<ul>
+<li>
+<a href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/rethinking/9__19-02-2021_SUMMARY_-Interactions.html" target="_blank" rel="noopener">Slides Chapter 8</a></li>
+</ul>
+<h2 id="introduction">Introduction</h2>
+<p>These are answers and solutions to the exercises at the end of chapter 8 in 
+<a href="https://xcelab.net/rm/statistical-rethinking/" target="_blank" rel="noopener">Satistical Rethinking 2</a> by Richard McElreath. I have created these notes as a part of my ongoing involvement in the 
+<a href="/project/aubayes/">AU Bayes Study Group</a>. Much of my inspiration for these solutions, where necessary, has been obtained from 
+<a href="https://jmgirard.com/statistical-rethinking-ch7/" target="_blank" rel="noopener">Jeffrey Girard</a>.</p>
+<h2 id="r-environment"><code>R</code> Environment</h2>
+<p>For today&rsquo;s exercise, I load the following packages:</p>
+<pre><code class="language-r">library(rethinking)
+library(ggplot2)
+library(viridis)
+</code></pre>
+<h2 id="easy-exercises">Easy Exercises</h2>
+<h3 id="practice-e1">Practice E1</h3>
+<p><strong>Question:</strong> For each of the causal relationships below, name a hypothetical third variable that would lead to an interaction effect.</p>
+<ol>
+<li>Bread dough rises because of yeast.</li>
+<li>Education leads to higher income.</li>
+<li>Gasoline makes a car go.</li>
+</ol>
+<p><strong>Answer:</strong></p>
+<ol>
+<li>Temperature. Yeast is active only in a certain range of temperatures and varyingly so.</li>
+<li>Age. Time spent in a profession usually comes with raises and thus higher pay as one gets older. This is not the case in all jobs, of course.</li>
+<li>Engine efficiency will interact with the presence of gasoline to determine how much the car will go.</li>
+</ol>
+<h3 id="practice-e2">Practice E2</h3>
+<p><strong>Question:</strong> Which of the following explanations invokes an interaction?</p>
+<ol>
+<li>Caramelizing onions requires cooking over low heat and making sure the onions do not dry out.</li>
+<li>A car will go faster when it has more cylinders or when it has a better fuel injector.</li>
+<li>Most people acquire their political beliefs from their parents, unless they get them instead from their friends.</li>
+<li>Intelligent animal species tend to be either highly social or have manipulative appendages (hands, tentacles, etc.).</li>
+</ol>
+<p><strong>Answer:</strong></p>
+<ol>
+<li><em>Yes</em>, there is an interaction here. Water and low heat interact to caramelize onions.</li>
+<li><em>Yes</em>, there is an interaction here. Number of cylinders and quality of fuel injector interact to determine the speed of the car.</li>
+<li><em>No</em>, there is no interaction here. You either get your political belief from your parents or your friends. The two do not interact.</li>
+<li><em>Yes</em>, there is an interaction here. Degree of sociality and possession of manipulative appendages combine to determine intelligence level.</li>
+</ol>
+<h3 id="practice-e3">Practice E3</h3>
+<p><strong>Question:</strong> For each of the explanations in E2, write a linear model that expresses the stated relationship.</p>
+<p><strong>Answer:</strong></p>
+<ol>
+<li>$\mu_i = \beta_T * T_i + \beta_W*W_i + \beta_{TW} * T_i W_i$</li>
+<li>$\mu_i = \beta_C * C_i + \beta_F * F_i + \beta_{CF} * C_i F_i$</li>
+<li>$\mu_i = \beta_P * P_i + \beta_F * F_i$</li>
+<li>$\mu_i = \beta_S * S_i + \beta_A * A_i + \beta_{SA} S_iA_i$</li>
+</ol>
+<h2 id="medium-exercises">Medium Exercises</h2>
+<h3 id="practice-m1">Practice M1</h3>
+<p><strong>Question:</strong> Recall the tulips example from the chapter. Suppose another set of treatments adjusted the temperature in the greenhouse over two levels: cold and hot. The data in the chapter were collected at the cold temperature. You find none of the plants grown under the hot temperature developed any blooms at all, regardless of the water and shade levels. Can you explain this result in terms of interactions between water, shade, and temperature?</p>
+<p><strong>Answer:</strong> We now have a model with a three-way interaction which comes with three two-way interactions:</p>
+<p>$$
+\begin{aligned}
+\mu_i = &amp; \alpha + \beta_T * T_i + \beta_W * W_i + \beta_S * S_i + \newline 
+&amp; \beta_{TW} * T_iW_i + \beta_{TS} * T_iS_i + \beta_{WS} * W_iS_i + \newline
+&amp; \beta_{TWS} * T_iW_iS_i
+\end{aligned}
+$$</p>
+<p>Within this model all parameters work out such that when $T_i = 2$ (hot condition) we obtain $\mu_i = 0$ (no blooms).</p>
+<h3 id="practice-m2">Practice M2</h3>
+<p><strong>Question:</strong> Can you invent a regression equation that would make the bloom size zero, whenever the temperature is hot?</p>
+<p><strong>Answer:</strong> Oops. I partially answered that in my previous exercise, but let&rsquo;s go more in detail. Let&rsquo;s first remember some values from the chapter: (1) water is recorded as 1-3 (dry to wet), (2) shade is coded as 1-3 (high to low), and (3) temperature is coded as 0/1 (cold/hot). So now we know that, irrespective of the values of water or shade, as long as $T = 1$, $mu_i$ has to be $0$ in this forumla:</p>
+<p>$$
+\begin{split}
+\mu_i = &amp;\alpha + \beta_T * T_i + \beta_W * W_i + \beta_S * S_i + \newline
+&amp;\beta_{TW} * T_iW_i + \beta_{TS} * T_iS_i + \beta_{WS} * W_iS_i + \newline
+&amp;\beta_{TWS} * T_iW_iS_i
+\end{split}
+$$</p>
+<p>How do we get there? For now, let&rsquo;s set water and shade to 1 and temperature to 1. Doing so will result in a rewriting of the formula above to:</p>
+<p>\begin{equation}
+\begin{split}
+\mu_{i|T=1,W=1,S=1} = \alpha + \beta_T + \beta_W + \beta_S + \beta_{TW} + \beta_{TS} + \beta_{WS} + \beta_{TWS}
+\end{split}
+\end{equation}</p>
+<p>So now we need to get this formula to always work out to 0, irrespective of values of $\alpha$, $\beta_s$, $\beta_W$, and $\beta_{WS}$. We can do so by having parameters which include the effect of temperature ($\beta_T$, $\beta_{TW}$, $\beta_{TS}$, and $\beta_{TWS}$) counteract the $\alpha$, $\beta_s$, $\beta_W$, and $\beta_{WS}$. This has us rewrite the above formula as:</p>
+<p>\begin{equation}
+\begin{split}
+\mu_{i|T=1,W=1,S=1} = (\alpha + \beta_T) + (\beta_W + \beta_{TW}) + (\beta_S + \beta_{TS}) + (\beta_{WS} + \beta_{TWS})
+\end{split}
+\end{equation}</p>
+<p>Now for the outcome to be $0$, the contents of the brackets need to be 0, so $\beta_T = -\alpha$, $\beta_{TW} = -\beta_W$, and so on. This morphs our equation into:</p>
+<p>\begin{equation}
+\begin{split}
+\mu_{i|T=1,W=1,S=1} = (\alpha - \alpha) + (\beta_W - \beta_W) + (\beta_S - \beta_S) + (\beta_{WS} - \beta_{WS})
+\end{split}
+\end{equation}</p>
+<p>So now, irrespective of $W$ or $S$, we will always obtain $\mu_i = 0$ when $T=1$. When $T=0$, all temperature effects drop out and we obtain the same formula as in the book chapter.</p>
+<h3 id="practice-m3">Practice M3</h3>
+<p><strong>Question:</strong> In parts of North America, ravens depend upon wolves for their food. This is because ravens are carnivorous but cannot usually kill or open carcasses of prey. Wolves however can and do kill and tear open animals, and they tolerate ravens co-feeding at their kills. This species relationship is generally described as a “species interaction.” Can you invent a hypothetical set of data on raven population size in which this relationship would manifest as a statistical interaction? Do you think the biological interaction could be linear? Why or why not?</p>
+<p><strong>Answer:</strong> Here&rsquo;s our regression:</p>
+<p>$Ravens∼Normal(μ,σ)$</p>
+<p>$μ=α+β_pPrey+β_wWolves+β_{pw}Prey*Wolves$</p>
+<p>with $Ravens$, $Wolves$, and $Prey$ being the number of ravens, wolves, and prey animals respectively, in a given habitat.</p>
+<p>Now let&rsquo;s make up some data with an in-built interaction effect:</p>
+<pre><code class="language-r">N &lt;- 1e5 # simulation size
+rPW &lt;- 0.2 # correlation between prey and wolf
+bP &lt;- 0.05 # regression coefficient for prey
+bW &lt;- -0.3 # regression coefficient for wolf
+bPW &lt;- 0.2 # regression coefficient for prey-by-wolf interaction
+# Simulate data
+prey &lt;- as.integer(rnorm(N, mean = 100, sd = 15)) # as.integer, so we have &quot;whole&quot; animals
+wolves &lt;- as.integer(rnorm(N, mean = 10 + rPW * prey, sd = 7))
+ravens &lt;- as.integer(rnorm(N, mean = 5 + bP * prey + bW * wolves + bPW * wolves * prey, sd = 9))
+d &lt;- data.frame(prey = prey, wolves = wolves, ravens = ravens)
+# plot the data
+par(mfrow = c(1, 2))
+plot(ravens ~ prey, data = d, main = &quot;Ravens like prey!&quot;)
+plot(ravens ~ wolves, data = d, main = &quot;Ravens like wolves?&quot;)
+</code></pre>
+<p><img src="2021-02-18-statistical-rethinking-chapter-08_files/figure-html/unnamed-chunk-2-1.png" width="1440" /></p>
+<p>Immediately, we see in our data that, despite us having simulated the data in such a way that ravens do not flock around wolves, when not conditioning on prey, we would think that ravens do flock around wolves.</p>
+<p>Time for a model run:</p>
+<pre><code class="language-r">m &lt;- quap(
+  alist(
+    ravens ~ dnorm(mu, sigma),
+    mu &lt;- a + bP * prey + bW * wolves + bPW * prey * wolves,
+    a ~ dnorm(min(d$ravens), 10), # minimum of ravens for intercept prior
+    bW ~ dnorm(0, 1),
+    bP ~ dnorm(0, 1),
+    bPW ~ dnorm(0, 1),
+    sigma ~ dnorm(sd(d$ravens), 10) # sd of raven as an initial guess
+  ),
+  data = d
+)
+precis(m)
+</code></pre>
+<pre><code>##              mean           sd       5.5%       94.5%
+## a      5.41309759 0.6926177989  4.3061606  6.52003460
+## bW    -0.32805262 0.0233269747 -0.3653336 -0.29077161
+## bP     0.04084714 0.0070894052  0.0295169  0.05217738
+## bPW    0.20027501 0.0002308127  0.1999061  0.20064390
+## sigma  8.97789166 0.0200777428  8.9458035  9.00997977
+</code></pre>
+<p>And we successfully reconstructed our input interactions.</p>
+<h2 id="hard-exercises">Hard Exercises</h2>
+<h3 id="practice-h1">Practice H1</h3>
+<p><strong>Question:</strong> Return to the <code>data(tulips)</code> example in the chapter. Now include the bed variable as a predictor in the interaction model. Don’t interact bed with the other predictors; just include it as a main effect. Note that bed is categorical. So to use it properly, you will need to either construct dummy variables or rather an index variable, as explained in Chapter 6.</p>
+<p><strong>Answer:</strong></p>
+<pre><code class="language-r">## Data
+data(tulips)
+d &lt;- tulips
+d$bed_id &lt;- coerce_index(d$bed)
+d$blooms_std &lt;- d$blooms / max(d$blooms) # now on a scale from 0 to 1
+d$shade_cent &lt;- d$shade - mean(d$shade) # now on a scale from -1 to 1
+d$water_cent &lt;- d$water - mean(d$water) # now on a scale from -1 to 1
+## Model
+set.seed(20) # setting a seed because I sometimes run out of model iterations here
+m.H1 &lt;- quap(alist(
+  blooms ~ dnorm(mu, sigma),
+  mu &lt;- a[bed_id] + bW * water_cent + bS * shade_cent + bWS * water_cent * shade_cent,
+  a[bed_id] ~ dnorm(130, 100),
+  bW ~ dnorm(0, 100),
+  bS ~ dnorm(0, 100),
+  bWS ~ dnorm(0, 100),
+  sigma ~ dunif(0, 100)
+),
+data = d
+)
+precis(m.H1, depth = 2)
+</code></pre>
+<pre><code>##            mean        sd      5.5%     94.5%
+## a[1]   97.54986 12.951192  76.85135 118.24837
+## a[2]  142.41547 12.950773 121.71763 163.11330
+## a[3]  147.11128 12.950771 126.41344 167.80911
+## bW     75.12289  9.197989  60.42272  89.82305
+## bS    -41.23747  9.196690 -55.93555 -26.53938
+## bWS   -52.23345 11.240444 -70.19785 -34.26905
+## sigma  39.18206  5.333939  30.65740  47.70673
+</code></pre>
+<h3 id="practice-h2">Practice H2</h3>
+<p><strong>Question:</strong> Use WAIC to compare the model from H1 to a model that omits bed. What do you infer from this comparison? Can you reconcile the WAIC results with the posterior distribution of the bed coefficients?</p>
+<p><strong>Answer:</strong></p>
+<pre><code class="language-r">m.H2 &lt;- quap(
+  alist(
+    blooms ~ dnorm(mu, sigma),
+    mu &lt;- a + bW * water_cent + bS * shade_cent + bWS * water_cent * shade_cent,
+    a ~ dnorm(130, 100),
+    bW ~ dnorm(0, 100),
+    bS ~ dnorm(0, 100),
+    bWS ~ dnorm(0, 100),
+    sigma ~ dunif(0, 100)
+  ),
+  data = d,
+  start = list(a = mean(d$blooms), bW = 0, bS = 0, bWS = 0, sigma = sd(d$blooms))
+)
+precis(m.H2)
+</code></pre>
+<pre><code>##            mean        sd      5.5%     94.5%
+## a     129.00797  8.670771 115.15041 142.86554
+## bW     74.95946 10.601997  58.01542  91.90350
+## bS    -41.14054 10.600309 -58.08188 -24.19920
+## bWS   -51.87265 12.948117 -72.56625 -31.17906
+## sigma  45.22497  6.152982  35.39132  55.05863
+</code></pre>
+<pre><code class="language-r">compare(m.H1, m.H2)
+</code></pre>
+<pre><code>##          WAIC        SE    dWAIC      dSE     pWAIC    weight
+## m.H2 295.0441  9.873189 0.000000       NA  6.062662 0.6776652
+## m.H1 296.5302 10.544146 1.486126 8.181914 10.771689 0.3223348
+</code></pre>
+<p>The model including the bed index variables (<code>m.H2</code>) shows a slightly better WAIC than the model that contains the bed variable (<code>m.H1</code>), and most of the Akaike weight. Judging from this (and the variation in the bed intercepts of model <code>m.H1</code>), we can infer that there&rsquo;s a lot of variability between the flower beds which model <code>m.H1</code> addresses, but might overfit in doing so. Let me visualise this in a plot:</p>
+<pre><code class="language-r">post &lt;- extract.samples(m.H1)
+post.a &lt;- post$a[, 1]
+post.b &lt;- post$a[, 2]
+post.c &lt;- post$a[, 3]
+dens(post.a, col = &quot;red&quot;, xlim = c(50, 200), ylim = c(0, 0.035))
+dens(post.b, col = &quot;blue&quot;, add = TRUE)
+dens(post.c, col = &quot;black&quot;, add = TRUE)
+</code></pre>
+<p><img src="2021-02-18-statistical-rethinking-chapter-08_files/figure-html/unnamed-chunk-6-1.png" width="1440" /></p>
+<h3 id="practice-h3">Practice H3</h3>
+<p><strong>Question:</strong> Consider again the <code>data(rugged)</code> data on economic development and terrain ruggedness, examined in this chapter. One of the African countries in that example, Seychelles, is far outside the cloud of other nations, being a rare country with both relatively high GDP and high ruggedness. Seychelles is also unusual, in that it is a group of islands far from the coast of mainland Africa, and its main economic activity is tourism.</p>
+<p><strong>Answer:</strong></p>
+<pre><code class="language-r">data(rugged)
+d &lt;- rugged
+d &lt;- rugged[complete.cases(rugged$rgdppc_2000), ]
+d$log_gdp &lt;- log(d$rgdppc_2000)
+d$log_gdp_std &lt;- d$log_gdp / mean(d$log_gdp)
+d$rugged_std &lt;- d$rugged / max(d$rugged)
+d$cid &lt;- ifelse(d$cont_africa == 1, 1, 2)
+</code></pre>
+<h4 id="part-a">Part A</h4>
+<p><strong>Question:</strong> Focus on model m8.5 from the chapter. Use WAIC point-wise penalties and PSIS Pareto k values to measure relative influence of each country. By these criteria, is Seychelles influencing the results? Are there other nations that are relatively influential? If so, can you explain why?</p>
+<p><strong>Answer:</strong><br>
+Firstly, the model that the exercise is after is not model m8.5, but model m8.3. Let&rsquo;s run that and look at the PSIS point-wise values:</p>
+<pre><code class="language-r">m.H3a &lt;- quap(alist(
+  log_gdp_std ~ dnorm(mu, sigma),
+  mu &lt;- a[cid] + b[cid] * (rugged_std - 0.215),
+  a[cid] ~ dnorm(1, 0.1),
+  b[cid] ~ dnorm(0, 0.3),
+  sigma ~ dexp(1)
+),
+data = d
+)
+precis(m.H3a, depth = 2)
+</code></pre>
+<pre><code>##             mean          sd        5.5%       94.5%
+## a[1]   0.8865690 0.015675759  0.86151610  0.91162189
+## a[2]   1.0505745 0.009936639  1.03469382  1.06645515
+## b[1]   0.1325281 0.074204674  0.01393472  0.25112152
+## b[2]  -0.1425744 0.054749596 -0.23007484 -0.05507398
+## sigma  0.1094945 0.005935353  0.10000867  0.11898035
+</code></pre>
+<p>Next, we look at point-wise WAIC values. I think there&rsquo;s a pretty clear separation of high point-wise WAIC-values in the plot at around 1 so I draw that in and obtain the country names for these:</p>
+<pre><code class="language-r">WAIC &lt;- WAIC(m.H3a, pointwise = TRUE)
+plot(WAIC$WAIC)
+abline(h = 1, col = &quot;red&quot;)
+</code></pre>
+<p><img src="2021-02-18-statistical-rethinking-chapter-08_files/figure-html/unnamed-chunk-9-1.png" width="1440" /></p>
+<pre><code class="language-r">as.character(d[WAIC$WAIC &gt; 1, ]$country)
+</code></pre>
+<pre><code>## [1] &quot;Austria&quot;             &quot;Bangladesh&quot;          &quot;Switzerland&quot;         &quot;Equatorial Guinea&quot;   &quot;Luxembourg&quot;          &quot;Republic of Moldova&quot; &quot;Seychelles&quot;          &quot;Uzbekistan&quot;         
+## [9] &quot;Yemen&quot;
+</code></pre>
+<p>Now, we do the same with point-wise PSIS Pareto k values. Again, I believe there is a separation. This time at 0.35:</p>
+<pre><code class="language-r">PSIS &lt;- PSIS(m.H3a, pointwise = TRUE)
+plot(PSIS$k)
+abline(h = .35, col = &quot;red&quot;)
+</code></pre>
+<p><img src="2021-02-18-statistical-rethinking-chapter-08_files/figure-html/unnamed-chunk-10-1.png" width="1440" /></p>
+<pre><code class="language-r">as.character(d[PSIS$k &gt; .35, ]$country)
+</code></pre>
+<pre><code>## [1] &quot;Switzerland&quot; &quot;Lesotho&quot;     &quot;Seychelles&quot;
+</code></pre>
+<p>Honestly, I cannot make too much sense of the countries I obtained via the point-wise WAIC-values, but the point-wise PSIS Pareto k values make obvious sense here. All of these are extremely rugged and much richer than even their surrounding flat countries.</p>
+<h4 id="part-b">Part B</h4>
+<p><strong>Question:</strong> Now use robust regression, as described in the previous chapter. Modify m8.5 to use a Student-t distribution with $ν = 2$. Does this change the results in a substantial way?</p>
+<p><strong>Answer:</strong></p>
+<pre><code class="language-r">m.H3b &lt;- quap(alist(
+  log_gdp_std ~ dstudent(2, mu, sigma),
+  mu &lt;- a[cid] + b[cid] * (rugged_std - 0.215),
+  a[cid] ~ dnorm(1, 0.1),
+  b[cid] ~ dnorm(0, 0.3),
+  sigma ~ dexp(1)
+),
+data = d
+)
+precis(m.H3b, depth = 2)
+</code></pre>
+<pre><code>##              mean          sd         5.5%       94.5%
+## a[1]   0.86265354 0.016153871  0.836836529  0.88847054
+## a[2]   1.04573322 0.010971670  1.028198374  1.06326807
+## b[1]   0.11279640 0.075195199 -0.007380055  0.23297285
+## b[2]  -0.21362933 0.063538165 -0.315175587 -0.11208307
+## sigma  0.08452953 0.006732778  0.073769255  0.09528981
+</code></pre>
+<p>The parameter estimates changed slightly, but not crazily so. Let&rsquo;s look at the point-wise importance again. This time, I see a split in WAIC values around 2:</p>
+<pre><code class="language-r">WAIC &lt;- WAIC(m.H3b, pointwise = TRUE)
+plot(WAIC$WAIC)
+abline(h = 2, col = &quot;red&quot;)
+</code></pre>
+<p><img src="2021-02-18-statistical-rethinking-chapter-08_files/figure-html/unnamed-chunk-12-1.png" width="1440" /></p>
+<pre><code class="language-r">as.character(d[WAIC$WAIC &gt; 2, ]$country)
+</code></pre>
+<pre><code>## [1] &quot;Switzerland&quot;       &quot;Equatorial Guinea&quot;
+</code></pre>
+<p>Now for point-wise PSIS-values. This time, I see don&rsquo;t really a separation so I&rsquo;ll just pull out the highest ranking nations:</p>
+<pre><code class="language-r">PSIS &lt;- PSIS(m.H3b, pointwise = TRUE)
+plot(PSIS$k)
+</code></pre>
+<p><img src="2021-02-18-statistical-rethinking-chapter-08_files/figure-html/unnamed-chunk-13-1.png" width="1440" /></p>
+<pre><code class="language-r">as.character(d$country[as.numeric(rownames(PSIS[order(PSIS$k), ])[1:5])])
+</code></pre>
+<pre><code>## [1] &quot;Malawi&quot;    &quot;Ethiopia&quot;  &quot;Yemen&quot;     &quot;Singapore&quot; &quot;Burundi&quot;
+</code></pre>
+<p>Interestingly, only Switzerland shows up in our subset of potentially highly influential nations. That being said, the outliers in the WAIC and point-wise PSIS values are much closer to the main cloud of data points than they were previously. I expect this to be the effect of the ropbust regression.</p>
+<h3 id="practice-h4">Practice H4</h3>
+<p><strong>Question:</strong> The values in <code>data(nettle)</code> are data on language diversity in 74 nations. The meaning of each column is given below:</p>
+<ol>
+<li><code>country</code>: Name of the country</li>
+<li><code>num.lang</code>: Number of recognized languages spoken</li>
+<li><code>area</code>: Area in square kilometres</li>
+<li><code>k.pop</code>: Population, in thousands</li>
+<li><code>num.stations</code>: Number of weather stations that provided data for the next two columns</li>
+<li><code>mean.growing.season</code>: Average length of growing season, in months</li>
+<li><code>sd.growing.season</code>: Standard deviation of length of growing season, in months</li>
+</ol>
+<p>Use these data to evaluate the hypothesis that language diversity is partly a product of food security. The notion is that, in productive ecologies, people don’t need large social networks to buffer them against risk of food shortfalls. This means ethnic groups can be smaller and more self-sufficient, leading to more languages per capita. In contrast, in a poor ecology, there is more subsistence risk, and so human societies have adapted by building larger networks of mutual obligation to provide food insurance. This in turn creates social forces that help prevent languages from diversifying. Specifically, you will try to model the number of languages per capita as the outcome variable:</p>
+<pre><code class="language-r">d$lang.per.cap &lt;- d$num.lang / d$k.pop
+</code></pre>
+<p>Use the logarithm of this new variable as your regression outcome. (A count model would be better here, but you’ll learn those later, in Chapter 11.) This problem is open ended, allowing you to decide how you address the hypotheses and the uncertain advice the modelling provides. If you think you need to use WAIC any place, please do. If you think you need certain priors, argue for them. If you think you need to plot predictions in a certain way, please do. Just try to honestly evaluate the main effects of both <code>mean.growing.season</code> and <code>sd.growing.season</code>, as well as their two-way interaction, as outlined in parts (a), (b), and (c) below. If you are not sure which approach to use, try several.</p>
+<p><strong>Answer:</strong></p>
+<pre><code class="language-r">data(nettle)
+d &lt;- nettle
+d$lang.per.cap &lt;- d$num.lang / d$k.pop
+d$log_lpc &lt;- log(d$lang.per.cap)
+d$log_area &lt;- log(d$area)
+d$log_area.c &lt;- d$log_area - mean(d$log_area)
+d$mgs.c &lt;- d$mean.growing.season - mean(d$mean.growing.season)
+d$sgs.c &lt;- d$sd.growing.season - mean(d$sd.growing.season)
+</code></pre>
+<h4 id="part-a-1">Part A</h4>
+<p><strong>Question:</strong> Evaluate the hypothesis that language diversity, as measured by <code>log(lang.per.cap)</code>, is positively associated with the average length of the growing season, <code>mean.growing.season</code>. Consider <code>log(area)</code> in your regression(s) as a covariate (not an interaction). Interpret your results.</p>
+<p><strong>Answer:</strong> Let&rsquo;s start this off by building a model that attempts to identify the logarithmic language per capita as defined above (<code>log_lpc</code>). I use this as my response variable to smooth out the effects of highly multilingual communities which would otherwise look like freakish outliers:</p>
+<pre><code class="language-r">### Model
+m.H4a &lt;- quap(
+  alist(
+    log_lpc ~ dnorm(mu, sigma),
+    mu &lt;- a + bM * mean.growing.season + bA * log_area.c,
+    a ~ dnorm(mean(d$log_lpc), sd(d$log_lpc)),
+    bM ~ dnorm(0, 2),
+    bA ~ dnorm(0, 2),
+    sigma ~ dunif(0, 10)
+  ),
+  data = d
+)
+precis(m.H4a)
+</code></pre>
+<pre><code>##             mean         sd       5.5%        94.5%
+## a     -6.3965435 0.40827385 -7.0490440 -5.744043063
+## bM     0.1349813 0.05390024  0.0488383  0.221124289
+## bA    -0.2091213 0.13661084 -0.4274518  0.009209185
+## sigma  1.3894990 0.11424753  1.2069094  1.572088628
+</code></pre>
+<pre><code class="language-r">### Prediction plot
+mean.growing.season.seq &lt;- seq(from = min(d$mean.growing.season), to = max(d$mean.growing.season), length.out = 50)
+mu &lt;- link(m.H4a, data = data.frame(mean.growing.season = mean.growing.season.seq, log_area.c = 0), refresh = 0)
+mu.mean &lt;- apply(mu, 2, mean)
+mu.PI &lt;- apply(mu, 2, PI, prob = 0.97)
+plot(log_lpc ~ mean.growing.season, data = d, col = rangi2)
+lines(mean.growing.season.seq, mu.mean)
+shade(mu.PI, mean.growing.season.seq)
+</code></pre>
+<p><img src="2021-02-18-statistical-rethinking-chapter-08_files/figure-html/unnamed-chunk-16-1.png" width="1440" /></p>
+<p>As we can see, there&rsquo;s a positive linear relationship between <code>mean.growing.season</code> and number of languages spoken by a population while also conditioning on area of the nations in question. I highly doubt that there is any causality here, however and instead hypothesise that <code>mean.growing.season</code> can be used as a proxy for &ldquo;sunniness&rdquo; of a nation which, from anecdotal evidence, is much more appealing to immigration from all over the world than freezing countries with short growing seasons. To follow the rationale of the task however, this is evidence of ample food supply allowing for cultural diversity and thus higher language count.</p>
+<h4 id="part-b-1">Part B</h4>
+<p><strong>Question:</strong> Now evaluate the hypothesis that language diversity is negatively associated with the standard deviation of length of growing season, <code>sd.growing.season</code>. This hypothesis follows from uncertainty in harvest favouring social insurance through larger social networks and therefore fewer languages. Again, consider <code>log(area)</code> as a covariate (not an interaction). Interpret your results.</p>
+<p><strong>Answer:</strong></p>
+<pre><code class="language-r">### Model
+m.H4b &lt;- quap(
+  alist(
+    log_lpc ~ dnorm(mu, sigma),
+    mu &lt;- a + bS * sd.growing.season + bA * log_area.c,
+    a ~ dnorm(mean(d$log_lpc), sd(d$log_lpc)),
+    bS ~ dnorm(0, 5),
+    bA ~ dnorm(0, 5),
+    sigma ~ dunif(0, 10)
+  ),
+  data = d
+)
+precis(m.H4b)
+</code></pre>
+<pre><code>##             mean        sd       5.5%        94.5%
+## a     -5.1199557 0.3485729 -5.6770426 -4.562868804
+## bS    -0.2005191 0.1824921 -0.4921768  0.091138529
+## bA    -0.2433936 0.1552325 -0.4914852  0.004697949
+## sigma  1.4384790 0.1182463  1.2494986  1.627459505
+</code></pre>
+<pre><code class="language-r">### Prediction plot
+sd.growing.season.seq &lt;- seq(from = min(d$sd.growing.season), to = max(d$sd.growing.season), length.out = 50)
+mu &lt;- link(m.H4b, data = data.frame(sd.growing.season = sd.growing.season.seq, log_area.c = 0), refresh = 0)
+mu.mean &lt;- apply(mu, 2, mean)
+mu.PI &lt;- apply(mu, 2, PI, prob = 0.97)
+plot(log_lpc ~ sd.growing.season, data = d, col = rangi2)
+lines(sd.growing.season.seq, mu.mean)
+shade(mu.PI, sd.growing.season.seq)
+</code></pre>
+<p><img src="2021-02-18-statistical-rethinking-chapter-08_files/figure-html/unnamed-chunk-17-1.png" width="1440" /></p>
+<p>Again, I find myself agreeing with the hypothesis seeing how I have identified a negative relationship between <code>sd.growing.season</code> and language count.</p>
+<h4 id="part-c">Part C</h4>
+<p><strong>Question:</strong> Finally, evaluate the hypothesis that <code>mean.growing.season</code> and <code>sd.growing.season</code> interact to synergistically reduce language diversity. The idea is that, in nations with longer average growing seasons, high variance makes storage and redistribution even more important than it would be otherwise. That way, people can cooperate to preserve and protect windfalls to be used during the droughts. These forces in turn may lead to greater social integration and fewer languages.</p>
+<p><strong>Answer:</strong> Again, I build a model which conditions on centred logarithmic area of nations, while building an interaction between <code>mean.growing.season</code> and <code>sd.growing.season</code>:</p>
+<pre><code class="language-r">m.H4c &lt;- quap(
+  alist(
+    log_lpc ~ dnorm(mu, sigma),
+    mu &lt;- a +
+      bM * mean.growing.season +
+      bS * sd.growing.season +
+      bMS * mean.growing.season * sd.growing.season +
+      bA * log_area.c,
+    a ~ dnorm(mean(d$log_lpc), sd(d$log_lpc)),
+    bM ~ dnorm(0, 5),
+    bS ~ dnorm(0, 5),
+    bA ~ dnorm(0, 5),
+    bMS ~ dnorm(0, 5),
+    sigma ~ dunif(0, 10)
+  ),
+  data = d
+)
+precis(m.H4c)
+</code></pre>
+<pre><code>##               mean         sd       5.5%       94.5%
+## a     -6.771794698 0.55161186 -7.6533770 -5.89021241
+## bM     0.277261541 0.07288992  0.1607694  0.39375371
+## bS     0.327529661 0.37052336 -0.2646382  0.91969756
+## bA    -0.005517158 0.15891352 -0.2594917  0.24845734
+## bMS   -0.098088334 0.04565210 -0.1710492 -0.02512746
+## sigma  1.307674873 0.10763683  1.1356504  1.47969932
+</code></pre>
+<p>We seem to be quite sure of the interaction effect <code>bMS</code>.</p>
+<p>To investiagte the interaction of the two predictors we are interested in, let&rsquo;s produce a Tryptich each:</p>
+<pre><code class="language-r">par(mfrow = c(2, 3))
+# Discretize variables into groups
+d$mean.growing.season.group &lt;- cut(
+  d$mean.growing.season,
+  breaks = quantile(d$mean.growing.season, probs = c(0, 1 / 3, 2 / 3, 1)),
+  include.lowest = TRUE,
+  dig.lab = 2
+)
+d$sd.growing.season.group &lt;- cut(
+  d$sd.growing.season,
+  breaks = quantile(d$sd.growing.season, probs = c(0, 1 / 3, 2 / 3, 1)),
+  include.lowest = TRUE,
+  dig.lab = 2
+)
+# Plot first row as mean against SD
+mean.growing.season.seq &lt;- seq(from = min(d$mean.growing.season), to = max(d$mean.growing.season), length.out = 50)
+for (group in levels(d$sd.growing.season.group)) {
+  dt &lt;- d[d$sd.growing.season.group == group, ]
+  plot(log_lpc ~ mean.growing.season,
+    data = dt, col = rangi2, xlim = c(min(d$mean.growing.season), max(d$mean.growing.season)), ylim = c(min(d$log_lpc), max(d$log_lpc)),
+    main = paste(&quot;SD GS = &quot;, group), xlab = &quot;Mean GS&quot;
+  )
+  mu &lt;- link(m.H4c,
+    data = data.frame(mean.growing.season = mean.growing.season.seq, sd.growing.season = mean(dt$sd.growing.season), log_area.c = 0),
+    refresh = 0
+  )
+  mu.mean &lt;- apply(mu, 2, mean)
+  mu.PI &lt;- apply(mu, 2, PI, prob = 0.97)
+  lines(mean.growing.season.seq, mu.mean)
+  lines(mean.growing.season.seq, mu.PI[1, ], lty = 2)
+  lines(mean.growing.season.seq, mu.PI[2, ], lty = 2)
+}
+# Plot second row as SD against mean
+sd.growing.season.seq &lt;- seq(from = min(d$sd.growing.season), to = max(d$sd.growing.season), length.out = 50)
+for (group in levels(d$mean.growing.season.group)) {
+  dt &lt;- d[d$mean.growing.season.group == group, ]
+  plot(log_lpc ~ sgs.c,
+    data = dt, col = rangi2, xlim = c(min(d$sd.growing.season), max(d$sd.growing.season)), ylim = c(min(d$log_lpc), max(d$log_lpc)),
+    main = paste(&quot;Mean GS = &quot;, group), xlab = &quot;SD GS&quot;
+  )
+  mu &lt;- link(m.H4c,
+    data = data.frame(sd.growing.season = sd.growing.season.seq, mean.growing.season = mean(dt$mean.growing.season), log_area.c = 0),
+    refresh = 0
+  )
+  mu.mean &lt;- apply(mu, 2, mean)
+  mu.PI &lt;- apply(mu, 2, PI, prob = 0.97)
+  lines(sd.growing.season.seq, mu.mean)
+  lines(sd.growing.season.seq, mu.PI[1, ], lty = 2)
+  lines(sd.growing.season.seq, mu.PI[2, ], lty = 2)
+}
+</code></pre>
+<p><img src="2021-02-18-statistical-rethinking-chapter-08_files/figure-html/unnamed-chunk-19-1.png" width="1440" /></p>
+<p>These plots show that the association between mean length of growing season and language diversity is positive when SD length of growing season is low, but is basically zero when SD length of growing season is high. Similarly, the association between SD length of growing season and language diversity is basically zero when mean length of growing season is low, but is negative when mean length of growing season is high. This is consistent with the hypothesis presented in the question.</p>
+<h2 id="session-info">Session Info</h2>
+<pre><code class="language-r">sessionInfo()
+</code></pre>
+<pre><code>## R version 4.0.5 (2021-03-31)
+## Platform: x86_64-w64-mingw32/x64 (64-bit)
+## Running under: Windows 10 x64 (build 19043)
+## 
+## Matrix products: default
+## 
+## locale:
+## [1] LC_COLLATE=English_United Kingdom.1252  LC_CTYPE=English_United Kingdom.1252    LC_MONETARY=English_United Kingdom.1252 LC_NUMERIC=C                           
+## [5] LC_TIME=English_United Kingdom.1252    
+## 
+## attached base packages:
+## [1] parallel  stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+## [1] viridis_0.6.0        viridisLite_0.4.0    rethinking_2.13      rstan_2.21.2         ggplot2_3.3.6        StanHeaders_2.21.0-7
+## 
+## loaded via a namespace (and not attached):
+##  [1] Rcpp_1.0.7         mvtnorm_1.1-1      lattice_0.20-41    prettyunits_1.1.1  ps_1.6.0           assertthat_0.2.1   digest_0.6.27      utf8_1.2.1         V8_3.4.1           R6_2.5.0          
+## [11] backports_1.2.1    stats4_4.0.5       evaluate_0.14      coda_0.19-4        highr_0.9          blogdown_1.3       pillar_1.6.0       rlang_0.4.11       curl_4.3.2         callr_3.7.0       
+## [21] jquerylib_0.1.4    R.utils_2.10.1     R.oo_1.24.0        rmarkdown_2.7      styler_1.4.1       stringr_1.4.0      loo_2.4.1          munsell_0.5.0      compiler_4.0.5     xfun_0.22         
+## [31] pkgconfig_2.0.3    pkgbuild_1.2.0     shape_1.4.5        htmltools_0.5.1.1  tidyselect_1.1.0   tibble_3.1.1       gridExtra_2.3      bookdown_0.22      codetools_0.2-18   matrixStats_0.61.0
+## [41] fansi_0.4.2        crayon_1.4.1       dplyr_1.0.5        withr_2.4.2        MASS_7.3-53.1      R.methodsS3_1.8.1  grid_4.0.5         jsonlite_1.7.2     gtable_0.3.0       lifecycle_1.0.0   
+## [51] DBI_1.1.1          magrittr_2.0.1     scales_1.1.1       RcppParallel_5.1.2 cli_3.0.0          stringi_1.5.3      bslib_0.2.4        ellipsis_0.3.2     generics_0.1.0     vctrs_0.3.7       
+## [61] rematch2_2.1.2     tools_4.0.5        R.cache_0.14.0     glue_1.4.2         purrr_0.3.4        processx_3.5.1     yaml_2.2.1         inline_0.3.17      colorspace_2.0-0   knitr_1.33        
+## [71] sass_0.3.1
+</code></pre>
+
+          </div>
+
+          
+
+<div class="article-tags">
+  
+  <a class="badge badge-light" href="/tag/statistics/">Statistics</a>
+  
+  <a class="badge badge-light" href="/tag/bayes/">Bayes</a>
+  
+  <a class="badge badge-light" href="/tag/bayesian-statistics/">Bayesian Statistics</a>
+  
+  <a class="badge badge-light" href="/tag/au-bayes-study-group/">AU Bayes Study Group</a>
+  
+</div>
+
+
+
+          
+          <div class="article-widget">
+            
+<div class="post-nav">
+  
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">Previous</div>
+    <a href="/courses/rethinking/chapter-07/" rel="next">Chapter 07</a>
+  </div>
+  
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">Next</div>
+    <a href="/courses/rethinking/chapter-09/" rel="prev">Chapter 09</a>
+  </div>
+  
+</div>
+
+          </div>
+          
+        </div>
+
+        <div class="body-footer">
+          <p>Last updated on 2021-02-18</p>
+
+          
+
+
+
+
+
+          
+
+
+          
+
+
+  
+  
+  <div class="article-widget content-widget-hr">
+    <h3>Related</h3>
+    <ul>
+      
+      <li><a href="/courses/rethinking/chapter-16/">Chapter 16</a></li>
+      
+      <li><a href="/courses/rethinking/chapter-15/">Chapter 15</a></li>
+      
+      <li><a href="/courses/rethinking/chapter-14/">Chapter 14</a></li>
+      
+      <li><a href="/courses/rethinking/chapter-13/">Chapter 13</a></li>
+      
+      <li><a href="/courses/rethinking/chapter-12/">Chapter 12</a></li>
+      
+    </ul>
+  </div>
+  
+
+
+
+        </div>
+
+      </article>
+
+      <footer class="site-footer">
+  
+  <p class="powered-by">
+    
+      <a href="/privacy/">Privacy Policy</a>
+    
+    
+       &middot; 
+      <a href="/terms/">Terms</a>
+    
+  </p>
+  
+
+  <p class="powered-by">
+    © 2024
+  </p>
+
+  
+  
+
+
+
+
+
+
+  <p class="powered-by">
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+  </p>
+</footer>
+
+
+    </main>
+  </div>
+</div>
+
+
+      
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js" integrity="sha256-eOgo0OtLL4cdq7RdwRUiGKLX9XsIJ7nGhWEKbohmVAQ=" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/languages/r.min.js"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/languages/latex.min.js"></script>
+        
+      
+
+    
+
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.js" integrity="sha256-EErZamuLefUnbMBQbsEqu1USa+btR2oIlCpBJbyD4/g=" crossorigin="anonymous"></script>
+    
+
+    
+    
+    <script>const code_highlighting = true;</script>
+    
+
+    
+    
+    <script>const isSiteThemeDark = false;</script>
+    
+
+    
+    
+    
+    
+    
+    
+    <script>
+      const search_config = {"indexURI":"/index.json","minLength":1,"threshold":0.3};
+      const i18n = {"no_results":"No results found","placeholder":"Search...","results":"results found"};
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks",
+        'slides' : "Slides"
+        };
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.1/anchor.min.js" integrity="sha256-pB/deHc9CGfFpJRjC43imB29Rse8tak+5eXqntO94ck=" crossorigin="anonymous"></script>
+    <script>
+      anchors.add();
+    </script>
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+      <div class="search-hit-content">
+        <div class="search-hit-name">
+          <a href="{{relpermalink}}">{{title}}</a>
+          <div class="article-metadata search-hit-type">{{type}}</div>
+          <p class="search-hit-description">{{snippet}}</p>
+        </div>
+      </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="/js/academic.min.66c553246b0f279a03be6e5597f72b52.js"></script>
+
+    
+
+
+
+
+
+
+  
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

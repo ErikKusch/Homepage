@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Roberto Salguero-Gómez | Erik Kusch</title>
+    <link>https://www.erikkusch.com/author/roberto-salguero-gomez/</link>
+      <atom:link href="https://www.erikkusch.com/author/roberto-salguero-gomez/index.xml" rel="self" type="application/rss+xml" />
+    <description>Roberto Salguero-Gómez</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-gb</language><copyright>© 2024</copyright><lastBuildDate>Thu, 01 Jun 2023 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg</url>
+      <title>Roberto Salguero-Gómez</title>
+      <link>https://www.erikkusch.com/author/roberto-salguero-gomez/</link>
+    </image>
+    
+    <item>
+      <title>MOSAIC - A Unified Trait Database to Complement Structured Population Models</title>
+      <link>https://www.erikkusch.com/publication/mosaic-a-unified-trait-database-to-complement-structured-population-models/</link>
+      <pubDate>Thu, 01 Jun 2023 00:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/publication/mosaic-a-unified-trait-database-to-complement-structured-population-models/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>MOSAIC - A Unified Trait Database to Complement Structured Population Models</title>
+      <link>https://www.erikkusch.com/publication/in-review/mosaic-a-unified-trait-database-to-complement-structured-population-models/</link>
+      <pubDate>Mon, 14 Mar 2022 00:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/publication/in-review/mosaic-a-unified-trait-database-to-complement-structured-population-models/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Intrinsic vegetation memory as a proxy of engineering resilience may be an oversimplification.</title>
+      <link>https://www.erikkusch.com/talk/2020_06_isec_poster/</link>
+      <pubDate>Thu, 25 Jun 2020 11:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/talk/2020_06_isec_poster/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Identifying Ecological Memory Patterns in Drylands Using Remote Sensing and State-of-the-art Climate Reanalysis Products</title>
+      <link>https://www.erikkusch.com/talk/2010_09_isem_talk/</link>
+      <pubDate>Fri, 04 Oct 2019 13:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/talk/2010_09_isem_talk/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Intrinsic vegetation memory as a proxy of engineering resilience may be an oversimplification.</title>
+      <link>https://www.erikkusch.com/talk/2010_09_isem_poster/</link>
+      <pubDate>Thu, 03 Oct 2019 11:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/talk/2010_09_isem_poster/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Inferring Vegetation Memory from Remote Sensing Data using novel Climate Reconstruction Products</title>
+      <link>https://www.erikkusch.com/talk/2019_mscdefense/</link>
+      <pubDate>Fri, 05 Jul 2019 12:30:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/talk/2019_mscdefense/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

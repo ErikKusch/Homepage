@@ -1,0 +1,1155 @@
+<!DOCTYPE html><html lang="en-gb" >
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.8.0">
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Erik Kusch">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Preparing The Work Let&rsquo;s create our basic structure for this document:
+Head Not much has changed in the head when compared to our last exercise. We merely change the contents and and the edit tag, since the rest stays the same for the entire project.">
+
+  
+  <link rel="alternate" hreflang="en-gb" href="https://www.erikkusch.com/courses/bftp-biome-detection/change-analysis/">
+
+  
+
+
+  
+  
+  
+  <meta name="theme-color" content="#858383">
+  
+
+  
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-1/css/all.min.css" integrity="sha256-4w9DunooKSr3MFXHXWyFER38WmPdm361bQS/2KUWZbU=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.css" integrity="sha256-SHMGCYmST46SoyGgo4YR/9AlK1vf3ff84Aq9yK4hdqM=" crossorigin="anonymous">
+    
+
+    
+
+    
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.1.2/lazysizes.min.js" integrity="sha256-Md1qLToewPeKjfAHU1zyPwOutccPAm5tahnaw7Osw0A=" crossorigin="anonymous" async></script>
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+        
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+
+  
+
+  
+  
+  
+    
+      
+      
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cutive+Mono%7CLora:400,700%7CRoboto:400,700&display=swap">
+    
+  
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/academic.css">
+
+  
+
+
+
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-186216138-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+
+  function gtag() {
+      dataLayer.push(arguments);
+  }
+
+  function trackOutboundLink(url, target) {
+    gtag('event', 'click', {
+         'event_category': 'outbound',
+         'event_label': url,
+         'transport_type': 'beacon',
+         'event_callback': function () {
+           if (target !== '_blank') {
+             document.location = url;
+           }
+         }
+    });
+    console.debug("Outbound link clicked: " + url);
+  }
+
+  function onClickCallback(event) {
+    if ((event.target.tagName !== 'A') || (event.target.host === window.location.host)) {
+      return;
+    }
+    trackOutboundLink(event.target, event.target.getAttribute('target'));  
+  }
+
+  gtag('js', new Date());
+  gtag('config', 'UA-186216138-1', {});
+
+  
+  document.addEventListener('click', onClickCallback, false);
+</script>
+
+
+  
+
+
+  
+  
+
+  
+
+  <link rel="manifest" href="/index.webmanifest">
+  <link rel="icon" type="image/png" href="/images/icon_hu7658c99d512131214e4d6c003a3f85f7_112593_32x32_fill_lanczos_center_2.png">
+  <link rel="apple-touch-icon" type="image/png" href="/images/icon_hu7658c99d512131214e4d6c003a3f85f7_112593_192x192_fill_lanczos_center_2.png">
+
+  <link rel="canonical" href="https://www.erikkusch.com/courses/bftp-biome-detection/change-analysis/">
+
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  <meta property="twitter:card" content="summary_large_image">
+  
+  <meta property="twitter:site" content="@ErikKusch">
+  <meta property="twitter:creator" content="@ErikKusch">
+  
+  <meta property="og:site_name" content="Erik Kusch">
+  <meta property="og:url" content="https://www.erikkusch.com/courses/bftp-biome-detection/change-analysis/">
+  <meta property="og:title" content="Change Analysis | Erik Kusch">
+  <meta property="og:description" content="Preparing The Work Let&rsquo;s create our basic structure for this document:
+Head Not much has changed in the head when compared to our last exercise. We merely change the contents and and the edit tag, since the rest stays the same for the entire project."><meta property="og:image" content="https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg">
+  <meta property="twitter:image" content="https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg"><meta property="og:locale" content="en-gb">
+  
+    
+      <meta property="article:published_time" content="2020-06-10T00:00:00&#43;00:00">
+    
+    <meta property="article:modified_time" content="2020-06-10T00:00:00&#43;00:00">
+  
+
+  
+
+
+
+  
+
+
+  
+
+
+  
+
+
+
+
+
+  <title>Change Analysis | Erik Kusch</title>
+
+</head>
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search" class="form-control">
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+<nav class="navbar navbar-expand-lg navbar-light compensate-for-scrollbar" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="d-none d-lg-inline-flex">
+      <a class="navbar-brand" href="/"><img src="/images/logo_huab2266ff59bbac6a094b6da1268adcf9_208479_0x70_resize_lanczos_2.png" alt="Erik Kusch"></a>
+    </div>
+    
+
+    
+    <button type="button" class="navbar-toggler" data-toggle="collapse"
+            data-target="#navbar-content" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+    <span><i class="fas fa-bars"></i></span>
+    </button>
+    
+
+    
+    <div class="navbar-brand-mobile-wrapper d-inline-flex d-lg-none">
+      <a class="navbar-brand" href="/"><img src="/images/logo_huab2266ff59bbac6a094b6da1268adcf9_208479_0x70_resize_lanczos_2.png" alt="Erik Kusch"></a>
+    </div>
+    
+
+    
+    
+    <div class="navbar-collapse main-menu-item collapse justify-content-center" id="navbar-content">
+
+      
+      <ul class="navbar-nav d-md-inline-flex">
+        
+
+        
+
+        
+        
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link  active" href="/"><span>Home</span></a>
+        </li>
+
+        
+        
+
+        
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"><span>Courses & Workshops</span><span class="caret"></span>
+          </a>
+          <div class="dropdown-menu">
+            
+              <a class="dropdown-item" href="/courses/krigr/"><span>KrigR - State-of-the-Art Climate Data within R</span></a>
+            
+              <a class="dropdown-item" href="/courses/gbif/"><span>Accessing and Referencing GBIF Data for Research</span></a>
+            
+              <a class="dropdown-item" href="/courses/rethinking/"><span>Statistical Rethinking - Introduction to Bayesian Statistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/bayes-nets/"><span>Bayesian Networks - Causality through Bayesian Approaches</span></a>
+            
+              <a class="dropdown-item" href="/courses/biostat101/"><span>Biostats 101 - An Introduction to Biostatistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/excursions-into-biostatistics/"><span>Biostats 301 - Excursions into Biostatistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/bftp-biome-detection/"><span>BFTP - First Steps in Macroecology in R</span></a>
+            
+          </div>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#projects"><span>Projects</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#featured"><span>Publications</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#talks"><span>Talks</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/about"><span>Contact</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+            
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/media/CV_ErikKusch.html" target="_blank" rel="noopener"><span>CV</span></a>
+        </li>
+
+        
+        
+
+      
+
+        
+      </ul>
+    </div>
+
+    <ul class="nav-icons navbar-nav flex-row ml-auto d-flex pl-md-2">
+      
+      <li class="nav-item">
+        <a class="nav-link js-search" href="#" aria-label="Search"><i class="fas fa-search" aria-hidden="true"></i></a>
+      </li>
+      
+
+      
+      <li class="nav-item dropdown theme-dropdown">
+        <a href="#" class="nav-link js-theme-selector" data-toggle="dropdown" aria-haspopup="true">
+          <i class="fas fa-palette" aria-hidden="true"></i>
+        </a>
+        <div class="dropdown-menu">
+          <a href="#" class="dropdown-item js-set-theme-light">
+            <span>Light</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-dark">
+            <span>Dark</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-auto">
+            <span>Automatic</span>
+          </a>
+        </div>
+      </li>
+      
+
+      
+
+    </ul>
+
+  </div>
+</nav>
+
+
+  
+
+<div class="container-fluid docs">
+  <div class="row flex-xl-nowrap">
+    <div class="col-12 col-md-3 col-xl-2 docs-sidebar">
+      
+
+
+
+
+
+  
+    
+  
+
+
+
+
+<form class="docs-search d-flex align-items-center">
+  <button class="btn docs-toggle d-md-none p-0 mr-3" type="button" data-toggle="collapse" data-target="#docs-nav" aria-controls="docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    <span><i class="fas fa-bars"></i></span>
+  </button>
+
+  
+  <input name="q" type="search" class="form-control" placeholder="Search..." autocomplete="off">
+  
+</form>
+
+<nav class="collapse docs-links" id="docs-nav">
+  
+
+  
+  
+  
+  
+  <div class="docs-toc-item">
+    <a class="docs-toc-link" href="/courses/bftp-biome-detection/">Overview</a>
+
+  </div>
+  
+  <div class="docs-toc-item">
+    <a class="docs-toc-link" href="/courses/bftp-biome-detection/data-allocation/">Exercises</a>
+    <ul class="nav docs-sidenav">
+      
+      <li >
+        <a href="/courses/bftp-biome-detection/data-allocation/">1 - Data Allocation</a>
+      </li>
+      
+      <li >
+        <a href="/courses/bftp-biome-detection/cluster-analysis/">2 - Cluster Analysis</a>
+      </li>
+      
+      <li class="active">
+        <a href="/courses/bftp-biome-detection/change-analysis/">3 - Change Analysis</a>
+      </li>
+      
+    </ul>
+    
+
+  </div>
+  
+  
+</nav>
+
+    </div>
+
+    
+    <div class="d-none d-xl-block col-xl-2 docs-toc">
+      <ul class="nav toc-top">
+        <li><a href="#" id="back_to_top" class="docs-toc-title">Contents</a></li>
+      </ul>
+
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#preparing-the-work">Preparing The Work</a>
+      <ul>
+        <li><a href="#head">Head</a></li>
+        <li><a href="#preamble">Preamble</a></li>
+        <li><a href="#coding">Coding</a></li>
+      </ul>
+    </li>
+    <li><a href="#change-analysis">Change Analysis</a>
+      <ul>
+        <li><a href="#loading-data">Loading Data</a></li>
+        <li><a href="#predictions">Predictions</a></li>
+        <li><a href="#initial-assesment">Initial Assesment</a></li>
+        <li><a href="#in-depth-assesment">In-Depth Assesment</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+      
+    </div>
+    
+
+    <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 docs-content" role="main">
+
+      <article class="article">
+
+        <div class="docs-article-container">
+          <h1>Change Analysis</h1>
+
+          <div class="article-style">
+            <h2 id="preparing-the-work">Preparing The Work</h2>
+<p>Let&rsquo;s create our basic structure for this document:</p>
+<h3 id="head">Head</h3>
+<p>Not much has changed in the <strong>head</strong> when compared to our last exercise. We merely change the <em>contents</em> and and the <em>edit</em> tag, since the rest stays the same for the entire project.</p>
+<pre><code class="language-r"># ####################################################################### #
+# PROJECT: [BFTP] Identifying Biomes And Their Shifts Using Remote Sensing
+# CONTENTS: Functionality to identify and analyse changes in spatial cluster distributions
+# AUTHOR: Erik Kusch
+# EDIT: 19/03/20
+# ####################################################################### #
+</code></pre>
+<h3 id="preamble">Preamble</h3>
+<p>I am keeping the same <strong>preamble</strong> as last time because we will need to index the data and the plot directory in this exercise. Our preamble then looks like this:</p>
+<pre><code class="language-r">rm(list=ls()) # clearing the entire environment
+Dir.Base &lt;- getwd() # identifying the current directory
+Dir.Data &lt;- paste(Dir.Base, &quot;Data&quot;, sep=&quot;/&quot;) # generating the folder path for data folder
+Dir.Plots &lt;- paste(Dir.Base, &quot;Plots&quot;, sep=&quot;/&quot;) # generating the folder path for figures folder
+</code></pre>
+<p>Notice, that we do not call the function <code>dir.create()</code> this time. We don&rsquo;t need to do so, because we already created the two directories established above in our last exercise. Usually, we would create this entire analysis of your BFTP project in one <code>R</code> code script. In this case, we would only have one preamble which defines and creates directories instead of doing this step for every single sub-part of the analysis. Alas, we want to break this down for you. Therefore, you see this preamble here and will again in the next exercise.</p>
+<p>This time, we actually do load packages here as we really only need the <code>raster</code> package. By now, I am assuming you know what we use it for:</p>
+<pre><code class="language-r">library(raster) # the raster package for rasters
+</code></pre>
+<p>Additionally, we reload our <code>.RData</code> workspace from the last exercise to gain back our <code>mclust</code> model objects in particular.</p>
+<pre><code class="language-r">load(file = &quot;Workspace.RData&quot;) # load workspace
+</code></pre>
+<h3 id="coding">Coding</h3>
+<p>Again, all of the important <strong>Coding</strong> happens after the head and the preamble are written and run in <code>R</code>. Basically, this is the rest of this document once more.</p>
+<h2 id="change-analysis">Change Analysis</h2>
+<h3 id="loading-data">Loading Data</h3>
+<p>Firstly, we need the raw NDVI mean and seasonality data for the time frames we want to compare. Let&rsquo;s deal with that right quick.</p>
+<h4 id="1982">1982</h4>
+<p>Let&rsquo;s load our 1982 NDVI mean and seasonality data:</p>
+<pre><code class="language-r">Mean1982_ras &lt;- raster(paste(Dir.Data, &quot;1982Mean.nc&quot;, sep=&quot;/&quot;)) # loading means
+Season1982_ras &lt;- raster(paste(Dir.Data, &quot;1982Season.nc&quot;, sep=&quot;/&quot;)) # loading seasonalities
+All1982_ras &lt;- stack(Mean1982_ras, Season1982_ras) # creating a stack
+names(All1982_ras) &lt;- c(&quot;Mean&quot;, &quot;Seasonality&quot;) # assign names to stack layers
+Vals1982_mat &lt;- values(All1982_ras) # extract data
+rownames(Vals1982_mat) &lt;- 1:dim(Vals1982_mat)[1] # rownames to index raster cell number
+Vals1982_mat &lt;- na.omit(Vals1982_mat) # omit all rows which contain at least one NA record
+summary(Vals1982_mat) # a summary of the data
+</code></pre>
+<pre><code>##       Mean       Seasonality  
+##  Min.   :0.00   Min.   :0.00  
+##  1st Qu.:0.22   1st Qu.:0.55  
+##  Median :0.33   Median :0.67  
+##  Mean   :0.32   Mean   :0.64  
+##  3rd Qu.:0.41   3rd Qu.:0.76  
+##  Max.   :0.84   Max.   :1.00
+</code></pre>
+<h4 id="2015">2015</h4>
+<p>In order to assess how biome distributions have changed, we need another time frame to compare our 1982 data to. For this, I have re-run the code from our first BFTP exercise for the year 2015. We now load that data into <code>R</code>:</p>
+<pre><code class="language-r">Mean2015_ras &lt;- raster(paste(Dir.Data, &quot;2015Mean.nc&quot;, sep=&quot;/&quot;)) # loading means
+Season2015_ras &lt;- raster(paste(Dir.Data, &quot;2015Season.nc&quot;, sep=&quot;/&quot;)) # loading seasonalities
+All2015_ras &lt;- stack(Mean2015_ras, Season2015_ras) # creating a stack
+names(All2015_ras) &lt;- c(&quot;Mean&quot;, &quot;Seasonality&quot;) # assign names to stack layers
+Vals2015_mat &lt;- values(All2015_ras) # extract data
+rownames(Vals2015_mat) &lt;- 1:dim(Vals2015_mat)[1] # rownames to index raster cell number
+Vals2015_mat &lt;- na.omit(Vals2015_mat) # omit all rows which contain at least one NA record
+summary(Vals2015_mat) # a summary of the data
+</code></pre>
+<pre><code>##       Mean       Seasonality  
+##  Min.   :0.00   Min.   :0.00  
+##  1st Qu.:0.25   1st Qu.:0.56  
+##  Median :0.33   Median :0.67  
+##  Mean   :0.34   Mean   :0.64  
+##  3rd Qu.:0.43   3rd Qu.:0.77  
+##  Max.   :0.83   Max.   :1.00
+</code></pre>
+<p>Notice, that the output of the <code>summary()</code> function is different for both matrices built from raster data values. This is important to ensure that our analysis actually references different time frames.</p>
+<p>\newpage</p>
+<h3 id="predictions">Predictions</h3>
+<p>Secondly, we want to compare cluster assignments. To do so, we need to use our <code>mclust</code> models to predict cluster assignments for each cell in our target region raster using the NDVI mean and seasonality data that we loaded previously.</p>
+<h4 id="1982-1">1982</h4>
+<p>Let&rsquo;s deal with the 1982 data first. <code>mod2</code> is the <code>mclust</code> model object for 4 clusters from our last exercise. Here, we predict clusters and place them on a raster:</p>
+<pre><code class="language-r">ModPred1982 &lt;- predict.Mclust(mod2, Vals1982_mat) # prediction
+Pred1982_ras &lt;- Mean1982_ras # establishing a rediction raster
+values(Pred1982_ras) &lt;- NA # set everything to NA
+# set values of prediction raster to corresponding classification according to rowname
+values(Pred1982_ras)[as.numeric(rownames(Vals1982_mat))] &lt;- as.vector(ModPred1982$classification)
+colours &lt;- rainbow(mod2$G) # define 4 colours
+plot(Pred1982_ras, # what to plot
+     col = colours, # colours for groups
+     colNA = &quot;black&quot;, # which colour to assign to NA values
+     legend.shrink=1, # vertical size of legend
+     legend.width=2 # horizontal size of legend
+     )
+</code></pre>
+<p><img src="03---change_files/figure-html/Pred1-1.png" width="1152" /></p>
+<p>\newpage</p>
+<h4 id="2015-1">2015</h4>
+<p>Now, we deal with the 2015 time frame. Notice, that we are using the <code>mod2</code> <code>mclust</code> model which was established for 1982 in our last exercise. It is important that we use the same model when predicting our classes between time frames to ensure comparability. After all, we want to make sure that cluster 1 is the same in 1982 as 2015. It is debatable whether we should use a cluster model built from just one year of data or even from the same time frame as one of the the time frames which are to be compared. In fact, I would argue that we should establish a <code>mclust</code> model for the mean annual NDVI and mean annual seasonality of NDVI across the entire time for which data is available. For now, we simply use the 1982-reliant model:</p>
+<pre><code class="language-r">ModPred2015 &lt;- predict.Mclust(mod2, Vals2015_mat) # prediction
+Pred2015_ras &lt;- Mean2015_ras # establishing a rediction raster
+values(Pred2015_ras) &lt;- NA # set everything to NA
+# set values of prediction raster to corresponding classification according to rowname
+values(Pred2015_ras)[as.numeric(rownames(Vals2015_mat))] &lt;- as.vector(ModPred2015$classification)
+colours &lt;- rainbow(mod2$G) # define 4 colours
+plot(Pred2015_ras, # what to plot
+     col = colours, # colours for groups
+     colNA = &quot;black&quot;, # which colour to assign to NA values
+     legend.shrink=1, # vertical size of legend
+     legend.width=2 # horizontal size of legend
+     )
+</code></pre>
+<p><img src="03---change_files/figure-html/Pred2-1.png" width="1152" /></p>
+<p>You can already see some cluster assignment changes on Nunivak island.</p>
+<p>\newpage</p>
+<h3 id="initial-assesment">Initial Assesment</h3>
+<p>Let&rsquo;s first assess how many raster cells have changed cluster assignment between our two time frames:</p>
+<pre><code class="language-r"># identify how many cell assignments don't match between rasters
+Change &lt;- sum(ModPred1982$classification != ModPred2015$classification)
+# divide number of mismatches by number of all cells
+Change/length(ModPred2015$classification)
+</code></pre>
+<pre><code>## [1] 0.22
+</code></pre>
+<p>As you can see, there is a proportion of 0.22 raster cells which have changed cluster assignment between the two time frames. Now, let&rsquo;s put this on a map:</p>
+<pre><code class="language-r">PredChange_ras &lt;- Mean2015_ras # establishing a rediction raster
+values(PredChange_ras) &lt;- NA # set everything to NA
+# set values of prediction raster to corresponding classification according to rowname
+values(PredChange_ras)[as.numeric(rownames(Vals2015_mat))] &lt;- 
+  ModPred1982$classification != ModPred2015$classification
+colours &lt;- c(&quot;green&quot;, &quot;red&quot;) # define 2 colours
+plot(PredChange_ras, col = colours, colNA = &quot;black&quot;,
+     legend.shrink=1, legend.width=2)
+</code></pre>
+<p><img src="03---change_files/figure-html/qualb-1.png" width="1152" /></p>
+<p>I leave it to you to interpret these patterns (there actually is an interpretation to be had here).</p>
+<p>\newpage</p>
+<h3 id="in-depth-assesment">In-Depth Assesment</h3>
+<p>I&rsquo;d argue that a simple understanding whether things have changed won&rsquo;t be what we want to report. What we want, is to know which cluster took over the cells of which raster. I.e., I&rsquo;d like to answer the question: &ldquo;Which clusters take over the regions of other clusters and which ones?&rdquo;. I hope you&rsquo;re interested in this, too. Here&rsquo;s how we can analyse this: For each cluster assignment we:</p>
+<ul>
+<li>Identify the cells corresponding to it in 1982/the past</li>
+<li>Count how many of these cells are classified as the same cluster in 2015/the present</li>
+<li>Repeat the above for all combinations of cluster assignments imaginable</li>
+</ul>
+<pre><code class="language-r">NClusters &lt;- mod2$G # identify the number of clusters
+present &lt;- as.vector(Pred2015_ras) # assignments in 2015
+past &lt;- as.vector(Pred1982_ras) # assignments in 1982
+# this matrix will hold the data, rows will show past state, columns will show present state
+changematrix &lt;- matrix(rep(NA, NClusters^2), nrow=NClusters, ncol=NClusters)
+changevec &lt;- rep(NA, NClusters) # this vector will fill rows in our matrix
+for(k in 1:NClusters){ # loop over clusters in past
+  changerun &lt;- changevec 
+  changeperc &lt;- changevec
+  for(m in 1:NClusters){ # loop over clusters in present
+    presentcells &lt;- which(present==m) # figure out which cells hold value m
+    pastcells &lt;- which(past==k) # figure out which cells hold value k
+    # figure out how many of the cell denominators are shared by the two vectors
+    rate &lt;- length(Reduce(intersect, list(pastcells,presentcells))) 
+    changerun[m] &lt;- rate # save rate to changerun in place m
+  } # end of present-loop
+  changematrix[k,] &lt;- changerun # save changerun to k row in matrix
+  for(n in 1:NClusters){ # turn rates into portions
+    # divide number of in a cell by total number of cells in its row
+    changeperc[n] &lt;- changematrix[k,n] / sum(changematrix[k,])
+  } # end of percentages
+  changematrix[k,] &lt;- changeperc # save changeperc to row k
+} # end of past-loop
+changematrix &lt;- changematrix*100 # turn everything into percentages
+rownames(changematrix) &lt;- paste0(&quot;Past&quot;, 1:NClusters)
+colnames(changematrix) &lt;- paste0(&quot;Present&quot;, 1:NClusters)
+changematrix # show the matrix
+</code></pre>
+<pre><code>##       Present1 Present2 Present3 Present4
+## Past1     82.0     0.84    4.459       13
+## Past2      3.5    60.35    0.074       36
+## Past3     23.8     0.00   76.235        0
+## Past4     16.9     3.01    0.029       80
+</code></pre>
+<p>As you can see, there&rsquo;s quite a bit going on here. Let me explain how to read this. From past (1982) to present (2015), 82.03% of raster cells assigned to cluster 1 in 1982 are assigned to cluster 1 in 2015 as well. 0.84% of raster cells previously assigned to cluster 1 are classified as cluster 2 in 2015. Notice, how all rows sum up to 100% each. Representing the total of assigned raster cells in the 1982 record.</p>
+<p>Given the biological counterparts of the clusters, how would you interpret these shifts?</p>
+
+          </div>
+
+          
+
+<div class="article-tags">
+  
+  <a class="badge badge-light" href="/tag/r/">R</a>
+  
+  <a class="badge badge-light" href="/tag/statistics/">Statistics</a>
+  
+  <a class="badge badge-light" href="/tag/remote-sensing/">Remote Sensing</a>
+  
+</div>
+
+
+
+          
+          <div class="article-widget">
+            
+<div class="post-nav">
+  
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">Previous</div>
+    <a href="/courses/bftp-biome-detection/cluster-analysis/" rel="next">Cluster Analysis</a>
+  </div>
+  
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">Next</div>
+    <a href="/courses/bftp-biome-detection/" rel="prev">BFTP - Biome Detection through Remote Sensing</a>
+  </div>
+  
+</div>
+
+          </div>
+          
+        </div>
+
+        <div class="body-footer">
+          <p>Last updated on 2020-06-10</p>
+
+          
+
+
+
+
+
+          
+
+
+          
+
+
+  
+  
+  <div class="article-widget content-widget-hr">
+    <h3>Related</h3>
+    <ul>
+      
+      <li><a href="/courses/bftp-biome-detection/data-allocation/"></a></li>
+      
+      <li><a href="/courses/bftp-biome-detection/cluster-analysis/">Cluster Analysis</a></li>
+      
+      <li><a href="/courses/excursions-into-biostatistics/classifications-order-from-chaos/">Classifications</a></li>
+      
+      <li><a href="/courses/excursions-into-biostatistics/data-handling-and-data-assumptions/">Data Handling and Data Assumptions</a></li>
+      
+      <li><a href="/courses/excursions-into-biostatistics/excursion-into-biostatistics/">Model Selection</a></li>
+      
+    </ul>
+  </div>
+  
+
+
+
+        </div>
+
+      </article>
+
+      <footer class="site-footer">
+  
+  <p class="powered-by">
+    
+      <a href="/privacy/">Privacy Policy</a>
+    
+    
+       &middot; 
+      <a href="/terms/">Terms</a>
+    
+  </p>
+  
+
+  <p class="powered-by">
+    © 2024
+  </p>
+
+  
+  
+
+
+
+
+
+
+  <p class="powered-by">
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+  </p>
+</footer>
+
+
+    </main>
+  </div>
+</div>
+
+
+      
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js" integrity="sha256-eOgo0OtLL4cdq7RdwRUiGKLX9XsIJ7nGhWEKbohmVAQ=" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/languages/r.min.js"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/languages/latex.min.js"></script>
+        
+      
+
+    
+
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.js" integrity="sha256-EErZamuLefUnbMBQbsEqu1USa+btR2oIlCpBJbyD4/g=" crossorigin="anonymous"></script>
+    
+
+    
+    
+    <script>const code_highlighting = true;</script>
+    
+
+    
+    
+    <script>const isSiteThemeDark = false;</script>
+    
+
+    
+    
+    
+    
+    
+    
+    <script>
+      const search_config = {"indexURI":"/index.json","minLength":1,"threshold":0.3};
+      const i18n = {"no_results":"No results found","placeholder":"Search...","results":"results found"};
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks",
+        'slides' : "Slides"
+        };
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.1/anchor.min.js" integrity="sha256-pB/deHc9CGfFpJRjC43imB29Rse8tak+5eXqntO94ck=" crossorigin="anonymous"></script>
+    <script>
+      anchors.add();
+    </script>
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+      <div class="search-hit-content">
+        <div class="search-hit-name">
+          <a href="{{relpermalink}}">{{title}}</a>
+          <div class="article-metadata search-hit-type">{{type}}</div>
+          <p class="search-hit-description">{{snippet}}</p>
+        </div>
+      </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="/js/academic.min.66c553246b0f279a03be6e5597f72b52.js"></script>
+
+    
+
+
+
+
+
+
+  
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

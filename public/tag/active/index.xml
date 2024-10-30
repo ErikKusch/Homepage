@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Active | Erik Kusch</title>
+    <link>https://www.erikkusch.com/tag/active/</link>
+      <atom:link href="https://www.erikkusch.com/tag/active/index.xml" rel="self" type="application/rss+xml" />
+    <description>Active</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-gb</language><copyright>© 2024</copyright><lastBuildDate>Thu, 17 Aug 2023 14:00:00 +0000</lastBuildDate>
+    <image>
+      <url>https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg</url>
+      <title>Active</title>
+      <link>https://www.erikkusch.com/tag/active/</link>
+    </image>
+    
+    <item>
+      <title>Integrating Ecological Networks in Macroecological Research - Enhancing Projections of Biodiversity in the Anthropocene</title>
+      <link>https://www.erikkusch.com/talk/2023_08_tangledbank/</link>
+      <pubDate>Thu, 17 Aug 2023 14:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/talk/2023_08_tangledbank/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Biodiversity Digitial Twin (BioDT)</title>
+      <link>https://www.erikkusch.com/project/biodt/</link>
+      <pubDate>Sat, 04 Mar 2023 00:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/project/biodt/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>A Macroecological Perspective to Ecological Networks</title>
+      <link>https://www.erikkusch.com/project/phd-packages/</link>
+      <pubDate>Mon, 28 Dec 2020 00:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/project/phd-packages/</guid>
+      <description>&lt;p&gt;My PhD project was a part of the greater 
+&lt;a href=&#34;https://www.erikkusch.com/project/biorates/&#34;&gt;BIORATES&lt;/a&gt; project.&lt;/p&gt;
+&lt;h1 id=&#34;motivation&#34;&gt;Motivation&lt;/h1&gt;
+&lt;p&gt;Species rarely occur in isolation. Instead, they assemble into multi-species communities wherein individuals interact within and across species groups. These pairwise species interactions affect responses of biological communities to environmental conditions and perturbations. To understand and forecast changes within the Ecosphere, it is thus vital to quantify such interactions and explore their implications. Changes in pairwise species interactions are largely spurred by processes of the Anthropocene (e.g., changes in temperature, habitat availability). These affect entire ecosystems simultaneously thus necessitating the exploration of biological interactions at macroecological scales. Despite the complexity of biological interactions and the networks they form at macroecological scales, their study can be carried out readily via ecological networks.&lt;/p&gt;
+&lt;p&gt;Here, I develop methodology and carry out analyses to address (1) the failure of contemporary macroecological research to incorporate state-of-the-art climate data by updating macroecological research practices, (2) the implications of mechanisms of extinction cascades within ecological networks with respect to interaction magnitude and potential/realised interactions thus using ecological networks as forecast tools, and finally (3) the lack of ecological network quantification at macroecological scales by inferring biological interactions from proxies.&lt;/p&gt;
+&lt;h1 id=&#34;work-packages&#34;&gt;Work Packages&lt;/h1&gt;
+&lt;h2 id=&#34;chapter-1---updating-macroecological-research-practices&#34;&gt;Chapter 1 - Updating Macroecological Research Practices&lt;/h2&gt;
+&lt;p&gt;Environmental conditions which regulate species distributions determine whether pairwise biological interactions can be realised (i.e., species which do not coincide cannot directly interact). Furthermore, changes in abiotic conditions alter the expression of realised interactions. Therefore, it is crucial to explicitly consider environmental conditions when quantifying and forecasting biological interactions, particularly at macroecological scales which are characterized by prominent environmental heterogeneity (e.g. thermal gradients). However, macroecological research, at present, does not leverage the most recent and accurate climate data products available. Therefore, we require changes to macroecological research practices to integrate state-of-the-art climate data.&lt;/p&gt;
+&lt;p&gt;To resolve this issue, I have developed the &lt;code&gt;KrigR&lt;/code&gt; &lt;code&gt;R&lt;/code&gt; package which provides an easy-to-use and highly flexible infrastructure for access, temporal aggregation, spatial limitation, and statistical downloading of state of the art climate data from ECMWF. The resulting data products outperform legacy data products commonly used in macroecological research in (1) temporal resolution, (2) data accuracy, (3) provisioning of climate variables, (4) flexibility, and (5) applicability to specific research requirements.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;1.png&#34; alt=&#34;CH1 - Macroecological Climate Data Practices&#34;&gt;&lt;/p&gt;
+&lt;p&gt;This work has been published in 
+&lt;a href=&#34;https://www.erikkusch.com/publication/krigr-a-tool-for-statistically-downscaling-climate-reanalysis-data-for-ecological-applications/&#34;&gt;Kusch &amp;amp; Davy, 2022&lt;/a&gt; and 
+&lt;a href=&#34;https://www.erikkusch.com/publication/reconciling-high-resolution-climate-datasets-using-krigr/&#34;&gt;Davy &amp;amp; Kusch, 2021&lt;/a&gt;. Due to the ongoing development of &lt;code&gt;KrigR&lt;/code&gt;, I have transferred any ongoing work on these issues to the 
+&lt;a href=&#34;https://www.erikkusch.com/project/krigr/&#34;&gt;&lt;code&gt;KrigR&lt;/code&gt; project&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;chapter-2---using-ecological-networks-as-forecast-tools&#34;&gt;Chapter 2 - Using Ecological Networks as Forecast Tools&lt;/h2&gt;
+&lt;p&gt;Biological interactions range in identity (i.e, present, absent), sign (i.e., positive and negative), and magnitude which determine the importance of an interaction for the persistence of interacting species and entire communities. This impact manifests especially through extinction cascades which exacerbate the biodiversity loss and change of network topologies spurred by Anthropogenic impacts. Such cascades are characterized by the loss of biological interactions following the extinction of a species leading to additional species extinctions. Thus, to forecast future community structures and quantify risk to ecosystem stability and functioning, it is vital to consider both the potential for and sign as well as magnitude of species interactions. Flexible and easy-to-use methodology for this purpose is currently lacking. Consequently, exploration of extinction cascades has remained simplistic and ought to be updated to facilitate the exploration of realistic future scenarios of the Ecosphere.&lt;/p&gt;
+&lt;p&gt;In addressing this knowledge gap, I have co-developed the &lt;code&gt;NetworkExtinction&lt;/code&gt; &lt;code&gt;R&lt;/code&gt; package which enables simulations of extinction cascades within trophic as well as mutualistic networks with varying levels of link-importance and realisation of potential interactions. Using this tool, I subsequently explore network resilience landscapes defined by link-loss sensitivity and rewiring probability thresholds for a collection of empirical mutualistic networks across the Earth.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;2.png&#34; alt=&#34;CH2 - Ecological Networks as Forecasting Tools&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;NetworkExtinction&lt;/code&gt; package has been published as 
+&lt;a href=&#34;https://www.erikkusch.com/publication/networkextinction-an-r-package-to-simulate-extinctions-propagation-and-rewiring-potential-in-ecological-networks/&#34;&gt;Ávila-Thieme &amp;amp; Kusch et. al, 2023&lt;/a&gt; while the exploration of mutualistic network resilience landscapes (
+&lt;a href=&#34;https://www.erikkusch.com/publication/ecological-network-resilience-extinction-proxies-updating-projections-of-ecological-networks/&#34;&gt;Kusch, Ordonez&lt;/a&gt;) is currently being prepared for submission.&lt;/p&gt;
+&lt;h2 id=&#34;chapter-3---inferring-biological-interactions-from-proxies&#34;&gt;Chapter 3 - Inferring Biological Interactions from Proxies&lt;/h2&gt;
+&lt;p&gt;Ecological networks are affected by the scales (e.g., local, regional, and continental) at which they are represented. Thus, locally quantified biological interactions cannot be used reliably to represent macroecological processes. However, sourcing networks at macroecological scales via traditional in-situ observations is prohibitively labour-intensive thus requiring the inference of biological interactions from macroecological proxies. However, the accuracy of already established biological interaction inference approaches remains understudied, calling into question their utility. Therefore, consistency and performance of interaction inference ought to be evaluated for use at macroecological scales.&lt;/p&gt;
+&lt;p&gt;Within this final chapter of my PhD, I assess the consistency of four different interaction inference approaches (COOCCUR, NETASSOC, HMSC, and NDD-RIM) across ecologically relevant skills. Finding little consistency between the inferred ecological networks, I subsequently develop a demographic simulation framework of populations of interacting species across time and space and establish guidelines for assessment of ecological network inference performance.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;3.png&#34; alt=&#34;CH3 - Ecological Network Inference&#34;&gt;&lt;/p&gt;
+&lt;p&gt;While the study of inference consistency is already submitted for review as 
+&lt;a href=&#34;https://www.erikkusch.com/publication/ecological-network-inference-is-not-consistent-across-sales-or-approaches/&#34;&gt;Kusch et. al, 2023&lt;/a&gt;, a publication of 
+&lt;a href=&#34;https://www.erikkusch.com/publication/a-novel-simulation-framework-for-validation-of-ecological-network-inference/&#34;&gt;Kusch &amp;amp; Vinton&lt;/a&gt; is to follow presenting the simulation framework.&lt;/p&gt;
+&lt;h1 id=&#34;implications&#34;&gt;Implications&lt;/h1&gt;
+&lt;p&gt;To ensure ecosystem management and conservation efforts are targeted appropriately under climate change, my work highlights that macroecological research practices ought to undergo a paradigm shift away from one-size-fits-all climate datasets towards reproducible and flexible data workflows for generation of climate datasets with respect to specific study purposes and requirements. Additionally, my explicit integration of ecological network resilience mechanisms towards extinction cascades reveals that contemporary approaches are likely overly optimistic in their projections of biodiversity loss throughout the Anthropocene. Lastly, I caution against naive use of ecological network inference within macroecological research. Instead, to render knowledge of ecological networks at macroecological scales, I argue that extensive assessments of network inference performance are required for which I present important groundwork.&lt;/p&gt;
+&lt;p&gt;Ultimately, my dissertation represents a key advancement of use-cases of ecological networks at macroecological scales. Thus, adopting the novel methodology I have developed for macroecological use and inference of ecological networks is pressing in order to ensure adequate ecosystem management throughout the Anthropocene.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>KrigR - Downloading and Downscaling of ERA5(-Land) data using R</title>
+      <link>https://www.erikkusch.com/project/krigr/</link>
+      <pubDate>Mon, 28 Dec 2020 00:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/project/krigr/</guid>
+      <description>&lt;div class=&#34;alert alert-danger&#34;&gt;
+  &lt;div&gt;
+    I am continuing to develop &lt;code&gt;KrigR&lt;/code&gt;, add to its functionality, and broaden its scope. For any suggestions of development goals, novel functionality as well as any issues you might face with &lt;code&gt;KrigR&lt;/code&gt;, please register an issue on &lt;a href=&#34;https://github.com/ErikKusch/KrigR/issues&#34; target=&#34;_blank&#34;&gt;GitHub&lt;/a&gt;. where I track these issues. Please refrain from inquiries via direct E-mail.
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;h1 id=&#34;motivation&#34;&gt;Motivation&lt;/h1&gt;
+&lt;p&gt;Contemporary studies of remote sensing and macroecology largely rely on legacy climate data which is surpassed by state-of-the-art climate reanalysis data sets such as the European Centre for Medium-range Weather Forecasts ReAnalysis 5 (ERA5) data catalogue which represents the forefront of advances in data assimilation and climate modelling.&lt;/p&gt;
+&lt;p&gt;Using these data sets within &lt;code&gt;R&lt;/code&gt; – the most prominent statistical software in macroecology – is a complicated task that involves downloading of data via shell scripts, reformatting of coordinate system, and might even require rescaling of the climate data.&lt;/p&gt;
+&lt;p&gt;In order to make the use of ERA5(-Land) in future analyses more streamlined, I am developing an &lt;code&gt;R&lt;/code&gt; Package (&lt;code&gt;KrigR&lt;/code&gt;) which will handle downloading and reformatting of ERA5(-Land) data. Furthermore, this package offers rescaling capabilities via the Kriging functionality of the &lt;code&gt;automap&lt;/code&gt; package whilst enabling multi-core processing for faster computation of time-series data.&lt;/p&gt;
+&lt;h1 id=&#34;description&#34;&gt;Description&lt;/h1&gt;
+&lt;p&gt;The superiority of ERA5(-Land) data over legacy data sets is largely due to:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;The volume of observational data used to create the ERA5 product. This includes a large volume of satellite data, ground-based weather station/independent institute data collection efforts, and other station data from a wide variety of data providers. This is in contrast to gridded observational datasets which are often characterised by their individual biases in sampling, coverage, and choice of interpolation and homogenization to create a gridded product.&lt;/li&gt;
+&lt;li&gt;The advances in data assimilation procedures. Data assimilation for geophysical application has greatly developed as a field in recent decades. This has included fundamental methodological advancements, such as the development of the ensemble Kalman filter, as well developments specific to geophysical application of data assimilation, such as approaches to localisation.&lt;/li&gt;
+&lt;li&gt;The complexity of the underlying models. Reanalysis products have been widely used to shed light on physical processes. ERA5 was created using the ECMWF’s integrated forecasting system which is the world’s best forecast model and is continuously developed using the latest understanding of the physics of the climate system.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;code&gt;KrigR&lt;/code&gt; is a tool to streamline and standardise the implementation of state-of-the-art ERA5(-Land) data and time series in large-scale analyses. As such, the &lt;code&gt;R&lt;/code&gt; Package includes the following functionality:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Download functions for:
+&lt;ul&gt;
+&lt;li&gt;ERA5(-Land) data&lt;/li&gt;
+&lt;li&gt;GMTED2010 covariate data (kriging will not be limited to GMTED2010 alone)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Preprocessing of ERA5(-Land) data&lt;/li&gt;
+&lt;li&gt;Statistical downscaling of ERA5(-Land) data using kriging methodology&lt;/li&gt;
+&lt;li&gt;Selection of regions by shapefiles or extents&lt;/li&gt;
+&lt;li&gt;Variable list with guidelines for statistical downscaling (this is currently being developed)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;KrigR&lt;/code&gt; downloads ERA5(-Land) upon having been provided with the required ECMWF API key and includes several self-checking statements to avoid the most common issues with the kriging methodology.&lt;/p&gt;
+&lt;p&gt;Users are be able to start the process of the &lt;code&gt;KrigR&lt;/code&gt; workflow at any given function of the package, but it is recommended to let &lt;code&gt;KrigR&lt;/code&gt; handle the entire workflow as intended.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

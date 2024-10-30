@@ -1,0 +1,1355 @@
+<!DOCTYPE html><html lang="en-gb" >
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.8.0">
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Erik Kusch">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Welcome to our fifth practical experience in R. Throughout the following notes, I will introduce you to a couple statistical approaches for metric or ordinal data when wanting to compare more than two samples/populations that might be useful to you and are, to varying degrees, often used in biology. To do so, I will enlist the sparrow data set we handled in our first exercise.">
+
+  
+  <link rel="alternate" hreflang="en-gb" href="https://www.erikkusch.com/courses/an-introduction-to-biostatistics/ordinal-metric-tests-more-than-two-sample-situations/">
+
+  
+
+
+  
+  
+  
+  <meta name="theme-color" content="#858383">
+  
+
+  
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-1/css/all.min.css" integrity="sha256-4w9DunooKSr3MFXHXWyFER38WmPdm361bQS/2KUWZbU=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.css" integrity="sha256-SHMGCYmST46SoyGgo4YR/9AlK1vf3ff84Aq9yK4hdqM=" crossorigin="anonymous">
+    
+
+    
+
+    
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.1.2/lazysizes.min.js" integrity="sha256-Md1qLToewPeKjfAHU1zyPwOutccPAm5tahnaw7Osw0A=" crossorigin="anonymous" async></script>
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+        
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+
+  
+
+  
+  
+  
+    
+      
+      
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cutive+Mono%7CLora:400,700%7CRoboto:400,700&display=swap">
+    
+  
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/academic.css">
+
+  
+
+
+
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-186216138-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+
+  function gtag() {
+      dataLayer.push(arguments);
+  }
+
+  function trackOutboundLink(url, target) {
+    gtag('event', 'click', {
+         'event_category': 'outbound',
+         'event_label': url,
+         'transport_type': 'beacon',
+         'event_callback': function () {
+           if (target !== '_blank') {
+             document.location = url;
+           }
+         }
+    });
+    console.debug("Outbound link clicked: " + url);
+  }
+
+  function onClickCallback(event) {
+    if ((event.target.tagName !== 'A') || (event.target.host === window.location.host)) {
+      return;
+    }
+    trackOutboundLink(event.target, event.target.getAttribute('target'));  
+  }
+
+  gtag('js', new Date());
+  gtag('config', 'UA-186216138-1', {});
+
+  
+  document.addEventListener('click', onClickCallback, false);
+</script>
+
+
+  
+
+
+  
+  
+
+  
+
+  <link rel="manifest" href="/index.webmanifest">
+  <link rel="icon" type="image/png" href="/images/icon_hu7658c99d512131214e4d6c003a3f85f7_112593_32x32_fill_lanczos_center_2.png">
+  <link rel="apple-touch-icon" type="image/png" href="/images/icon_hu7658c99d512131214e4d6c003a3f85f7_112593_192x192_fill_lanczos_center_2.png">
+
+  <link rel="canonical" href="https://www.erikkusch.com/courses/an-introduction-to-biostatistics/ordinal-metric-tests-more-than-two-sample-situations/">
+
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  <meta property="twitter:card" content="summary_large_image">
+  
+  <meta property="twitter:site" content="@ErikKusch">
+  <meta property="twitter:creator" content="@ErikKusch">
+  
+  <meta property="og:site_name" content="Erik Kusch">
+  <meta property="og:url" content="https://www.erikkusch.com/courses/an-introduction-to-biostatistics/ordinal-metric-tests-more-than-two-sample-situations/">
+  <meta property="og:title" content="Ordinal &amp; Metric Tests (More-Than-Two-Sample Situations) | Erik Kusch">
+  <meta property="og:description" content="Welcome to our fifth practical experience in R. Throughout the following notes, I will introduce you to a couple statistical approaches for metric or ordinal data when wanting to compare more than two samples/populations that might be useful to you and are, to varying degrees, often used in biology. To do so, I will enlist the sparrow data set we handled in our first exercise."><meta property="og:image" content="https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg">
+  <meta property="twitter:image" content="https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg"><meta property="og:locale" content="en-gb">
+  
+    
+      <meta property="article:published_time" content="2020-06-10T00:00:00&#43;00:00">
+    
+    <meta property="article:modified_time" content="2020-06-10T00:00:00&#43;00:00">
+  
+
+  
+
+
+
+  
+
+
+  
+
+
+  
+
+
+
+
+
+  <title>Ordinal &amp; Metric Tests (More-Than-Two-Sample Situations) | Erik Kusch</title>
+
+</head>
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search" class="form-control">
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+<nav class="navbar navbar-expand-lg navbar-light compensate-for-scrollbar" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="d-none d-lg-inline-flex">
+      <a class="navbar-brand" href="/"><img src="/images/logo_huab2266ff59bbac6a094b6da1268adcf9_208479_0x70_resize_lanczos_2.png" alt="Erik Kusch"></a>
+    </div>
+    
+
+    
+    <button type="button" class="navbar-toggler" data-toggle="collapse"
+            data-target="#navbar-content" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+    <span><i class="fas fa-bars"></i></span>
+    </button>
+    
+
+    
+    <div class="navbar-brand-mobile-wrapper d-inline-flex d-lg-none">
+      <a class="navbar-brand" href="/"><img src="/images/logo_huab2266ff59bbac6a094b6da1268adcf9_208479_0x70_resize_lanczos_2.png" alt="Erik Kusch"></a>
+    </div>
+    
+
+    
+    
+    <div class="navbar-collapse main-menu-item collapse justify-content-center" id="navbar-content">
+
+      
+      <ul class="navbar-nav d-md-inline-flex">
+        
+
+        
+
+        
+        
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link  active" href="/"><span>Home</span></a>
+        </li>
+
+        
+        
+
+        
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"><span>Courses & Workshops</span><span class="caret"></span>
+          </a>
+          <div class="dropdown-menu">
+            
+              <a class="dropdown-item" href="/courses/krigr/"><span>KrigR - State-of-the-Art Climate Data within R</span></a>
+            
+              <a class="dropdown-item" href="/courses/gbif/"><span>Accessing and Referencing GBIF Data for Research</span></a>
+            
+              <a class="dropdown-item" href="/courses/rethinking/"><span>Statistical Rethinking - Introduction to Bayesian Statistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/bayes-nets/"><span>Bayesian Networks - Causality through Bayesian Approaches</span></a>
+            
+              <a class="dropdown-item" href="/courses/biostat101/"><span>Biostats 101 - An Introduction to Biostatistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/excursions-into-biostatistics/"><span>Biostats 301 - Excursions into Biostatistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/bftp-biome-detection/"><span>BFTP - First Steps in Macroecology in R</span></a>
+            
+          </div>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#projects"><span>Projects</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#featured"><span>Publications</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#talks"><span>Talks</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/about"><span>Contact</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+            
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/media/CV_ErikKusch.html" target="_blank" rel="noopener"><span>CV</span></a>
+        </li>
+
+        
+        
+
+      
+
+        
+      </ul>
+    </div>
+
+    <ul class="nav-icons navbar-nav flex-row ml-auto d-flex pl-md-2">
+      
+      <li class="nav-item">
+        <a class="nav-link js-search" href="#" aria-label="Search"><i class="fas fa-search" aria-hidden="true"></i></a>
+      </li>
+      
+
+      
+      <li class="nav-item dropdown theme-dropdown">
+        <a href="#" class="nav-link js-theme-selector" data-toggle="dropdown" aria-haspopup="true">
+          <i class="fas fa-palette" aria-hidden="true"></i>
+        </a>
+        <div class="dropdown-menu">
+          <a href="#" class="dropdown-item js-set-theme-light">
+            <span>Light</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-dark">
+            <span>Dark</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-auto">
+            <span>Automatic</span>
+          </a>
+        </div>
+      </li>
+      
+
+      
+
+    </ul>
+
+  </div>
+</nav>
+
+
+  
+
+<div class="container-fluid docs">
+  <div class="row flex-xl-nowrap">
+    <div class="col-12 col-md-3 col-xl-2 docs-sidebar">
+      
+
+
+
+
+
+  
+    
+  
+
+
+
+
+<form class="docs-search d-flex align-items-center">
+  <button class="btn docs-toggle d-md-none p-0 mr-3" type="button" data-toggle="collapse" data-target="#docs-nav" aria-controls="docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    <span><i class="fas fa-bars"></i></span>
+  </button>
+
+  
+  <input name="q" type="search" class="form-control" placeholder="Search..." autocomplete="off">
+  
+</form>
+
+<nav class="collapse docs-links" id="docs-nav">
+  
+
+  
+  
+  
+  
+  <div class="docs-toc-item">
+    <a class="docs-toc-link" href="/courses/an-introduction-to-biostatistics/">Overview</a>
+
+  </div>
+  
+  <div class="docs-toc-item">
+    <a class="docs-toc-link" href="/courses/an-introduction-to-biostatistics/01-an-introduction-to-basic-statistics-for-biologists/">Sessions</a>
+    <ul class="nav docs-sidenav">
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/01-an-introduction-to-basic-statistics-for-biologists/">01 - Basic Statistics for Biologists</a>
+      </li>
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/introduction-to-r/">02 - Introduction to R</a>
+      </li>
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/a-primer-for-statistical-tests/">03 - A Primer For Statistical Tests</a>
+      </li>
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/descriptive-statistics/">04 - Descriptive Statistics</a>
+      </li>
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/data-visualisation/">05 - Data Visualisation</a>
+      </li>
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/06-inferential-statistics-hypotheses-and-our-research-project/">06 - Inferential Statistics, Hypotheses And Our Research Project</a>
+      </li>
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/data-handling-and-data-mining/">07 - Data Handling and Data Mining</a>
+      </li>
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/nominal-tests/">08 - Nominal Tests</a>
+      </li>
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/correlation-tests/">09 - Correlation Tests</a>
+      </li>
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/ordinal-metric-tests-two-sample-situations/">10 - Ordinal &amp; Metric Tests (Two-Sample Situations)</a>
+      </li>
+      
+      <li class="active">
+        <a href="/courses/an-introduction-to-biostatistics/ordinal-metric-tests-more-than-two-sample-situations/">11 - Ordinal &amp; Metric Tests (More-Than-Two-Sample Situations)</a>
+      </li>
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/simple-parametric-tests/">12 - Simple Parametric Tests</a>
+      </li>
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/13-an-outlook-on-advanced-statistics/">13 - Closing &amp; Summary</a>
+      </li>
+      
+    </ul>
+    
+
+  </div>
+  
+  
+</nav>
+
+    </div>
+
+    
+    <div class="d-none d-xl-block col-xl-2 docs-toc">
+      <ul class="nav toc-top">
+        <li><a href="#" id="back_to_top" class="docs-toc-title">Contents</a></li>
+      </ul>
+
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#theory">Theory</a></li>
+    <li><a href="#data">Data</a></li>
+    <li><a href="#preparing-our-procedure">Preparing Our Procedure</a>
+      <ul>
+        <li><a href="#packages">Packages</a></li>
+        <li><a href="#loading-data">Loading Data</a></li>
+      </ul>
+    </li>
+    <li><a href="#kruskal-wallis-test">Kruskal-Wallis Test</a>
+      <ul>
+        <li><a href="#climate-warmingextremes">Climate Warming/Extremes</a></li>
+        <li><a href="#predation">Predation</a></li>
+        <li><a href="#competition">Competition</a></li>
+      </ul>
+    </li>
+    <li><a href="#friedman-test">Friedman Test</a>
+      <ul>
+        <li><a href="#preparing-data">Preparing Data</a></li>
+        <li><a href="#climate-warmingextremes-1">Climate Warming/Extremes</a></li>
+        <li><a href="#predation-1">Predation</a></li>
+        <li><a href="#competition-1">Competition</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+      
+    </div>
+    
+
+    <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 docs-content" role="main">
+
+      <article class="article">
+
+        <div class="docs-article-container">
+          <h1>Ordinal &amp; Metric Tests (More-Than-Two-Sample Situations)</h1>
+
+          <div class="article-style">
+            <h2 id="theory">Theory</h2>
+<p>Welcome to our fifth practical experience in R. Throughout the following notes, I will introduce you to a couple statistical approaches for metric or ordinal data when wanting to compare more than two samples/populations that might be useful to you and are, to varying degrees, often used in biology. To do so, I will enlist the sparrow data set we handled in our first exercise.</p>
+<p>I have prepared some <a href="/courses/an-introduction-to-biostatistics/11---Ordinal-and-Metric-Test--More-Than-Two-Sample-_Handout.html" target="_blank"> Lecture Slides </a> for this session.</p>
+<h2 id="data">Data</h2>
+<p>Find the data for this exercise <a href="/courses/an-introduction-to-biostatistics/Data/1%20-%20Sparrow_Data_READY.rds" target="_blank"> here</a>,  <a href="/courses/an-introduction-to-biostatistics/Data/2a%20-%20Sparrow_ResettledSIMA_READY.rds" target="_blank"> here</a>, and <a href="/courses/an-introduction-to-biostatistics/Data/2b%20-%20Sparrow_ResettledSIUK_READY.rds" target="_blank"> here</a>.</p>
+<h2 id="preparing-our-procedure">Preparing Our Procedure</h2>
+<p>To ensure others can reproduce our analysis we run the following three lines of code at the beginning of our <code>R</code> coding file.</p>
+<pre><code class="language-r">rm(list=ls()) # clearing environment
+Dir.Base &lt;- getwd() # soft-coding our working directory
+Dir.Data &lt;- paste(Dir.Base, &quot;Data&quot;, sep=&quot;/&quot;) # soft-coding our data directory 
+</code></pre>
+<h3 id="packages">Packages</h3>
+<p>Using the following, user-defined function, we install/load all the necessary packages into our current <code>R</code> session.</p>
+<pre><code class="language-r"># function to load packages and install them if they haven't been installed yet
+install.load.package &lt;- function(x) {
+  if (!require(x, character.only = TRUE))
+    install.packages(x)
+  require(x, character.only = TRUE)
+}
+package_vec &lt;- c()
+sapply(package_vec, install.load.package)
+</code></pre>
+<pre><code>## list()
+</code></pre>
+<p>As you can see, we don&rsquo;t need any packages for our analyses in this practical. Take note that I am not using <code>ggplot2</code> for data visualisation today. Personally, I find it cumbersome for &ldquo;behind-the-scenes&rdquo; boxplots (which is what I&rsquo;ll use a lot today) and so I am presenting you with the base <code>R</code> alternative.</p>
+<h3 id="loading-data">Loading Data</h3>
+<p>During our first exercise (Data Mining and Data Handling - Fixing The Sparrow Data Set) we saved our clean data set as an RDS file. To load this, we use the <code>readRDS()</code> command that comes with base <code>R</code>.</p>
+<pre><code class="language-r">Data_df_base &lt;- readRDS(file = paste(Dir.Data, &quot;/1 - Sparrow_Data_READY.rds&quot;, sep=&quot;&quot;))
+Data_df &lt;- Data_df_base # duplicate and save initial data on a new object
+</code></pre>
+<h2 id="kruskal-wallis-test">Kruskal-Wallis Test</h2>
+<h3 id="climate-warmingextremes">Climate Warming/Extremes</h3>
+<p><strong>Does morphology of Passer domesticus depend on climate?</strong></p>
+<p>Using the Mann-Witney U Test in our last practical, we concluded that climate (when recorded as &ldquo;Continental&rdquo; and &ldquo;Non-Continental&rdquo;) is an important driver of <em>Passer domesticus</em> morphology. Now we will see whether this holds true when considering non-continental climates as coastal and semi-coastal ones.</p>
+<p>Take note that we need to limit our analysis to our climate type testing sites again as follows (we include Manitoba this time as it is at the same latitude as the UK and Siberia and holds a semi-coastal climate type):</p>
+<pre><code class="language-r"># prepare climate type testing data
+Data_df &lt;- Data_df_base
+Index &lt;- Data_df$Index
+Rows &lt;- which(Index == &quot;SI&quot; | Index == &quot;UK&quot; | Index == &quot;RE&quot; | Index == &quot;AU&quot; | Index == &quot;MA&quot;)
+Data_df &lt;- Data_df[Rows,]
+</code></pre>
+<h4 id="weight">Weight</h4>
+<p>Let&rsquo;s start with weight records of common house sparrows:</p>
+<pre><code class="language-r">WeightCont &lt;- with(Data_df, Weight[which(Climate == &quot;Continental&quot;)])
+WeightSemi &lt;- with(Data_df, Weight[which(Climate == &quot;Semi-Coastal&quot;)])
+WeightCoast &lt;- with(Data_df, Weight[which(Climate == &quot;Coastal&quot;)])
+Weights_vec &lt;- c(WeightCont, WeightSemi, WeightCoast)
+
+Climates &lt;- c(
+  rep(&quot;Continental&quot;, length(WeightCont)),
+  rep(&quot;Semi-Coastal&quot;, length(WeightSemi)),
+  rep(&quot;Coastal&quot;, length(WeightCoast))
+)
+Climates &lt;- as.factor(Climates)
+
+kruskal.test(Weights_vec, Climates)
+</code></pre>
+<pre><code>## 
+## 	Kruskal-Wallis rank sum test
+## 
+## data:  Weights_vec and Climates
+## Kruskal-Wallis chi-squared = 150.98, df = 2, p-value &lt; 2.2e-16
+</code></pre>
+<p>We conclude that the three-level climate variable is an important source of information to understand what drives weight records of <em>Passer domesticus</em> and thus <strong>reject the null hypothesis</strong> (p = $1.6418184\times 10^{-33}$).</p>
+<pre><code class="language-r">boxplot(Weights_vec ~ Climates)
+</code></pre>
+<p><img src="11---Ordinal-and-Metric-Test--More-Than-Two-Sample-_files/figure-html/KruskalSite1b-1.png" width="1440" /></p>
+<p>Looking at the boxplot, we can understand the distribution of weight records as grouped by climate types and identify weight records to be biggest for continental climates followed by semi-coastal ones with similar spreads. Coastal climates, on the other hand, show a remarkable spread of weight records of <em>Passer domesticus</em> with a markedly lower median than the two previous categories.</p>
+<h4 id="height">Height</h4>
+<p>Secondly, let&rsquo;s repeat the above Kruskal-Wallis Test for the height/length records of our <em>Passer domesticus</em> individuals:</p>
+<pre><code class="language-r">HeightCont &lt;- with(Data_df, Height[which(Climate == &quot;Continental&quot;)])
+HeightSemi &lt;- with(Data_df, Height[which(Climate == &quot;Semi-Coastal&quot;)])
+HeightCoast &lt;- with(Data_df, Height[which(Climate == &quot;Coastal&quot;)])
+Heights_vec &lt;- c(HeightCont, HeightSemi, HeightCoast)
+
+Climates &lt;- c(
+  rep(&quot;Continental&quot;, length(HeightCont)),
+  rep(&quot;Semi-Coastal&quot;, length(HeightSemi)),
+  rep(&quot;Coastal&quot;, length(HeightCoast))
+)
+Climates &lt;- as.factor(Climates)
+
+kruskal.test(Heights_vec, Climates)
+</code></pre>
+<pre><code>## 
+## 	Kruskal-Wallis rank sum test
+## 
+## data:  Heights_vec and Climates
+## Kruskal-Wallis chi-squared = 15.635, df = 2, p-value = 0.0004027
+</code></pre>
+<pre><code class="language-r">boxplot(Heights_vec ~ Climates)
+</code></pre>
+<p><img src="11---Ordinal-and-Metric-Test--More-Than-Two-Sample-_files/figure-html/KruskalSite2a-1.png" width="1440" />
+We conclude that the three-level climate variable is an important source of information to understand what drives height records of <em>Passer domesticus</em> and thus <strong>reject the null hypothesis</strong> (p = $4.0267296\times 10^{-4}$).</p>
+<p>Looking at the boxplot, we can understand the distribution of height records as grouped by climate types and identify height records to be smallest for continental climates followed by semi-coastal ones with similar spreads. Coastal climates, on the other hand, show a remarkable spread of height records of <em>Passer domesticus</em> with a markedly higher median than the two previous categories.</p>
+<h4 id="wing-chord">Wing Chord</h4>
+<p>Third, we will test whether climate is a good predictor for wing chord of common house sparrows:</p>
+<pre><code class="language-r">Wing.ChordCont &lt;- with(Data_df, Wing.Chord[which(Climate == &quot;Continental&quot;)])
+Wing.ChordSemi &lt;- with(Data_df, Wing.Chord[which(Climate == &quot;Semi-Coastal&quot;)])
+Wing.ChordCoast &lt;- with(Data_df, Wing.Chord[which(Climate == &quot;Coastal&quot;)])
+Wing.Chords_vec &lt;- c(Wing.ChordCont, Wing.ChordSemi, Wing.ChordCoast)
+
+Climates &lt;- c(
+  rep(&quot;Continental&quot;, length(Wing.ChordCont)),
+  rep(&quot;Semi-Coastal&quot;, length(Wing.ChordSemi)),
+  rep(&quot;Coastal&quot;, length(Wing.ChordCoast))
+)
+Climates &lt;- as.factor(Climates)
+
+kruskal.test(Wing.Chords_vec, Climates)
+</code></pre>
+<pre><code>## 
+## 	Kruskal-Wallis rank sum test
+## 
+## data:  Wing.Chords_vec and Climates
+## Kruskal-Wallis chi-squared = 41.539, df = 2, p-value = 9.548e-10
+</code></pre>
+<pre><code class="language-r">boxplot(Wing.Chords_vec ~ Climates)
+</code></pre>
+<p><img src="11---Ordinal-and-Metric-Test--More-Than-Two-Sample-_files/figure-html/KruskalSite3a-1.png" width="1440" /></p>
+<p>We conclude that the three-level climate variable is an important source of information to understand what drives wing chord records of <em>Passer domesticus</em> and thus <strong>reject the null hypothesis</strong> (p = $9.5482279\times 10^{-10}$).</p>
+<p>Looking at the boxplot, we can understand the distribution of wing chord records as grouped by climate types and identify wing chord records to be smallest for continental climates followed by semi-coastal ones with similar spreads. Coastal climates, on the other hand, show a remarkable spread of wing chord records of <em>Passer domesticus</em> with a markedly higher median than the two previous categories.</p>
+<h4 id="automating-the-analysis">Automating the Analysis</h4>
+<p>As we have seen, running seperate tests for every research question may be a bit cumbersome and so we may want to automate the analysis by establishing our own user-defined function as follows:</p>
+<pre><code class="language-r">AutomatedKruskal &lt;- function(Variables, Groups, Plotting){
+# establish data frame to save results to
+Export &lt;- data.frame(
+  Variables = Variables,
+  Grouped_by = rep(Groups, length(Variables)),
+  Chi_Squared = rep(NA, length(Variables)),
+  DF = rep(NA, length(Variables)),
+  p_value = rep(NA, length(Variables))
+)
+
+for(i in 1:length(Variables)){
+# extract data and groups from data frame
+YData &lt;- Data_df[,which(colnames(Data_df)==Variables[i])]
+XData &lt;- Data_df[,which(colnames(Data_df)==Groups)]
+
+# establish a list holding our groups for our data
+Data &lt;- list()
+Grouping &lt;- list()
+for(k in 1:length(unique(XData))){
+  Data[[k]] &lt;- YData[which(XData == unique(XData)[k])]
+  Grouping[[k]] &lt;- rep(unique(XData)[k], length = length(Data[[k]]))
+} # end of k-loop
+
+Data &lt;- unlist(Data)
+Grouping &lt;- unlist(Grouping)
+
+# fill data frame
+Export[i, 3] &lt;- kruskal.test(Data, Grouping)[[&quot;statistic&quot;]][[&quot;Kruskal-Wallis chi-squared&quot;]]
+Export[i, 4] &lt;- kruskal.test(Data, Grouping)[[&quot;parameter&quot;]]
+Export[i, 5] &lt;- kruskal.test(Data, Grouping)[[&quot;p.value&quot;]]
+
+# optional plotting
+if(Plotting == TRUE){
+plot(Data ~ factor(Grouping), ylab = Variables[i])
+}
+
+} # end of i loop
+
+# return data frame to R outside of function
+return(Export)
+} # end of function
+</code></pre>
+<p>This function is <em>named</em> <code>AutomatedKruskal()</code> and takes three <em>arguments</em>: (1) <code>Variables</code> - a vector of character typed identifiers for the variables we want to have tested, (2) <code>Groups</code> - a character string identifying the grouping variable, (3) <code>Plotting</code> - a logical statement (<code>TRUE</code> or <code>FALSE</code>) whether boxplots shall be produced.</p>
+<p>The function then proceeds to establish an empty data frame which it will store the results of our Kurskal-Wallis Tests in. Afterwards, it cycles through all variables contained within the <code>Variables</code> statement, extracts the relevant data, grouping it according to the specified grouping variable (<code>Groups</code>), runs the test, fills the data frame and plots the data if <code>Plotting</code> has been set to <code>TRUE</code>.</p>
+<p>Let&rsquo;s re-run our earlier test on sparrow morphology as influenced by climate using this function by <em>calling</em> it:</p>
+<pre><code class="language-r">par(mfrow = c(3,1)) # adjust plotting panes
+AutomatedKruskal(Variables = c(&quot;Weight&quot;, &quot;Height&quot;, &quot;Wing.Chord&quot;), 
+                 Groups = &quot;Climate&quot;, 
+                 Plotting = TRUE)
+</code></pre>
+<p><img src="11---Ordinal-and-Metric-Test--More-Than-Two-Sample-_files/figure-html/KruskalSite7b-1.png" width="1440" /></p>
+<pre><code>##    Variables Grouped_by Chi_Squared DF      p_value
+## 1     Weight    Climate   150.97901  2 1.641818e-33
+## 2     Height    Climate    15.63477  2 4.026730e-04
+## 3 Wing.Chord    Climate    41.53899  2 9.548228e-10
+</code></pre>
+<p>As we can see from the results above, our function works flawlessly and we can use it going ahead.</p>
+<p>Furthermore, we can confirm some of the results of our Mann-Whitney U Test from last seminar.</p>
+<h3 id="predation">Predation</h3>
+<p><strong>Does nesting height depend on predator characteristics?</strong></p>
+<p>Again, using the Mann-WHitney U Test in our last exercise, we identified both predator presence as well as predator type to be important predictors for nesting height of <em>Passer domesticus</em>.</p>
+<p>We may wish to use the entirety of our data set again for this purpose:</p>
+<pre><code class="language-r">Data_df &lt;- Data_df_base
+</code></pre>
+<p>Using the Kruskal-Wallis Test, we can combine these two predictors by turning every record of predator type that is recorded as <code>NA</code> into &ldquo;None&rdquo; which will then serve as an identifier for the absence of any predators effectively making the predator presence variable redundant:</p>
+<pre><code class="language-r"># changing levels in predator type
+levels(Data_df$Predator.Type) &lt;- c(levels(Data_df$Predator.Type), &quot;None&quot;)
+Data_df$Predator.Type[which(is.na(Data_df$Predator.Type))] &lt;- &quot;None&quot;
+
+# running analysis
+AutomatedKruskal(Variables = &quot;Nesting.Height&quot;, Groups = &quot;Predator.Type&quot;, Plotting = TRUE)
+</code></pre>
+<p><img src="11---Ordinal-and-Metric-Test--More-Than-Two-Sample-_files/figure-html/KruskalPredationa-1.png" width="1440" /></p>
+<pre><code>##        Variables    Grouped_by Chi_Squared DF      p_value
+## 1 Nesting.Height Predator.Type    88.81797  2 5.169206e-20
+</code></pre>
+<p>Using our <code>Automated Kruskal()</code> function, we can conclude that the aggregation of predator presence to predator type records serve as an excellent predictor for sparrow nesting height and <strong>reject the null hypothesis</strong> (p = $5.169206\times 10^{-20}$).</p>
+<p>Therefore, we can argue that avian predation forces sparrows into low nesting sites, non-avian predation leads to more elevated nesting sites in <em>Passer domesticus</em> and absence of predators seems to not force nesting height in any direction or restricting its spread.</p>
+<h3 id="competition">Competition</h3>
+<p><strong>Does home range depend on climate?</strong></p>
+<p>Having used the Mann-Whitney U Test to identify possible climate-driven changes in home ranges of <em>Passer domesticus</em> in our last seminar, we concluded that climate types largely affect home ranges of the common house sparrow.</p>
+<p>Take note that we need to limit our analysis to our climate type testing sites again as follows (we include Manitoba this time as it is at the same latitude as the UK and Siberia and holds a semi-coastal climate type):</p>
+<pre><code class="language-r"># prepare climate type testing data
+Data_df &lt;- Data_df_base
+Index &lt;- Data_df$Index
+Rows &lt;- which(Index == &quot;SI&quot; | Index == &quot;UK&quot; | Index == &quot;RE&quot; | Index == &quot;AU&quot; | Index == &quot;MA&quot;)
+Data_df &lt;- Data_df[Rows,]
+</code></pre>
+<p>Let&rsquo;s test this for our three-level climate variable:</p>
+<pre><code class="language-r">Data_df$Home.Range &lt;- as.numeric(factor(Data_df$Home.Range))
+AutomatedKruskal(Variables = &quot;Home.Range&quot;, Groups = &quot;Climate&quot;, Plotting = TRUE)
+</code></pre>
+<p><img src="11---Ordinal-and-Metric-Test--More-Than-Two-Sample-_files/figure-html/KruskalCompetitiona-1.png" width="1440" /></p>
+<pre><code>##    Variables Grouped_by Chi_Squared DF    p_value
+## 1 Home.Range    Climate    6.243918  2 0.04407075
+</code></pre>
+<p>Using our <code>Automated Kruskal()</code> function, we can conclude that the three-loevel climate variable serves as an excellent predictor for sparrow home range and <strong>reject the null hypothesis</strong> (p = $0.0440707$) thus being at odds with our Mann-Whitney U results (that were only based on two climate types).</p>
+<p>Remember that small numeric ranges mean large actual ranges in this set-up and so we can conclude that  climates force common house sparrows to adapt to bigger home ranges.</p>
+<h2 id="friedman-test">Friedman Test</h2>
+<p>We can analyse the significance of more than two population/sample medians of metric variables which are dependent of one another using the <code>friedman.test()</code> function in base <code>R</code>.</p>
+<h3 id="preparing-data">Preparing Data</h3>
+<p>Obviously, none of our data records are paired as such. Whilst one may want to make the argument that many characteristics of individuals that group together might be dependant on the expressions of themselves found throughout said group, we will not concentrate on this possibility within these practicals.</p>
+<p>Conclusively, we need <strong>additional data sets with truly paired records</strong> of sparrows. Within our study set-up, think of a <strong>resettling experiment</strong>, were you take <em>Passer domesticus</em> individuals from one site, transfer them to another and check back with them after some time has passed to see whether some of their characteristics have changed in their expression.<br>
+To this end, presume we have taken the entire <em>Passer domesticus</em> population found at our <strong>Siberian</strong> research station and moved them to <strong>Manitoba</strong>. After a given time at their new location, we are again moving the population from Manitoba to the <strong>United Kingdom</strong>. Whilst this keeps the latitude stable, the sparrows <em>now experience a semi-coastal climate followed by a coastal one instead of a continental one</em>. After some time (let&rsquo;s say: a year), we have come back and recorded all the characteristics for the same individuals again. Within our data, none of the original individuals have gone missing or died throghout our study period. This is usually not the case in nature and such records would need to be deleted from the data set.</p>
+<p>You will find the corresponding <em>new data</em> in <code>2a - Sparrow_ResettledSIMA_READY.rds</code> (Siberia to Manitoba) and <code>2b - Sparrow_ResettledSIUK_READY.rds</code> (former SIberian population from manitoba to the UK). Take note that these sets only contain records for the transferred individuals in the <strong>same order</strong> as in the old data set.</p>
+<pre><code class="language-r">Data_df_SIMA &lt;- readRDS(file = paste(Dir.Data, &quot;/2a - Sparrow_ResettledSIMA_READY.rds&quot;, sep=&quot;&quot;))
+Data_df_SIUK &lt;- readRDS(file = paste(Dir.Data, &quot;/2b - Sparrow_ResettledSIUK_READY.rds&quot;, sep=&quot;&quot;))
+</code></pre>
+<p>With these data records, we can now re-evaluate how the characteristics of sparrows can change when subjected to different conditions than previously thus shedding light on their <strong>plasticity</strong>.</p>
+<p>As such, this program is very reminiscent of the resettling program in our last exercise when using Wilcoxon Signed Rank Test to account for plasticity of our sparrow individuals. This new program includes the additional step of transferring sparrows via Manitoba first. Why have we chosen this order of resettlements?</p>
+<ol>
+<li>Our stations SI, MA and UK are all on roughly the same latitude.</li>
+<li>Moving the sparrows from SI to UK via MA results in them experiencing a gradient from continental to semi-coastal to coastal climate.</li>
+<li>Whilst Siberia is populated by avian predators, no predators are present at Manitoba and our sparrows are subject to non-avian predation in the UK.</li>
+</ol>
+<p>All of this serves to <strong>maximise variation</strong> that we want to research whilst <strong>minising constraining factors</strong>.</p>
+<h3 id="climate-warmingextremes-1">Climate Warming/Extremes</h3>
+<p><strong>Does sparrow morphology change depend on climate?</strong></p>
+<p>Thinking back to out Wilcoxon Signed Rank test, we can already argue that weight records of sparrows should change according to climate whilst height and wing chord records should remain unaltered for every individual.</p>
+<p>We may wish to use the entirety of our data set again for this purpose:</p>
+<pre><code class="language-r">Data_df &lt;- Data_df_base
+</code></pre>
+<p>Since this involves testing three seperate criterions of sparrow morphology, we again establish a user-defined function. This one is called <code>AutomatedFried()</code> and has dropped the <code>Groups</code> argument that was present in <code>AutomatedKruskal()</code> since the grouping will always be our three stations:</p>
+<pre><code class="language-r">AutomatedFried &lt;- function(Variables, Plotting){
+# establish data frame to save results to
+Export &lt;- data.frame(
+  Variables = Variables,
+  Grouped_by = rep(&quot;Resettling&quot;, length(Variables)),
+  Chi_Squared = rep(NA, length(Variables)),
+  DF = rep(NA, length(Variables)),
+  p_value = rep(NA, length(Variables))
+)
+
+for(i in 1:length(Variables)){
+# extract data and groups from data frame
+YDataSI &lt;- Data_df[,which(colnames(Data_df)==Variables[i])]
+YDataMA &lt;- Data_df_SIMA[,which(colnames(Data_df)==Variables[i])]
+YDataUK &lt;- Data_df_SIUK[,which(colnames(Data_df)==Variables[i])]
+
+Data &lt;- matrix(c(YDataSI[which(Data_df$Index == &quot;SI&quot;)],
+          YDataMA, YDataUK), nrow = dim(Data_df_SIMA)[1],
+       byrow = FALSE, dimnames = list(1:dim(Data_df_SIMA)[1], 
+                                      c(&quot;SI&quot;, &quot;MA&quot;, &quot;UK&quot;))
+  )
+
+# fill data frame
+Export[i, 3] &lt;- friedman.test(Data)[[&quot;statistic&quot;]][[&quot;Friedman chi-squared&quot;]]
+Export[i, 4] &lt;- friedman.test(Data)[[&quot;parameter&quot;]]
+Export[i, 5] &lt;- friedman.test(Data)[[&quot;p.value&quot;]]
+
+# optional plotting
+if(Plotting == TRUE){
+  
+  # prepare plotting data
+  PlotData &lt;- as.vector(Data)
+  Grouping &lt;- as.factor(
+    rep(c(&quot;SI&quot;, &quot;MA&quot;, &quot;UK&quot;), each = dim(Data_df_SIMA)[1])
+    )
+  # plotting
+  plot(PlotData ~ Grouping, ylab = Variables[i])
+}
+} # end of i loop
+
+# return data frame to R outside of function
+return(Export)
+} # end of function
+</code></pre>
+<p>As such, the above function operates a lot like the earlier user-defined counterpart for the Kruskal-Wallis Test. It returns the important test characteristics and allows for plots. Internally, however, it is built on a matrix rather than vectors.</p>
+<p>Let&rsquo;s get to testing our prediction:</p>
+<pre><code class="language-r">par(mfrow = c(3,1)) # adjust plotting panes
+AutomatedFried(Variables = c(&quot;Weight&quot;, &quot;Height&quot;, &quot;Wing.Chord&quot;), Plotting = TRUE)
+</code></pre>
+<p><img src="11---Ordinal-and-Metric-Test--More-Than-Two-Sample-_files/figure-html/FriedClimateb-1.png" width="1440" /></p>
+<pre><code>##    Variables Grouped_by Chi_Squared DF      p_value
+## 1     Weight Resettling    97.84848  2 5.655506e-22
+## 2     Height Resettling         NaN  2          NaN
+## 3 Wing.Chord Resettling         NaN  2          NaN
+</code></pre>
+<p>Indeed, whilst climate is a good predictor for the weight of resettled sparrows (weight in continental climates is higher than in semi-coastal or coastal ones), height and wing chord records couldn&rsquo;t be properly tested on using the <code>friedman.test()</code> function since they have remained unalterd. Thetrefore, we <strong>reject the null hypothesis</strong> for weight records of <em>Passer domesticus</em> and <strong>accept the null hypothesis</strong> for height and wing chord records.</p>
+<h3 id="predation-1">Predation</h3>
+<p><strong>Does nesting height depend on predator characteristics?</strong></p>
+<p>According to the results of our last practical, we would assume <em>Passer doemsticus</em> to adhere to local conditions when chosing a nesting site and corresponding nesting height depending on predator presence:</p>
+<pre><code class="language-r">AutomatedFried(Variables = &quot;Nesting.Height&quot;, Plotting = TRUE)
+</code></pre>
+<p><img src="11---Ordinal-and-Metric-Test--More-Than-Two-Sample-_files/figure-html/FriedPreda-1.png" width="1440" /></p>
+<pre><code>##        Variables Grouped_by Chi_Squared DF     p_value
+## 1 Nesting.Height Resettling      10.864  2 0.004374338
+</code></pre>
+<p>Just like we expected, nesting height of resettled sparrows depends hugely on predator presence at the sties they have been moved to (p = $7.3991389\times 10^{-19}$) and we <strong>reject the null hypothesis</strong>.</p>
+<h3 id="competition-1">Competition</h3>
+<p><strong>Does home range depend on climate?</strong></p>
+<p>As we&rsquo;ve seen in our last seminar, a statistically signficant change in home ranges did not occur when resettling Siberian sparrows directly to the UK. How about when we resettle them via Manitoba?</p>
+<pre><code class="language-r">Data_df_SIMA$Home.Range &lt;- as.numeric(Data_df_SIMA$Home.Range)
+Data_df_SIUK$Home.Range &lt;- as.numeric(Data_df_SIUK$Home.Range)
+
+AutomatedFried(Variables = &quot;Home.Range&quot;, Plotting = TRUE)
+</code></pre>
+<pre><code>## Warning in xy.coords(x, y, xlabel, ylabel, log): NAs introduced by coercion
+</code></pre>
+<p><img src="11---Ordinal-and-Metric-Test--More-Than-Two-Sample-_files/figure-html/FriedCompetitiona-1.png" width="1440" /></p>
+<pre><code>##    Variables Grouped_by Chi_Squared DF      p_value
+## 1 Home.Range Resettling         132  2 2.170522e-29
+</code></pre>
+<p>With our three-step resettling program we do record a statistically significant change in home ranges of our sparrow flocks and <strong>reject the null hypothesis</strong> (p = $2.170522\times 10^{-29}$).</p>
+
+          </div>
+
+          
+
+<div class="article-tags">
+  
+  <a class="badge badge-light" href="/tag/r/">R</a>
+  
+  <a class="badge badge-light" href="/tag/statistics/">Statistics</a>
+  
+</div>
+
+
+
+          
+          <div class="article-widget">
+            
+<div class="post-nav">
+  
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">Previous</div>
+    <a href="/courses/an-introduction-to-biostatistics/ordinal-metric-tests-two-sample-situations/" rel="next">Ordinal &amp; Metric Tests (Two-Sample Situations)</a>
+  </div>
+  
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">Next</div>
+    <a href="/courses/an-introduction-to-biostatistics/simple-parametric-tests/" rel="prev">Simple Parametric Tests</a>
+  </div>
+  
+</div>
+
+          </div>
+          
+        </div>
+
+        <div class="body-footer">
+          <p>Last updated on 2020-06-10</p>
+
+          
+
+
+
+
+
+          
+
+
+          
+
+
+  
+  
+  <div class="article-widget content-widget-hr">
+    <h3>Related</h3>
+    <ul>
+      
+      <li><a href="/courses/biostat101/ordinal-metric-tests-more-than-two-sample-situations/">Ordinal &amp; Metric Tests (More-Than-Two-Sample Situations)</a></li>
+      
+      <li><a href="/courses/an-introduction-to-biostatistics/a-primer-for-statistical-tests/">A Primer For Statistical Tests</a></li>
+      
+      <li><a href="/courses/biostat101/a-primer-for-statistical-tests/">A Primer For Statistical Tests</a></li>
+      
+      <li><a href="/courses/biostat101/correlation-tests/">Correlation Tests</a></li>
+      
+      <li><a href="/courses/an-introduction-to-biostatistics/correlation-tests/">Correlation Tests</a></li>
+      
+    </ul>
+  </div>
+  
+
+
+
+        </div>
+
+      </article>
+
+      <footer class="site-footer">
+  
+  <p class="powered-by">
+    
+      <a href="/privacy/">Privacy Policy</a>
+    
+    
+       &middot; 
+      <a href="/terms/">Terms</a>
+    
+  </p>
+  
+
+  <p class="powered-by">
+    © 2024
+  </p>
+
+  
+  
+
+
+
+
+
+
+  <p class="powered-by">
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+  </p>
+</footer>
+
+
+    </main>
+  </div>
+</div>
+
+
+      
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js" integrity="sha256-eOgo0OtLL4cdq7RdwRUiGKLX9XsIJ7nGhWEKbohmVAQ=" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/languages/r.min.js"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/languages/latex.min.js"></script>
+        
+      
+
+    
+
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.js" integrity="sha256-EErZamuLefUnbMBQbsEqu1USa+btR2oIlCpBJbyD4/g=" crossorigin="anonymous"></script>
+    
+
+    
+    
+    <script>const code_highlighting = true;</script>
+    
+
+    
+    
+    <script>const isSiteThemeDark = false;</script>
+    
+
+    
+    
+    
+    
+    
+    
+    <script>
+      const search_config = {"indexURI":"/index.json","minLength":1,"threshold":0.3};
+      const i18n = {"no_results":"No results found","placeholder":"Search...","results":"results found"};
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks",
+        'slides' : "Slides"
+        };
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.1/anchor.min.js" integrity="sha256-pB/deHc9CGfFpJRjC43imB29Rse8tak+5eXqntO94ck=" crossorigin="anonymous"></script>
+    <script>
+      anchors.add();
+    </script>
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+      <div class="search-hit-content">
+        <div class="search-hit-name">
+          <a href="{{relpermalink}}">{{title}}</a>
+          <div class="article-metadata search-hit-type">{{type}}</div>
+          <p class="search-hit-description">{{snippet}}</p>
+        </div>
+      </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="/js/academic.min.66c553246b0f279a03be6e5597f72b52.js"></script>
+
+    
+
+
+
+
+
+
+  
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

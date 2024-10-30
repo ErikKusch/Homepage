@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Vigdis Vandvik | Erik Kusch</title>
+    <link>https://www.erikkusch.com/author/vigdis-vandvik/</link>
+      <atom:link href="https://www.erikkusch.com/author/vigdis-vandvik/index.xml" rel="self" type="application/rss+xml" />
+    <description>Vigdis Vandvik</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-gb</language><copyright>© 2024</copyright><lastBuildDate>Wed, 21 Feb 2024 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg</url>
+      <title>Vigdis Vandvik</title>
+      <link>https://www.erikkusch.com/author/vigdis-vandvik/</link>
+    </image>
+    
+    <item>
+      <title>Plant trait and vegetation data along a 1314m elevation gradient with fire history in Puna grasslands, Perú</title>
+      <link>https://www.erikkusch.com/publication/plant-trait-and-vegetation-data-along-a-1314-m-elevation-gradient-with-fire-history-in-puna-grasslands-peru/</link>
+      <pubDate>Wed, 21 Feb 2024 00:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/publication/plant-trait-and-vegetation-data-along-a-1314-m-elevation-gradient-with-fire-history-in-puna-grasslands-peru/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

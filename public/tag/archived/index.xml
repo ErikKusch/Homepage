@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Archived | Erik Kusch</title>
+    <link>https://www.erikkusch.com/tag/archived/</link>
+      <atom:link href="https://www.erikkusch.com/tag/archived/index.xml" rel="self" type="application/rss+xml" />
+    <description>Archived</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-gb</language><copyright>© 2024</copyright><lastBuildDate>Tue, 29 Dec 2020 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg</url>
+      <title>Archived</title>
+      <link>https://www.erikkusch.com/tag/archived/</link>
+    </image>
+    
+    <item>
+      <title>Causes and Processes of Dryland Vegetation Memory</title>
+      <link>https://www.erikkusch.com/project/functional-traits-and-life-history-effects-on-high-resolution-vegetation-memory/</link>
+      <pubDate>Tue, 29 Dec 2020 00:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/project/functional-traits-and-life-history-effects-on-high-resolution-vegetation-memory/</guid>
+      <description>&lt;h1 id=&#34;disclaimer&#34;&gt;Disclaimer&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;This project is currently on hold.&lt;/strong&gt;&lt;/p&gt;
+&lt;h1 id=&#34;motivation&#34;&gt;Motivation&lt;/h1&gt;
+&lt;p&gt;Throughout my previous project concerning 
+&lt;a href=&#34;https://www.erikkusch.com/project/vegetation-memory-across-global-dryland-regions/&#34;&gt;Vegetation Memory across Global Dryland Regions&lt;/a&gt;, I identified prominent spatial patterns of intrinsic and extrinsic vegetation memory components. These patterns may serve us in discerning global and local resistance and recovery potential of vegetation communities to perturbations.&lt;/p&gt;
+&lt;p&gt;However, these patterns alone only tell part of the story. How do these come about? How are they maintained? Understanding these mechanisms would undoubtedly go a long way in predicting responses of vegetation to anthropogenic and climate change-driven disturbances. Ultimately, I expect this exercise to create valuable knowledge for conservation biology and the agricultural sector.&lt;/p&gt;
+&lt;h1 id=&#34;description&#34;&gt;Description&lt;/h1&gt;
+&lt;p&gt;MODIS EVI data is aggregated at bi-weekly intervals and used as a proxy of vegetation response in the dryland study regions between January 2000 and December 2019. Independent climate data is provided using the &lt;code&gt;KrigR&lt;/code&gt; package (
+&lt;a href=&#34;https://www.erikkusch.com/project/krigr/ar&#34;&gt;KrigR - Downloading and Downscaling of ERA5(-Land) data using R&lt;/a&gt;). Doing so allows us to make use of the high temporal resolution of the European Centre for Medium-range Weather Forecasts ReAnalysis 5 (ERA5) data from the European Centre for Medium-Range Weather Forecasts (ECMWF) at spatial resolutions of roughly 1x1km. Effectively, this increases the spatial resolution of vegetation memory products by almost one order of magnitude when compared to my previous project at 9x9km resolution. Vegetation memory is calculated the same way as during my previous project.&lt;/p&gt;
+&lt;p&gt;Using these high-resolution vegetation memory products, we can reasonably argue that ground-data obtained through functional trait campaigns or vegetation plot exercises represents the 1x1km grid reasonably well. Thus we are able to assess correlations between the different vegetation components and ground-truthed expressions of plant life. To identify what shapes vegetation memory expressions, I am investigating a range of three potential predictor families:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Plant Functional Traits&lt;/strong&gt; - I expect investment in certain functional characteristics to greatly influence resistance and recovery potential. For example, sturdy leaves should grant resistance to temperature fluctuations but are costly to recover once lost.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Life History Traits&lt;/strong&gt; - Life history speed and timing undoubtedly alters vegetation memory expressions. But which life history traits fair best at explaining these processes? For example, a short-lived population may be less resistant to a perturbation than a long-lived one, but surely boasts a reproduction rate that achieves fast recovery.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Abiotic Legacies&lt;/strong&gt; - Biological organisms adapt to their surroundings. On varying time-scales and through varying processes, but they adapt nonetheless. I aim to investigate how strong these adaptations become by computing the impact of the legacy mean and standard deviation of abiotic conditions on vegetation memory components. For example, a species in a highly variable aridity regime may be more resistant to fluctuations in aridity than one used to stable, moist conditions&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Bayes Study Group</title>
+      <link>https://www.erikkusch.com/project/aubayes/</link>
+      <pubDate>Mon, 28 Dec 2020 00:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/project/aubayes/</guid>
+      <description>&lt;div class=&#34;alert alert-success&#34;&gt;
+  &lt;div&gt;
+    This study group has come to an end. All information about it can still be found below. We are now coordinating through Slack to get our fix of all things Bayes. Our Slack Workspace is open to anyone who wants to join us. To do so, simply let me know by &lt;a href=&#34;https://www.erikkusch.com/about#contact&#34;&gt;contacting me&lt;/a&gt; and shortly introduce yourself.
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;h1 id=&#34;motivation&#34;&gt;Motivation&lt;/h1&gt;
+&lt;p&gt;Have you ever read a paper and thought: “Wow, this is really cool”, then read on only to find the word “Bayesian” in the analysis specification and promptly get lost at the terminology and approach to statistics?&lt;/p&gt;
+&lt;p&gt;If you did/do, you are obviously not alone and I think it might be time we do something about it. To this end, I have created a Bayes Study Group (formerly AU Bayes Study Group) within which we work our way through (1) a 
+&lt;a href=&#34;https://www.youtube.com/playlist?list=PLDcUM9US4XdNM4Edgs7weiyIguLSToZRI&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;lecture series&lt;/a&gt; by Bayes Wunderkind Richard McElreath, (2) his corresponding book (“
+&lt;a href=&#34;https://xcelab.net/rm/statistical-rethinking/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Statistical Rethinking&lt;/a&gt;”), and (3) a few practical examples in &lt;code&gt;R&lt;/code&gt;.&lt;/p&gt;
+&lt;h1 id=&#34;conduct--logistics&#34;&gt;Conduct &amp;amp; Logistics&lt;/h1&gt;
+&lt;p&gt;Below, you will find a few key facts outlining how this Bayes Study Group sessions are run. You will find that what we do is quite a lot (I would like to think it quite exhaustive, actually). We are following the example set by some colleagues at the University of Oxford here and I have added some extra bits to the material and schedule. Go big or go home, right?&lt;/p&gt;
+&lt;p&gt;That being said, I realise that what I propose is quite a big-time commitment – both in per-week hours and for how long this study group is supposed to run.&lt;/p&gt;
+&lt;h2 id=&#34;meetings&#34;&gt;Meetings:&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Scheduling:
+&lt;ul&gt;
+&lt;li&gt;Friday 1300-1600 GMT+1 (sessions end earlier if we are done earlier, of course)&lt;/li&gt;
+&lt;li&gt;Weekly for 20 sessions including 4 input talks by practicioneers of Bayesian analyses&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;contents&#34;&gt;Contents&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;We follow the material noted further down under Group Material&lt;/li&gt;
+&lt;li&gt;We prepare ourselves by working through the material noted for each session&lt;/li&gt;
+&lt;li&gt;At the start of each session, either me or a volunteer quickly presents a summary of the preparation material. This does not mean a presenter should have mastered the material at all – simply be able to provide a red-thread through the contents and get a discussion going. We then go into questions/challenges concerning the material, practical examples, and personal implementations.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;material&#34;&gt;Material&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Lecture Recording “Statistical Rethinking” by Richard McElreath; available 
+&lt;a href=&#34;https://www.youtube.com/playlist?list=PLDcUM9US4XdNM4Edgs7weiyIguLSToZRI&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;here&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Book “Statistical Rethinking” by Richard McElreath; available 
+&lt;a href=&#34;https://github.com/Booleans/statistical-rethinking/blob/master/Statistical%20Rethinking%202nd%20Edition.pdf&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;here&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Practical Examples:
+&lt;ul&gt;
+&lt;li&gt;Course Material 
+&lt;a href=&#34;https://github.com/rmcelreath/stat_rethinking_2020&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Statistical Rethinking&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Book “Introduction to WinBUGS for Ecologists” by Marc Kéry; available 
+&lt;a href=&#34;https://www.sciencedirect.com/book/9780123786050/introduction-to-winbugs-for-ecologists&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;here&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Book “Bayesian Population Analysis using WinBUGS” by Marc Kéry and Michael Schaub; available 
+&lt;a href=&#34;https://www.sciencedirect.com/book/9780123870209/bayesian-population-analysis-using-winbugs&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;here&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Further Input (all prospective)&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Bayesian Networks Study Group</title>
+      <link>https://www.erikkusch.com/project/bayesnets/</link>
+      <pubDate>Mon, 28 Dec 2020 00:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/project/bayesnets/</guid>
+      <description>&lt;div class=&#34;alert alert-success&#34;&gt;
+  &lt;div&gt;
+    This study group has come to an end. All information about it can still be found below. We are now coordinating through Slack to get our fix of all things Bayes. Our Slack Workspace is open to anyone who wants to join us. To do so, simply let me know by &lt;a href=&#34;https://www.erikkusch.com/about#contact&#34;&gt;contacting me&lt;/a&gt; and shortly introduce yourself.
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;h1 id=&#34;motivation&#34;&gt;Motivation&lt;/h1&gt;
+&lt;p&gt;Building on the success of the 
+&lt;a href=&#34;https://www.erikkusch.com/project/aubayes/&#34;&gt;Bayes Study Group&lt;/a&gt; I ran two years ago, I have decided to create another study group this time focusing on explicit inference and analysis of Bayesian Networks which I believe are a neat tool for hypothesis testing.&lt;/p&gt;
+&lt;h1 id=&#34;conduct--logistics&#34;&gt;Conduct &amp;amp; Logistics&lt;/h1&gt;
+&lt;p&gt;Below, you will find a few key facts outlining how this Bayesian Network Study Group sessions are run. You will find that what we do is quite a lot (I would like to think it quite exhaustive, actually).&lt;/p&gt;
+&lt;p&gt;That being said, I realise that what I propose is quite a big-time commitment – both in per-week hours and for how long this study group is supposed to run.&lt;/p&gt;
+&lt;h2 id=&#34;meetings&#34;&gt;Meetings:&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Scheduling:
+&lt;ul&gt;
+&lt;li&gt;Tuesday 1500-1700 CEST (sessions end earlier if we are done earlier, of course)&lt;/li&gt;
+&lt;li&gt;Weekly for 8 sessions&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;contents&#34;&gt;Contents&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;We follow the material noted further down under Group Material&lt;/li&gt;
+&lt;li&gt;We prepare ourselves by working through the material noted for each session the proposed 
+&lt;a href=&#34;https://www.erikkusch.com/project/bayesnets/Schedule.pdf&#34;&gt;schedule&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;At the start of each session, either me or a volunteer quickly presents a summary of the preparation material. This does not mean a presenter should have mastered the material at all – simply be able to provide a red-thread through the contents and get a discussion going. We then go into questions/challenges concerning the material, practical examples, and personal implementations.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;material&#34;&gt;Material&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Book “Bayesian Networks With Examples in R” by Marco Scutari &amp;amp; Jean-Baptiste Denis; available 
+&lt;a href=&#34;https://www.routledge.com/Bayesian-Networks-With-Examples-in-R/Scutari-Denis/p/book/9780367366513&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;here&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Book “Bayesian Networks in R with Applications in Systems Biology” by Radhakrishnan Nagarajan, Marco Scutari &amp;amp; Sophie Lèbre; available 
+&lt;a href=&#34;https://link.springer.com/book/10.1007/978-1-4614-6446-4&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;here&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>BIOlogical response RATES to current rates of environmental changes</title>
+      <link>https://www.erikkusch.com/project/biorates/</link>
+      <pubDate>Mon, 28 Dec 2020 00:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/project/biorates/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Vegetation Memory across Global Dryland Regions</title>
+      <link>https://www.erikkusch.com/project/vegetation-memory-across-global-dryland-regions/</link>
+      <pubDate>Mon, 28 Dec 2020 00:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/project/vegetation-memory-across-global-dryland-regions/</guid>
+      <description>&lt;h1 id=&#34;motivation&#34;&gt;Motivation&lt;/h1&gt;
+&lt;p&gt;Vegetation memory describes the effect of antecedent environmental and ecosystem states on ecosystem state in the present and has been used as an important proxy for ecosystem recovery rates potentially a key component of vegetation resilience, at a global scale. In particular, strong vegetation memory effects have been identified in dryland regions coinciding with decreased vegetation sensitivity towards climatological drivers.&lt;/p&gt;
+&lt;p&gt;Here, we aim to test the components and drivers of vegetation memory in dryland regions using state-of the-art climate reanalysis data and refined approaches to identify vegetation-memory characteristics across global dryland regions. We show that (1) dryland regions are characterised by strong vegetation memory (intrinsic and extrinsic), (2) it is possible to distinguish intrinsic and extrinsic vegetation memory to a hitherto unachieved degree using climate reanalysis data sets, (3) the link between intrinsic vegetation memory and resilience may be an oversimplification, and (4) dryland vegetation does not react to bioclimatic forcing in the same way across the Earth.&lt;/p&gt;
+&lt;h1 id=&#34;description&#34;&gt;Description&lt;/h1&gt;
+&lt;p&gt;GIMMS NDVI 3g data was used as a proxy of vegetation response in the dryland study regions between January 1982 and December 2015. The NDVI is a compound vegetation index made up from reflectance in the red and near-infrared reflectance bands.
+For independent climate data in this study, we used European Centre for Medium-range Weather Forecasts ReAnalysis 5 (ERA5) data from the European Centre for Medium-Range Weather Forecasts (ECMWF). ERA5 data is available for hourly intervals (which we assembled to monthly time steps) from 1950 to present day at a 30km × 30km spatial resolution of global coverage making the resolution of ERA5 and AVHRR-based GIMMS NDVI 3g incompatible. We resolved this issue by statistically downscaling ERA5 data using the kriging methodology (&lt;code&gt;KrigR&lt;/code&gt; package of my 
+&lt;a href=&#34;https://www.erikkusch.com/project/krigr/&#34;&gt;KrigR - Downloading and Downscaling of ERA5(-Land) data using R&lt;/a&gt; project).&lt;/p&gt;
+&lt;p&gt;To assess the relative importance of intrinsic memory and extrinsic climate forcing we used a linear modelling approach akin to DeKeersmaecker et al, 2015. We use NDVI anomalies on a one-month lag, air temperature (Tair) and soil moisture (Qsoil) data on different temporal lags to model anomalies of monthly NDVI values over three decades. Due to issues of multi-collinearity, we do so using a principal component regression approach.&lt;/p&gt;
+&lt;p&gt;The results contain information about relative importance of vegetation memory components, their temporal lags,and are presented in the context of contemporary vegetation memory and sensitivity literature.&lt;/p&gt;
+&lt;p&gt;Our findings demonstrate novel observations of vegetation memory patterns across dryland regions such as regional differences of processes forming vegetation memory capabilities. Consequently, this study provides a helpful stepping stone for refining and combining already existing methodology which could, in turn, generate important knowledge of ecosystem functioning and resilience.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

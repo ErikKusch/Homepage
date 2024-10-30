@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Bayesian Networks | Erik Kusch</title>
+    <link>https://www.erikkusch.com/tag/bayesian-networks/</link>
+      <atom:link href="https://www.erikkusch.com/tag/bayesian-networks/index.xml" rel="self" type="application/rss+xml" />
+    <description>Bayesian Networks</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-gb</language><copyright>© 2024</copyright><lastBuildDate>Mon, 28 Dec 2020 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg</url>
+      <title>Bayesian Networks</title>
+      <link>https://www.erikkusch.com/tag/bayesian-networks/</link>
+    </image>
+    
+    <item>
+      <title>Bayesian Networks Study Group</title>
+      <link>https://www.erikkusch.com/project/bayesnets/</link>
+      <pubDate>Mon, 28 Dec 2020 00:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/project/bayesnets/</guid>
+      <description>&lt;div class=&#34;alert alert-success&#34;&gt;
+  &lt;div&gt;
+    This study group has come to an end. All information about it can still be found below. We are now coordinating through Slack to get our fix of all things Bayes. Our Slack Workspace is open to anyone who wants to join us. To do so, simply let me know by &lt;a href=&#34;https://www.erikkusch.com/about#contact&#34;&gt;contacting me&lt;/a&gt; and shortly introduce yourself.
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;h1 id=&#34;motivation&#34;&gt;Motivation&lt;/h1&gt;
+&lt;p&gt;Building on the success of the 
+&lt;a href=&#34;https://www.erikkusch.com/project/aubayes/&#34;&gt;Bayes Study Group&lt;/a&gt; I ran two years ago, I have decided to create another study group this time focusing on explicit inference and analysis of Bayesian Networks which I believe are a neat tool for hypothesis testing.&lt;/p&gt;
+&lt;h1 id=&#34;conduct--logistics&#34;&gt;Conduct &amp;amp; Logistics&lt;/h1&gt;
+&lt;p&gt;Below, you will find a few key facts outlining how this Bayesian Network Study Group sessions are run. You will find that what we do is quite a lot (I would like to think it quite exhaustive, actually).&lt;/p&gt;
+&lt;p&gt;That being said, I realise that what I propose is quite a big-time commitment – both in per-week hours and for how long this study group is supposed to run.&lt;/p&gt;
+&lt;h2 id=&#34;meetings&#34;&gt;Meetings:&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Scheduling:
+&lt;ul&gt;
+&lt;li&gt;Tuesday 1500-1700 CEST (sessions end earlier if we are done earlier, of course)&lt;/li&gt;
+&lt;li&gt;Weekly for 8 sessions&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;contents&#34;&gt;Contents&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;We follow the material noted further down under Group Material&lt;/li&gt;
+&lt;li&gt;We prepare ourselves by working through the material noted for each session the proposed 
+&lt;a href=&#34;https://www.erikkusch.com/project/bayesnets/Schedule.pdf&#34;&gt;schedule&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;At the start of each session, either me or a volunteer quickly presents a summary of the preparation material. This does not mean a presenter should have mastered the material at all – simply be able to provide a red-thread through the contents and get a discussion going. We then go into questions/challenges concerning the material, practical examples, and personal implementations.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;material&#34;&gt;Material&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Book “Bayesian Networks With Examples in R” by Marco Scutari &amp;amp; Jean-Baptiste Denis; available 
+&lt;a href=&#34;https://www.routledge.com/Bayesian-Networks-With-Examples-in-R/Scutari-Denis/p/book/9780367366513&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;here&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Book “Bayesian Networks in R with Applications in Systems Biology” by Radhakrishnan Nagarajan, Marco Scutari &amp;amp; Sophie Lèbre; available 
+&lt;a href=&#34;https://link.springer.com/book/10.1007/978-1-4614-6446-4&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;here&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

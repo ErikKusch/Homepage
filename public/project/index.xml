@@ -1,35 +1,245 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Projects | Academic</title>
-    <link>/project/</link>
-      <atom:link href="/project/index.xml" rel="self" type="application/rss+xml" />
+    <title>Projects | Erik Kusch</title>
+    <link>https://www.erikkusch.com/project/</link>
+      <atom:link href="https://www.erikkusch.com/project/index.xml" rel="self" type="application/rss+xml" />
     <description>Projects</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Wed, 27 Apr 2016 00:00:00 +0000</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-gb</language><copyright>© 2024</copyright><lastBuildDate>Sat, 04 Mar 2023 00:00:00 +0000</lastBuildDate>
     <image>
-      <url>/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_2.png</url>
+      <url>https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg</url>
       <title>Projects</title>
-      <link>/project/</link>
+      <link>https://www.erikkusch.com/project/</link>
     </image>
     
     <item>
-      <title>External Project</title>
-      <link>/project/external-project/</link>
-      <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>
-      <guid>/project/external-project/</guid>
+      <title>Biodiversity Digitial Twin (BioDT)</title>
+      <link>https://www.erikkusch.com/project/biodt/</link>
+      <pubDate>Sat, 04 Mar 2023 00:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/project/biodt/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Internal Project</title>
-      <link>/project/internal-project/</link>
-      <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>
-      <guid>/project/internal-project/</guid>
-      <description>&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis posuere tellus ac convallis placerat. Proin tincidunt magna sed ex sollicitudin condimentum. Sed ac faucibus dolor, scelerisque sollicitudin nisi. Cras purus urna, suscipit quis sapien eu, pulvinar tempor diam. Quisque risus orci, mollis id ante sit amet, gravida egestas nisl. Sed ac tempus magna. Proin in dui enim. Donec condimentum, sem id dapibus fringilla, tellus enim condimentum arcu, nec volutpat est felis vel metus. Vestibulum sit amet erat at nulla eleifend gravida.&lt;/p&gt;
-&lt;p&gt;Nullam vel molestie justo. Curabitur vitae efficitur leo. In hac habitasse platea dictumst. Sed pulvinar mauris dui, eget varius purus congue ac. Nulla euismod, lorem vel elementum dapibus, nunc justo porta mi, sed tempus est est vel tellus. Nam et enim eleifend, laoreet sem sit amet, elementum sem. Morbi ut leo congue, maximus velit ut, finibus arcu. In et libero cursus, rutrum risus non, molestie leo. Nullam congue quam et volutpat malesuada. Sed risus tortor, pulvinar et dictum nec, sodales non mi. Phasellus lacinia commodo laoreet. Nam mollis, erat in feugiat consectetur, purus eros egestas tellus, in auctor urna odio at nibh. Mauris imperdiet nisi ac magna convallis, at rhoncus ligula cursus.&lt;/p&gt;
-&lt;p&gt;Cras aliquam rhoncus ipsum, in hendrerit nunc mattis vitae. Duis vitae efficitur metus, ac tempus leo. Cras nec fringilla lacus. Quisque sit amet risus at ipsum pharetra commodo. Sed aliquam mauris at consequat eleifend. Praesent porta, augue sed viverra bibendum, neque ante euismod ante, in vehicula justo lorem ac eros. Suspendisse augue libero, venenatis eget tincidunt ut, malesuada at lorem. Donec vitae bibendum arcu. Aenean maximus nulla non pretium iaculis. Quisque imperdiet, nulla in pulvinar aliquet, velit quam ultrices quam, sit amet fringilla leo sem vel nunc. Mauris in lacinia lacus.&lt;/p&gt;
-&lt;p&gt;Suspendisse a tincidunt lacus. Curabitur at urna sagittis, dictum ante sit amet, euismod magna. Sed rutrum massa id tortor commodo, vitae elementum turpis tempus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean purus turpis, venenatis a ullamcorper nec, tincidunt et massa. Integer posuere quam rutrum arcu vehicula imperdiet. Mauris ullamcorper quam vitae purus congue, quis euismod magna eleifend. Vestibulum semper vel augue eget tincidunt. Fusce eget justo sodales, dapibus odio eu, ultrices lorem. Duis condimentum lorem id eros commodo, in facilisis mauris scelerisque. Morbi sed auctor leo. Nullam volutpat a lacus quis pharetra. Nulla congue rutrum magna a ornare.&lt;/p&gt;
-&lt;p&gt;Aliquam in turpis accumsan, malesuada nibh ut, hendrerit justo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Quisque sed erat nec justo posuere suscipit. Donec ut efficitur arcu, in malesuada neque. Nunc dignissim nisl massa, id vulputate nunc pretium nec. Quisque eget urna in risus suscipit ultricies. Pellentesque odio odio, tincidunt in eleifend sed, posuere a diam. Nam gravida nisl convallis semper elementum. Morbi vitae felis faucibus, vulputate orci placerat, aliquet nisi. Aliquam erat volutpat. Maecenas sagittis pulvinar purus, sed porta quam laoreet at.&lt;/p&gt;
+      <title>Causes and Processes of Dryland Vegetation Memory</title>
+      <link>https://www.erikkusch.com/project/functional-traits-and-life-history-effects-on-high-resolution-vegetation-memory/</link>
+      <pubDate>Tue, 29 Dec 2020 00:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/project/functional-traits-and-life-history-effects-on-high-resolution-vegetation-memory/</guid>
+      <description>&lt;h1 id=&#34;disclaimer&#34;&gt;Disclaimer&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;This project is currently on hold.&lt;/strong&gt;&lt;/p&gt;
+&lt;h1 id=&#34;motivation&#34;&gt;Motivation&lt;/h1&gt;
+&lt;p&gt;Throughout my previous project concerning 
+&lt;a href=&#34;https://www.erikkusch.com/project/vegetation-memory-across-global-dryland-regions/&#34;&gt;Vegetation Memory across Global Dryland Regions&lt;/a&gt;, I identified prominent spatial patterns of intrinsic and extrinsic vegetation memory components. These patterns may serve us in discerning global and local resistance and recovery potential of vegetation communities to perturbations.&lt;/p&gt;
+&lt;p&gt;However, these patterns alone only tell part of the story. How do these come about? How are they maintained? Understanding these mechanisms would undoubtedly go a long way in predicting responses of vegetation to anthropogenic and climate change-driven disturbances. Ultimately, I expect this exercise to create valuable knowledge for conservation biology and the agricultural sector.&lt;/p&gt;
+&lt;h1 id=&#34;description&#34;&gt;Description&lt;/h1&gt;
+&lt;p&gt;MODIS EVI data is aggregated at bi-weekly intervals and used as a proxy of vegetation response in the dryland study regions between January 2000 and December 2019. Independent climate data is provided using the &lt;code&gt;KrigR&lt;/code&gt; package (
+&lt;a href=&#34;https://www.erikkusch.com/project/krigr/ar&#34;&gt;KrigR - Downloading and Downscaling of ERA5(-Land) data using R&lt;/a&gt;). Doing so allows us to make use of the high temporal resolution of the European Centre for Medium-range Weather Forecasts ReAnalysis 5 (ERA5) data from the European Centre for Medium-Range Weather Forecasts (ECMWF) at spatial resolutions of roughly 1x1km. Effectively, this increases the spatial resolution of vegetation memory products by almost one order of magnitude when compared to my previous project at 9x9km resolution. Vegetation memory is calculated the same way as during my previous project.&lt;/p&gt;
+&lt;p&gt;Using these high-resolution vegetation memory products, we can reasonably argue that ground-data obtained through functional trait campaigns or vegetation plot exercises represents the 1x1km grid reasonably well. Thus we are able to assess correlations between the different vegetation components and ground-truthed expressions of plant life. To identify what shapes vegetation memory expressions, I am investigating a range of three potential predictor families:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Plant Functional Traits&lt;/strong&gt; - I expect investment in certain functional characteristics to greatly influence resistance and recovery potential. For example, sturdy leaves should grant resistance to temperature fluctuations but are costly to recover once lost.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Life History Traits&lt;/strong&gt; - Life history speed and timing undoubtedly alters vegetation memory expressions. But which life history traits fair best at explaining these processes? For example, a short-lived population may be less resistant to a perturbation than a long-lived one, but surely boasts a reproduction rate that achieves fast recovery.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Abiotic Legacies&lt;/strong&gt; - Biological organisms adapt to their surroundings. On varying time-scales and through varying processes, but they adapt nonetheless. I aim to investigate how strong these adaptations become by computing the impact of the legacy mean and standard deviation of abiotic conditions on vegetation memory components. For example, a species in a highly variable aridity regime may be more resistant to fluctuations in aridity than one used to stable, moist conditions&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>A Macroecological Perspective to Ecological Networks</title>
+      <link>https://www.erikkusch.com/project/phd-packages/</link>
+      <pubDate>Mon, 28 Dec 2020 00:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/project/phd-packages/</guid>
+      <description>&lt;p&gt;My PhD project was a part of the greater 
+&lt;a href=&#34;https://www.erikkusch.com/project/biorates/&#34;&gt;BIORATES&lt;/a&gt; project.&lt;/p&gt;
+&lt;h1 id=&#34;motivation&#34;&gt;Motivation&lt;/h1&gt;
+&lt;p&gt;Species rarely occur in isolation. Instead, they assemble into multi-species communities wherein individuals interact within and across species groups. These pairwise species interactions affect responses of biological communities to environmental conditions and perturbations. To understand and forecast changes within the Ecosphere, it is thus vital to quantify such interactions and explore their implications. Changes in pairwise species interactions are largely spurred by processes of the Anthropocene (e.g., changes in temperature, habitat availability). These affect entire ecosystems simultaneously thus necessitating the exploration of biological interactions at macroecological scales. Despite the complexity of biological interactions and the networks they form at macroecological scales, their study can be carried out readily via ecological networks.&lt;/p&gt;
+&lt;p&gt;Here, I develop methodology and carry out analyses to address (1) the failure of contemporary macroecological research to incorporate state-of-the-art climate data by updating macroecological research practices, (2) the implications of mechanisms of extinction cascades within ecological networks with respect to interaction magnitude and potential/realised interactions thus using ecological networks as forecast tools, and finally (3) the lack of ecological network quantification at macroecological scales by inferring biological interactions from proxies.&lt;/p&gt;
+&lt;h1 id=&#34;work-packages&#34;&gt;Work Packages&lt;/h1&gt;
+&lt;h2 id=&#34;chapter-1---updating-macroecological-research-practices&#34;&gt;Chapter 1 - Updating Macroecological Research Practices&lt;/h2&gt;
+&lt;p&gt;Environmental conditions which regulate species distributions determine whether pairwise biological interactions can be realised (i.e., species which do not coincide cannot directly interact). Furthermore, changes in abiotic conditions alter the expression of realised interactions. Therefore, it is crucial to explicitly consider environmental conditions when quantifying and forecasting biological interactions, particularly at macroecological scales which are characterized by prominent environmental heterogeneity (e.g. thermal gradients). However, macroecological research, at present, does not leverage the most recent and accurate climate data products available. Therefore, we require changes to macroecological research practices to integrate state-of-the-art climate data.&lt;/p&gt;
+&lt;p&gt;To resolve this issue, I have developed the &lt;code&gt;KrigR&lt;/code&gt; &lt;code&gt;R&lt;/code&gt; package which provides an easy-to-use and highly flexible infrastructure for access, temporal aggregation, spatial limitation, and statistical downloading of state of the art climate data from ECMWF. The resulting data products outperform legacy data products commonly used in macroecological research in (1) temporal resolution, (2) data accuracy, (3) provisioning of climate variables, (4) flexibility, and (5) applicability to specific research requirements.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;1.png&#34; alt=&#34;CH1 - Macroecological Climate Data Practices&#34;&gt;&lt;/p&gt;
+&lt;p&gt;This work has been published in 
+&lt;a href=&#34;https://www.erikkusch.com/publication/krigr-a-tool-for-statistically-downscaling-climate-reanalysis-data-for-ecological-applications/&#34;&gt;Kusch &amp;amp; Davy, 2022&lt;/a&gt; and 
+&lt;a href=&#34;https://www.erikkusch.com/publication/reconciling-high-resolution-climate-datasets-using-krigr/&#34;&gt;Davy &amp;amp; Kusch, 2021&lt;/a&gt;. Due to the ongoing development of &lt;code&gt;KrigR&lt;/code&gt;, I have transferred any ongoing work on these issues to the 
+&lt;a href=&#34;https://www.erikkusch.com/project/krigr/&#34;&gt;&lt;code&gt;KrigR&lt;/code&gt; project&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;chapter-2---using-ecological-networks-as-forecast-tools&#34;&gt;Chapter 2 - Using Ecological Networks as Forecast Tools&lt;/h2&gt;
+&lt;p&gt;Biological interactions range in identity (i.e, present, absent), sign (i.e., positive and negative), and magnitude which determine the importance of an interaction for the persistence of interacting species and entire communities. This impact manifests especially through extinction cascades which exacerbate the biodiversity loss and change of network topologies spurred by Anthropogenic impacts. Such cascades are characterized by the loss of biological interactions following the extinction of a species leading to additional species extinctions. Thus, to forecast future community structures and quantify risk to ecosystem stability and functioning, it is vital to consider both the potential for and sign as well as magnitude of species interactions. Flexible and easy-to-use methodology for this purpose is currently lacking. Consequently, exploration of extinction cascades has remained simplistic and ought to be updated to facilitate the exploration of realistic future scenarios of the Ecosphere.&lt;/p&gt;
+&lt;p&gt;In addressing this knowledge gap, I have co-developed the &lt;code&gt;NetworkExtinction&lt;/code&gt; &lt;code&gt;R&lt;/code&gt; package which enables simulations of extinction cascades within trophic as well as mutualistic networks with varying levels of link-importance and realisation of potential interactions. Using this tool, I subsequently explore network resilience landscapes defined by link-loss sensitivity and rewiring probability thresholds for a collection of empirical mutualistic networks across the Earth.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;2.png&#34; alt=&#34;CH2 - Ecological Networks as Forecasting Tools&#34;&gt;&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;NetworkExtinction&lt;/code&gt; package has been published as 
+&lt;a href=&#34;https://www.erikkusch.com/publication/networkextinction-an-r-package-to-simulate-extinctions-propagation-and-rewiring-potential-in-ecological-networks/&#34;&gt;Ávila-Thieme &amp;amp; Kusch et. al, 2023&lt;/a&gt; while the exploration of mutualistic network resilience landscapes (
+&lt;a href=&#34;https://www.erikkusch.com/publication/ecological-network-resilience-extinction-proxies-updating-projections-of-ecological-networks/&#34;&gt;Kusch, Ordonez&lt;/a&gt;) is currently being prepared for submission.&lt;/p&gt;
+&lt;h2 id=&#34;chapter-3---inferring-biological-interactions-from-proxies&#34;&gt;Chapter 3 - Inferring Biological Interactions from Proxies&lt;/h2&gt;
+&lt;p&gt;Ecological networks are affected by the scales (e.g., local, regional, and continental) at which they are represented. Thus, locally quantified biological interactions cannot be used reliably to represent macroecological processes. However, sourcing networks at macroecological scales via traditional in-situ observations is prohibitively labour-intensive thus requiring the inference of biological interactions from macroecological proxies. However, the accuracy of already established biological interaction inference approaches remains understudied, calling into question their utility. Therefore, consistency and performance of interaction inference ought to be evaluated for use at macroecological scales.&lt;/p&gt;
+&lt;p&gt;Within this final chapter of my PhD, I assess the consistency of four different interaction inference approaches (COOCCUR, NETASSOC, HMSC, and NDD-RIM) across ecologically relevant skills. Finding little consistency between the inferred ecological networks, I subsequently develop a demographic simulation framework of populations of interacting species across time and space and establish guidelines for assessment of ecological network inference performance.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;3.png&#34; alt=&#34;CH3 - Ecological Network Inference&#34;&gt;&lt;/p&gt;
+&lt;p&gt;While the study of inference consistency is already submitted for review as 
+&lt;a href=&#34;https://www.erikkusch.com/publication/ecological-network-inference-is-not-consistent-across-sales-or-approaches/&#34;&gt;Kusch et. al, 2023&lt;/a&gt;, a publication of 
+&lt;a href=&#34;https://www.erikkusch.com/publication/a-novel-simulation-framework-for-validation-of-ecological-network-inference/&#34;&gt;Kusch &amp;amp; Vinton&lt;/a&gt; is to follow presenting the simulation framework.&lt;/p&gt;
+&lt;h1 id=&#34;implications&#34;&gt;Implications&lt;/h1&gt;
+&lt;p&gt;To ensure ecosystem management and conservation efforts are targeted appropriately under climate change, my work highlights that macroecological research practices ought to undergo a paradigm shift away from one-size-fits-all climate datasets towards reproducible and flexible data workflows for generation of climate datasets with respect to specific study purposes and requirements. Additionally, my explicit integration of ecological network resilience mechanisms towards extinction cascades reveals that contemporary approaches are likely overly optimistic in their projections of biodiversity loss throughout the Anthropocene. Lastly, I caution against naive use of ecological network inference within macroecological research. Instead, to render knowledge of ecological networks at macroecological scales, I argue that extensive assessments of network inference performance are required for which I present important groundwork.&lt;/p&gt;
+&lt;p&gt;Ultimately, my dissertation represents a key advancement of use-cases of ecological networks at macroecological scales. Thus, adopting the novel methodology I have developed for macroecological use and inference of ecological networks is pressing in order to ensure adequate ecosystem management throughout the Anthropocene.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Bayes Study Group</title>
+      <link>https://www.erikkusch.com/project/aubayes/</link>
+      <pubDate>Mon, 28 Dec 2020 00:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/project/aubayes/</guid>
+      <description>&lt;div class=&#34;alert alert-success&#34;&gt;
+  &lt;div&gt;
+    This study group has come to an end. All information about it can still be found below. We are now coordinating through Slack to get our fix of all things Bayes. Our Slack Workspace is open to anyone who wants to join us. To do so, simply let me know by &lt;a href=&#34;https://www.erikkusch.com/about#contact&#34;&gt;contacting me&lt;/a&gt; and shortly introduce yourself.
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;h1 id=&#34;motivation&#34;&gt;Motivation&lt;/h1&gt;
+&lt;p&gt;Have you ever read a paper and thought: “Wow, this is really cool”, then read on only to find the word “Bayesian” in the analysis specification and promptly get lost at the terminology and approach to statistics?&lt;/p&gt;
+&lt;p&gt;If you did/do, you are obviously not alone and I think it might be time we do something about it. To this end, I have created a Bayes Study Group (formerly AU Bayes Study Group) within which we work our way through (1) a 
+&lt;a href=&#34;https://www.youtube.com/playlist?list=PLDcUM9US4XdNM4Edgs7weiyIguLSToZRI&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;lecture series&lt;/a&gt; by Bayes Wunderkind Richard McElreath, (2) his corresponding book (“
+&lt;a href=&#34;https://xcelab.net/rm/statistical-rethinking/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Statistical Rethinking&lt;/a&gt;”), and (3) a few practical examples in &lt;code&gt;R&lt;/code&gt;.&lt;/p&gt;
+&lt;h1 id=&#34;conduct--logistics&#34;&gt;Conduct &amp;amp; Logistics&lt;/h1&gt;
+&lt;p&gt;Below, you will find a few key facts outlining how this Bayes Study Group sessions are run. You will find that what we do is quite a lot (I would like to think it quite exhaustive, actually). We are following the example set by some colleagues at the University of Oxford here and I have added some extra bits to the material and schedule. Go big or go home, right?&lt;/p&gt;
+&lt;p&gt;That being said, I realise that what I propose is quite a big-time commitment – both in per-week hours and for how long this study group is supposed to run.&lt;/p&gt;
+&lt;h2 id=&#34;meetings&#34;&gt;Meetings:&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Scheduling:
+&lt;ul&gt;
+&lt;li&gt;Friday 1300-1600 GMT+1 (sessions end earlier if we are done earlier, of course)&lt;/li&gt;
+&lt;li&gt;Weekly for 20 sessions including 4 input talks by practicioneers of Bayesian analyses&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;contents&#34;&gt;Contents&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;We follow the material noted further down under Group Material&lt;/li&gt;
+&lt;li&gt;We prepare ourselves by working through the material noted for each session&lt;/li&gt;
+&lt;li&gt;At the start of each session, either me or a volunteer quickly presents a summary of the preparation material. This does not mean a presenter should have mastered the material at all – simply be able to provide a red-thread through the contents and get a discussion going. We then go into questions/challenges concerning the material, practical examples, and personal implementations.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;material&#34;&gt;Material&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Lecture Recording “Statistical Rethinking” by Richard McElreath; available 
+&lt;a href=&#34;https://www.youtube.com/playlist?list=PLDcUM9US4XdNM4Edgs7weiyIguLSToZRI&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;here&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Book “Statistical Rethinking” by Richard McElreath; available 
+&lt;a href=&#34;https://github.com/Booleans/statistical-rethinking/blob/master/Statistical%20Rethinking%202nd%20Edition.pdf&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;here&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Practical Examples:
+&lt;ul&gt;
+&lt;li&gt;Course Material 
+&lt;a href=&#34;https://github.com/rmcelreath/stat_rethinking_2020&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Statistical Rethinking&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Book “Introduction to WinBUGS for Ecologists” by Marc Kéry; available 
+&lt;a href=&#34;https://www.sciencedirect.com/book/9780123786050/introduction-to-winbugs-for-ecologists&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;here&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Book “Bayesian Population Analysis using WinBUGS” by Marc Kéry and Michael Schaub; available 
+&lt;a href=&#34;https://www.sciencedirect.com/book/9780123870209/bayesian-population-analysis-using-winbugs&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;here&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Further Input (all prospective)&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Bayesian Networks Study Group</title>
+      <link>https://www.erikkusch.com/project/bayesnets/</link>
+      <pubDate>Mon, 28 Dec 2020 00:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/project/bayesnets/</guid>
+      <description>&lt;div class=&#34;alert alert-success&#34;&gt;
+  &lt;div&gt;
+    This study group has come to an end. All information about it can still be found below. We are now coordinating through Slack to get our fix of all things Bayes. Our Slack Workspace is open to anyone who wants to join us. To do so, simply let me know by &lt;a href=&#34;https://www.erikkusch.com/about#contact&#34;&gt;contacting me&lt;/a&gt; and shortly introduce yourself.
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;h1 id=&#34;motivation&#34;&gt;Motivation&lt;/h1&gt;
+&lt;p&gt;Building on the success of the 
+&lt;a href=&#34;https://www.erikkusch.com/project/aubayes/&#34;&gt;Bayes Study Group&lt;/a&gt; I ran two years ago, I have decided to create another study group this time focusing on explicit inference and analysis of Bayesian Networks which I believe are a neat tool for hypothesis testing.&lt;/p&gt;
+&lt;h1 id=&#34;conduct--logistics&#34;&gt;Conduct &amp;amp; Logistics&lt;/h1&gt;
+&lt;p&gt;Below, you will find a few key facts outlining how this Bayesian Network Study Group sessions are run. You will find that what we do is quite a lot (I would like to think it quite exhaustive, actually).&lt;/p&gt;
+&lt;p&gt;That being said, I realise that what I propose is quite a big-time commitment – both in per-week hours and for how long this study group is supposed to run.&lt;/p&gt;
+&lt;h2 id=&#34;meetings&#34;&gt;Meetings:&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Scheduling:
+&lt;ul&gt;
+&lt;li&gt;Tuesday 1500-1700 CEST (sessions end earlier if we are done earlier, of course)&lt;/li&gt;
+&lt;li&gt;Weekly for 8 sessions&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;contents&#34;&gt;Contents&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;We follow the material noted further down under Group Material&lt;/li&gt;
+&lt;li&gt;We prepare ourselves by working through the material noted for each session the proposed 
+&lt;a href=&#34;https://www.erikkusch.com/project/bayesnets/Schedule.pdf&#34;&gt;schedule&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;At the start of each session, either me or a volunteer quickly presents a summary of the preparation material. This does not mean a presenter should have mastered the material at all – simply be able to provide a red-thread through the contents and get a discussion going. We then go into questions/challenges concerning the material, practical examples, and personal implementations.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;material&#34;&gt;Material&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Book “Bayesian Networks With Examples in R” by Marco Scutari &amp;amp; Jean-Baptiste Denis; available 
+&lt;a href=&#34;https://www.routledge.com/Bayesian-Networks-With-Examples-in-R/Scutari-Denis/p/book/9780367366513&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;here&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Book “Bayesian Networks in R with Applications in Systems Biology” by Radhakrishnan Nagarajan, Marco Scutari &amp;amp; Sophie Lèbre; available 
+&lt;a href=&#34;https://link.springer.com/book/10.1007/978-1-4614-6446-4&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;here&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>BIOlogical response RATES to current rates of environmental changes</title>
+      <link>https://www.erikkusch.com/project/biorates/</link>
+      <pubDate>Mon, 28 Dec 2020 00:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/project/biorates/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>KrigR - Downloading and Downscaling of ERA5(-Land) data using R</title>
+      <link>https://www.erikkusch.com/project/krigr/</link>
+      <pubDate>Mon, 28 Dec 2020 00:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/project/krigr/</guid>
+      <description>&lt;div class=&#34;alert alert-danger&#34;&gt;
+  &lt;div&gt;
+    I am continuing to develop &lt;code&gt;KrigR&lt;/code&gt;, add to its functionality, and broaden its scope. For any suggestions of development goals, novel functionality as well as any issues you might face with &lt;code&gt;KrigR&lt;/code&gt;, please register an issue on &lt;a href=&#34;https://github.com/ErikKusch/KrigR/issues&#34; target=&#34;_blank&#34;&gt;GitHub&lt;/a&gt;. where I track these issues. Please refrain from inquiries via direct E-mail.
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;h1 id=&#34;motivation&#34;&gt;Motivation&lt;/h1&gt;
+&lt;p&gt;Contemporary studies of remote sensing and macroecology largely rely on legacy climate data which is surpassed by state-of-the-art climate reanalysis data sets such as the European Centre for Medium-range Weather Forecasts ReAnalysis 5 (ERA5) data catalogue which represents the forefront of advances in data assimilation and climate modelling.&lt;/p&gt;
+&lt;p&gt;Using these data sets within &lt;code&gt;R&lt;/code&gt; – the most prominent statistical software in macroecology – is a complicated task that involves downloading of data via shell scripts, reformatting of coordinate system, and might even require rescaling of the climate data.&lt;/p&gt;
+&lt;p&gt;In order to make the use of ERA5(-Land) in future analyses more streamlined, I am developing an &lt;code&gt;R&lt;/code&gt; Package (&lt;code&gt;KrigR&lt;/code&gt;) which will handle downloading and reformatting of ERA5(-Land) data. Furthermore, this package offers rescaling capabilities via the Kriging functionality of the &lt;code&gt;automap&lt;/code&gt; package whilst enabling multi-core processing for faster computation of time-series data.&lt;/p&gt;
+&lt;h1 id=&#34;description&#34;&gt;Description&lt;/h1&gt;
+&lt;p&gt;The superiority of ERA5(-Land) data over legacy data sets is largely due to:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;The volume of observational data used to create the ERA5 product. This includes a large volume of satellite data, ground-based weather station/independent institute data collection efforts, and other station data from a wide variety of data providers. This is in contrast to gridded observational datasets which are often characterised by their individual biases in sampling, coverage, and choice of interpolation and homogenization to create a gridded product.&lt;/li&gt;
+&lt;li&gt;The advances in data assimilation procedures. Data assimilation for geophysical application has greatly developed as a field in recent decades. This has included fundamental methodological advancements, such as the development of the ensemble Kalman filter, as well developments specific to geophysical application of data assimilation, such as approaches to localisation.&lt;/li&gt;
+&lt;li&gt;The complexity of the underlying models. Reanalysis products have been widely used to shed light on physical processes. ERA5 was created using the ECMWF’s integrated forecasting system which is the world’s best forecast model and is continuously developed using the latest understanding of the physics of the climate system.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;&lt;code&gt;KrigR&lt;/code&gt; is a tool to streamline and standardise the implementation of state-of-the-art ERA5(-Land) data and time series in large-scale analyses. As such, the &lt;code&gt;R&lt;/code&gt; Package includes the following functionality:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Download functions for:
+&lt;ul&gt;
+&lt;li&gt;ERA5(-Land) data&lt;/li&gt;
+&lt;li&gt;GMTED2010 covariate data (kriging will not be limited to GMTED2010 alone)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Preprocessing of ERA5(-Land) data&lt;/li&gt;
+&lt;li&gt;Statistical downscaling of ERA5(-Land) data using kriging methodology&lt;/li&gt;
+&lt;li&gt;Selection of regions by shapefiles or extents&lt;/li&gt;
+&lt;li&gt;Variable list with guidelines for statistical downscaling (this is currently being developed)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;KrigR&lt;/code&gt; downloads ERA5(-Land) upon having been provided with the required ECMWF API key and includes several self-checking statements to avoid the most common issues with the kriging methodology.&lt;/p&gt;
+&lt;p&gt;Users are be able to start the process of the &lt;code&gt;KrigR&lt;/code&gt; workflow at any given function of the package, but it is recommended to let &lt;code&gt;KrigR&lt;/code&gt; handle the entire workflow as intended.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Vegetation Memory across Global Dryland Regions</title>
+      <link>https://www.erikkusch.com/project/vegetation-memory-across-global-dryland-regions/</link>
+      <pubDate>Mon, 28 Dec 2020 00:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/project/vegetation-memory-across-global-dryland-regions/</guid>
+      <description>&lt;h1 id=&#34;motivation&#34;&gt;Motivation&lt;/h1&gt;
+&lt;p&gt;Vegetation memory describes the effect of antecedent environmental and ecosystem states on ecosystem state in the present and has been used as an important proxy for ecosystem recovery rates potentially a key component of vegetation resilience, at a global scale. In particular, strong vegetation memory effects have been identified in dryland regions coinciding with decreased vegetation sensitivity towards climatological drivers.&lt;/p&gt;
+&lt;p&gt;Here, we aim to test the components and drivers of vegetation memory in dryland regions using state-of the-art climate reanalysis data and refined approaches to identify vegetation-memory characteristics across global dryland regions. We show that (1) dryland regions are characterised by strong vegetation memory (intrinsic and extrinsic), (2) it is possible to distinguish intrinsic and extrinsic vegetation memory to a hitherto unachieved degree using climate reanalysis data sets, (3) the link between intrinsic vegetation memory and resilience may be an oversimplification, and (4) dryland vegetation does not react to bioclimatic forcing in the same way across the Earth.&lt;/p&gt;
+&lt;h1 id=&#34;description&#34;&gt;Description&lt;/h1&gt;
+&lt;p&gt;GIMMS NDVI 3g data was used as a proxy of vegetation response in the dryland study regions between January 1982 and December 2015. The NDVI is a compound vegetation index made up from reflectance in the red and near-infrared reflectance bands.
+For independent climate data in this study, we used European Centre for Medium-range Weather Forecasts ReAnalysis 5 (ERA5) data from the European Centre for Medium-Range Weather Forecasts (ECMWF). ERA5 data is available for hourly intervals (which we assembled to monthly time steps) from 1950 to present day at a 30km × 30km spatial resolution of global coverage making the resolution of ERA5 and AVHRR-based GIMMS NDVI 3g incompatible. We resolved this issue by statistically downscaling ERA5 data using the kriging methodology (&lt;code&gt;KrigR&lt;/code&gt; package of my 
+&lt;a href=&#34;https://www.erikkusch.com/project/krigr/&#34;&gt;KrigR - Downloading and Downscaling of ERA5(-Land) data using R&lt;/a&gt; project).&lt;/p&gt;
+&lt;p&gt;To assess the relative importance of intrinsic memory and extrinsic climate forcing we used a linear modelling approach akin to DeKeersmaecker et al, 2015. We use NDVI anomalies on a one-month lag, air temperature (Tair) and soil moisture (Qsoil) data on different temporal lags to model anomalies of monthly NDVI values over three decades. Due to issues of multi-collinearity, we do so using a principal component regression approach.&lt;/p&gt;
+&lt;p&gt;The results contain information about relative importance of vegetation memory components, their temporal lags,and are presented in the context of contemporary vegetation memory and sensitivity literature.&lt;/p&gt;
+&lt;p&gt;Our findings demonstrate novel observations of vegetation memory patterns across dryland regions such as regional differences of processes forming vegetation memory capabilities. Consequently, this study provides a helpful stepping stone for refining and combining already existing methodology which could, in turn, generate important knowledge of ecosystem functioning and resilience.&lt;/p&gt;
 </description>
     </item>
     

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Statistical Rethinking | Erik Kusch</title>
+    <link>https://www.erikkusch.com/tag/statistical-rethinking/</link>
+      <atom:link href="https://www.erikkusch.com/tag/statistical-rethinking/index.xml" rel="self" type="application/rss+xml" />
+    <description>Statistical Rethinking</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-gb</language><copyright>© 2024</copyright><lastBuildDate>Mon, 28 Dec 2020 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg</url>
+      <title>Statistical Rethinking</title>
+      <link>https://www.erikkusch.com/tag/statistical-rethinking/</link>
+    </image>
+    
+    <item>
+      <title>Bayes Study Group</title>
+      <link>https://www.erikkusch.com/project/aubayes/</link>
+      <pubDate>Mon, 28 Dec 2020 00:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/project/aubayes/</guid>
+      <description>&lt;div class=&#34;alert alert-success&#34;&gt;
+  &lt;div&gt;
+    This study group has come to an end. All information about it can still be found below. We are now coordinating through Slack to get our fix of all things Bayes. Our Slack Workspace is open to anyone who wants to join us. To do so, simply let me know by &lt;a href=&#34;https://www.erikkusch.com/about#contact&#34;&gt;contacting me&lt;/a&gt; and shortly introduce yourself.
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;h1 id=&#34;motivation&#34;&gt;Motivation&lt;/h1&gt;
+&lt;p&gt;Have you ever read a paper and thought: “Wow, this is really cool”, then read on only to find the word “Bayesian” in the analysis specification and promptly get lost at the terminology and approach to statistics?&lt;/p&gt;
+&lt;p&gt;If you did/do, you are obviously not alone and I think it might be time we do something about it. To this end, I have created a Bayes Study Group (formerly AU Bayes Study Group) within which we work our way through (1) a 
+&lt;a href=&#34;https://www.youtube.com/playlist?list=PLDcUM9US4XdNM4Edgs7weiyIguLSToZRI&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;lecture series&lt;/a&gt; by Bayes Wunderkind Richard McElreath, (2) his corresponding book (“
+&lt;a href=&#34;https://xcelab.net/rm/statistical-rethinking/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Statistical Rethinking&lt;/a&gt;”), and (3) a few practical examples in &lt;code&gt;R&lt;/code&gt;.&lt;/p&gt;
+&lt;h1 id=&#34;conduct--logistics&#34;&gt;Conduct &amp;amp; Logistics&lt;/h1&gt;
+&lt;p&gt;Below, you will find a few key facts outlining how this Bayes Study Group sessions are run. You will find that what we do is quite a lot (I would like to think it quite exhaustive, actually). We are following the example set by some colleagues at the University of Oxford here and I have added some extra bits to the material and schedule. Go big or go home, right?&lt;/p&gt;
+&lt;p&gt;That being said, I realise that what I propose is quite a big-time commitment – both in per-week hours and for how long this study group is supposed to run.&lt;/p&gt;
+&lt;h2 id=&#34;meetings&#34;&gt;Meetings:&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Scheduling:
+&lt;ul&gt;
+&lt;li&gt;Friday 1300-1600 GMT+1 (sessions end earlier if we are done earlier, of course)&lt;/li&gt;
+&lt;li&gt;Weekly for 20 sessions including 4 input talks by practicioneers of Bayesian analyses&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;contents&#34;&gt;Contents&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;We follow the material noted further down under Group Material&lt;/li&gt;
+&lt;li&gt;We prepare ourselves by working through the material noted for each session&lt;/li&gt;
+&lt;li&gt;At the start of each session, either me or a volunteer quickly presents a summary of the preparation material. This does not mean a presenter should have mastered the material at all – simply be able to provide a red-thread through the contents and get a discussion going. We then go into questions/challenges concerning the material, practical examples, and personal implementations.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;material&#34;&gt;Material&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Lecture Recording “Statistical Rethinking” by Richard McElreath; available 
+&lt;a href=&#34;https://www.youtube.com/playlist?list=PLDcUM9US4XdNM4Edgs7weiyIguLSToZRI&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;here&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Book “Statistical Rethinking” by Richard McElreath; available 
+&lt;a href=&#34;https://github.com/Booleans/statistical-rethinking/blob/master/Statistical%20Rethinking%202nd%20Edition.pdf&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;here&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Practical Examples:
+&lt;ul&gt;
+&lt;li&gt;Course Material 
+&lt;a href=&#34;https://github.com/rmcelreath/stat_rethinking_2020&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Statistical Rethinking&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Book “Introduction to WinBUGS for Ecologists” by Marc Kéry; available 
+&lt;a href=&#34;https://www.sciencedirect.com/book/9780123786050/introduction-to-winbugs-for-ecologists&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;here&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Book “Bayesian Population Analysis using WinBUGS” by Marc Kéry and Michael Schaub; available 
+&lt;a href=&#34;https://www.sciencedirect.com/book/9780123870209/bayesian-population-analysis-using-winbugs&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;here&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;li&gt;Further Input (all prospective)&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

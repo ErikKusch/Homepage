@@ -1,0 +1,1719 @@
+<!DOCTYPE html><html lang="en-gb" >
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.8.0">
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Erik Kusch">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Download specifications and considerations with `KrigR`.">
+
+  
+  <link rel="alternate" hreflang="en-gb" href="https://www.erikkusch.com/courses/krigr/download/">
+
+  
+
+
+  
+  
+  
+  <meta name="theme-color" content="#858383">
+  
+
+  
+  
+  
+  <script src="/js/mathjax-config.js"></script>
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-1/css/all.min.css" integrity="sha256-4w9DunooKSr3MFXHXWyFER38WmPdm361bQS/2KUWZbU=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.css" integrity="sha256-SHMGCYmST46SoyGgo4YR/9AlK1vf3ff84Aq9yK4hdqM=" crossorigin="anonymous">
+    
+
+    
+
+    
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.1.2/lazysizes.min.js" integrity="sha256-Md1qLToewPeKjfAHU1zyPwOutccPAm5tahnaw7Osw0A=" crossorigin="anonymous" async></script>
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" integrity="" crossorigin="anonymous" async></script>
+      
+    
+      
+
+      
+      
+
+      
+    
+
+  
+
+  
+  
+  
+    
+      
+      
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cutive+Mono%7CLora:400,700%7CRoboto:400,700&display=swap">
+    
+  
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/academic.css">
+
+  
+
+
+
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-186216138-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+
+  function gtag() {
+      dataLayer.push(arguments);
+  }
+
+  function trackOutboundLink(url, target) {
+    gtag('event', 'click', {
+         'event_category': 'outbound',
+         'event_label': url,
+         'transport_type': 'beacon',
+         'event_callback': function () {
+           if (target !== '_blank') {
+             document.location = url;
+           }
+         }
+    });
+    console.debug("Outbound link clicked: " + url);
+  }
+
+  function onClickCallback(event) {
+    if ((event.target.tagName !== 'A') || (event.target.host === window.location.host)) {
+      return;
+    }
+    trackOutboundLink(event.target, event.target.getAttribute('target'));  
+  }
+
+  gtag('js', new Date());
+  gtag('config', 'UA-186216138-1', {});
+
+  
+  document.addEventListener('click', onClickCallback, false);
+</script>
+
+
+  
+
+
+  
+  
+
+  
+
+  <link rel="manifest" href="/index.webmanifest">
+  <link rel="icon" type="image/png" href="/images/icon_hu7658c99d512131214e4d6c003a3f85f7_112593_32x32_fill_lanczos_center_2.png">
+  <link rel="apple-touch-icon" type="image/png" href="/images/icon_hu7658c99d512131214e4d6c003a3f85f7_112593_192x192_fill_lanczos_center_2.png">
+
+  <link rel="canonical" href="https://www.erikkusch.com/courses/krigr/download/">
+
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  <meta property="twitter:card" content="summary_large_image">
+  
+  <meta property="twitter:site" content="@ErikKusch">
+  <meta property="twitter:creator" content="@ErikKusch">
+  
+  <meta property="og:site_name" content="Erik Kusch">
+  <meta property="og:url" content="https://www.erikkusch.com/courses/krigr/download/">
+  <meta property="og:title" content="Downloading &amp; Processing | Erik Kusch">
+  <meta property="og:description" content="Download specifications and considerations with `KrigR`."><meta property="og:image" content="https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg">
+  <meta property="twitter:image" content="https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg"><meta property="og:locale" content="en-gb">
+  
+    
+      <meta property="article:published_time" content="2022-05-26T00:00:00&#43;00:00">
+    
+    <meta property="article:modified_time" content="2021-05-26T20:00:00&#43;01:00">
+  
+
+  
+
+
+
+  
+
+
+  
+
+
+  
+
+
+
+
+
+  <title>Downloading &amp; Processing | Erik Kusch</title>
+
+</head>
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search" class="form-control">
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+<nav class="navbar navbar-expand-lg navbar-light compensate-for-scrollbar" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="d-none d-lg-inline-flex">
+      <a class="navbar-brand" href="/"><img src="/images/logo_huab2266ff59bbac6a094b6da1268adcf9_208479_0x70_resize_lanczos_2.png" alt="Erik Kusch"></a>
+    </div>
+    
+
+    
+    <button type="button" class="navbar-toggler" data-toggle="collapse"
+            data-target="#navbar-content" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+    <span><i class="fas fa-bars"></i></span>
+    </button>
+    
+
+    
+    <div class="navbar-brand-mobile-wrapper d-inline-flex d-lg-none">
+      <a class="navbar-brand" href="/"><img src="/images/logo_huab2266ff59bbac6a094b6da1268adcf9_208479_0x70_resize_lanczos_2.png" alt="Erik Kusch"></a>
+    </div>
+    
+
+    
+    
+    <div class="navbar-collapse main-menu-item collapse justify-content-center" id="navbar-content">
+
+      
+      <ul class="navbar-nav d-md-inline-flex">
+        
+
+        
+
+        
+        
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link  active" href="/"><span>Home</span></a>
+        </li>
+
+        
+        
+
+        
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"><span>Courses & Workshops</span><span class="caret"></span>
+          </a>
+          <div class="dropdown-menu">
+            
+              <a class="dropdown-item" href="/courses/krigr/"><span>KrigR - State-of-the-Art Climate Data within R</span></a>
+            
+              <a class="dropdown-item" href="/courses/gbif/"><span>Accessing and Referencing GBIF Data for Research</span></a>
+            
+              <a class="dropdown-item" href="/courses/rethinking/"><span>Statistical Rethinking - Introduction to Bayesian Statistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/bayes-nets/"><span>Bayesian Networks - Causality through Bayesian Approaches</span></a>
+            
+              <a class="dropdown-item" href="/courses/biostat101/"><span>Biostats 101 - An Introduction to Biostatistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/excursions-into-biostatistics/"><span>Biostats 301 - Excursions into Biostatistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/bftp-biome-detection/"><span>BFTP - First Steps in Macroecology in R</span></a>
+            
+          </div>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#projects"><span>Projects</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#featured"><span>Publications</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#talks"><span>Talks</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/about"><span>Contact</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+            
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/media/CV_ErikKusch.html" target="_blank" rel="noopener"><span>CV</span></a>
+        </li>
+
+        
+        
+
+      
+
+        
+      </ul>
+    </div>
+
+    <ul class="nav-icons navbar-nav flex-row ml-auto d-flex pl-md-2">
+      
+      <li class="nav-item">
+        <a class="nav-link js-search" href="#" aria-label="Search"><i class="fas fa-search" aria-hidden="true"></i></a>
+      </li>
+      
+
+      
+      <li class="nav-item dropdown theme-dropdown">
+        <a href="#" class="nav-link js-theme-selector" data-toggle="dropdown" aria-haspopup="true">
+          <i class="fas fa-palette" aria-hidden="true"></i>
+        </a>
+        <div class="dropdown-menu">
+          <a href="#" class="dropdown-item js-set-theme-light">
+            <span>Light</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-dark">
+            <span>Dark</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-auto">
+            <span>Automatic</span>
+          </a>
+        </div>
+      </li>
+      
+
+      
+
+    </ul>
+
+  </div>
+</nav>
+
+
+  
+
+<div class="container-fluid docs">
+  <div class="row flex-xl-nowrap">
+    <div class="col-12 col-md-3 col-xl-2 docs-sidebar">
+      
+
+
+
+
+
+  
+    
+  
+
+
+
+
+<form class="docs-search d-flex align-items-center">
+  <button class="btn docs-toggle d-md-none p-0 mr-3" type="button" data-toggle="collapse" data-target="#docs-nav" aria-controls="docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    <span><i class="fas fa-bars"></i></span>
+  </button>
+
+  
+  <input name="q" type="search" class="form-control" placeholder="Search..." autocomplete="off">
+  
+</form>
+
+<nav class="collapse docs-links" id="docs-nav">
+  
+
+  
+  
+  
+  
+  <div class="docs-toc-item">
+    <a class="docs-toc-link" href="/courses/krigr/">Introduction</a>
+    <ul class="nav docs-sidenav">
+      
+      <li >
+        <a href="/courses/krigr/">Motivation &amp; Workshop</a>
+      </li>
+      
+      <li >
+        <a href="/courses/krigr/background/">The Theory Behind KrigR</a>
+      </li>
+      
+    </ul>
+    
+
+  </div>
+  
+  <div class="docs-toc-item">
+    <a class="docs-toc-link" href="/courses/krigr/setup/">Quick Start</a>
+    <ul class="nav docs-sidenav">
+      
+      <li >
+        <a href="/courses/krigr/setup/">Setting up KrigR</a>
+      </li>
+      
+      <li >
+        <a href="/courses/krigr/quickstart/">Quick Guide</a>
+      </li>
+      
+    </ul>
+    
+
+  </div>
+  
+  <div class="docs-toc-item">
+    <a class="docs-toc-link" href="/courses/krigr/prep/">Workshop</a>
+    <ul class="nav docs-sidenav">
+      
+      <li >
+        <a href="/courses/krigr/prep/">Preparing the Workshop</a>
+      </li>
+      
+      <li class="active">
+        <a href="/courses/krigr/download/">Downloading &amp; Processing</a>
+      </li>
+      
+      <li >
+        <a href="/courses/krigr/kriging/">Statistical Downscaling</a>
+      </li>
+      
+      <li >
+        <a href="/courses/krigr/bioclim/">Bioclimatic Variables</a>
+      </li>
+      
+      <li >
+        <a href="/courses/krigr/third-party/">Third-Party Data</a>
+      </li>
+      
+      <li >
+        <a href="/courses/krigr/projections/">Projection Downscaling</a>
+      </li>
+      
+    </ul>
+    
+
+  </div>
+  
+  
+</nav>
+
+    </div>
+
+    
+    <div class="d-none d-xl-block col-xl-2 docs-toc">
+      <ul class="nav toc-top">
+        <li><a href="#" id="back_to_top" class="docs-toc-title">Contents</a></li>
+      </ul>
+
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#downloading-climate-data">Downloading Climate Data</a></li>
+    <li><a href="#spatial-limitation">Spatial Limitation</a>
+      <ul>
+        <li><a href="#shape-spatialpolygons">Shape (<code>SpatialPolygons</code>)</a></li>
+        <li><a href="#points-dataframe">Points (<code>data.frame</code>)</a></li>
+      </ul>
+    </li>
+    <li><a href="#temporal-aggregation">Temporal Aggregation</a>
+      <ul>
+        <li><a href="#temporal-resolution-tresolution-and-tstep">Temporal Resolution (<code>TResolution</code> and <code>TStep</code>)</a></li>
+        <li><a href="#aggregate-metrics-fun">Aggregate Metrics (<code>FUN</code>)</a></li>
+      </ul>
+    </li>
+    <li><a href="#dynamical-data-uncertainty">Dynamical Data Uncertainty</a></li>
+    <li><a href="#final-downloads-for-workshop-progress">Final Downloads for Workshop Progress</a>
+      <ul>
+        <li><a href="#climate-data">Climate Data</a></li>
+        <li><a href="#dynamical-data-uncertainty-1">Dynamical Data Uncertainty</a></li>
+      </ul>
+    </li>
+    <li><a href="#considerations-for-download_era">Considerations for <code>download_ERA()</code></a>
+      <ul>
+        <li><a href="#effeciency">Effeciency</a></li>
+        <li><a href="#cummulative-variables-precipfix">Cummulative Variables (<code>PrecipFix</code>)</a></li>
+        <li><a href="#stability">Stability</a></li>
+      </ul>
+    </li>
+    <li><a href="#session-info">Session Info</a></li>
+  </ul>
+</nav>
+
+      
+    </div>
+    
+
+    <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 docs-content" role="main">
+
+      <article class="article">
+
+        <div class="docs-article-container">
+          <h1>Downloading &amp; Processing</h1>
+
+          <div class="article-style">
+            <p><div class="alert alert-danger">
+  <div>
+    <strong><code>KrigR</code> is currently undergoing development. As a result, this part of the workshop has become deprecated. Please refer to the <a href="/courses/krigr/setup/">setup</a> <a href="/courses/krigr/quickstart/">quick guide</a> portions of this material as these are up-to-date. </strong>
+  </div>
+</div>
+</p>
+<div class="alert alert-danger">
+  <div>
+    This part of the workshop is dependant on set-up and preparation done previously <a href="/courses/krigr/prep/">here</a>.
+  </div>
+</div>
+<p>First, we load <code>KrigR</code>:</p>
+<pre><code class="language-r">library(KrigR)
+</code></pre>
+<div class="alert alert-info">
+  <div>
+    Downloads and data processing with <code>KrigR</code> are staged and executed with the <code>download_ERA()</code>function.
+  </div>
+</div>
+<p><code>download_ERA()</code> is a very versatile function and I will show you it&rsquo;s capabilities throughout this material.</p>
+<div class="alert alert-warning">
+  <div>
+    We will start with a <strong>simple calls</strong>  to <code>KrigR</code> and subsequently make them <strong>more sophisticated</strong> during this workshop.
+  </div>
+</div>
+<h2 id="downloading-climate-data">Downloading Climate Data</h2>
+<p>Let&rsquo;s start with a very basic call to <code>download_ERA()</code>.</p>
+<p>For this part of the workshop, we download air temperature for my birth month (January 1995) using the extent of our 
+<a href="/courses/krigr/prep/#our-workshop-target-region">target region</a>.</p>
+<p>See the code chunk below for explanations on each function argument. If you want to know about the defaults for any argument in <code>download_ERA()</code> simply run <code>?download_ERA()</code>. Doing so should make it obvious why we specify the function as we do below.</p>
+<div class="alert alert-">
+  <div>
+    Notice that the downloading of ERA-family reanalysis data may take a short while to start as the download request gets queued with the CDS of the ECMWF before it is executed.
+  </div>
+</div>
+<details>
+  <summary>Click here for file if download takes too long:</summary>
+    Download 
+<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/krigr/Data/FirstDL.nc">FirstDL.nc</a> and place it into your data directory.
+</details> 
+<pre><code class="language-r">FirstDL &lt;- download_ERA(
+    Variable = &quot;2m_temperature&quot;, # the variable we want to obtain data for
+    DataSet = &quot;era5-land&quot;, # the data set we want to obtain data from
+    DateStart = &quot;1995-01-01&quot;, # the starting date of our time-window
+    DateStop = &quot;1995-01-31&quot;, # the final date of our time-window
+    Extent = Extent_ext, # the spatial preference we are after
+    Dir = Dir.Data, # where to store the downloaded data
+    FileName = &quot;FirstDL&quot;, # a name for our downloaded file
+    API_User = API_User, # your API User Number
+    API_Key = API_Key # your API User Key
+  )
+</code></pre>
+<pre><code>## download_ERA() is starting. Depending on your specifications, this can take a significant time.
+</code></pre>
+<pre><code>## User 39340 for cds service added successfully in keychain
+</code></pre>
+<pre><code>## Staging 1 download(s).
+</code></pre>
+<pre><code>## 0001_FirstDL.nc download queried
+</code></pre>
+<pre><code>## Requesting data to the cds service with username 39340
+</code></pre>
+<pre><code>## - staging data transfer at url endpoint or request id:
+</code></pre>
+<pre><code>##   e48f036d-0979-4db4-bc4e-9d08be01c9d6
+</code></pre>
+<pre><code>## - timeout set to 10.0 hours
+</code></pre>
+<pre><code>## - polling server for a data transfer
+\ polling server for a data transfer
+| polling server for a data transfer
+/ polling server for a data transfer
+- polling server for a data transfer
+\ polling server for a data transfer
+| polling server for a data transfer
+/ polling server for a data transfer
+- polling server for a data transfer
+\ polling server for a data transfer
+| polling server for a data transfer
+/ polling server for a data transfer
+- polling server for a data transfer
+\ polling server for a data transfer
+| polling server for a data transfer
+/ polling server for a data transfer
+- polling server for a data transfer
+\ polling server for a data transfer
+| polling server for a data transfer
+/ polling server for a data transfer
+- polling server for a data transfer
+\ polling server for a data transfer
+| polling server for a data transfer
+/ polling server for a data transfer
+- polling server for a data transfer
+## Downloading file
+</code></pre>
+<pre><code>## 
+  |                                                                                      
+  |                                                                                |   0%
+  |                                                                                      
+  |================================================================================| 100%
+</code></pre>
+<pre><code>## - moved temporary file to -&gt; /Users/erikkus/Documents/HomePage/content/courses/krigr/Data/0001_FirstDL.nc
+## - Delete data from queue for url endpoint or request id:
+##   https://cds.climate.copernicus.eu/api/v2/tasks/e48f036d-0979-4db4-bc4e-9d08be01c9d6
+## 
+## Checking for known data issues.
+## Loading downloaded data for masking and aggregation.
+## Aggregating to temporal resolution of choice
+</code></pre>
+<p>As you can see the <code>download_ERA()</code> function updates you on what it is currently working on at each major step. I implemented this to make sure people don&rsquo;t get too anxious staring at an empty console in <code>R</code>. If this feature is not appealing to you, you can turn this progress tracking off by setting <code>verbose = FALSE</code> in the function call to <code>download_ERA()</code>.</p>
+<div class="alert alert-warning">
+  <div>
+    For the rest of this workshop, I suppress messages from <code>download_ERA()</code> via other means so that when you execute, you get progress tracking.
+  </div>
+</div>
+<p>I will make exceptions to this rule when there are special things I want to demonstrate.</p>
+<p>Now, let&rsquo;s look at the raster that was produced:</p>
+<pre><code class="language-r">FirstDL
+</code></pre>
+<pre><code>## class      : RasterStack 
+## dimensions : 34, 54, 1836, 1  (nrow, ncol, ncell, nlayers)
+## resolution : 0.09999999, 0.09999998  (x, y)
+## extent     : 9.72, 15.12, 49.74, 53.14  (xmin, xmax, ymin, ymax)
+## crs        : +proj=longlat +datum=WGS84 +no_defs 
+## names      : X1995.01.01
+</code></pre>
+<p>One layer (i.e., one month) worth of data. That seems to have worked. If you are keen-eyed, you will notice that the extent on this object does not align with the extent we supplied with <code>Extent_ext</code>. The reason? To download the data, we need to snap to the nearest full cell in the data set from which we query our downloads. <code>KrigR</code> always ends up widening the extent to ensure all the data you desire will be downloaded.</p>
+<p>Finally, let&rsquo;s visualise our downloaded data with one of our 
+<a href="/courses/krigr/prep/#visualising-our-study-setting">user-defined plotting functions</a>:</p>
+<pre><code class="language-r">Plot_Raw(FirstDL, Dates = &quot;01-1995&quot;)
+</code></pre>
+<p><img src="krigr-downloads_files/figure-html/FirstDLVis-1.png" width="1440" /></p>
+<p>That is all there is to downloading ERA5(-Land) data with <code>KrigR</code>. You can already see how, even at the relatively course resolution of ERA5-Land, the mountain ridges along the German-Czech border are showing up. This will become a lot clearer of a pattern once we 
+<a href="/courses/krigr/kriging/">downscale our data</a>.</p>
+<div class="alert alert-info">
+  <div>
+    <code>download_ERA()</code> provides you with a lot more functionality than <em>just</em> access to the ERA5(-Land) data sets.
+  </div>
+</div>
+<div class="alert alert-">
+  <div>
+    <p>With <code>download_ERA()</code>, you can also carry out processing of the downloaded data. Data processing with <code>download_ERA()</code> includes:</p>
+<ol>
+<li><em>Spatial Limitation</em> to cut down on the data that is stored on your end.</li>
+<li><em>Temporal Aggregation</em> to establish data at the temporal resolution you desire.</li>
+</ol>
+  </div>
+</div>
+<h2 id="spatial-limitation">Spatial Limitation</h2>
+<p>Let&rsquo;s start with spatial limitation. As discussed 
+<a href="/courses/krigr/prep/#spatial-preferences-in-krigr">previously</a>, <code>download_ERA()</code> can handle a variety of inputs describing spatial preferences.</p>
+<div class="alert alert-">
+  <div>
+    <p><code>KrigR</code> is capable of learning about your spatial preferences in three ways:</p>
+<ol>
+<li>As an <code>extent</code> input (a rectangular box).</li>
+<li>As a <code>SpatialPolygons</code> input (a polygon or set of polygons).</li>
+<li>As a set of locations stored in a <code>data.frame</code>.</li>
+</ol>
+<p>These spatial preferences are registered in <code>KrigR</code> functions using the <code>Extent</code> argument.</p>
+  </div>
+</div>
+<p>You might now ask yourself: How does <code>KrigR</code> achieve spatial limitation of the data? Couldn&rsquo;t we just simply download only the data we are interested in?</p>
+<p>The ECMWF CDS gives us tremendous capability of retrieving only the data we want. However, the CDS only recognises rectangular boxes (i.e., <code>extent</code>s) for spatial limitation. Consequently, we always have to download data corresponding to a rectangular box in space. When informing <code>KrigR</code> of your spatial preferences using a <code>data.frame</code> or <code>SpatialPolygons</code>, <code>download_ERA()</code> automatically (1) identifies the smallest <code>extent</code> required by your input, (2) downloads data corresponding to this <code>extent</code>, and (3) masks our any data not queried by you.</p>
+<div class="alert alert-info">
+  <div>
+    Using <code>KrigR</code>&rsquo;s spatial limitation features ensures faster computation and smaller file sizes (depending on file type).
+  </div>
+</div>
+<p>In the following, I demonstrate how to use the <code>Extent</code> argument in <code>download_ERA()</code>.</p>
+<h3 id="shape-spatialpolygons">Shape (<code>SpatialPolygons</code>)</h3>
+<p>Let me show you how <code>SpatialPolygons</code> show up in our data with <code>download_ERA()</code>. Remember that these <code>SpatialPolygons</code> originate 
+<a href="/courses/krigr/prep/#shape-of-interest-spatialpolygons">here</a>. First, we query our download as follows:</p>
+<details>
+  <summary>Click here for file if download takes too long:</summary>
+    Download 
+<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/krigr/Data/SpatialPolygons_DL.nc">SpatialPolygons_DL.nc</a> and place it into your data directory.
+</details> 
+<pre><code class="language-r">SpatialPolygons_DL &lt;- download_ERA(
+  Variable = &quot;2m_temperature&quot;,
+  DataSet = &quot;era5-land&quot;,
+  DateStart = &quot;1995-01-01&quot;,
+  DateStop = &quot;1995-01-31&quot;,
+  Extent = Shape_shp, # we simply switch the Extent Argument
+  Dir = Dir.Data,
+  FileName = &quot;SpatialPolygons_DL&quot;,
+  API_User = API_User,
+  API_Key = API_Key
+)  
+Plot_Raw(SpatialPolygons_DL, Dates = &quot;01-1995&quot;, Shp = Shape_shp)
+</code></pre>
+<p><img src="krigr-downloads_files/figure-html/unnamed-chunk-3-1.png" width="1440" /></p>
+<p>You will find that the data retained with the spatial limitation in <code>download_ERA()</code> contains all raster cells of which even a fraction falls within the bounds of the <code>SpatialPolygons</code> you supplied. This is different from standard <code>raster</code> masking through which only cells whose centroids fall within the <code>SpatialPolygons</code> are retained.</p>
+<div class="alert alert-info">
+  <div>
+    <code>raster</code> masking in <code>KrigR</code> always ensures that the entire area of your spatial preferences are retained.
+  </div>
+</div>
+<h3 id="points-dataframe">Points (<code>data.frame</code>)</h3>
+<p>Now we move on to point-locations. Often times, we are researching very specific sets of coordinates, rather than entire regions. <code>download_ERA()</code> is capable of limiting data to only small areas (of a size of your choosing) around your point-locations. For our purposes here, we make use of a set of mountain-top coordinates throughout our study region. Remember that these coordinates (stored in a <code>data.frame</code>) originate 
+<a href="/courses/krigr/prep/#points-of-interest-dataframe">here</a>.</p>
+<p>This time around, we need to tell <code>download_ERA()</code> about not just the <code>Extent</code>, but also specify how much of a buffer (<code>Buffer</code> in $°$) to retain data for around each individual (<code>ID</code>) location.</p>
+<div class="alert alert-">
+  <div>
+    <p>The <code>data.frame</code> input to the <code>Extent</code> must contain a column called <code>Lat</code> and a column called <code>Lon</code>:</p>
+<p>In addition, one must also specify:</p>
+<ol>
+<li>A <code>Buffer</code> in $°$ to be drawn around each location.</li>
+<li>The name of the <code>ID</code> column in your <code>data.frame</code> which indexes each individual location.</li>
+</ol>
+  </div>
+</div>
+<div class="alert alert-">
+  <div>
+    Our <a href="/courses/krigr/outlook/">development goals</a> include support for a broader range of point-location specifications.
+  </div>
+</div>
+<p>Let&rsquo;s stage such a download:</p>
+<details>
+  <summary>Click here for file if download takes too long:</summary>
+    Download 
+<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/krigr/Data/points_DL.nc">points_DL.nc</a> and place it into your data directory.
+</details> 
+<pre><code class="language-r">points_DL &lt;- download_ERA(
+  Variable = &quot;2m_temperature&quot;,
+  DataSet = &quot;era5-land&quot;,
+  DateStart = &quot;1995-01-01&quot;,
+  DateStop = &quot;1995-01-31&quot;,
+  Extent = Mountains_df, # our data.frame with Lat and Lon columns
+  Buffer = 0.5, # a half-degree buffer
+  ID = &quot;Mountain&quot;, # the ID column in our data.frame
+  Dir = Dir.Data,
+  FileName = &quot;points_DL&quot;,
+  API_User = API_User,
+  API_Key = API_Key
+)
+Plot_Raw(points_DL, Dates = &quot;01-1995&quot;) + 
+  geom_point(aes(x = Lon, y = Lat), data = Mountains_df, 
+             colour = &quot;green&quot;, size = 10, pch = 14)
+</code></pre>
+<p><img src="krigr-downloads_files/figure-html/unnamed-chunk-5-1.png" width="1440" /></p>
+<p>Above you can see how the mountain tops we are interested in lie exactly at the centre of the retained data. As we will see later, such spatial limitation greatly reduces computation cost of statistical downscaling procedures.</p>
+<h2 id="temporal-aggregation">Temporal Aggregation</h2>
+<p>So far, we have downloaded a single layer of data (i.e., one monthly average layer) from the CDS. However, ERA5(-Land) products come at <strong>hourly temporal resolutions</strong> from which we can generate climate data at almost any temporal resolution we may require. This is what <strong>temporal aggregation</strong> in <code>download_ERA()</code> is for.</p>
+<div class="alert alert-info">
+  <div>
+    With <strong>temporal aggregation</strong> in <code>download_ERA()</code> you can achieve almost any temporal resolution and aggregate metric you may desire.
+  </div>
+</div>
+<div class="alert alert-">
+  <div>
+    <p>Temporal aggregation with <code>download_ERA()</code> uses the arguments:</p>
+<ul>
+<li><code>TResolution</code> and <code>TStep</code> to achieve desired temporal resolutions</li>
+<li><code>FUN</code> to calculate desired aggregate metrics</li>
+</ul>
+  </div>
+</div>
+<h3 id="temporal-resolution-tresolution-and-tstep">Temporal Resolution (<code>TResolution</code> and <code>TStep</code>)</h3>
+<p>Let&rsquo;s start by querying data at non-CDS temporal resolutions.</p>
+<div class="alert alert-">
+  <div>
+    <p>The <code>download_ERA()</code> function in the <code>KrigR</code> package accepts the following arguments which you can use to control the temporal resolution of your climate data:</p>
+<ul>
+<li><code>TResolution</code> controls the time-line that <code>TStep</code> indexes. You can specify anything from the following:  <code>'hour'</code>, <code>'day'</code>, <code>'month'</code>, or <code>'year'</code>. The default is <code>'month'</code>.</li>
+<li><code>TStep</code> controls how many time-steps to aggregate into one layer of data each. Aggregation is done via taking the mean per cell in each raster comprising time steps that go into the final, aggregated time-step. The default is <code>1</code>.</li>
+</ul>
+  </div>
+</div>
+<p>For now, let&rsquo;s download hourly data from the CDS (this achieved by specifying a <code>TResolution</code> of <code>&quot;hour&quot;</code> or <code>&quot;day&quot;</code>) and aggregate these to 1-day intervals. To make the result easier to visualise, we focus only on the first four days of January 1995:</p>
+<details>
+  <summary>Click here for file if download takes too long:</summary>
+    Download 
+<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/krigr/Data/TimeSeries.nc">TimeSeries.nc</a> and place it into your data directory.
+</details> 
+<pre><code class="language-r">TimeSeries &lt;- download_ERA(
+  Variable = &quot;2m_temperature&quot;,
+  DataSet = &quot;era5-land&quot;,
+  DateStart = &quot;1995-01-01&quot;,
+  DateStop = &quot;1995-01-04&quot;,
+  TResolution = &quot;day&quot;, # aggregate to days
+  TStep = 1, # aggregate to 1 day each
+  Extent = Shape_shp,
+  Dir = Dir.Data,
+  FileName = &quot;TimeSeries&quot;,
+  API_User = API_User,
+  API_Key = API_Key
+)
+Plot_Raw(TimeSeries, Dates = c(&quot;01-1995&quot;, &quot;02-1995&quot;, 
+                               &quot;03-1995&quot;, &quot;04-1995&quot;),
+         Shp = Shape_shp)
+</code></pre>
+<p><img src="krigr-downloads_files/figure-html/unnamed-chunk-7-1.png" width="1440" />
+Looks like a cold front rolled over my home area at the beginning of 1995.</p>
+<div class="alert alert-info">
+  <div>
+    <code>KrigR</code> automatically identifies which data set to download from given your temporal aggregation specification.
+  </div>
+</div>
+<p>As soon as <code>TResolution</code> is set to <code>'month'</code> or <code>'year'</code>, the package automatically downloads monthly mean data from the CDS. We do this to make the temporal aggregation calculation more light-weight on your computing units and to make downloads less heavy.</p>
+<p>Let&rsquo;s run through a few examples to make clear how desired temporal resolution of data can be achieved using the <code>KrigR</code> package:</p>
+<table>
+  <tr>
+    <th>What We Want</th>
+    <th>TResolution </th>
+    <th>TStep</th>
+  </tr>
+  <tr>
+    <td>Hourly intervals</td>
+    <td>hour</td>
+    <td>1</td>
+  </tr>
+  <tr>
+    <td>6-hour intervals</td>
+    <td>hour</td>
+    <td>6</td>
+  </tr>
+  <tr>
+    <td>Half-day intervals</td>
+    <td>hour</td>
+    <td>12</td>
+  </tr>
+  <tr>
+    <td>Daily intervals </td>
+    <td>day</td>
+    <td>1</td>
+  </tr>
+  <tr>
+    <td>3-day intervals</td>
+    <td>day</td>
+    <td>3</td>
+  </tr>
+  <tr>
+    <td>Weekly intervals</td>
+    <td>day</td>
+    <td>7</td>
+  </tr>
+  <tr>
+    <td>Monthly aggregates</td>
+    <td>month</td>
+    <td>1</td>
+  </tr>
+  <tr>
+    <td>4-month intervals</td>
+    <td>month</td>
+    <td>4</td>
+  </tr>
+  <tr>
+    <td>Annual intervals</td>
+    <td>year</td>
+    <td>1</td>
+  </tr>
+  <tr>
+    <td>10-year intervals</td>
+    <td>year</td>
+    <td>10</td>
+  </tr>
+</table> 
+<div class="alert alert-warning">
+  <div>
+    Specifying <code>TResolution</code> of <code>'month'</code> will result in the download of full month aggregates for every month included in your time series.
+  </div>
+</div>
+<p>For example, <code>DateStart = &quot;2000-01-20&quot;</code>, <code>DateStop = &quot;2000-02-20&quot;</code> with <code>TResolution = 'month'</code>, and <code>TStep = 1</code> <strong>does not</strong> result in the mean aggregate for the month between the 20/01/200 and the 20/02/2000, but <strong>does result</strong> in the monthly aggregates for January and February 2000. If you desire the former, you would need to specify <code>DateStart = &quot;2000-01-20&quot;</code>, <code>DateStop = &quot;2000-02-20&quot;</code> with <code>TResolution = 'day'</code>, and <code>TStep = 32</code> (the number of days between the two dates).</p>
+<h3 id="aggregate-metrics-fun">Aggregate Metrics (<code>FUN</code>)</h3>
+<p>Aggregate metrics can be particularly useful for certain study settings when climate variability or exposure to extreme events are sought after.</p>
+<div class="alert alert-">
+  <div>
+    <p>The <code>FUN</code> argument in <code>download_ERA()</code> controls which values to calculate for the temporal aggregates, e.g.: <code>'min'</code>, <code>'max'</code>, or <code>'mean'</code> (default).</p>
+<p>Any function which returns a single value when fed a vector of values is supported.</p>
+  </div>
+</div>
+<p>Let&rsquo;s say we are interested in the variability of temperature across our study region in daily intervals. Again, we shorten our time-series to just four days:</p>
+<details>
+  <summary>Click here for file if download takes too long:</summary>
+    Download 
+<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/krigr/Data/TimeSeriesSD.nc">TimeSeriesSD.nc</a> and place it into your data directory.
+</details> 
+<pre><code class="language-r">TimeSeriesSD &lt;- download_ERA(
+  Variable = &quot;2m_temperature&quot;,
+  DataSet = &quot;era5-land&quot;,
+  DateStart = &quot;1995-01-01&quot;,
+  DateStop = &quot;1995-01-04&quot;,
+  TResolution = &quot;day&quot;,
+  TStep = 1,
+  FUN = sd, # query standard deviation
+  Extent = Shape_shp,
+  Dir = Dir.Data,
+  FileName = &quot;TimeSeriesSD&quot;,
+  API_User = API_User,
+  API_Key = API_Key
+)
+Plot_Raw(TimeSeriesSD, Dates = c(&quot;01-1995&quot;, &quot;02-1995&quot;, 
+                                 &quot;03-1995&quot;, &quot;04-1995&quot;),
+         Shp = Shape_shp)
+</code></pre>
+<p><img src="krigr-downloads_files/figure-html/unnamed-chunk-9-1.png" width="1440" />
+Seems like the temperatures fluctuated most on the third and fourth of January, but the area of temperature fluctuations changed location between those two days.</p>
+<div class="alert alert-info">
+  <div>
+    You should now be able to query data for any location you study and achieve temporal resolutions and aggregate metrics which your study requires.
+  </div>
+</div>
+<h2 id="dynamical-data-uncertainty">Dynamical Data Uncertainty</h2>
+<p>With climate reanalyses, you also gain access to uncertainty flags of the data stored in the reanalysis product. For the ERA5-family of products, this uncertainty can be obtained by assessing the standard deviation of the 10 ensemble members which make up the underlying ERA5 model exercise.</p>
+<p>With <code>download_ERA()</code> you can obtain this information as follows:</p>
+<details>
+  <summary>Click here for file if download takes too long:</summary>
+    Download 
+<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/krigr/Data/SpatialPolygons_DL.nc">SpatialPolygonsEns_DL.nc</a> and place it into your data directory.
+</details> 
+<pre><code class="language-r">SpatialPolygonsEns_DL &lt;- download_ERA(
+    Variable = &quot;2m_temperature&quot;,
+    DataSet = &quot;era5&quot;,
+    Type = &quot;ensemble_members&quot;,
+    DateStart = &quot;1995-01-01&quot;,
+    DateStop = &quot;1995-01-02&quot;,
+    TResolution = &quot;day&quot;,
+    TStep = 1,
+    FUN = sd,
+    Extent = Shape_shp,
+    Dir = Dir.Data,
+    FileName = &quot;SpatialPolygonsEns_DL&quot;,
+    API_User = API_User,
+    API_Key = API_Key
+  )
+Plot_Raw(SpatialPolygonsEns, Dates = c(&quot;01-1995&quot;, &quot;02-1995&quot;),
+         Shp = Shape_shp, COL = rev(viridis(100)))
+</code></pre>
+<p><img src="krigr-downloads_files/figure-html/unnamed-chunk-11-1.png" width="1440" /></p>
+<p>As you can see here, there is substantial disagreement between the ensemble members of daily average temperatures across our study region. This uncertainty among ensemble members is greatest at high temporal resolution and becomes negligible at coarse temporal resolution. We document this phenomenon in 
+<a href="https://iopscience.iop.org/article/10.1088/1748-9326/ac39bf" target="_blank" rel="noopener">this publication (Figure 1)</a>.</p>
+<h2 id="final-downloads-for-workshop-progress">Final Downloads for Workshop Progress</h2>
+<p>Now that we know how to use spatial limitation and temporal aggregation with <code>download_ERA()</code> it is time to generate the data products we will use for the rest of this workshop material.</p>
+<h3 id="climate-data">Climate Data</h3>
+<div class="alert alert-info">
+  <div>
+    To streamline this workshop material, I will focus on just three short-time series of data with different spatial limitations. I visualise them all side-by-side further down.
+  </div>
+</div>
+<details><summary> Click here for download calls </summary>
+<h4 id="extent-data"><code>extent</code> Data</h4>
+<details>
+  <summary>Click here for file if download takes too long:</summary>
+    Download 
+<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/krigr/Data/ExtentRaw.nc">ExtentRaw.nc</a> and place it into your data directory.
+</details> 
+<pre><code class="language-r">Extent_Raw &lt;- download_ERA(
+  Variable = &quot;2m_temperature&quot;,
+  DataSet = &quot;era5-land&quot;,
+  DateStart = &quot;1995-01-01&quot;,
+  DateStop = &quot;1995-01-04&quot;,
+  TResolution = &quot;day&quot;,
+  TStep = 1,
+  Extent = Extent_ext,
+  Dir = Dir.Data,
+  FileName = &quot;ExtentRaw&quot;,
+  API_User = API_User,
+  API_Key = API_Key
+)
+</code></pre>
+<h4 id="spatialpolygons-data"><code>SpatialPolygons</code> Data</h4>
+<details>
+  <summary>Click here for file if download takes too long:</summary>
+    Download 
+<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/krigr/Data/SpatialPolygonsRaw.nc">SpatialPolygonsRaw.nc</a> and place it into your data directory.
+</details> 
+<pre><code class="language-r">SpatialPolygonsRaw &lt;- download_ERA(
+  Variable = &quot;2m_temperature&quot;,
+  DataSet = &quot;era5-land&quot;,
+  DateStart = &quot;1995-01-01&quot;,
+  DateStop = &quot;1995-01-04&quot;,
+  TResolution = &quot;day&quot;,
+  TStep = 1,
+  Extent = Shape_shp,
+  Dir = Dir.Data,
+  FileName = &quot;SpatialPolygonsRaw&quot;,
+  API_User = API_User,
+  API_Key = API_Key
+)
+</code></pre>
+<h4 id="pointdataframe-data">Point(<code>data.frame</code>) Data</h4>
+<details>
+  <summary>Click here for file if download takes too long:</summary>
+    Download 
+<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/krigr/Data/PointsRaw.nc">PointsRaw.nc</a> and place it into your data directory.
+</details> 
+<pre><code class="language-r">Points_Raw &lt;- download_ERA(
+  Variable = &quot;2m_temperature&quot;,
+  DataSet = &quot;era5-land&quot;,
+  DateStart = &quot;1995-01-01&quot;,
+  DateStop = &quot;1995-01-4&quot;,
+  TResolution = &quot;day&quot;,
+  TStep = 1,
+  Extent = Mountains_df,
+  Buffer = 0.5,
+  ID = &quot;Mountain&quot;,
+  Dir = Dir.Data,
+  FileName = &quot;PointsRaw&quot;,
+  API_User = API_User,
+  API_Key = API_Key
+)
+</code></pre>
+</details>
+<p>Now let&rsquo;s visualise these data for a better understanding of what they contain:</p>
+<pre><code class="language-r">Extent_gg &lt;- Plot_Raw(Extent_Raw[[1]], Dates = &quot;Extent&quot;)
+SP_gg &lt;- Plot_Raw(SpatialPolygonsRaw[[1]], Dates = &quot;SpatialPolygons&quot;)
+Points_gg &lt;- Plot_Raw(Points_Raw[[1]], Dates = &quot;SpatialPolygons&quot;)
+plot_grid(Extent_gg, SP_gg, Points_gg, ncol = 3)
+</code></pre>
+<p><img src="krigr-downloads_files/figure-html/dataviz-1.png" width="1440" /></p>
+<h3 id="dynamical-data-uncertainty-1">Dynamical Data Uncertainty</h3>
+<div class="alert alert-info">
+  <div>
+    For an aggregate understanding of data uncertainty, we also obtain dynamical uncertainty for our target region and time frame. For simplicity, we do so only for the <code>SpatialPolygons</code> specification.
+  </div>
+</div>
+<details><summary> Click here for download call </summary>
+<details>
+  <summary>Click here for file if download takes too long:</summary>
+    Download 
+<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/krigr/Data/SpatialPolygonsEns.nc">SpatialPolygonsEns.nc</a> and place it into your data directory.
+</details> 
+<pre><code class="language-r">SpatialPolygonsEns &lt;- download_ERA(
+    Variable = &quot;2m_temperature&quot;,
+    DataSet = &quot;era5&quot;,
+    Type = &quot;ensemble_members&quot;,
+    DateStart = &quot;1995-01-01&quot;,
+    DateStop = &quot;1995-01-04&quot;,
+    TResolution = &quot;day&quot;,
+    TStep = 1,
+    FUN = sd,
+    Extent = Shape_shp,
+    Dir = Dir.Data,
+    FileName = &quot;SpatialPolygonsEns&quot;,
+    API_User = API_User,
+    API_Key = API_Key
+  )
+</code></pre>
+</details> 
+<pre><code class="language-r">Plot_Raw(SpatialPolygonsEns, Dates = c(&quot;01-1995&quot;, &quot;02-1995&quot;, 
+                                          &quot;03-1995&quot;, &quot;04-1995&quot;),
+         Shp = Shape_shp, COL = rev(viridis(100)))
+</code></pre>
+<p><img src="krigr-downloads_files/figure-html/unnamed-chunk-17-1.png" width="1440" /></p>
+<p>We will see how these uncertainties stack up against other sources of uncertainty when we arrive at 
+<a href="/courses/krigr/kriging/#aggregate-uncertainty">aggregate uncertainty</a> of our final product.</p>
+<h2 id="considerations-for-download_era">Considerations for <code>download_ERA()</code></h2>
+<p><code>download_ERA()</code> is a complex function with many things happening under the hood. To make sure you have the best experience with this interface to the ERA5(-Land) products through <code>R</code>, I have compiled a few bits of <em>good-to-know</em> information about the workings of <code>download_ERA()</code>.</p>
+<h3 id="effeciency">Effeciency</h3>
+<p>Download speeds with <code>download_ERA()</code> are largely tied to CDS queue time, but there are some things worth considering when querying downloads of time-series data.</p>
+<div class="alert alert-warning">
+  <div>
+    The <code>download_ERA()</code> function automatically breaks down download requests into monthly intervals thus circumventing the danger of running into making a download request that is too big for the CDS.
+  </div>
+</div>
+<p>For example, <code>DateStart = &quot;2000-01-20&quot;</code>, <code>DateStop = &quot;2000-02-20&quot;</code> with <code>TResolution = 'day'</code>, and <code>TStep = 8</code> will lead to two download requests to the CDS: (1) hourly data in the range 20/01/2000 00:00 to 31/01/2000 23:00, and (2) hourly data in the range 01/02/2000 00:00 to 20/02/2000 23:00. These data sets are subsequently fused in <code>R</code>, aggregated to daily aggregates, and finally, aggregated to four big aggregates.<br>
+This gives you a lot of flexibility, but always keep in mind that third-party data sets might not account for leap-years so make sure the dates of third-party data (should you chose to use some) lines up with the ones as specified by your calls to the functions of the <code>KrigR</code> package.</p>
+<h4 id="singulardl"><code>SingularDL</code></h4>
+<p>ECMWF CDS downloads come with a hard limit of 100,000 layers worth of data. This corresponds to more than 1 month worth of data. As a matter of fact, even ar hourly time-scales, you could theoretically download ~11 years worth of data without hitting this limit. In this particular case, <code>download_ERA()</code> stages, by default, 132 individual downloads (1 per month) when the CDS would be just fine accepting the download request for all the data in one download call.</p>
+<p>Is there any way to bypass the monthly downloads in <code>download_ERA()</code>? Yes, there is. With the <code>SingularDL</code> argument.</p>
+<div class="alert alert-info">
+  <div>
+    Setting <code>SingularDL = TRUE</code> in <code>download_ERA()</code> bypasses the automatic month-wise download staging. A pre-staging check breaks the operation if you query more than the CDS hard limit on data.
+  </div>
+</div>
+<div class="alert alert-">
+  <div>
+    Our <a href="/courses/krigr/outlook/">development goals</a> include changing month-wise default downloads to downloads of 100,000 layers at a time.
+  </div>
+</div>
+<h4 id="cores"><code>Cores</code></h4>
+<p>Continuing on from the previous point, let&rsquo;s consider you want to obtain more than 100,000 layers worth of data for your analysis and thus can&rsquo;t make use of the <code>SingularDL</code> argument. 
+By default <code>download_ERA()</code> stages downloads sequentially. Most modern PCs come with multiple cores each of which could theoretically stage it&rsquo;s own download in parallel. Couldn&rsquo;t we make use of this for more efficient download staging? Yes, we can with the <code>Cores</code> argument.</p>
+<div class="alert alert-info">
+  <div>
+    Using the <code>Cores</code> argument in <code>download_ERA()</code> you can specify how many downloads to stage in parallel rather than sequentially.
+  </div>
+</div>
+<h4 id="disk-space">Disk Space</h4>
+<p><code>KrigR</code> uses NETCDF (.nc) files as they represent the standard in climate science. NETCDF file size is not connected to data content in the raster but number of cells. Other formats, such as GeoTiff (.tif) do however scale in file size with non-NA cell number in the saved rasters.</p>
+<div class="alert alert-">
+  <div>
+    Our <a href="/courses/krigr/outlook/">development goals</a> include giving the user control over the file type as which <code>KrigR</code>-derived products are saved.
+  </div>
+</div>
+<p>For example, the file size of the above <code>FirstDL</code> raster is 7kb while the <code>SpatialPolygons</code> and <code>data.frame</code> driven data is saved as GeoTiffs of 4kb and 3kb, respectively.</p>
+<div class="alert alert-">
+  <div>
+    If you need to optimise storage space, particularly when using <a href="/courses/krigr/download/#spatial-limitation">spatial limitation</a> with <code>KrigR</code>, I can thus recommend re-saving <code>KrigR</code> outputs as GeoTiffs.
+  </div>
+</div>
+<h3 id="cummulative-variables-precipfix">Cummulative Variables (<code>PrecipFix</code>)</h3>
+<div class="alert alert-danger">
+  <div>
+    Some variables in the ERA5(-Land) data sets are stored as cumulative records for pre-set time-windows, but temporal aggregation in <code>download-ERA()</code> cannot handle such data.
+  </div>
+</div>
+<p>Consequently, cumulative records need to be transformed into single-time-step records with respect to their base temporal resolution and cumulative aggregation interval like so:</p>
+<img src="/courses/krigr/PrecipFix.jpg" width="900"/>
+<div class="alert alert-">
+  <div>
+    To make cumulatively stored variables compatible with temporal aggregation in <code>download_ERA()</code> simple toggle <code>PrecipFix = TRUE</code> in the function call.
+  </div>
+</div>
+<div class="alert alert-info">
+  <div>
+    To identify which variables are stored cumulatively, we recommend searching for variables listed as &ldquo;This variable is accumulated from the beginning of the forecast time to the end of the forecast step.&rdquo; on the data set documentation page (e.g., <a href="https://cds.climate.copernicus.eu/cdsapp#!/dataset/reanalysis-era5-land?tab=overview">ERA5-Land</a>).
+  </div>
+</div>
+<div class="alert alert-">
+  <div>
+    Our <a href="/courses/krigr/outlook/">development goals</a> include an error check for specification of <code>PrecipFix = TRUE</code> on non-cumulatively stored variables.
+  </div>
+</div>
+<h3 id="stability">Stability</h3>
+<p><code>download_ERA()</code> requires a stable connection to the ECWMF CDS. Sometimes, however, a connection may drop or the CDS queue is so long that our downloads just fail. To mitigate the annoyance caused by these issues, I have implemented to extra arguments to the <code>download_ERA()</code> function call:</p>
+<h4 id="timeout"><code>TimeOut</code></h4>
+<p><code>TimeOut</code> is a numeric argument which specifies how many seconds to wait for the CDS to return the queried data. The default equates to 10 hours.</p>
+<h4 id="trydown"><code>TryDown</code></h4>
+<p><code>TryDown</code> is a numeric argument which specifies how often to retry a download before giving up and moving on or stopping the execution of <code>download_ERA()</code>. The default is 10.</p>
+<h2 id="session-info">Session Info</h2>
+<pre><code class="language-r">sessionInfo()
+</code></pre>
+<pre><code>## R version 4.2.3 (2023-03-15)
+## Platform: x86_64-apple-darwin17.0 (64-bit)
+## Running under: macOS Big Sur ... 10.16
+## 
+## Matrix products: default
+## BLAS:   /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRlapack.dylib
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] parallel  stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+##  [1] mapview_2.11.0          rnaturalearthdata_0.1.0 rnaturalearth_0.3.2    
+##  [4] gimms_1.2.1             ggmap_3.0.2             cowplot_1.1.1          
+##  [7] viridis_0.6.2           viridisLite_0.4.1       ggplot2_3.4.1          
+## [10] tidyr_1.3.0             KrigR_0.1.2             terra_1.7-21           
+## [13] httr_1.4.5              stars_0.6-0             abind_1.4-5            
+## [16] fasterize_1.0.4         sf_1.0-12               lubridate_1.9.2        
+## [19] automap_1.1-9           doSNOW_1.0.20           snow_0.4-4             
+## [22] doParallel_1.0.17       iterators_1.0.14        foreach_1.5.2          
+## [25] rgdal_1.6-5             raster_3.6-20           sp_1.6-0               
+## [28] stringr_1.5.0           keyring_1.3.1           ecmwfr_1.5.0           
+## [31] ncdf4_1.21             
+## 
+## loaded via a namespace (and not attached):
+##  [1] leafem_0.2.0             colorspace_2.1-0         class_7.3-21            
+##  [4] leaflet_2.1.2            satellite_1.0.4          base64enc_0.1-3         
+##  [7] rstudioapi_0.14          proxy_0.4-27             farver_2.1.1            
+## [10] fansi_1.0.4              codetools_0.2-19         cachem_1.0.7            
+## [13] knitr_1.42               jsonlite_1.8.4           png_0.1-8               
+## [16] Kendall_2.2.1            compiler_4.2.3           assertthat_0.2.1        
+## [19] fastmap_1.1.1            cli_3.6.0                htmltools_0.5.4         
+## [22] tools_4.2.3              gtable_0.3.1             glue_1.6.2              
+## [25] dplyr_1.1.0              Rcpp_1.0.10              jquerylib_0.1.4         
+## [28] vctrs_0.6.1              blogdown_1.16            crosstalk_1.2.0         
+## [31] lwgeom_0.2-11            xfun_0.37                timechange_0.2.0        
+## [34] lifecycle_1.0.3          rnaturalearthhires_0.2.1 zoo_1.8-11              
+## [37] scales_1.2.1             gstat_2.1-0              yaml_2.3.7              
+## [40] curl_5.0.0               memoise_2.0.1            gridExtra_2.3           
+## [43] sass_0.4.5               reshape_0.8.9            stringi_1.7.12          
+## [46] highr_0.10               e1071_1.7-13             boot_1.3-28.1           
+## [49] intervals_0.15.3         RgoogleMaps_1.4.5.3      rlang_1.1.0             
+## [52] pkgconfig_2.0.3          bitops_1.0-7             evaluate_0.20           
+## [55] lattice_0.20-45          purrr_1.0.1              htmlwidgets_1.6.1       
+## [58] labeling_0.4.2           tidyselect_1.2.0         plyr_1.8.8              
+## [61] magrittr_2.0.3           bookdown_0.33            R6_2.5.1                
+## [64] generics_0.1.3           DBI_1.1.3                pillar_1.8.1            
+## [67] withr_2.5.0              units_0.8-1              xts_0.13.0              
+## [70] tibble_3.2.1             spacetime_1.2-8          KernSmooth_2.23-20      
+## [73] utf8_1.2.3               rmarkdown_2.20           jpeg_0.1-10             
+## [76] grid_4.2.3               zyp_0.11-1               FNN_1.1.3.2             
+## [79] digest_0.6.31            classInt_0.4-9           webshot_0.5.4           
+## [82] stats4_4.2.3             munsell_0.5.0            bslib_0.4.2
+</code></pre>
+
+          </div>
+
+          
+
+<div class="article-tags">
+  
+  <a class="badge badge-light" href="/tag/climate-data/">Climate Data</a>
+  
+  <a class="badge badge-light" href="/tag/statistical-downscaling/">Statistical Downscaling</a>
+  
+  <a class="badge badge-light" href="/tag/krigr/">KrigR</a>
+  
+</div>
+
+
+
+          
+          <div class="article-widget">
+            
+<div class="post-nav">
+  
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">Previous</div>
+    <a href="/courses/krigr/prep/" rel="next">Preparing the Workshop</a>
+  </div>
+  
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">Next</div>
+    <a href="/courses/krigr/kriging/" rel="prev">Statistical Downscaling</a>
+  </div>
+  
+</div>
+
+          </div>
+          
+        </div>
+
+        <div class="body-footer">
+          <p>Last updated on 2021-05-26</p>
+
+          
+
+
+
+
+
+          
+
+
+          
+
+
+  
+  
+  <div class="article-widget content-widget-hr">
+    <h3>Related</h3>
+    <ul>
+      
+      <li><a href="/courses/krigr/bioclim/">Bioclimatic Variables</a></li>
+      
+      <li><a href="/courses/krigr/prep/">Preparing the Workshop</a></li>
+      
+      <li><a href="/courses/krigr/projections/">Projection Downscaling</a></li>
+      
+      <li><a href="/courses/krigr/quickstart/">Quick Guide</a></li>
+      
+      <li><a href="/courses/krigr/setup/">Setting up KrigR</a></li>
+      
+    </ul>
+  </div>
+  
+
+
+
+        </div>
+
+      </article>
+
+      <footer class="site-footer">
+  
+  <p class="powered-by">
+    
+      <a href="/privacy/">Privacy Policy</a>
+    
+    
+       &middot; 
+      <a href="/terms/">Terms</a>
+    
+  </p>
+  
+
+  <p class="powered-by">
+    © 2024
+  </p>
+
+  
+  
+
+
+
+
+
+
+  <p class="powered-by">
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+  </p>
+</footer>
+
+
+    </main>
+  </div>
+</div>
+
+
+      
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js" integrity="sha256-eOgo0OtLL4cdq7RdwRUiGKLX9XsIJ7nGhWEKbohmVAQ=" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/languages/r.min.js"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/languages/latex.min.js"></script>
+        
+      
+
+    
+
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.js" integrity="sha256-EErZamuLefUnbMBQbsEqu1USa+btR2oIlCpBJbyD4/g=" crossorigin="anonymous"></script>
+    
+
+    
+    
+    <script>const code_highlighting = true;</script>
+    
+
+    
+    
+    <script>const isSiteThemeDark = false;</script>
+    
+
+    
+    
+    
+    
+    
+    
+    <script>
+      const search_config = {"indexURI":"/index.json","minLength":1,"threshold":0.3};
+      const i18n = {"no_results":"No results found","placeholder":"Search...","results":"results found"};
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks",
+        'slides' : "Slides"
+        };
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.1/anchor.min.js" integrity="sha256-pB/deHc9CGfFpJRjC43imB29Rse8tak+5eXqntO94ck=" crossorigin="anonymous"></script>
+    <script>
+      anchors.add();
+    </script>
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+      <div class="search-hit-content">
+        <div class="search-hit-name">
+          <a href="{{relpermalink}}">{{title}}</a>
+          <div class="article-metadata search-hit-type">{{type}}</div>
+          <p class="search-hit-description">{{snippet}}</p>
+        </div>
+      </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="/js/academic.min.66c553246b0f279a03be6e5597f72b52.js"></script>
+
+    
+
+
+
+
+
+
+  
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

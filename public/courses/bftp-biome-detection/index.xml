@@ -1,0 +1,771 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>BFTP - Biome Detection through Remote Sensing | Erik Kusch</title>
+    <link>https://www.erikkusch.com/courses/bftp-biome-detection/</link>
+      <atom:link href="https://www.erikkusch.com/courses/bftp-biome-detection/index.xml" rel="self" type="application/rss+xml" />
+    <description>BFTP - Biome Detection through Remote Sensing</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-gb</language><copyright>© 2024</copyright><lastBuildDate>Fri, 01 Jan 2021 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg</url>
+      <title>BFTP - Biome Detection through Remote Sensing</title>
+      <link>https://www.erikkusch.com/courses/bftp-biome-detection/</link>
+    </image>
+    
+    <item>
+      <title></title>
+      <link>https://www.erikkusch.com/courses/bftp-biome-detection/data-allocation/</link>
+      <pubDate>Wed, 10 Jun 2020 00:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/courses/bftp-biome-detection/data-allocation/</guid>
+      <description>&lt;h2 id=&#34;preparing-the-work&#34;&gt;Preparing The Work&lt;/h2&gt;
+&lt;p&gt;First of all, most &lt;code&gt;.R&lt;/code&gt; scripts will follow the same kind of structure:&lt;/p&gt;
+&lt;h3 id=&#34;head&#34;&gt;Head&lt;/h3&gt;
+&lt;p&gt;The &lt;strong&gt;Head&lt;/strong&gt; is used as an information statement at the top of your code document that informs the user of the contents, author, and (sometimes) date of the last edit on said document. This is highly useful when you are intending to give your document to other people at some point. The head for our analysis might look something like this:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# ####################################################################### #
+# PROJECT: [BFTP] Identifying Biomes And Their Shifts Using Remote Sensing
+# CONTENTS: Functionality to download, aggregate, and crop/mask NDVI data
+# AUTHOR: Erik Kusch
+# EDIT: 09/03/20
+# ####################################################################### #
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;preamble&#34;&gt;Preamble&lt;/h3&gt;
+&lt;p&gt;The &lt;strong&gt;Preamble&lt;/strong&gt; is where you set up the most important parameters/guidelines for your coding script. Personally, I &lt;em&gt;highly&lt;/em&gt; recommend to make your first line in the preamble read &lt;code&gt;rm(list=ls())&lt;/code&gt;. This nifty line of code clears your entire working environment in &lt;code&gt;R&lt;/code&gt; meaning that you work from a clean slate thus eliminating all possible interference of previous work. If your code works as intended after this line, it means that your project is &lt;em&gt;internally consistent&lt;/em&gt; and &lt;em&gt;self-contained&lt;/em&gt; which makes your analysis &lt;strong&gt;reproducible&lt;/strong&gt; (we want that!).&lt;/p&gt;
+&lt;p&gt;Afterwards, I like to establish a &lt;em&gt;directory&lt;/em&gt; (i.e. &amp;ldquo;folder&amp;rdquo;) structure. After all, no one likes a cluttered folder on their hard drive.Therefore, we identify our current working directory (wd) with &lt;code&gt;getwd()&lt;/code&gt; and save it as an object in &lt;code&gt;R&lt;/code&gt; which we call &lt;code&gt;Dir.Base&lt;/code&gt;. This is the folder in which our document is located and where &lt;code&gt;R&lt;/code&gt; is looking for and saving files to. We don&amp;rsquo;t want to dump everything there. Conclusively, we need to create our own folders within our project folder. We would like to call these folders &amp;ldquo;Data&amp;rdquo; and &amp;ldquo;Plots&amp;rdquo; (the purpose of these folders should be obvious from their names). To actually create these folders on your hard drive, we must first establish the folder paths. We do so by using the &lt;code&gt;paste()&lt;/code&gt; command in &lt;code&gt;R&lt;/code&gt; which combines objects and writes the &lt;code&gt;sep&lt;/code&gt; argument between the combined objects. Here, we take the path to our project folder (&lt;code&gt;Dir.Base &lt;/code&gt;) and combine it with the name of the folder we want (e.g. &amp;ldquo;Data&amp;rdquo;) while using the backslash (&amp;quot;/&amp;quot;) between these two objects as it indicates the jump in a folder hierarchy. The folder is then created using the &lt;code&gt;dir.create()&lt;/code&gt; function.&lt;/p&gt;
+&lt;p&gt;Our preamble then looks like this:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;rm(list=ls()) # clearing the entire environment
+Dir.Base &amp;lt;- getwd() # identifying the current directory
+Dir.Data &amp;lt;- paste(Dir.Base, &amp;quot;Data&amp;quot;, sep=&amp;quot;/&amp;quot;) # generating the folder path for data folder
+dir.create(Dir.Data) # creating the data folder
+Dir.Plots &amp;lt;- paste(Dir.Base, &amp;quot;Plots&amp;quot;, sep=&amp;quot;/&amp;quot;) # generating the folder path for figures folder
+dir.create(Dir.Plots) # creating the figures folder
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Usually, this is also where we load &lt;em&gt;packages&lt;/em&gt; for more functionality of our analyses. However, this time, we will do so when they are necessary to give you a better overview and explanation what they do.&lt;/p&gt;
+&lt;h3 id=&#34;coding&#34;&gt;Coding&lt;/h3&gt;
+&lt;p&gt;All of the important &lt;strong&gt;Coding&lt;/strong&gt; happens after the head and the preamble are written and run in &lt;code&gt;R&lt;/code&gt;. Basically, this is the rest of this document.&lt;/p&gt;
+&lt;h2 id=&#34;downloading-ndvi-data&#34;&gt;Downloading NDVI Data&lt;/h2&gt;
+&lt;p&gt;First of all, we need to download the NDVI data that we are interested in. One particularly useful repository for this is the Global Inventory Modelling and Mapping Studies (GIMMS) 3g v.1 data set obtained via the Advanced Very High Resolution Radiometer (AVHRR). This time series goes back all the way to January 1982 and contains bi-weekly, global projects of NDVI values.&lt;/p&gt;
+&lt;h3 id=&#34;packages&#34;&gt;Packages&lt;/h3&gt;
+&lt;p&gt;Firstly, we need some packages:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;gimms&lt;/code&gt; is a package which enables us to download the GIMMS 3g v.1 data set directly through &lt;code&gt;R&lt;/code&gt;&lt;/li&gt;
+&lt;li&gt;&lt;code&gt;raster&lt;/code&gt; is a package which allows us to establish, handle, and save spatial gridded products of any variable we want (NDVI in this case)&lt;br&gt;
+We install and load our packages as follows:&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;install.packages(&amp;quot;gimms&amp;quot;) # for GIMMS NDVI data download
+library(gimms)
+install.packages(&amp;quot;raster&amp;quot;) # for spatial raster format
+library(raster)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;downloading&#34;&gt;Downloading&lt;/h3&gt;
+&lt;p&gt;Let&amp;rsquo;s download the GIMMS 3g v.1 NDVI data for the entire year of 1982:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;gimms_files &amp;lt;- downloadGimms(x = as.Date(&amp;quot;1982-01-01&amp;quot;), # download from January 1982
+                             y = as.Date(&amp;quot;1982-12-31&amp;quot;), # download to December 1982
+                             dsn = Dir.Data, # save downloads in data folder
+                             quiet = FALSE # show download progress
+                             )
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now, we want to turn our downloaded data into a raster so we can do spatial analyses with it:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;gimms_raster &amp;lt;- rasterizeGimms(x = gimms_files, # the data we rasterize
+                               remove_header = TRUE # we don&#39;t need the header of the data
+                               )
+gimms_raster # some information about the raster stack we created here
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## class      : RasterStack 
+## dimensions : 2160, 4320, 9331200, 24  (nrow, ncol, ncell, nlayers)
+## resolution : 0.083, 0.083  (x, y)
+## extent     : -180, 180, -90, 90  (xmin, xmax, ymin, ymax)
+## crs        : +proj=longlat +datum=WGS84 +no_defs 
+## names      : ndvi.1.1, ndvi.2.1, ndvi.3.1, ndvi.4.1, ndvi.5.1, ndvi.6.1, ndvi.7.1, ndvi.8.1, ndvi.9.1, ndvi.10.1, ndvi.11.1, ndvi.12.1, ndvi.1.2, ndvi.2.2, ndvi.3.2, ... 
+## min values :     -0.3,     -0.3,     -0.3,     -0.3,     -0.3,     -0.3,     -0.3,     -0.3,     -0.3,      -0.3,      -0.3,      -0.3,     -0.3,     -0.3,     -0.3, ... 
+## max values :     0.99,     0.99,     1.00,     0.99,     0.99,     0.99,     1.00,     1.00,     0.99,      0.99,      1.00,      1.00,     1.00,     1.00,     1.00, ...
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Here, you can see that we have successfully created a &lt;code&gt;RasterStack&lt;/code&gt; with 24 layers (two for each month because measurements were bi-weekly), for the entire earth (extent of -180, 180, -90, 90). We can also see that there are some values below 0 which we don&amp;rsquo;t expect for the NDVI and we will fix this in a second. For now, just notice that we have successfully downloaded the data.&lt;/p&gt;
+&lt;h2 id=&#34;aggregating-ndvi-data&#34;&gt;Aggregating NDVI Data&lt;/h2&gt;
+&lt;p&gt;With our data successfully downloaded, it is now time to prepare the data further for our analysis.&lt;/p&gt;
+&lt;h3 id=&#34;composites&#34;&gt;Composites&lt;/h3&gt;
+&lt;p&gt;Firstly, we want to deal with monthly NDVI values. To do so, we want to build monthly maximum composites. Luckily, the &lt;code&gt;gimms&lt;/code&gt; package has just the right option for us:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;indices &amp;lt;- monthlyIndices(gimms_files) # generate month indices from the data
+gimms_raster_mvc &amp;lt;- monthlyComposite(gimms_raster, # the data
+                                     indices = indices # the indices
+                                     )
+gimms_raster_mvc # some information about our monthly composite raster stack
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## class      : RasterStack 
+## dimensions : 2160, 4320, 9331200, 12  (nrow, ncol, ncell, nlayers)
+## resolution : 0.083, 0.083  (x, y)
+## extent     : -180, 180, -90, 90  (xmin, xmax, ymin, ymax)
+## crs        : +proj=longlat +datum=WGS84 +no_defs 
+## names      : index_1.1, index_1.2, index_1.3, index_1.4, index_1.5, index_1.6, index_1.7, index_1.8, index_1.9, index_1.10, index_1.11, index_1.12 
+## min values :     -0.30,     -0.30,     -0.30,     -0.29,     -0.30,     -0.30,     -0.30,     -0.30,     -0.30,      -0.30,      -0.30,      -0.30 
+## max values :      0.99,      1.00,      0.99,      1.00,      0.99,      1.00,      1.00,      1.00,      1.00,       1.00,       0.99,       0.99
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;As you can see above, our new raster stack has the same dimensions, resolution, coordinate reference system (crs), and extent as the previous one. However, we have reduced the number of layers to 12 (one for each month).&lt;/p&gt;
+&lt;p&gt;Since there are still negative values present (an artifact of how NASA stores the data or cloud cover), we simply set these to 0:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;Negatives &amp;lt;- which(values(gimms_raster_mvc) &amp;lt; 0) # identify all negative values
+values(gimms_raster_mvc)[Negatives] &amp;lt;- 0 # set threshold for barren land (NDVI&amp;lt;0)
+gimms_raster_mvc
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## class      : RasterBrick 
+## dimensions : 2160, 4320, 9331200, 12  (nrow, ncol, ncell, nlayers)
+## resolution : 0.083, 0.083  (x, y)
+## extent     : -180, 180, -90, 90  (xmin, xmax, ymin, ymax)
+## crs        : +proj=longlat +datum=WGS84 +no_defs 
+## source     : memory
+## names      : index_1.1, index_1.2, index_1.3, index_1.4, index_1.5, index_1.6, index_1.7, index_1.8, index_1.9, index_1.10, index_1.11, index_1.12 
+## min values :         0,         0,         0,         0,         0,         0,         0,         0,         0,          0,          0,          0 
+## max values :      0.99,      1.00,      0.99,      1.00,      0.99,      1.00,      1.00,      1.00,      1.00,       1.00,       0.99,       0.99
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;See how all of the &lt;code&gt;min values&lt;/code&gt; are now on 0!&lt;/p&gt;
+&lt;p&gt;Lastly, we want to see what our data looks like (visual inspection is an important step to sanity check your work). We do so as follows:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;plot(gimms_raster_mvc)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;01---data_allocation_files/figure-html/Aggr3-1.png&#34; width=&#34;1152&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;What a beautiful seasonal trend of greening we can observe (I&amp;rsquo;ll stop nerding out here before it get&amp;rsquo;s out of hand, don&amp;rsquo;t worry)!&lt;/p&gt;
+&lt;h3 id=&#34;annual-values&#34;&gt;Annual Values&lt;/h3&gt;
+&lt;p&gt;Lastly, we may wish (and in fact, you will have to) aggregate our data to annual and even more-than-annual means and seasonality measures.&lt;/p&gt;
+&lt;h4 id=&#34;mean-values&#34;&gt;Mean Values&lt;/h4&gt;
+&lt;p&gt;To establish annual mean values, we simply take the mean for each cell in our raster stack for all the layers as such:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;gimms_annual &amp;lt;- calc(gimms_raster_mvc, # data from which to calculate
+                     fun=mean, # function which to calculate with
+                     na.rm = TRUE # ignore NAs
+                     )
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;seasonality-values&#34;&gt;Seasonality Values&lt;/h4&gt;
+&lt;p&gt;Measures of seasonality are defined as the span between the maximum value of a cell and the minimum value of the same cell. So, we calculate a maximum raster and a minimum raster and then simply subtract the minimum from the maximum as follows:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;maxi &amp;lt;- calc(gimms_raster_mvc, fun=max)
+mini &amp;lt;- calc(gimms_raster_mvc, fun=min)
+gimms_seasonality &amp;lt;- maxi-mini
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;\pagebreak&lt;/p&gt;
+&lt;h4 id=&#34;plots&#34;&gt;Plots&lt;/h4&gt;
+&lt;p&gt;Let&amp;rsquo;s have a look at our annual mean and seasonality:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;plot(gimms_annual, main = &amp;quot;Mean&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;01---data_allocation_files/figure-html/Aggr6-1.png&#34; width=&#34;1152&#34; /&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;plot(gimms_seasonality, main = &amp;quot;Seasonality&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;01---data_allocation_files/figure-html/Aggr6-2.png&#34; width=&#34;1152&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;cropping-ndvi-data&#34;&gt;Cropping NDVI Data&lt;/h2&gt;
+&lt;p&gt;Our data is still on a global scale. We are only interested in data across Alaska, though. Let&amp;rsquo;s deal with that.&lt;/p&gt;
+&lt;h3 id=&#34;packages--data&#34;&gt;Packages &amp;amp; Data&lt;/h3&gt;
+&lt;p&gt;Again, we have to install some packages and load them.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;install.packages(&amp;quot;sp&amp;quot;) # for spatialpolygons format
+library(sp)
+install.packages(&amp;quot;rgdal&amp;quot;) # for shapefiles
+library(rgdal)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Secondly, we require the actual shape files. Personally, I am a big fan of the Natural Earth Shape files (\url{http://www.naturalearthdata.com/downloads/10m-cultural-vectors/}) because of all the different shape files I can get there. Here, we are interested in states/provinces and so want to download the data from here: \url{https://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/cultural/ne_10m_admin_1_states_provinces.zip}. Thankfully, &lt;code&gt;R&lt;/code&gt;let&amp;rsquo;s us do the downloading as well as the unpacking of archived (.zip) data:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# Downloading
+download.file(&amp;quot;https://www.naturalearthdata.com/http//www.naturalearthdata.com/download/10m/cultural/ne_10m_admin_1_states_provinces.zip&amp;quot;,
+              destfile = paste(Dir.Data, &amp;quot;Shapes.zip&amp;quot;, sep=&amp;quot;/&amp;quot;)) # destination file
+# Unzipping
+unzip(paste(Dir.Data, &amp;quot;Shapes.zip&amp;quot;, sep=&amp;quot;/&amp;quot;), # which file to unzip
+      exdir = Dir.Data) # where to unzip to
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Finally, we want to load our shape files into &lt;code&gt;R&lt;/code&gt;. We do this using the &lt;code&gt;readOGR()&lt;/code&gt; function in &lt;code&gt;R&lt;/code&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;Shapes &amp;lt;- readOGR(Dir.Data, # where to look for the file
+                  &amp;quot;ne_10m_admin_1_states_provinces&amp;quot;, # the file name
+                  verbose = FALSE) # we don&#39;t want an overview of the loaded data
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;crop--mask&#34;&gt;Crop &amp;amp; Mask&lt;/h3&gt;
+&lt;p&gt;Now, we are ready to use our shape file for Alaska. First, we have to find out which of our shape files is for Alaska:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;Position &amp;lt;- which(Shapes$name_en == &amp;quot;Alaska&amp;quot;) # find the english name that&#39;s &amp;quot;Alaska&amp;quot; in our shapefiles
+Alaska_Shp &amp;lt;- Shapes[Position,] # extract the Alaska shapefile
+plot(Alaska_Shp) # plot it for inspection
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;01---data_allocation_files/figure-html/Crop4-1.png&#34; width=&#34;1152&#34; /&gt;
+We really don&amp;rsquo;t care much about that island chain all the way to the right in our plot.&lt;/p&gt;
+&lt;p&gt;This is likely to be an extent-caused issue and we should crop our shape file extent to the easternmost point of Alaska on the continent:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;extent(Alaska_Shp) # extent clearly shows the super-eastern coordinates
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## class      : Extent 
+## xmin       : -179 
+## xmax       : 180 
+## ymin       : 51 
+## ymax       : 71
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# Crop
+Alaska_Shp &amp;lt;- crop(Alaska_Shp, # what to crop
+                   extent(-190, -130, 51, 71)) # which extent to crop to
+plot(Alaska_Shp) # visualising the cropped product
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;01---data_allocation_files/figure-html/Crop5-1.png&#34; width=&#34;1152&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Lovely. That resolved the issue. We are ready for final cropping of our data and saving of the cropped data.&lt;/p&gt;
+&lt;h4 id=&#34;mean-values-1&#34;&gt;Mean Values&lt;/h4&gt;
+&lt;p&gt;Let&amp;rsquo;s deal with the annual mean for 1982:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# Crop
+gimms_annual &amp;lt;- crop(gimms_annual, # mean annual data
+                     extent(Alaska_Shp)) # cropped Alaska extent
+# Mask (this keeps only cells that fall into our shapefile)
+gimms_annual &amp;lt;- mask(gimms_annual, # cropped annual means
+                     Alaska_Shp) # cropped Alaska shapefile
+plot(gimms_annual, main =&amp;quot;Annual Mean 1982&amp;quot;) # inspection time!
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;01---data_allocation_files/figure-html/Crop6-1.png&#34; width=&#34;1152&#34; /&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# Save data
+writeRaster(x = gimms_annual, # which raster to save
+            file = paste(Dir.Data, &amp;quot;1982Mean&amp;quot;, sep=&amp;quot;/&amp;quot;), # which file to save to
+            format = &amp;quot;CDF&amp;quot;, overwrite = TRUE) # which format to use and whether to overwrite
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## class      : RasterLayer 
+## dimensions : 237, 590, 139830  (nrow, ncol, ncell)
+## resolution : 0.083, 0.083  (x, y)
+## extent     : -179, -130, 51, 71  (xmin, xmax, ymin, ymax)
+## crs        : +proj=longlat +datum=WGS84 +no_defs 
+## source     : 1982Mean.nc 
+## names      : layer 
+## values     : 0, 0.84  (min, max)
+## zvar       : layer
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;seasonality-values-1&#34;&gt;Seasonality Values&lt;/h4&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# Crop
+gimms_seasonality &amp;lt;- crop(gimms_seasonality, # mean seasonality data
+                     extent(Alaska_Shp)) # cropped Alaska extent
+# Mask (this keeps only cells that fall into our shapefile)
+gimms_seasonality &amp;lt;- mask(gimms_seasonality, # cropped seasonality data
+                     Alaska_Shp) # cropped Alaska shapefile
+plot(gimms_seasonality, main = &amp;quot;Seasonality 1982&amp;quot;) # inspection time!
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;01---data_allocation_files/figure-html/Crop7-1.png&#34; width=&#34;1152&#34; /&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# Save data
+writeRaster(x = gimms_seasonality, # which raster to save
+            file = paste(Dir.Data, &amp;quot;1982Season&amp;quot;, sep=&amp;quot;/&amp;quot;), # which file to save to
+            format = &amp;quot;CDF&amp;quot;, overwrite = TRUE) # which format to use and whether to overwrite
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## class      : RasterLayer 
+## dimensions : 237, 590, 139830  (nrow, ncol, ncell)
+## resolution : 0.083, 0.083  (x, y)
+## extent     : -179, -130, 51, 71  (xmin, xmax, ymin, ymax)
+## crs        : +proj=longlat +datum=WGS84 +no_defs 
+## source     : 1982Season.nc 
+## names      : layer 
+## values     : 0, 1  (min, max)
+## zvar       : layer
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Cluster Analysis</title>
+      <link>https://www.erikkusch.com/courses/bftp-biome-detection/cluster-analysis/</link>
+      <pubDate>Wed, 10 Jun 2020 00:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/courses/bftp-biome-detection/cluster-analysis/</guid>
+      <description>&lt;h2 id=&#34;preparing-the-work&#34;&gt;Preparing The Work&lt;/h2&gt;
+&lt;p&gt;Let&amp;rsquo;s create our basic structure for this document:&lt;/p&gt;
+&lt;h3 id=&#34;head&#34;&gt;Head&lt;/h3&gt;
+&lt;p&gt;Not much has changed in the &lt;strong&gt;head&lt;/strong&gt; when compared to our last exercise. We merely change the &lt;em&gt;contents&lt;/em&gt; and and the &lt;em&gt;edit&lt;/em&gt; tag, since the rest stays the same for the entire project.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# ####################################################################### #
+# PROJECT: [BFTP] Identifying Biomes And Their Shifts Using Remote Sensing
+# CONTENTS: Functionality to identify clusters of NDVI mean and seasonality
+# AUTHOR: Erik Kusch
+# EDIT: 18/03/20
+# ####################################################################### #
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;preamble&#34;&gt;Preamble&lt;/h3&gt;
+&lt;p&gt;I am keeping the same &lt;strong&gt;preamble&lt;/strong&gt; as last time because we will need to index the data and the plot directory in this exercise. Our preamble then looks like this:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;rm(list=ls()) # clearing the entire environment
+Dir.Base &amp;lt;- getwd() # identifying the current directory
+Dir.Data &amp;lt;- paste(Dir.Base, &amp;quot;Data&amp;quot;, sep=&amp;quot;/&amp;quot;) # generating the folder path for data folder
+Dir.Plots &amp;lt;- paste(Dir.Base, &amp;quot;Plots&amp;quot;, sep=&amp;quot;/&amp;quot;) # generating the folder path for figures folder
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Notice, that we do not call the function &lt;code&gt;dir.create()&lt;/code&gt; this time. We don&amp;rsquo;t need to do so, because we already created the two directories established above in our last exercise. Usually, we would create this entire analysis of your BFTP project in one &lt;code&gt;R&lt;/code&gt; code script. In this case, we would only have one preamble which defines and creates directories instead of doing this step for every single sub-part of the analysis. Alas, we want to break this down for you. Therefore, you see this preamble here and will again in the next exercise.&lt;/p&gt;
+&lt;p&gt;Again, this is where would load packages, but I am going to install and load the necessary packages when needed to show you what they are good for. Personally, I recommend you always load all necessary packages at the beginning of your code file and leave comments as to what you load them for. This will make it easier to remove packages you don&amp;rsquo;t need anymore when you change things.&lt;/p&gt;
+&lt;h3 id=&#34;coding&#34;&gt;Coding&lt;/h3&gt;
+&lt;p&gt;Again, all of the important &lt;strong&gt;Coding&lt;/strong&gt; happens after the head and the preamble are written and run in &lt;code&gt;R&lt;/code&gt;. Basically, this is the rest of this document once more.&lt;/p&gt;
+&lt;h2 id=&#34;cluster-analysis&#34;&gt;Cluster Analysis&lt;/h2&gt;
+&lt;p&gt;Cluster analyses come in many forms. Here, we are interested in a k-means clustering approach. These approaches identify $k$ (a number) clusters. One of the most prominent ways to do this in &lt;code&gt;R&lt;/code&gt; is undoubtedly the &lt;code&gt;mclust&lt;/code&gt; &lt;code&gt;R&lt;/code&gt; package. Clusters can be thought of as groupings of data in multi-dimensional space. The number of dimensions is equal to the number of clustering components. In the &lt;code&gt;mclust&lt;/code&gt; &lt;code&gt;R&lt;/code&gt; package, the characteristics of these clusters (orientation, volume, shape) are, if not specified otherwise, estimated from the data.&lt;/p&gt;
+&lt;!-- They can be set to vary between clusters or constrained to be the same for all clusters. Depending on cluster characteristics, `mclust` distinguishes 20 individual models which you can see in table \ref{tab:MClustModels}, but are not expected to understand fully.   --&gt;
+&lt;!-- \begin{table}[ht!] --&gt;
+&lt;!--   \centering --&gt;
+&lt;!--   \caption[Models in mclust]{\textbf{Models in mclust:} The r-package mclust distinguishes 20 different models for data clustering based on distribution and cluster characteristics.} --&gt;
+&lt;!--     \begin{tabular}{|lcccc|} --&gt;
+&lt;!--     Acronym &amp; Distribution &amp; Volume &amp; Shape &amp; Orientation \\ --&gt;
+&lt;!--     \hline --&gt;
+&lt;!--     E     &amp; univariate &amp; equal &amp; -     &amp; - \\ --&gt;
+&lt;!--     V     &amp; univariate &amp; variable &amp; -     &amp; - \\ \hdashline --&gt;
+&lt;!--     EII   &amp; spherical  &amp; equal &amp; equal &amp; NA \\ --&gt;
+&lt;!--     VII   &amp; spherical  &amp; variable &amp; equal &amp; NA \\ \hdashline --&gt;
+&lt;!--     EEI   &amp; diagonal &amp; equal &amp; equal &amp; coordinate axes \\ --&gt;
+&lt;!--     VEI   &amp; diagonal &amp; variable &amp; equal &amp; coordinate axes \\ --&gt;
+&lt;!--     EVI   &amp; diagonal &amp; equal &amp; variable &amp; coordinate axes \\ --&gt;
+&lt;!--     VVI   &amp; diagonal &amp; variable &amp; variable &amp; coordinate axes \\ \hdashline --&gt;
+&lt;!--     EEE   &amp; ellipsoidal &amp; equal &amp; equal &amp; equal \\ --&gt;
+&lt;!--     EVE   &amp; ellipsoidal &amp; equal &amp; variable &amp; equal \\ --&gt;
+&lt;!-- 	VEE   &amp; ellipsoidal &amp; variable &amp; equal &amp; equal \\     --&gt;
+&lt;!--     VVE   &amp; ellipsoidal &amp; variable &amp; variable &amp; equal \\ --&gt;
+&lt;!--     EEV   &amp; ellipsoidal &amp; equal &amp; equal &amp; variable \\ --&gt;
+&lt;!--     VEV   &amp; ellipsoidal &amp; variable &amp; equal &amp; variable \\ --&gt;
+&lt;!--     EEV   &amp; ellipsoidal &amp; equal &amp; variable &amp; variable \\ --&gt;
+&lt;!--     VVV   &amp; ellipsoidal &amp; variable &amp; variable &amp; variable \\ \hdashline --&gt;
+&lt;!--     X	  &amp; \multicolumn{4}{c|}{univariate normal} \\ --&gt;
+&lt;!--     XII	  &amp; \multicolumn{4}{c|}{spherical multivariate normal} \\ --&gt;
+&lt;!--     XXI	  &amp; \multicolumn{4}{c|}{diagonal multivariate normal} \\ --&gt;
+&lt;!--     XXX	  &amp; \multicolumn{4}{c|}{ellipsoidal multivariate normal} \\ --&gt;
+&lt;!--     \hline --&gt;
+&lt;!--     \end{tabular}% --&gt;
+&lt;!--   \label{tab:MClustModels}% --&gt;
+&lt;!-- \end{table} --&gt;
+&lt;p&gt;&lt;code&gt;mclust&lt;/code&gt; provides the user with a very autonomous process of model calculation and selection. First, if not specified otherwise, &lt;code&gt;mclust&lt;/code&gt; calculates all available models for a range of cluster component numbers (by default one to nine clusters). Secondly, once the models are established, &lt;code&gt;mclust&lt;/code&gt; selects the most appropriate of the models according to their respective Bayesian Information Criterion (BIC) value. The BIC is an indicator of model quality: the lower the BIC, the better the model fits the data. Conclusively, &lt;code&gt;mclust&lt;/code&gt; chooses the model with the lowest BIC available for clustering the data.&lt;/p&gt;
+&lt;!-- As an example: for a clustering of data with four individual variables, `mclust` will, by default, calculate 126 individual models (14 model classes $*$ 9 cluster possibilities). It will calculate models from only 14 classes, since E, V, X, XII, XXI and XXX models are only appropriate for single variable clustering.   --&gt;
+&lt;h3 id=&#34;loading-data&#34;&gt;Loading Data&lt;/h3&gt;
+&lt;p&gt;Before we can get started with our analysis, we have to load our NDVI mean and seasonality data (see last exercise) back into &lt;code&gt;R&lt;/code&gt;, we do this as follows:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;library(raster) # the raster package for rasters
+Mean1982_ras &amp;lt;- raster(paste(Dir.Data, &amp;quot;1982Mean.nc&amp;quot;, sep=&amp;quot;/&amp;quot;)) # loading means
+Season1982_ras &amp;lt;- raster(paste(Dir.Data, &amp;quot;1982Season.nc&amp;quot;, sep=&amp;quot;/&amp;quot;)) # loading seasonalities
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now that we have loaded the data into &lt;code&gt;R&lt;/code&gt;, it is time to introduce you to another useful feature of the &lt;code&gt;raster&lt;/code&gt; package - the &lt;strong&gt;stack&lt;/strong&gt;. With a stack of rasters, you can do exactly what the name suggests, stack rasters of the same resolution, and extent into one &lt;code&gt;R&lt;/code&gt; object. You do this by calling the &lt;code&gt;stack()&lt;/code&gt;function in &lt;code&gt;R&lt;/code&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;All1982_ras &amp;lt;- stack(Mean1982_ras, Season1982_ras) # creating a stack
+names(All1982_ras) &amp;lt;- c(&amp;quot;Mean&amp;quot;, &amp;quot;Seasonality&amp;quot;) # assign names to stack layers
+All1982_ras
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## class      : RasterStack 
+## dimensions : 237, 590, 139830, 2  (nrow, ncol, ncell, nlayers)
+## resolution : 0.083, 0.083  (x, y)
+## extent     : -179, -130, 51, 71  (xmin, xmax, ymin, ymax)
+## crs        : +proj=longlat +datum=WGS84 +no_defs 
+## names      : Mean, Seasonality 
+## min values :    0,           0 
+## max values : 0.84,        1.00
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;As you can see, this object contains both rasters as &lt;em&gt;layers&lt;/em&gt; which we have already assigned names to.&lt;/p&gt;
+&lt;p&gt;Now let&amp;rsquo;s see how plotting works with this. This time, I am adding a couple of arguments to the &lt;code&gt;plot()&lt;/code&gt; function to make the plots nicer than before:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;plot(All1982_ras, # what to plot
+     colNA = &amp;quot;black&amp;quot;, # which colour to assign to NA values
+     legend.shrink=1, # vertical size of legend
+     legend.width=2 # horizontal size of legend
+     )
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;02---classifications_files/figure-html/Loading3-1.png&#34; width=&#34;1152&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Using stacks makes plotting easier in &lt;code&gt;R&lt;/code&gt; if you want to plot more than one raster at a time.&lt;/p&gt;
+&lt;h3 id=&#34;data-extraction&#34;&gt;Data Extraction&lt;/h3&gt;
+&lt;p&gt;We&amp;rsquo;re now ready to extract data from our data sets. &lt;code&gt;mclust&lt;/code&gt; let&amp;rsquo;s us assess multi-dimensional clusters but wants the data to be handed over in one file - as a matrix, to be precise. Let&amp;rsquo;s see what happens when we just look the first few (&lt;code&gt;head()&lt;/code&gt;) values (&lt;code&gt;values()&lt;/code&gt;) of our raster stack:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;head(values(All1982_ras))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##      Mean Seasonality
+## [1,]   NA          NA
+## [2,]   NA          NA
+## [3,]   NA          NA
+## [4,]   NA          NA
+## [5,]   NA          NA
+## [6,]   NA          NA
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;As you can see, the data gets extracted but there are NA values here. This is because the top-left corner of our rasters (which is where values start) contains a lot of NA cells.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s see what kind of object this is:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;class(values(All1982_ras))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] &amp;quot;matrix&amp;quot; &amp;quot;array&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;It is a matrix! Just what &lt;code&gt;mclust&lt;/code&gt; wants! Let&amp;rsquo;s actually create that as an object:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;Vals1982_mat &amp;lt;- values(All1982_ras)
+rownames(Vals1982_mat) &amp;lt;- 1:dim(Vals1982_mat)[1] # rownames to index raster cell number
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Finally, let&amp;rsquo;s carry out a sanity check to make sure that we really have ported all values from both source rasters to our matrix. For this to be the case, the rownumber of our matrix (&lt;code&gt;dim()[1]&lt;/code&gt;) needs to be the same as the amount (&lt;code&gt;length()&lt;/code&gt;) of values (&lt;code&gt;values()&lt;/code&gt;) in our rasters:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;dim(Vals1982_mat)[1] == length(values(Mean1982_ras)) &amp;amp; 
+  dim(Vals1982_mat)[1] == length(values(Season1982_ras))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] TRUE
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This checks out!&lt;/p&gt;
+&lt;h3 id=&#34;data-prepartion&#34;&gt;Data Prepartion&lt;/h3&gt;
+&lt;p&gt;As you remember, there were plenty of NA values in our data set. No cluster algorithm can handle these. Therefore, we need to get rid of them. This is done as follows:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;Vals1982_mat &amp;lt;- na.omit(Vals1982_mat) # omit all rows which contain at least one NA record
+dim(Vals1982_mat) # new dimensions of our matrix
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 39460     2
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This seriously cut our data down and will speed up our clustering approach a lot.&lt;/p&gt;
+&lt;h3 id=&#34;cluster-identification&#34;&gt;Cluster Identification&lt;/h3&gt;
+&lt;p&gt;Let&amp;rsquo;s install and load the &lt;code&gt;mclust&lt;/code&gt; package.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;install.packages(&amp;quot;mclust&amp;quot;)
+library(mclust)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;cluster-model-selection&#34;&gt;Cluster Model Selection&lt;/h4&gt;
+&lt;p&gt;Let&amp;rsquo;s start with the &lt;code&gt;mclust&lt;/code&gt; functionality to identify the best fitting clustering with a range of 1 to 9 clusters. To do so, we first need to identify the BIC fit for all of our possible cluster models. &lt;code&gt;mclust&lt;/code&gt; does this automatically:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;dataBIC &amp;lt;- mclustBIC(Vals1982_mat) # identify BICs for different models
+print(summary(dataBIC)) # show summary of top-ranking models
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Best BIC values:
+##           EVV,8    EVV,9  EVE,8
+## BIC      136809 136800.2 135504
+## BIC diff      0     -8.6  -1304
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The output above tells us that the best performing model was of type EVV (ellipsoidal distribution,  equal volume, variable shape, and variable orientation of clusters) identifying 9 clusters.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s see a visual overview of this:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;plot(dataBIC)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;02---classifications_files/figure-html/MClust1b-1.png&#34; width=&#34;1152&#34; /&gt;
+Here, you can see different models compared to each other given certain numbers of clusters that have been considered.&lt;/p&gt;
+&lt;p&gt;Now we can build our model:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;mod &amp;lt;- Mclust(Vals1982_mat, # data for the cluster model
+                   G = 7 # BIC index for model to be built
+                   )
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We now have our full model! How many clusters did it identify?&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;mod$G # number of groups/clusters in model
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 7
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;No surprises here, we&amp;rsquo;ve got 7 clusters.&lt;/p&gt;
+&lt;p&gt;Now let&amp;rsquo;s look at the mean values of the clusters:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;mod[[&amp;quot;parameters&amp;quot;]][[&amp;quot;mean&amp;quot;]] # mean values of clusters
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##             [,1] [,2] [,3]  [,4] [,5] [,6] [,7]
+## Mean        0.36 0.53 0.67 0.081 0.44 0.26 0.21
+## Seasonality 0.76 0.56 0.35 0.269 0.72 0.64 0.59
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;These can be interpreted biologically, but I will leave that to you.&lt;/p&gt;
+&lt;p&gt;Now let&amp;rsquo;s see how well these clusters distinguish the mean-seasonality space:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;plot(mod, what = &amp;quot;uncertainty&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;02---classifications_files/figure-html/MClust1f-1.png&#34; width=&#34;1152&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;How do we map this? We &lt;em&gt;predict&lt;/em&gt; our clusters for our initial data as follows:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;ModPred &amp;lt;- predict.Mclust(mod, Vals1982_mat) # prediction
+Pred_ras &amp;lt;- Mean1982_ras # establishing a rediction raster
+values(Pred_ras) &amp;lt;- NA # set everything to NA
+# set values of prediction raster to corresponding classification according to rowname
+values(Pred_ras)[as.numeric(rownames(Vals1982_mat))] &amp;lt;- as.vector(ModPred$classification)
+Pred_ras
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## class      : RasterLayer 
+## dimensions : 237, 590, 139830  (nrow, ncol, ncell)
+## resolution : 0.083, 0.083  (x, y)
+## extent     : -179, -130, 51, 71  (xmin, xmax, ymin, ymax)
+## crs        : +proj=longlat +datum=WGS84 +no_defs 
+## source     : memory
+## names      : layer 
+## values     : 1, 7  (min, max)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;As you can see, this has the same extent and resolution as our source rasters but the values range from 1 to 7. These are our cluster assignments.&lt;/p&gt;
+&lt;p&gt;Now let&amp;rsquo;s plot this:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;colours &amp;lt;- rainbow(mod$G) # define 7 colours
+plot(Pred_ras, # what to plot
+     col = colours, # colours for groups
+     colNA = &amp;quot;black&amp;quot;, # which colour to assign to NA values
+     legend.shrink=1, # vertical size of legend
+     legend.width=2 # horizontal size of legend
+     )
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;02---classifications_files/figure-html/MClust1h-1.png&#34; width=&#34;1152&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;How often do we observe which assignment?&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;table(values(Pred_ras))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## 
+##     1     2     3     4     5     6     7 
+## 13101  1902  1118  2939  5608  8047  6745
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;pre-defined-number&#34;&gt;Pre-Defined Number&lt;/h4&gt;
+&lt;p&gt;As biologists, we have got decades of work already present concerning biome distributions across the Earth. One such classification are the Terrestrial Ecoregions of the World (\url{https://www.worldwildlife.org/publications/terrestrial-ecoregions-of-the-world}). We want to identify how many biomes this data set identifies across Australia.&lt;/p&gt;
+&lt;p&gt;Firstly, we download the data and unpack it:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# downloading Terrestrial Ecoregion Shapefile as zip
+download.file(&amp;quot;http://assets.worldwildlife.org/publications/15/files/original/official_teow.zip&amp;quot;,
+              destfile = file.path(Dir.Data, &amp;quot;wwf_ecoregions.zip&amp;quot;)
+              )
+# unpacking the zip
+unzip(file.path(Dir.Data, &amp;quot;wwf_ecoregions.zip&amp;quot;), 
+      exdir = file.path(Dir.Data, &amp;quot;WWF_ecoregions&amp;quot;)
+      )
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Secondly, we load the data into &lt;code&gt;R&lt;/code&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# loading shapefile for biomes
+wwf &amp;lt;- readOGR(file.path(Dir.Data, &amp;quot;WWF_ecoregions&amp;quot;, &amp;quot;official&amp;quot;, &amp;quot;wwf_terr_ecos.shp&amp;quot;),
+               verbose = FALSE)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Thirdly, we need to limit the global terrestrial ecoregion shapefile to the state of Alaska and need our Alaska shapefile for this:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;Shapes &amp;lt;- readOGR(Dir.Data, # where to look for the file
+                  &amp;quot;ne_10m_admin_1_states_provinces&amp;quot;, # the file name
+                  verbose = FALSE) # we don&#39;t want an overview of the loaded data
+Position &amp;lt;- which(Shapes$name_en == &amp;quot;Alaska&amp;quot;) # find the english name that&#39;s &amp;quot;Alaska&amp;quot;
+Alaska_Shp &amp;lt;- Shapes[Position,] # extract the Alaska shapefile
+Alaska_Shp &amp;lt;- crop(Alaska_Shp, # what to crop
+                   extent(-190, -130, 51, 71)) # which extent to crop to
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now, we need to limit the global biome shapefile to the shape of Alaska:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;wwf_ready &amp;lt;- crop(wwf, extent(Alaska_Shp)) # cropping to Alaska extent
+wwf_ready &amp;lt;- intersect(Alaska_Shp, wwf) # masking of two shapefiles
+plot(wwf_ready,  # plotting final shape
+     col = wwf_ready@data[[&amp;quot;BIOME&amp;quot;]] # use BIOME specification for colours
+     )
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;02---classifications_files/figure-html/MClust2c-1.png&#34; width=&#34;1152&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;We first identify the BICs:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# identify BICs for different models
+dataBIC2 &amp;lt;- mclustBIC(Vals1982_mat, 
+                     G = length(unique(wwf_ready@data[[&amp;quot;G200_BIOME&amp;quot;]]))) 
+print(summary(dataBIC2)) # show summary of top-ranking models
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Best BIC values:
+##           EVV,4  VVE,4  EVE,4
+## BIC      133035 132345 125463
+## BIC diff      0   -690  -7572
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;As you can see, the shapefile gives us 4 clusters across Alaska even though the map only shows 3. The fourth biome is only represented by a single polygon across all of Alaska and we might want to reduce the set to 3.&lt;/p&gt;
+&lt;p&gt;For now, we are running with the idea of 4 clusters:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;mod2 &amp;lt;- Mclust(Vals1982_mat, # data for the cluster model
+                   G = 4 # BIC index for model to be built
+                   )
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We now have our full model!&lt;/p&gt;
+&lt;p&gt;Now let&amp;rsquo;s look at the mean values of the clusters:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;mod2[[&amp;quot;parameters&amp;quot;]][[&amp;quot;mean&amp;quot;]] # mean values of clusters
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##             [,1] [,2] [,3] [,4]
+## Mean        0.41 0.13 0.60 0.27
+## Seasonality 0.73 0.39 0.44 0.67
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Again, I leave the biological interpretation to you.&lt;/p&gt;
+&lt;p&gt;Finally, we will plot our assignments in mean-seasonality space:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;plot(mod2, what = &amp;quot;uncertainty&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;02---classifications_files/figure-html/MClust2h-1.png&#34; width=&#34;1152&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Again, let&amp;rsquo;s &lt;em&gt;predict&lt;/em&gt; our clusters for our initial data as follows:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;ModPred2 &amp;lt;- predict.Mclust(mod2, Vals1982_mat) # prediction
+Pred2_ras &amp;lt;- Mean1982_ras # establishing a rediction raster
+values(Pred2_ras) &amp;lt;- NA # set everything to NA
+# set values of prediction raster to corresponding classification according to rowname
+values(Pred2_ras)[as.numeric(rownames(Vals1982_mat))] &amp;lt;- as.vector(ModPred2$classification)
+Pred2_ras
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## class      : RasterLayer 
+## dimensions : 237, 590, 139830  (nrow, ncol, ncell)
+## resolution : 0.083, 0.083  (x, y)
+## extent     : -179, -130, 51, 71  (xmin, xmax, ymin, ymax)
+## crs        : +proj=longlat +datum=WGS84 +no_defs 
+## source     : memory
+## names      : layer 
+## values     : 1, 4  (min, max)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;As you can see, this has the same extent and resolution as our source rasters but the values range from 1 to 4. These are our cluster assignments.&lt;/p&gt;
+&lt;p&gt;Now let&amp;rsquo;s plot this:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;colours &amp;lt;- rainbow(mod2$G) # define 4 colours
+plot(Pred2_ras, # what to plot
+     col = colours, # colours for groups
+     colNA = &amp;quot;black&amp;quot;, # which colour to assign to NA values
+     legend.shrink=1, # vertical size of legend
+     legend.width=2 # horizontal size of legend
+     )
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;02---classifications_files/figure-html/MClust2j-1.png&#34; width=&#34;1152&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;How often do we observe which assignment?&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;table(values(Pred2_ras))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## 
+##     1     2     3     4 
+## 12223  4066  2327 20844
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;saving-workspace&#34;&gt;Saving Workspace&lt;/h2&gt;
+&lt;h3 id=&#34;what-is-it-and-why-do-we-do-it&#34;&gt;What Is It And Why Do We Do It?&lt;/h3&gt;
+&lt;p&gt;The workspace records all of our elements in &lt;code&gt;R&lt;/code&gt;. Since we want to pick up from this point in our next exercise, we want to save the workspace and restore it at a later point to assess all of our elements again.&lt;/p&gt;
+&lt;h3 id=&#34;saving-and-loading-the-workspace&#34;&gt;Saving And Loading The Workspace&lt;/h3&gt;
+&lt;p&gt;Saving a workspace goes as follows:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# save workspace
+save.image(file = (paste(Dir.Base, &amp;quot;Workspace.RData&amp;quot;, sep=&amp;quot;/&amp;quot;)))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now let&amp;rsquo;s load it again:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;rm(list=ls()) # clean workspace
+load(file = &amp;quot;Workspace.RData&amp;quot;) # load workspace
+ls() # list elements in workspace
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##  [1] &amp;quot;Alaska_Shp&amp;quot;     &amp;quot;All1982_ras&amp;quot;    &amp;quot;colours&amp;quot;       
+##  [4] &amp;quot;dataBIC&amp;quot;        &amp;quot;dataBIC2&amp;quot;       &amp;quot;Dir.Base&amp;quot;      
+##  [7] &amp;quot;Dir.Data&amp;quot;       &amp;quot;Dir.Plots&amp;quot;      &amp;quot;Mean1982_ras&amp;quot;  
+## [10] &amp;quot;mod&amp;quot;            &amp;quot;mod2&amp;quot;           &amp;quot;ModPred&amp;quot;       
+## [13] &amp;quot;ModPred2&amp;quot;       &amp;quot;Position&amp;quot;       &amp;quot;Pred_ras&amp;quot;      
+## [16] &amp;quot;Pred2_ras&amp;quot;      &amp;quot;Season1982_ras&amp;quot; &amp;quot;Shapes&amp;quot;        
+## [19] &amp;quot;Vals1982_mat&amp;quot;   &amp;quot;wwf&amp;quot;            &amp;quot;wwf_ready&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;All our files are back!&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Change Analysis</title>
+      <link>https://www.erikkusch.com/courses/bftp-biome-detection/change-analysis/</link>
+      <pubDate>Wed, 10 Jun 2020 00:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/courses/bftp-biome-detection/change-analysis/</guid>
+      <description>&lt;h2 id=&#34;preparing-the-work&#34;&gt;Preparing The Work&lt;/h2&gt;
+&lt;p&gt;Let&amp;rsquo;s create our basic structure for this document:&lt;/p&gt;
+&lt;h3 id=&#34;head&#34;&gt;Head&lt;/h3&gt;
+&lt;p&gt;Not much has changed in the &lt;strong&gt;head&lt;/strong&gt; when compared to our last exercise. We merely change the &lt;em&gt;contents&lt;/em&gt; and and the &lt;em&gt;edit&lt;/em&gt; tag, since the rest stays the same for the entire project.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# ####################################################################### #
+# PROJECT: [BFTP] Identifying Biomes And Their Shifts Using Remote Sensing
+# CONTENTS: Functionality to identify and analyse changes in spatial cluster distributions
+# AUTHOR: Erik Kusch
+# EDIT: 19/03/20
+# ####################################################################### #
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;preamble&#34;&gt;Preamble&lt;/h3&gt;
+&lt;p&gt;I am keeping the same &lt;strong&gt;preamble&lt;/strong&gt; as last time because we will need to index the data and the plot directory in this exercise. Our preamble then looks like this:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;rm(list=ls()) # clearing the entire environment
+Dir.Base &amp;lt;- getwd() # identifying the current directory
+Dir.Data &amp;lt;- paste(Dir.Base, &amp;quot;Data&amp;quot;, sep=&amp;quot;/&amp;quot;) # generating the folder path for data folder
+Dir.Plots &amp;lt;- paste(Dir.Base, &amp;quot;Plots&amp;quot;, sep=&amp;quot;/&amp;quot;) # generating the folder path for figures folder
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Notice, that we do not call the function &lt;code&gt;dir.create()&lt;/code&gt; this time. We don&amp;rsquo;t need to do so, because we already created the two directories established above in our last exercise. Usually, we would create this entire analysis of your BFTP project in one &lt;code&gt;R&lt;/code&gt; code script. In this case, we would only have one preamble which defines and creates directories instead of doing this step for every single sub-part of the analysis. Alas, we want to break this down for you. Therefore, you see this preamble here and will again in the next exercise.&lt;/p&gt;
+&lt;p&gt;This time, we actually do load packages here as we really only need the &lt;code&gt;raster&lt;/code&gt; package. By now, I am assuming you know what we use it for:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;library(raster) # the raster package for rasters
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Additionally, we reload our &lt;code&gt;.RData&lt;/code&gt; workspace from the last exercise to gain back our &lt;code&gt;mclust&lt;/code&gt; model objects in particular.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;load(file = &amp;quot;Workspace.RData&amp;quot;) # load workspace
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;coding&#34;&gt;Coding&lt;/h3&gt;
+&lt;p&gt;Again, all of the important &lt;strong&gt;Coding&lt;/strong&gt; happens after the head and the preamble are written and run in &lt;code&gt;R&lt;/code&gt;. Basically, this is the rest of this document once more.&lt;/p&gt;
+&lt;h2 id=&#34;change-analysis&#34;&gt;Change Analysis&lt;/h2&gt;
+&lt;h3 id=&#34;loading-data&#34;&gt;Loading Data&lt;/h3&gt;
+&lt;p&gt;Firstly, we need the raw NDVI mean and seasonality data for the time frames we want to compare. Let&amp;rsquo;s deal with that right quick.&lt;/p&gt;
+&lt;h4 id=&#34;1982&#34;&gt;1982&lt;/h4&gt;
+&lt;p&gt;Let&amp;rsquo;s load our 1982 NDVI mean and seasonality data:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;Mean1982_ras &amp;lt;- raster(paste(Dir.Data, &amp;quot;1982Mean.nc&amp;quot;, sep=&amp;quot;/&amp;quot;)) # loading means
+Season1982_ras &amp;lt;- raster(paste(Dir.Data, &amp;quot;1982Season.nc&amp;quot;, sep=&amp;quot;/&amp;quot;)) # loading seasonalities
+All1982_ras &amp;lt;- stack(Mean1982_ras, Season1982_ras) # creating a stack
+names(All1982_ras) &amp;lt;- c(&amp;quot;Mean&amp;quot;, &amp;quot;Seasonality&amp;quot;) # assign names to stack layers
+Vals1982_mat &amp;lt;- values(All1982_ras) # extract data
+rownames(Vals1982_mat) &amp;lt;- 1:dim(Vals1982_mat)[1] # rownames to index raster cell number
+Vals1982_mat &amp;lt;- na.omit(Vals1982_mat) # omit all rows which contain at least one NA record
+summary(Vals1982_mat) # a summary of the data
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##       Mean       Seasonality  
+##  Min.   :0.00   Min.   :0.00  
+##  1st Qu.:0.22   1st Qu.:0.55  
+##  Median :0.33   Median :0.67  
+##  Mean   :0.32   Mean   :0.64  
+##  3rd Qu.:0.41   3rd Qu.:0.76  
+##  Max.   :0.84   Max.   :1.00
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;2015&#34;&gt;2015&lt;/h4&gt;
+&lt;p&gt;In order to assess how biome distributions have changed, we need another time frame to compare our 1982 data to. For this, I have re-run the code from our first BFTP exercise for the year 2015. We now load that data into &lt;code&gt;R&lt;/code&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;Mean2015_ras &amp;lt;- raster(paste(Dir.Data, &amp;quot;2015Mean.nc&amp;quot;, sep=&amp;quot;/&amp;quot;)) # loading means
+Season2015_ras &amp;lt;- raster(paste(Dir.Data, &amp;quot;2015Season.nc&amp;quot;, sep=&amp;quot;/&amp;quot;)) # loading seasonalities
+All2015_ras &amp;lt;- stack(Mean2015_ras, Season2015_ras) # creating a stack
+names(All2015_ras) &amp;lt;- c(&amp;quot;Mean&amp;quot;, &amp;quot;Seasonality&amp;quot;) # assign names to stack layers
+Vals2015_mat &amp;lt;- values(All2015_ras) # extract data
+rownames(Vals2015_mat) &amp;lt;- 1:dim(Vals2015_mat)[1] # rownames to index raster cell number
+Vals2015_mat &amp;lt;- na.omit(Vals2015_mat) # omit all rows which contain at least one NA record
+summary(Vals2015_mat) # a summary of the data
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##       Mean       Seasonality  
+##  Min.   :0.00   Min.   :0.00  
+##  1st Qu.:0.25   1st Qu.:0.56  
+##  Median :0.33   Median :0.67  
+##  Mean   :0.34   Mean   :0.64  
+##  3rd Qu.:0.43   3rd Qu.:0.77  
+##  Max.   :0.83   Max.   :1.00
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Notice, that the output of the &lt;code&gt;summary()&lt;/code&gt; function is different for both matrices built from raster data values. This is important to ensure that our analysis actually references different time frames.&lt;/p&gt;
+&lt;p&gt;\newpage&lt;/p&gt;
+&lt;h3 id=&#34;predictions&#34;&gt;Predictions&lt;/h3&gt;
+&lt;p&gt;Secondly, we want to compare cluster assignments. To do so, we need to use our &lt;code&gt;mclust&lt;/code&gt; models to predict cluster assignments for each cell in our target region raster using the NDVI mean and seasonality data that we loaded previously.&lt;/p&gt;
+&lt;h4 id=&#34;1982-1&#34;&gt;1982&lt;/h4&gt;
+&lt;p&gt;Let&amp;rsquo;s deal with the 1982 data first. &lt;code&gt;mod2&lt;/code&gt; is the &lt;code&gt;mclust&lt;/code&gt; model object for 4 clusters from our last exercise. Here, we predict clusters and place them on a raster:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;ModPred1982 &amp;lt;- predict.Mclust(mod2, Vals1982_mat) # prediction
+Pred1982_ras &amp;lt;- Mean1982_ras # establishing a rediction raster
+values(Pred1982_ras) &amp;lt;- NA # set everything to NA
+# set values of prediction raster to corresponding classification according to rowname
+values(Pred1982_ras)[as.numeric(rownames(Vals1982_mat))] &amp;lt;- as.vector(ModPred1982$classification)
+colours &amp;lt;- rainbow(mod2$G) # define 4 colours
+plot(Pred1982_ras, # what to plot
+     col = colours, # colours for groups
+     colNA = &amp;quot;black&amp;quot;, # which colour to assign to NA values
+     legend.shrink=1, # vertical size of legend
+     legend.width=2 # horizontal size of legend
+     )
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;03---change_files/figure-html/Pred1-1.png&#34; width=&#34;1152&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;\newpage&lt;/p&gt;
+&lt;h4 id=&#34;2015-1&#34;&gt;2015&lt;/h4&gt;
+&lt;p&gt;Now, we deal with the 2015 time frame. Notice, that we are using the &lt;code&gt;mod2&lt;/code&gt; &lt;code&gt;mclust&lt;/code&gt; model which was established for 1982 in our last exercise. It is important that we use the same model when predicting our classes between time frames to ensure comparability. After all, we want to make sure that cluster 1 is the same in 1982 as 2015. It is debatable whether we should use a cluster model built from just one year of data or even from the same time frame as one of the the time frames which are to be compared. In fact, I would argue that we should establish a &lt;code&gt;mclust&lt;/code&gt; model for the mean annual NDVI and mean annual seasonality of NDVI across the entire time for which data is available. For now, we simply use the 1982-reliant model:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;ModPred2015 &amp;lt;- predict.Mclust(mod2, Vals2015_mat) # prediction
+Pred2015_ras &amp;lt;- Mean2015_ras # establishing a rediction raster
+values(Pred2015_ras) &amp;lt;- NA # set everything to NA
+# set values of prediction raster to corresponding classification according to rowname
+values(Pred2015_ras)[as.numeric(rownames(Vals2015_mat))] &amp;lt;- as.vector(ModPred2015$classification)
+colours &amp;lt;- rainbow(mod2$G) # define 4 colours
+plot(Pred2015_ras, # what to plot
+     col = colours, # colours for groups
+     colNA = &amp;quot;black&amp;quot;, # which colour to assign to NA values
+     legend.shrink=1, # vertical size of legend
+     legend.width=2 # horizontal size of legend
+     )
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;03---change_files/figure-html/Pred2-1.png&#34; width=&#34;1152&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;You can already see some cluster assignment changes on Nunivak island.&lt;/p&gt;
+&lt;p&gt;\newpage&lt;/p&gt;
+&lt;h3 id=&#34;initial-assesment&#34;&gt;Initial Assesment&lt;/h3&gt;
+&lt;p&gt;Let&amp;rsquo;s first assess how many raster cells have changed cluster assignment between our two time frames:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# identify how many cell assignments don&#39;t match between rasters
+Change &amp;lt;- sum(ModPred1982$classification != ModPred2015$classification)
+# divide number of mismatches by number of all cells
+Change/length(ModPred2015$classification)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.22
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;As you can see, there is a proportion of 0.22 raster cells which have changed cluster assignment between the two time frames. Now, let&amp;rsquo;s put this on a map:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;PredChange_ras &amp;lt;- Mean2015_ras # establishing a rediction raster
+values(PredChange_ras) &amp;lt;- NA # set everything to NA
+# set values of prediction raster to corresponding classification according to rowname
+values(PredChange_ras)[as.numeric(rownames(Vals2015_mat))] &amp;lt;- 
+  ModPred1982$classification != ModPred2015$classification
+colours &amp;lt;- c(&amp;quot;green&amp;quot;, &amp;quot;red&amp;quot;) # define 2 colours
+plot(PredChange_ras, col = colours, colNA = &amp;quot;black&amp;quot;,
+     legend.shrink=1, legend.width=2)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;03---change_files/figure-html/qualb-1.png&#34; width=&#34;1152&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;I leave it to you to interpret these patterns (there actually is an interpretation to be had here).&lt;/p&gt;
+&lt;p&gt;\newpage&lt;/p&gt;
+&lt;h3 id=&#34;in-depth-assesment&#34;&gt;In-Depth Assesment&lt;/h3&gt;
+&lt;p&gt;I&amp;rsquo;d argue that a simple understanding whether things have changed won&amp;rsquo;t be what we want to report. What we want, is to know which cluster took over the cells of which raster. I.e., I&amp;rsquo;d like to answer the question: &amp;ldquo;Which clusters take over the regions of other clusters and which ones?&amp;rdquo;. I hope you&amp;rsquo;re interested in this, too. Here&amp;rsquo;s how we can analyse this: For each cluster assignment we:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Identify the cells corresponding to it in 1982/the past&lt;/li&gt;
+&lt;li&gt;Count how many of these cells are classified as the same cluster in 2015/the present&lt;/li&gt;
+&lt;li&gt;Repeat the above for all combinations of cluster assignments imaginable&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;NClusters &amp;lt;- mod2$G # identify the number of clusters
+present &amp;lt;- as.vector(Pred2015_ras) # assignments in 2015
+past &amp;lt;- as.vector(Pred1982_ras) # assignments in 1982
+# this matrix will hold the data, rows will show past state, columns will show present state
+changematrix &amp;lt;- matrix(rep(NA, NClusters^2), nrow=NClusters, ncol=NClusters)
+changevec &amp;lt;- rep(NA, NClusters) # this vector will fill rows in our matrix
+for(k in 1:NClusters){ # loop over clusters in past
+  changerun &amp;lt;- changevec 
+  changeperc &amp;lt;- changevec
+  for(m in 1:NClusters){ # loop over clusters in present
+    presentcells &amp;lt;- which(present==m) # figure out which cells hold value m
+    pastcells &amp;lt;- which(past==k) # figure out which cells hold value k
+    # figure out how many of the cell denominators are shared by the two vectors
+    rate &amp;lt;- length(Reduce(intersect, list(pastcells,presentcells))) 
+    changerun[m] &amp;lt;- rate # save rate to changerun in place m
+  } # end of present-loop
+  changematrix[k,] &amp;lt;- changerun # save changerun to k row in matrix
+  for(n in 1:NClusters){ # turn rates into portions
+    # divide number of in a cell by total number of cells in its row
+    changeperc[n] &amp;lt;- changematrix[k,n] / sum(changematrix[k,])
+  } # end of percentages
+  changematrix[k,] &amp;lt;- changeperc # save changeperc to row k
+} # end of past-loop
+changematrix &amp;lt;- changematrix*100 # turn everything into percentages
+rownames(changematrix) &amp;lt;- paste0(&amp;quot;Past&amp;quot;, 1:NClusters)
+colnames(changematrix) &amp;lt;- paste0(&amp;quot;Present&amp;quot;, 1:NClusters)
+changematrix # show the matrix
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##       Present1 Present2 Present3 Present4
+## Past1     82.0     0.84    4.459       13
+## Past2      3.5    60.35    0.074       36
+## Past3     23.8     0.00   76.235        0
+## Past4     16.9     3.01    0.029       80
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;As you can see, there&amp;rsquo;s quite a bit going on here. Let me explain how to read this. From past (1982) to present (2015), 82.03% of raster cells assigned to cluster 1 in 1982 are assigned to cluster 1 in 2015 as well. 0.84% of raster cells previously assigned to cluster 1 are classified as cluster 2 in 2015. Notice, how all rows sum up to 100% each. Representing the total of assigned raster cells in the 1982 record.&lt;/p&gt;
+&lt;p&gt;Given the biological counterparts of the clusters, how would you interpret these shifts?&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>BFTP - Biome Detection through Remote Sensing</title>
+      <link>https://www.erikkusch.com/courses/bftp-biome-detection/</link>
+      <pubDate>Fri, 01 Jan 2021 00:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/courses/bftp-biome-detection/</guid>
+      <description>&lt;p&gt;If you are seeing this page, something went awry in the build of the website. Please find the first course material for this course 
+&lt;a href=&#34;https://www.erikkusch.com/courses/bftp-biome-detection/data-allocation/&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

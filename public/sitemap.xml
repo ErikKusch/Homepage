@@ -3,223 +3,1629 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>/courses/example/example1/</loc>
-    <lastmod>2019-05-05T00:00:00+01:00</lastmod>
+    <loc>https://www.erikkusch.com/courses/gbif/</loc>
+    <lastmod>2024-11-06T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/courses/example/</loc>
-    <lastmod>2018-09-09T00:00:00+00:00</lastmod>
+    <loc>https://www.erikkusch.com/courses/bayes-nets/inference/</loc>
+    <lastmod>2022-11-08T20:00:00+01:00</lastmod>
   </url>
   
   <url>
-    <loc>/courses/example/example2/</loc>
-    <lastmod>2019-05-05T00:00:00+01:00</lastmod>
+    <loc>https://www.erikkusch.com/courses/bayes-nets/dynamic/</loc>
+    <lastmod>2022-11-01T20:00:00+01:00</lastmod>
   </url>
   
   <url>
-    <loc>/talk/example/</loc>
-    <lastmod>2030-06-01T13:00:00+00:00</lastmod>
+    <loc>https://www.erikkusch.com/courses/bayes-nets/introduction/</loc>
+    <lastmod>2022-09-13T20:00:00+01:00</lastmod>
   </url>
   
   <url>
-    <loc>/talk/</loc>
-    <lastmod>2030-06-01T13:00:00+00:00</lastmod>
+    <loc>https://www.erikkusch.com/courses/krigr/background/</loc>
+    <lastmod>2021-05-26T20:00:00+01:00</lastmod>
   </url>
   
   <url>
-    <loc>/post/</loc>
-    <lastmod>2019-09-05T00:00:00+00:00</lastmod>
+    <loc>https://www.erikkusch.com/courses/bayes-nets/part-1/</loc>
+    <lastmod>2021-04-13T20:00:00+01:00</lastmod>
   </url>
   
   <url>
-    <loc>/post/writing-technical-content/</loc>
-    <lastmod>2019-07-12T00:00:00+00:00</lastmod>
+    <loc>https://www.erikkusch.com/courses/an-introduction-to-biostatistics/</loc>
+    <lastmod>2021-01-01T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/courses/</loc>
-    <lastmod>2019-05-05T00:00:00+01:00</lastmod>
+    <loc>https://www.erikkusch.com/courses/bayes-nets/</loc>
+    <lastmod>2021-01-01T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/publication-type/3/</loc>
-    <lastmod>2019-04-07T00:00:00+00:00</lastmod>
+    <loc>https://www.erikkusch.com/courses/bftp-biome-detection/</loc>
+    <lastmod>2021-01-01T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/publication/preprint/</loc>
-    <lastmod>2019-04-07T00:00:00+00:00</lastmod>
+    <loc>https://www.erikkusch.com/courses/biostat101/</loc>
+    <lastmod>2021-01-01T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/authors/</loc>
-    <lastmod>2019-09-05T00:00:00+00:00</lastmod>
+    <loc>https://www.erikkusch.com/courses/excursions-into-biostatistics/1_biostatistics-wait.-what/</loc>
+    <lastmod>2021-01-01T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/author/nelson-bighetti/</loc>
-    <lastmod>2019-09-05T00:00:00+00:00</lastmod>
+    <loc>https://www.erikkusch.com/courses/excursions-into-biostatistics/</loc>
+    <lastmod>2021-01-01T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/publication_types/</loc>
-    <lastmod>2019-04-07T00:00:00+00:00</lastmod>
+    <loc>https://www.erikkusch.com/courses/rethinking/</loc>
+    <lastmod>2021-01-01T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/publication/</loc>
-    <lastmod>2019-04-07T00:00:00+00:00</lastmod>
+    <loc>https://www.erikkusch.com/courses/bftp-biome-detection/data-allocation/</loc>
+    <lastmod>2020-06-10T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/tag/source-themes/</loc>
-    <lastmod>2019-04-07T00:00:00+00:00</lastmod>
+    <loc>https://www.erikkusch.com/courses/an-introduction-to-biostatistics/01-an-introduction-to-basic-statistics-for-biologists/</loc>
   </url>
   
   <url>
-    <loc>/tags/</loc>
-    <lastmod>2019-04-17T00:00:00+00:00</lastmod>
+    <loc>https://www.erikkusch.com/courses/biostat101/01-an-introduction-to-basic-statistics-for-biologists/</loc>
   </url>
   
   <url>
-    <loc>/post/jupyter/</loc>
-    <lastmod>2019-09-05T00:00:00+00:00</lastmod>
+    <loc>https://www.erikkusch.com/courses/bayes-nets/networksr/</loc>
+    <lastmod>2022-09-27T20:00:00+01:00</lastmod>
   </url>
   
   <url>
-    <loc>/slides/</loc>
-    <lastmod>2019-02-05T00:00:00+00:00</lastmod>
+    <loc>https://www.erikkusch.com/courses/krigr/setup/</loc>
+    <lastmod>2021-05-26T20:00:00+01:00</lastmod>
   </url>
   
   <url>
-    <loc>/slides/example/</loc>
-    <lastmod>2019-02-05T00:00:00+00:00</lastmod>
+    <loc>https://www.erikkusch.com/courses/bayes-nets/part-2/</loc>
+    <lastmod>2021-06-01T20:00:00+01:00</lastmod>
   </url>
   
   <url>
-    <loc>/</loc>
+    <loc>https://www.erikkusch.com/courses/rethinking/chapter-02/</loc>
+    <lastmod>2021-01-05T16:26:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/excursions-into-biostatistics/2_statistical-terminology-the-basics-misconceptions-and-pedantics/</loc>
+    <lastmod>2021-01-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/an-introduction-to-biostatistics/introduction-to-r/</loc>
+    <lastmod>2020-06-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/biostat101/introduction-to-r/</loc>
+    <lastmod>2020-06-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/bftp-biome-detection/cluster-analysis/</loc>
+    <lastmod>2020-06-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/krigr/quickstart/</loc>
+    <lastmod>2021-05-26T20:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/bayes-nets/part-3/</loc>
+    <lastmod>2021-06-08T20:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/rethinking/chapter-03/</loc>
+    <lastmod>2021-01-07T08:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/excursions-into-biostatistics/3_coding-practices-life-with-r/</loc>
+    <lastmod>2021-01-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/an-introduction-to-biostatistics/a-primer-for-statistical-tests/</loc>
+    <lastmod>2020-06-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/biostat101/a-primer-for-statistical-tests/</loc>
+    <lastmod>2020-06-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/bftp-biome-detection/change-analysis/</loc>
+    <lastmod>2020-06-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/bayes-nets/static/</loc>
+    <lastmod>2022-10-25T20:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/excursions-into-biostatistics/research-project/</loc>
+    <lastmod>2020-02-27T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/excursions-into-biostatistics/research-project/</loc>
+    <lastmod>2020-02-27T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/rethinking/chapter-04/</loc>
+    <lastmod>2021-01-08T09:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/an-introduction-to-biostatistics/descriptive-statistics/</loc>
+    <lastmod>2020-06-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/biostat101/descriptive-statistics/</loc>
+    <lastmod>2020-06-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/krigr/prep/</loc>
+    <lastmod>2021-05-26T20:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/excursions-into-biostatistics/data-handling-and-data-assumptions/</loc>
+    <lastmod>2020-02-27T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/rethinking/chapter-04b/</loc>
+    <lastmod>2021-01-15T09:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/an-introduction-to-biostatistics/data-visualisation/</loc>
+    <lastmod>2020-06-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/biostat101/data-visualisation/</loc>
+    <lastmod>2020-06-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/excursions-into-biostatistics/classifications-order-from-chaos/</loc>
+    <lastmod>2020-02-27T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/rethinking/chapter-05/</loc>
+    <lastmod>2021-01-21T14:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/an-introduction-to-biostatistics/06-inferential-statistics-hypotheses-and-our-research-project/</loc>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/biostat101/06-inferential-statistics-hypotheses-and-our-research-project/</loc>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/excursions-into-biostatistics/regressions-correlations-for-the-advanced/</loc>
+    <lastmod>2020-02-27T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/rethinking/chapter-06/</loc>
+    <lastmod>2021-01-28T18:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/an-introduction-to-biostatistics/data-handling-and-data-mining/</loc>
+    <lastmod>2020-06-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/biostat101/data-handling-and-data-mining/</loc>
+    <lastmod>2020-06-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/excursions-into-biostatistics/excursion-into-biostatistics/</loc>
+    <lastmod>2020-02-27T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/rethinking/chapter-07/</loc>
+    <lastmod>2021-02-04T20:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/an-introduction-to-biostatistics/nominal-tests/</loc>
+    <lastmod>2020-06-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/biostat101/nominal-tests/</loc>
+    <lastmod>2020-06-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/rethinking/chapter-08/</loc>
+    <lastmod>2021-02-18T20:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/excursions-into-biostatistics/8_statistical-significance-in-biology-conventions-abstractions-and-the-future/</loc>
+    <lastmod>2021-01-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/an-introduction-to-biostatistics/correlation-tests/</loc>
+    <lastmod>2020-06-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/biostat101/correlation-tests/</loc>
+    <lastmod>2020-06-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/krigr/download/</loc>
+    <lastmod>2021-05-26T20:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/rethinking/chapter-09/</loc>
+    <lastmod>2021-02-25T20:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/excursions-into-biostatistics/9_rmarkdown-manuscript-workflow-revisited/</loc>
+    <lastmod>2021-01-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/an-introduction-to-biostatistics/ordinal-metric-tests-two-sample-situations/</loc>
+    <lastmod>2020-06-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/biostat101/ordinal-metric-tests-two-sample-situations/</loc>
+    <lastmod>2020-06-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/rethinking/chapter-11/</loc>
+    <lastmod>2021-03-18T20:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/excursions-into-biostatistics/10_troubleshooting_r-isolating-issues-and-asking-questions/</loc>
+    <lastmod>2021-01-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/an-introduction-to-biostatistics/ordinal-metric-tests-more-than-two-sample-situations/</loc>
+    <lastmod>2020-06-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/biostat101/ordinal-metric-tests-more-than-two-sample-situations/</loc>
+    <lastmod>2020-06-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/rethinking/chapter-12/</loc>
+    <lastmod>2021-03-25T20:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/an-introduction-to-biostatistics/simple-parametric-tests/</loc>
+    <lastmod>2020-06-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/biostat101/simple-parametric-tests/</loc>
+    <lastmod>2020-06-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/rethinking/chapter-13/</loc>
+    <lastmod>2021-04-07T20:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/an-introduction-to-biostatistics/13-an-outlook-on-advanced-statistics/</loc>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/biostat101/13-an-outlook-on-advanced-statistics/</loc>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/rethinking/chapter-14/</loc>
+    <lastmod>2021-04-16T12:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/krigr/kriging/</loc>
+    <lastmod>2021-05-26T20:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/rethinking/chapter-15/</loc>
+    <lastmod>2021-05-06T18:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/rethinking/chapter-16/</loc>
+    <lastmod>2021-05-13T18:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/krigr/bioclim/</loc>
+    <lastmod>2021-05-26T20:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/krigr/third-party/</loc>
+    <lastmod>2021-05-26T20:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/krigr/projections/</loc>
+    <lastmod>2021-05-26T20:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/authors/</loc>
+    <lastmod>2024-11-06T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/biodiversity/</loc>
+    <lastmod>2024-11-06T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/category/biodiversity/</loc>
+    <lastmod>2024-11-06T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/categories/</loc>
+    <lastmod>2024-11-06T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/</loc>
+    <lastmod>2024-11-06T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/</loc>
+    <lastmod>2024-11-06T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/erik-kusch/</loc>
+    <lastmod>2024-11-06T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/gbif/</loc>
+    <lastmod>2024-11-06T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/category/gbif/</loc>
+    <lastmod>2024-11-06T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/open-science/</loc>
+    <lastmod>2024-11-06T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/category/open-science/</loc>
+    <lastmod>2024-11-06T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tags/</loc>
+    <lastmod>2024-11-06T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/publication-type/3/</loc>
+    <lastmod>2024-07-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/biodt/</loc>
+    <lastmod>2024-07-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/dag-endresen/</loc>
+    <lastmod>2024-07-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/desalegn-chala-gelete/</loc>
+    <lastmod>2024-07-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/design-framework/</loc>
+    <lastmod>2024-07-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/digital-twin/</loc>
+    <lastmod>2024-07-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/koen-de-koning/</loc>
+    <lastmod>2024-07-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/publication_types/</loc>
+    <lastmod>2024-07-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/publication/</loc>
+    <lastmod>2024-07-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/taimur-khan/</loc>
+    <lastmod>2024-07-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/publication/twineco-a-unified-framework-for-dynamic-data-driven-digital-twins-in-ecology/</loc>
+    <lastmod>2024-07-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/publication-type/2/</loc>
+    <lastmod>2024-06-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/carrie-andrew/</loc>
+    <lastmod>2024-06-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/claus-weiland/</loc>
+    <lastmod>2024-06-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/crop-wild-relatives/</loc>
+    <lastmod>2024-06-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/desalegn-chala/</loc>
+    <lastmod>2024-06-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/erik-kusch/</loc>
+    <lastmod>2024-06-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/jonas-grieb/</loc>
+    <lastmod>2024-06-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/publication/prototype-biodiversity-digital-twin-crop-wild-relatives-genetic-resources-for-food-security/</loc>
+    <lastmod>2024-06-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/tomas-martinovic/</loc>
+    <lastmod>2024-06-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/tuomas-rossi/</loc>
+    <lastmod>2024-06-11T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/adam-ccahuana/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/adam-chmurzynski/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/agustina-barros/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/alyssa-smith/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/anders-isaksen/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/andrea-carmeli-palomino-cardenas/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/andrea-sanchez-tapia/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/aud-h.-halbritter/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/brian-j.-enquist/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/brian-s.-maitner/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/casper-tai-christiansen/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/dagmar-d.-egelkraut/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/data-base/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/erickson-urquiaga-flores/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/eugenia-sanchez-diaz/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/fernanda-chiappero/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/fiorella-n.-gonzales/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/hilde-stokland-rui/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/imma-oliveras-menor/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/jess-rickenback/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/jhonatan-sallo-bravo/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/jocelyn-navarro/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/jonathan-j.-henn/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/jonathan-von-oppen/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/josef-c.-garen/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/joseph-gaudard/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/julia-chacon-labella/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/kai-lepley/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/korina-ocampo-zuleta/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/kristine-birkeli/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/kristyna-hoskova/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/laura-h.-jessup/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/lorah-seltzer/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/lucely-l.-vilca-bustamante/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/mackenzie-lift/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/marcus-p.-spiegel/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/maria-elisa-pierfederici/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/matiss-castorena/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/mickey-boakye/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/miguel-munoz-mazon/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/miles-r.-silman/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/natalia-l.-quinteros-casaverde/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/paul-efren-santos-andrade/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/plant-functional-traits/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/publication/plant-trait-and-vegetation-data-along-a-1314-m-elevation-gradient-with-fire-history-in-puna-grasslands-peru/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/ragnhild-gya/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/richard-j.-telford/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/ruben-e.-roos/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/rudi-cruz/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/samuel-pastor-ploskonka/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/sandra-m.-duran/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/sara-l.-middleton/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/sean-t.-michaletz/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/sehoya-h.-cotner/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/siri-vats%C3%B8-haugum/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/sonya-r.-geange/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/tanya-strydom/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/tasha-leigh-j.-gauthier/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/trace-e.-martyn/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/veronica-pinelli/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/veronica-zepeda/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/vigdis-vandvik/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/will-johnson/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/william-farfan-rios/</loc>
+    <lastmod>2024-02-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/active/</loc>
+    <lastmod>2023-08-17T14:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/biological-networks/</loc>
+    <lastmod>2023-08-17T14:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/climate-data/</loc>
+    <lastmod>2023-08-17T14:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/talk/2023_08_tangledbank/</loc>
+    <lastmod>2023-08-17T14:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/macroecology/</loc>
+    <lastmod>2023-08-17T14:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/phd/</loc>
+    <lastmod>2023-08-17T14:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/talk/</loc>
+    <lastmod>2023-08-17T14:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/resilience/</loc>
+    <lastmod>2023-08-17T14:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/publication/a-novel-simulation-framework-for-validation-of-ecological-network-inference/</loc>
+    <lastmod>2023-08-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/alejandro-ordonez/</loc>
+    <lastmod>2023-08-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/anna-c.-vinton/</loc>
+    <lastmod>2023-08-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/climate-safety-margins/</loc>
+    <lastmod>2023-08-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/cooccurrence/</loc>
+    <lastmod>2023-08-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/ecological-network-inference/</loc>
+    <lastmod>2023-08-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/publication/ecological-network-resilience-extinction-proxies-updating-projections-of-ecological-networks/</loc>
+    <lastmod>2023-08-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/ecological-networks/</loc>
+    <lastmod>2023-08-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/ecosystem-projections/</loc>
+    <lastmod>2023-08-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/extinction-cascades/</loc>
+    <lastmod>2023-08-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/extinction-risk/</loc>
+    <lastmod>2023-08-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/iucn/</loc>
+    <lastmod>2023-08-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/method-comparison/</loc>
+    <lastmod>2023-08-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/network-resilience/</loc>
+    <lastmod>2023-08-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/network-topology/</loc>
+    <lastmod>2023-08-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/rewiring/</loc>
+    <lastmod>2023-08-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/spatial-scale/</loc>
+    <lastmod>2023-08-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/species-associations/</loc>
+    <lastmod>2023-08-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/publication/ecological-network-inference-is-not-consistent-across-sales-or-approaches/</loc>
+    <lastmod>2023-08-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/james-a.-lutz/</loc>
+    <lastmod>2023-08-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/malyon-bimler/</loc>
+    <lastmod>2023-08-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/derek-corcoran/</loc>
+    <lastmod>2023-06-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/disturbance/</loc>
+    <lastmod>2023-06-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/extinction-thresholds/</loc>
+    <lastmod>2023-06-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/fernanda-s.-valdovinos/</loc>
+    <lastmod>2023-06-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/food-webs/</loc>
+    <lastmod>2023-06-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/m.isidora-avila-thieme/</loc>
+    <lastmod>2023-06-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/mutualistic-networks/</loc>
+    <lastmod>2023-06-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/network-science/</loc>
+    <lastmod>2023-06-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/publication/networkextinction-an-r-package-to-simulate-extinctions-propagation-and-rewiring-potential-in-ecological-networks/</loc>
+    <lastmod>2023-06-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/pablo-a.-marquet/</loc>
+    <lastmod>2023-06-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/robustness/</loc>
+    <lastmod>2023-06-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/sergio-a.-navarrete/</loc>
+    <lastmod>2023-06-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/simon-p.-castillo/</loc>
+    <lastmod>2023-06-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/connor-bernard/</loc>
+    <lastmod>2023-06-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/demography/</loc>
+    <lastmod>2023-06-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/gabriel-silva-santos/</loc>
+    <lastmod>2023-06-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/jacques-deere/</loc>
+    <lastmod>2023-06-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/john-jackson/</loc>
+    <lastmod>2023-06-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/publication/mosaic-a-unified-trait-database-to-complement-structured-population-models/</loc>
+    <lastmod>2023-06-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/pol-capdevila/</loc>
+    <lastmod>2023-06-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/roberto-rodriguez-caro/</loc>
+    <lastmod>2023-06-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/roberto-salguero-gomez/</loc>
+    <lastmod>2023-06-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/samuel-j-l-gascoigne/</loc>
+    <lastmod>2023-06-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/gbif/</loc>
+    <lastmod>2023-05-21T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/project/biodt/</loc>
+    <lastmod>2023-03-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/data-science/</loc>
+    <lastmod>2023-03-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/project/</loc>
+    <lastmod>2023-03-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/publication/in-review/networkextinction-an-r-package-to-simulate-extinctions-propagation-and-rewiring-potential-in-ecological-networks/</loc>
+    <lastmod>2022-12-05T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/bayes/</loc>
+    <lastmod>2022-11-08T20:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/category/bayesian-networks/</loc>
+    <lastmod>2022-11-08T20:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/bayesian-statistics/</loc>
+    <lastmod>2022-11-08T20:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/networks/</loc>
+    <lastmod>2022-11-08T20:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/statistics/</loc>
+    <lastmod>2022-11-08T20:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/publication/in-review/ecological-network-inference-is-not-consistent-across-sales-or-approaches/</loc>
+    <lastmod>2022-08-09T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/krigr/</loc>
+    <lastmod>2022-06-06T11:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/talk/2022_06_oikos/</loc>
+    <lastmod>2022-06-06T11:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/talk/2022_05_clim4ecol/</loc>
+    <lastmod>2022-06-06T11:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/statistical-downscaling/</loc>
+    <lastmod>2022-06-06T11:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/category/climate-data/</loc>
+    <lastmod>2021-05-26T20:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/category/krigr/</loc>
+    <lastmod>2021-05-26T20:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/publication/a-novel-trophic-cascade-between-cougars-and-feral-donkeys-shapes-desert-wetlands/</loc>
+    <lastmod>2022-05-23T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/publication/journal-article/a-novel-trophic-cascade-between-cougars-and-feral-donkeys-shapes-desert-wetlands/</loc>
+    <lastmod>2022-05-23T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/arian-wallach/</loc>
+    <lastmod>2022-05-23T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/chris-hasselerharm/</loc>
+    <lastmod>2022-05-23T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/daniel-ramp/</loc>
+    <lastmod>2022-05-23T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/eamonn-wooster/</loc>
+    <lastmod>2022-05-23T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/erick-lundgren/</loc>
+    <lastmod>2022-05-23T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/jessica-sanchez/</loc>
+    <lastmod>2022-05-23T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/mairin-balisi/</loc>
+    <lastmod>2022-05-23T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/mystyn-mills/</loc>
+    <lastmod>2022-05-23T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/owen-middleton/</loc>
+    <lastmod>2022-05-23T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/predation/</loc>
+    <lastmod>2022-05-23T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/trophic-cascade/</loc>
+    <lastmod>2022-05-23T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/william-ripple/</loc>
+    <lastmod>2022-05-23T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/alistair-seddon/</loc>
+    <lastmod>2022-04-13T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/drylands/</loc>
+    <lastmod>2022-04-13T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/remote-sensing/</loc>
+    <lastmod>2022-04-13T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/author/richard-davy/</loc>
+    <lastmod>2022-04-13T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/vegetation-memory/</loc>
+    <lastmod>2022-04-13T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/publication/journal-article/vegetation-memory-effects-and-their-association-with-vegetation-resilience-in-global-drylands/</loc>
+    <lastmod>2022-04-13T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/publication/vegetation-memory-effects-and-their-association-with-vegetation-resilience-in-global-drylands/</loc>
+    <lastmod>2022-04-13T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/publication/in-review/mosaic-a-unified-trait-database-to-complement-structured-population-models/</loc>
+    <lastmod>2022-03-14T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/talk/2022_02_climate-coffee/</loc>
+    <lastmod>2022-02-24T11:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/publication/journal-article/krigr-a-tool-for-statistically-downscaling-climate-reanalysis-data-for-ecological-applications/</loc>
+    <lastmod>2022-01-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/publication/krigr-a-tool-for-statistically-downscaling-climate-reanalysis-data-for-ecological-applications/</loc>
+    <lastmod>2022-01-07T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/talk/2021_12_bes/</loc>
+    <lastmod>2021-12-13T11:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/publication/journal-article/reconciling-high-resolution-climate-datasets-using-krigr/</loc>
+    <lastmod>2021-11-16T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/publication/reconciling-high-resolution-climate-datasets-using-krigr/</loc>
+    <lastmod>2021-11-16T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/biostatistics/</loc>
+    <lastmod>2021-09-09T16:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/coding/</loc>
+    <lastmod>2021-09-09T16:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/education/</loc>
+    <lastmod>2021-09-09T16:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/r/</loc>
+    <lastmod>2021-09-09T16:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/talk/2021_09_statisticaleducation/</loc>
+    <lastmod>2021-09-09T16:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/teaching/</loc>
+    <lastmod>2021-09-09T16:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/talk/2021_07_salgoteam/</loc>
+    <lastmod>2021-07-08T10:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/au-bayes-study-group/</loc>
+    <lastmod>2021-05-13T18:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/category/statistical-rethinking/</loc>
+    <lastmod>2021-05-13T18:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/category/excursion-into-biostatistics/</loc>
+    <lastmod>2020-02-27T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/an-introduction-to-biostatistics/</loc>
+    <lastmod>2021-01-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/bayes-nets/</loc>
+    <lastmod>2021-01-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/bftp-biome-detection/</loc>
+    <lastmod>2021-01-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/biostat101/</loc>
+    <lastmod>2021-01-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/excursions-into-biostatistics/</loc>
+    <lastmod>2021-01-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/krigr/</loc>
+    <lastmod>2021-01-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/krigr/</loc>
+    <lastmod>2021-01-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/rethinking/</loc>
+    <lastmod>2021-01-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/rethinking/</loc>
+    <lastmod>2021-01-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/archived/</loc>
+    <lastmod>2020-12-29T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/project/functional-traits-and-life-history-effects-on-high-resolution-vegetation-memory/</loc>
+    <lastmod>2020-12-29T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/functional-traits/</loc>
+    <lastmod>2020-12-29T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/life-history/</loc>
+    <lastmod>2020-12-29T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/project/phd-packages/</loc>
+    <lastmod>2020-12-28T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/project/aubayes/</loc>
+    <lastmod>2020-12-28T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/bayesian-networks/</loc>
+    <lastmod>2020-12-28T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/project/bayesnets/</loc>
+    <lastmod>2020-12-28T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/project/biorates/</loc>
+    <lastmod>2020-12-28T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/project/krigr/</loc>
+    <lastmod>2020-12-28T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/tag/statistical-rethinking/</loc>
+    <lastmod>2020-12-28T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/project/vegetation-memory-across-global-dryland-regions/</loc>
+    <lastmod>2020-12-28T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/talk/2020_12_salgoteam/</loc>
+    <lastmod>2020-12-03T16:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/talk/2020_11-krigrworkshop/</loc>
+    <lastmod>2020-11-12T13:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/talk/2020_06_isec_poster/</loc>
+    <lastmod>2020-06-25T11:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/talk/2020_06_isec_presentation/</loc>
+    <lastmod>2020-06-25T10:30:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/category/an-introduction-to-biostatistics/</loc>
+    <lastmod>2020-06-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/category/bftp-projects/</loc>
+    <lastmod>2020-06-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/category/biostat101/</loc>
+    <lastmod>2020-06-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/talk/2010_09_isem_talk/</loc>
+    <lastmod>2019-10-04T13:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/talk/2010_09_isem_poster/</loc>
+    <lastmod>2019-10-03T11:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/talk/2019_mscdefense/</loc>
+    <lastmod>2019-07-05T12:30:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/publication-type/7/</loc>
+    <lastmod>2019-05-19T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/publication/journal-article/m.sc._inferring-vegetation-memory-from-remote-copy/</loc>
+    <lastmod>2019-05-19T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/publication/m.sc._inferring-vegetation-memory-from-remote-copy/</loc>
+    <lastmod>2019-05-19T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/privacy/</loc>
     <lastmod>2018-06-28T00:00:00+01:00</lastmod>
   </url>
   
   <url>
-    <loc>/privacy/</loc>
+    <loc>https://www.erikkusch.com/terms/</loc>
     <lastmod>2018-06-28T00:00:00+01:00</lastmod>
   </url>
   
   <url>
-    <loc>/terms/</loc>
-    <lastmod>2018-06-28T00:00:00+01:00</lastmod>
+    <loc>https://www.erikkusch.com/tag/biome-shifts/</loc>
+    <lastmod>2017-03-10T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/tag/deep-learning/</loc>
-    <lastmod>2016-04-27T00:00:00+00:00</lastmod>
+    <loc>https://www.erikkusch.com/publication/b.sc._inferring-vegetation-memory-from-remote/</loc>
+    <lastmod>2017-03-10T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/tag/demo/</loc>
-    <lastmod>2016-04-27T00:00:00+00:00</lastmod>
+    <loc>https://www.erikkusch.com/publication/journal-article/b.sc._inferring-vegetation-memory-from-remote/</loc>
+    <lastmod>2017-03-10T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/project/external-project/</loc>
-    <lastmod>2016-04-27T00:00:00+00:00</lastmod>
+    <loc>https://www.erikkusch.com/talk/2017_bscdefense/</loc>
+    <lastmod>2017-02-24T12:30:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/project/internal-project/</loc>
-    <lastmod>2016-04-27T00:00:00+00:00</lastmod>
+    <loc>https://www.erikkusch.com/about/</loc>
   </url>
   
   <url>
-    <loc>/project/</loc>
-    <lastmod>2016-04-27T00:00:00+00:00</lastmod>
+    <loc>https://www.erikkusch.com/contact/</loc>
   </url>
   
   <url>
-    <loc>/tag/academic/</loc>
-    <lastmod>2019-04-17T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/post/getting-started/</loc>
-    <lastmod>2019-04-17T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/categories/</loc>
-    <lastmod>2019-04-17T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/category/demo/</loc>
-    <lastmod>2019-04-17T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/author/%E5%90%B3%E6%81%A9%E9%81%94/</loc>
-    <lastmod>2019-04-17T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tag/%E5%BC%80%E6%BA%90/</loc>
-    <lastmod>2019-04-17T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/category/%E6%95%99%E7%A8%8B/</loc>
-    <lastmod>2019-04-17T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/publication-type/2/</loc>
-    <lastmod>2015-09-01T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/publication/journal-article/</loc>
-    <lastmod>2015-09-01T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/author/robert-ford/</loc>
-    <lastmod>2015-09-01T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/post/2015-07-23-r-rmarkdown/</loc>
-    <lastmod>2015-07-23T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tag/plot/</loc>
-    <lastmod>2015-07-23T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/category/r/</loc>
-    <lastmod>2015-07-23T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tag/r-markdown/</loc>
-    <lastmod>2015-07-23T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/tag/regression/</loc>
-    <lastmod>2015-07-23T21:13:14-05:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/publication-type/1/</loc>
-    <lastmod>2013-07-01T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>/publication/conference-paper/</loc>
-    <lastmod>2013-07-01T00:00:00+00:00</lastmod>
+    <loc>https://www.erikkusch.com/post/</loc>
   </url>
   
 </urlset>

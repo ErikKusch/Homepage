@@ -1,37 +1,135 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Recent &amp; Upcoming Talks | Academic</title>
-    <link>/talk/</link>
-      <atom:link href="/talk/index.xml" rel="self" type="application/rss+xml" />
+    <title>Recent &amp; Upcoming Talks | Erik Kusch</title>
+    <link>https://www.erikkusch.com/talk/</link>
+      <atom:link href="https://www.erikkusch.com/talk/index.xml" rel="self" type="application/rss+xml" />
     <description>Recent &amp; Upcoming Talks</description>
-    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-us</language><lastBuildDate>Sat, 01 Jun 2030 13:00:00 +0000</lastBuildDate>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-gb</language><copyright>© 2024</copyright><lastBuildDate>Thu, 17 Aug 2023 14:00:00 +0000</lastBuildDate>
     <image>
-      <url>/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_2.png</url>
+      <url>https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg</url>
       <title>Recent &amp; Upcoming Talks</title>
-      <link>/talk/</link>
+      <link>https://www.erikkusch.com/talk/</link>
     </image>
     
     <item>
-      <title>Example Talk</title>
-      <link>/talk/example/</link>
-      <pubDate>Sat, 01 Jun 2030 13:00:00 +0000</pubDate>
-      <guid>/talk/example/</guid>
-      <description>&lt;div class=&#34;alert alert-note&#34;&gt;
-  &lt;div&gt;
-    Click on the &lt;strong&gt;Slides&lt;/strong&gt; button above to view the built-in slides feature.
-  &lt;/div&gt;
-&lt;/div&gt;
-&lt;p&gt;Slides can be added in a few ways:&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;strong&gt;Create&lt;/strong&gt; slides using Academic&amp;rsquo;s 
-&lt;a href=&#34;https://sourcethemes.com/academic/docs/managing-content/#create-slides&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;&lt;em&gt;Slides&lt;/em&gt;&lt;/a&gt; feature and link using &lt;code&gt;slides&lt;/code&gt; parameter in the front matter of the talk file&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Upload&lt;/strong&gt; an existing slide deck to &lt;code&gt;static/&lt;/code&gt; and link using &lt;code&gt;url_slides&lt;/code&gt; parameter in the front matter of the talk file&lt;/li&gt;
-&lt;li&gt;&lt;strong&gt;Embed&lt;/strong&gt; your slides (e.g. Google Slides) or presentation video on this page using 
-&lt;a href=&#34;https://sourcethemes.com/academic/docs/writing-markdown-latex/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;shortcodes&lt;/a&gt;.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Further talk details can easily be added to this page using &lt;em&gt;Markdown&lt;/em&gt; and $\rm \LaTeX$ math code.&lt;/p&gt;
-</description>
+      <title>Integrating Ecological Networks in Macroecological Research - Enhancing Projections of Biodiversity in the Anthropocene</title>
+      <link>https://www.erikkusch.com/talk/2023_08_tangledbank/</link>
+      <pubDate>Thu, 17 Aug 2023 14:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/talk/2023_08_tangledbank/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>KrigR - Climate Data for your Study Needs</title>
+      <link>https://www.erikkusch.com/talk/2022_06_oikos/</link>
+      <pubDate>Mon, 06 Jun 2022 11:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/talk/2022_06_oikos/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>KrigR — A tool for downloading and statistically downscaling climate reanalysis data</title>
+      <link>https://www.erikkusch.com/talk/2022_05_clim4ecol/</link>
+      <pubDate>Mon, 06 Jun 2022 11:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/talk/2022_05_clim4ecol/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Climate Data Pipelines for the 21st Century - Efficient Data Retrieval and Processing</title>
+      <link>https://www.erikkusch.com/talk/2022_02_climate-coffee/</link>
+      <pubDate>Thu, 24 Feb 2022 11:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/talk/2022_02_climate-coffee/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Data Simplification  for Ecological Network Inference</title>
+      <link>https://www.erikkusch.com/talk/2021_12_bes/</link>
+      <pubDate>Mon, 13 Dec 2021 11:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/talk/2021_12_bes/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Statistical Education for Biologists</title>
+      <link>https://www.erikkusch.com/talk/2021_09_statisticaleducation/</link>
+      <pubDate>Thu, 09 Sep 2021 16:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/talk/2021_09_statisticaleducation/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Coding Practices in R</title>
+      <link>https://www.erikkusch.com/talk/2021_07_salgoteam/</link>
+      <pubDate>Thu, 08 Jul 2021 10:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/talk/2021_07_salgoteam/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Species Associations Across Scales of Organisation</title>
+      <link>https://www.erikkusch.com/talk/2020_12_salgoteam/</link>
+      <pubDate>Thu, 03 Dec 2020 16:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/talk/2020_12_salgoteam/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>KrigR - Downscaling State-of-the-Art Climate Data for Macroecologists</title>
+      <link>https://www.erikkusch.com/talk/2020_11-krigrworkshop/</link>
+      <pubDate>Thu, 12 Nov 2020 13:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/talk/2020_11-krigrworkshop/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Intrinsic vegetation memory as a proxy of engineering resilience may be an oversimplification.</title>
+      <link>https://www.erikkusch.com/talk/2020_06_isec_poster/</link>
+      <pubDate>Thu, 25 Jun 2020 11:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/talk/2020_06_isec_poster/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>KrigR - Climate Data for Your Spatial Study</title>
+      <link>https://www.erikkusch.com/talk/2020_06_isec_presentation/</link>
+      <pubDate>Thu, 25 Jun 2020 10:30:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/talk/2020_06_isec_presentation/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Identifying Ecological Memory Patterns in Drylands Using Remote Sensing and State-of-the-art Climate Reanalysis Products</title>
+      <link>https://www.erikkusch.com/talk/2010_09_isem_talk/</link>
+      <pubDate>Fri, 04 Oct 2019 13:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/talk/2010_09_isem_talk/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Intrinsic vegetation memory as a proxy of engineering resilience may be an oversimplification.</title>
+      <link>https://www.erikkusch.com/talk/2010_09_isem_poster/</link>
+      <pubDate>Thu, 03 Oct 2019 11:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/talk/2010_09_isem_poster/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Inferring Vegetation Memory from Remote Sensing Data using novel Climate Reconstruction Products</title>
+      <link>https://www.erikkusch.com/talk/2019_mscdefense/</link>
+      <pubDate>Fri, 05 Jul 2019 12:30:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/talk/2019_mscdefense/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Remote Sensing And Predicting Shifts In Biome Distribution And Resilience Using NDVI Data</title>
+      <link>https://www.erikkusch.com/talk/2017_bscdefense/</link>
+      <pubDate>Fri, 24 Feb 2017 12:30:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/talk/2017_bscdefense/</guid>
+      <description></description>
     </item>
     
   </channel>

@@ -1,0 +1,1833 @@
+<!DOCTYPE html><html lang="en-gb" >
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.8.0">
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Erik Kusch">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="These are exercises and solutions meant as a compendium to my talk on Regression Models.">
+
+  
+  <link rel="alternate" hreflang="en-gb" href="https://www.erikkusch.com/courses/excursions-into-biostatistics/regressions-correlations-for-the-advanced/">
+
+  
+
+
+  
+  
+  
+  <meta name="theme-color" content="#858383">
+  
+
+  
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-1/css/all.min.css" integrity="sha256-4w9DunooKSr3MFXHXWyFER38WmPdm361bQS/2KUWZbU=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.css" integrity="sha256-SHMGCYmST46SoyGgo4YR/9AlK1vf3ff84Aq9yK4hdqM=" crossorigin="anonymous">
+    
+
+    
+
+    
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.1.2/lazysizes.min.js" integrity="sha256-Md1qLToewPeKjfAHU1zyPwOutccPAm5tahnaw7Osw0A=" crossorigin="anonymous" async></script>
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+        
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+
+  
+
+  
+  
+  
+    
+      
+      
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cutive+Mono%7CLora:400,700%7CRoboto:400,700&display=swap">
+    
+  
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/academic.css">
+
+  
+
+
+
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-186216138-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+
+  function gtag() {
+      dataLayer.push(arguments);
+  }
+
+  function trackOutboundLink(url, target) {
+    gtag('event', 'click', {
+         'event_category': 'outbound',
+         'event_label': url,
+         'transport_type': 'beacon',
+         'event_callback': function () {
+           if (target !== '_blank') {
+             document.location = url;
+           }
+         }
+    });
+    console.debug("Outbound link clicked: " + url);
+  }
+
+  function onClickCallback(event) {
+    if ((event.target.tagName !== 'A') || (event.target.host === window.location.host)) {
+      return;
+    }
+    trackOutboundLink(event.target, event.target.getAttribute('target'));  
+  }
+
+  gtag('js', new Date());
+  gtag('config', 'UA-186216138-1', {});
+
+  
+  document.addEventListener('click', onClickCallback, false);
+</script>
+
+
+  
+
+
+  
+  
+
+  
+
+  <link rel="manifest" href="/index.webmanifest">
+  <link rel="icon" type="image/png" href="/images/icon_hu7658c99d512131214e4d6c003a3f85f7_112593_32x32_fill_lanczos_center_2.png">
+  <link rel="apple-touch-icon" type="image/png" href="/images/icon_hu7658c99d512131214e4d6c003a3f85f7_112593_192x192_fill_lanczos_center_2.png">
+
+  <link rel="canonical" href="https://www.erikkusch.com/courses/excursions-into-biostatistics/regressions-correlations-for-the-advanced/">
+
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  <meta property="twitter:card" content="summary_large_image">
+  
+  <meta property="twitter:site" content="@ErikKusch">
+  <meta property="twitter:creator" content="@ErikKusch">
+  
+  <meta property="og:site_name" content="Erik Kusch">
+  <meta property="og:url" content="https://www.erikkusch.com/courses/excursions-into-biostatistics/regressions-correlations-for-the-advanced/">
+  <meta property="og:title" content="Regressions | Erik Kusch">
+  <meta property="og:description" content="These are exercises and solutions meant as a compendium to my talk on Regression Models."><meta property="og:image" content="https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg">
+  <meta property="twitter:image" content="https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg"><meta property="og:locale" content="en-gb">
+  
+    
+      <meta property="article:published_time" content="2021-02-27T00:00:00&#43;00:00">
+    
+    <meta property="article:modified_time" content="2020-02-27T00:00:00&#43;00:00">
+  
+
+  
+
+
+
+  
+
+
+  
+
+
+  
+
+
+
+
+
+  <title>Regressions | Erik Kusch</title>
+
+</head>
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search" class="form-control">
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+<nav class="navbar navbar-expand-lg navbar-light compensate-for-scrollbar" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="d-none d-lg-inline-flex">
+      <a class="navbar-brand" href="/"><img src="/images/logo_huab2266ff59bbac6a094b6da1268adcf9_208479_0x70_resize_lanczos_2.png" alt="Erik Kusch"></a>
+    </div>
+    
+
+    
+    <button type="button" class="navbar-toggler" data-toggle="collapse"
+            data-target="#navbar-content" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+    <span><i class="fas fa-bars"></i></span>
+    </button>
+    
+
+    
+    <div class="navbar-brand-mobile-wrapper d-inline-flex d-lg-none">
+      <a class="navbar-brand" href="/"><img src="/images/logo_huab2266ff59bbac6a094b6da1268adcf9_208479_0x70_resize_lanczos_2.png" alt="Erik Kusch"></a>
+    </div>
+    
+
+    
+    
+    <div class="navbar-collapse main-menu-item collapse justify-content-center" id="navbar-content">
+
+      
+      <ul class="navbar-nav d-md-inline-flex">
+        
+
+        
+
+        
+        
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link  active" href="/"><span>Home</span></a>
+        </li>
+
+        
+        
+
+        
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"><span>Courses & Workshops</span><span class="caret"></span>
+          </a>
+          <div class="dropdown-menu">
+            
+              <a class="dropdown-item" href="/courses/krigr/"><span>KrigR - State-of-the-Art Climate Data within R</span></a>
+            
+              <a class="dropdown-item" href="/courses/gbif/"><span>Accessing and Referencing GBIF Data for Research</span></a>
+            
+              <a class="dropdown-item" href="/courses/rethinking/"><span>Statistical Rethinking - Introduction to Bayesian Statistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/bayes-nets/"><span>Bayesian Networks - Causality through Bayesian Approaches</span></a>
+            
+              <a class="dropdown-item" href="/courses/biostat101/"><span>Biostats 101 - An Introduction to Biostatistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/excursions-into-biostatistics/"><span>Biostats 301 - Excursions into Biostatistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/bftp-biome-detection/"><span>BFTP - First Steps in Macroecology in R</span></a>
+            
+          </div>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#projects"><span>Projects</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#featured"><span>Publications</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#talks"><span>Talks</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/about"><span>Contact</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+            
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/media/CV_ErikKusch.html" target="_blank" rel="noopener"><span>CV</span></a>
+        </li>
+
+        
+        
+
+      
+
+        
+      </ul>
+    </div>
+
+    <ul class="nav-icons navbar-nav flex-row ml-auto d-flex pl-md-2">
+      
+      <li class="nav-item">
+        <a class="nav-link js-search" href="#" aria-label="Search"><i class="fas fa-search" aria-hidden="true"></i></a>
+      </li>
+      
+
+      
+      <li class="nav-item dropdown theme-dropdown">
+        <a href="#" class="nav-link js-theme-selector" data-toggle="dropdown" aria-haspopup="true">
+          <i class="fas fa-palette" aria-hidden="true"></i>
+        </a>
+        <div class="dropdown-menu">
+          <a href="#" class="dropdown-item js-set-theme-light">
+            <span>Light</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-dark">
+            <span>Dark</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-auto">
+            <span>Automatic</span>
+          </a>
+        </div>
+      </li>
+      
+
+      
+
+    </ul>
+
+  </div>
+</nav>
+
+
+  
+
+<div class="container-fluid docs">
+  <div class="row flex-xl-nowrap">
+    <div class="col-12 col-md-3 col-xl-2 docs-sidebar">
+      
+
+
+
+
+
+  
+    
+  
+
+
+
+
+<form class="docs-search d-flex align-items-center">
+  <button class="btn docs-toggle d-md-none p-0 mr-3" type="button" data-toggle="collapse" data-target="#docs-nav" aria-controls="docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    <span><i class="fas fa-bars"></i></span>
+  </button>
+
+  
+  <input name="q" type="search" class="form-control" placeholder="Search..." autocomplete="off">
+  
+</form>
+
+<nav class="collapse docs-links" id="docs-nav">
+  
+
+  
+  
+  
+  
+  <div class="docs-toc-item">
+    <a class="docs-toc-link" href="/courses/excursions-into-biostatistics/">Overview</a>
+
+  </div>
+  
+  <div class="docs-toc-item">
+    <a class="docs-toc-link" href="/courses/excursions-into-biostatistics/1_biostatistics-wait.-what/">Seminars</a>
+    <ul class="nav docs-sidenav">
+      
+      <li >
+        <a href="/courses/excursions-into-biostatistics/1_biostatistics-wait.-what/">Biostatistics - Wait... What?!</a>
+      </li>
+      
+      <li >
+        <a href="/courses/excursions-into-biostatistics/2_statistical-terminology-the-basics-misconceptions-and-pedantics/">Statistical Terminology</a>
+      </li>
+      
+      <li >
+        <a href="/courses/excursions-into-biostatistics/3_coding-practices-life-with-r/">Coding Practices - Life with R</a>
+      </li>
+      
+      <li >
+        <a href="/courses/excursions-into-biostatistics/research-project/">Research Project for our Exercises</a>
+      </li>
+      
+      <li >
+        <a href="/courses/excursions-into-biostatistics/data-handling-and-data-assumptions/">Data Handling and Data Assumptions</a>
+      </li>
+      
+      <li >
+        <a href="/courses/excursions-into-biostatistics/classifications-order-from-chaos/">Classifications - Order from Chaos</a>
+      </li>
+      
+      <li class="active">
+        <a href="/courses/excursions-into-biostatistics/regressions-correlations-for-the-advanced/">Regressions - Correlations for the Advanced</a>
+      </li>
+      
+      <li >
+        <a href="/courses/excursions-into-biostatistics/excursion-into-biostatistics/">Model Selection and Statistical Significance</a>
+      </li>
+      
+      <li >
+        <a href="/courses/excursions-into-biostatistics/8_statistical-significance-in-biology-conventions-abstractions-and-the-future/">Statistical Significance in Biology</a>
+      </li>
+      
+      <li >
+        <a href="/courses/excursions-into-biostatistics/9_rmarkdown-manuscript-workflow-revisited/">RMarkdown - Manuscript Workflow Revisited</a>
+      </li>
+      
+      <li >
+        <a href="/courses/excursions-into-biostatistics/10_troubleshooting_r-isolating-issues-and-asking-questions/">Troubleshooting R - Isolating Issues and Asking Questions</a>
+      </li>
+      
+    </ul>
+    
+
+  </div>
+  
+  
+</nav>
+
+    </div>
+
+    
+    <div class="d-none d-xl-block col-xl-2 docs-toc">
+      <ul class="nav toc-top">
+        <li><a href="#" id="back_to_top" class="docs-toc-title">Contents</a></li>
+      </ul>
+
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#theory">Theory</a></li>
+    <li><a href="#our-resarch-project">Our Resarch Project</a>
+      <ul>
+        <li><a href="#the-data">The Data</a></li>
+        <li><a href="#reading-the-data-into-r">Reading the Data into <code>R</code></a></li>
+        <li><a href="#hypotheses">Hypotheses</a></li>
+      </ul>
+    </li>
+    <li><a href="#r-environment"><code>R</code> Environment</a></li>
+    <li><a href="#linear-regression">Linear Regression</a>
+      <ul>
+        <li><a href="#climate-conditions">Climate Conditions</a></li>
+        <li><a href="#competition">Competition</a></li>
+        <li><a href="#predation">Predation</a></li>
+        <li><a href="#null--full-model">Null &amp; Full Model</a></li>
+        <li><a href="#summary-of-linear-regression">Summary of Linear Regression</a></li>
+      </ul>
+    </li>
+    <li><a href="#mixed-effect-models">Mixed Effect Models</a>
+      <ul>
+        <li><a href="#climate-conditions-1">Climate Conditions</a></li>
+        <li><a href="#competition-1">Competition</a></li>
+        <li><a href="#predation-1">Predation</a></li>
+        <li><a href="#full-model">Full Model</a></li>
+        <li><a href="#summary-of-mixed-effect-models">Summary of Mixed Effect Models</a></li>
+      </ul>
+    </li>
+    <li><a href="#generalised-linear-models">Generalised Linear Models</a></li>
+    <li><a href="#final-models">Final Models</a></li>
+    <li><a href="#sessioninfo">SessionInfo</a></li>
+  </ul>
+</nav>
+
+      
+    </div>
+    
+
+    <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 docs-content" role="main">
+
+      <article class="article">
+
+        <div class="docs-article-container">
+          <h1>Regressions</h1>
+
+          <div class="article-style">
+            <h2 id="theory">Theory</h2>
+<p>These are exercises and solutions meant as a compendium to my talk on Model Selection and Model Building.</p>
+<p>I have prepared some <a href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/Excursions-into-Biostatistics/Regressions---Correlations-for-the-Advanced.html" target="_blank"> Lecture Slides </a> for this session.</p>
+<h2 id="our-resarch-project">Our Resarch Project</h2>
+<p>Today, we are looking at a big (and entirely fictional) data base of the common house sparrow (<em>Passer domesticus</em>). In particular, we are interested in the <strong>Evolution of <em>Passer domesticus</em> in Response to Climate Change</strong> which was previously explained <a href="/courses/excursions-into-biostatistics/research-project/" target="_blank"> here</a>.</p>
+<h3 id="the-data">The Data</h3>
+<p>I have created a large data set for this exercise which is available <a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/excursions-into-biostatistics/Data.rar" target="_blank"> here</a> and we previously cleaned up so that is now usable <a href="/courses/excursions-into-biostatistics/data-handling-and-data-assumptions/" target="_blank"> here</a>.</p>
+<h3 id="reading-the-data-into-r">Reading the Data into <code>R</code></h3>
+<p>Let&rsquo;s start by reading the data into <code>R</code> and taking an initial look at it:</p>
+<pre><code class="language-r">Sparrows_df &lt;- readRDS(file.path(&quot;Data&quot;, &quot;SparrowDataClimate.rds&quot;))
+head(Sparrows_df)
+</code></pre>
+<pre><code>##   Index Latitude Longitude     Climate Population.Status Weight Height Wing.Chord Colour    Sex Nesting.Site Nesting.Height Number.of.Eggs Egg.Weight Flock Home.Range Predator.Presence Predator.Type
+## 1    SI       60       100 Continental            Native  34.05  12.87       6.67  Brown   Male         &lt;NA&gt;             NA             NA         NA     B      Large               Yes         Avian
+## 2    SI       60       100 Continental            Native  34.86  13.68       6.79   Grey   Male         &lt;NA&gt;             NA             NA         NA     B      Large               Yes         Avian
+## 3    SI       60       100 Continental            Native  32.34  12.66       6.64  Black Female        Shrub          35.60              1       3.21     C      Large               Yes         Avian
+## 4    SI       60       100 Continental            Native  34.78  15.09       7.00  Brown Female        Shrub          47.75              0         NA     E      Large               Yes         Avian
+## 5    SI       60       100 Continental            Native  35.01  13.82       6.81   Grey   Male         &lt;NA&gt;             NA             NA         NA     B      Large               Yes         Avian
+## 6    SI       60       100 Continental            Native  32.36  12.67       6.64  Brown Female        Shrub          32.47              1       3.17     E      Large               Yes         Avian
+##       TAvg      TSD
+## 1 269.9596 15.71819
+## 2 269.9596 15.71819
+## 3 269.9596 15.71819
+## 4 269.9596 15.71819
+## 5 269.9596 15.71819
+## 6 269.9596 15.71819
+</code></pre>
+<h3 id="hypotheses">Hypotheses</h3>
+<p>Let&rsquo;s remember our hypotheses:</p>
+<ol>
+<li><strong>Sparrow Morphology</strong> is determined by:<br>
+A. <em>Climate Conditions</em> with sparrows in stable, warm environments fairing better than those in colder, less stable ones.<br>
+B. <em>Competition</em> with sparrows in small flocks doing better than those in big flocks.<br>
+C. <em>Predation</em> with sparrows under pressure of predation doing worse than those without.</li>
+<li><strong>Sites</strong>  accurately represent <strong>sparrow morphology</strong>. This may mean:<br>
+A. <em>Population status</em> as inferred through morphology.<br>
+B. <em>Site index</em> as inferred through morphology.<br>
+C. <em>Climate</em> as inferred through morphology.</li>
+</ol>
+<p>Quite obviously, <strong>hypothesis 1</strong> is the only one lending itself well to regression exercises. Since we have three variables that describe sparrow morphology (<code>Weight</code>, <code>Height</code>, <code>Wing.Chord</code>) and multi-response-variable models are definitely above the pay-grade of this material, we need to select one of our morphology variables as our response variable here. Remembering the <a href="/courses/excursions-into-biostatistics/classifications-order-from-chaos/" target="_blank"> Classification exercise</a>, we recall that <code>Weight</code> was the most informative morphological trait so far. Hence, we stick with this one for these exercises.</p>
+<h2 id="r-environment"><code>R</code> Environment</h2>
+<p>For this exercise, we will need the following packages:</p>
+<pre><code class="language-r">install.load.package &lt;- function(x) {
+  if (!require(x, character.only = TRUE)) {
+    install.packages(x, repos = &quot;http://cran.us.r-project.org&quot;)
+  }
+  require(x, character.only = TRUE)
+}
+package_vec &lt;- c(
+  &quot;ggplot2&quot;, # for visualisation
+  &quot;nlme&quot;, # for mixed effect models
+  &quot;HLMdiag&quot; # for leverage of mixed effect models
+)
+sapply(package_vec, install.load.package)
+</code></pre>
+<pre><code>## ggplot2    nlme HLMdiag 
+##    TRUE    TRUE    TRUE
+</code></pre>
+<p>Using the above function is way more sophisticated than the usual <code>install.packages()</code> &amp; <code>library()</code> approach since it automatically detects which packages require installing and only install these thus not overwriting already installed packages.</p>
+<h2 id="linear-regression">Linear Regression</h2>
+<p>Remember the <strong>Assumptions of Linear Regression</strong>:</p>
+<ol>
+<li>Variable values follow homoscedasticity (equal variance across entire data range)</li>
+<li>Residuals follow normal distribution (normality)</li>
+<li>Absence of influential outliers</li>
+<li>Response and Predictor are related in a linear fashion</li>
+</ol>
+<h3 id="climate-conditions">Climate Conditions</h3>
+<h4 id="weight-as-a-result-of-average-temperature-tavg"><code>Weight</code> as a result of average temperature (<code>TAvg</code>)</h4>
+<p>Before we begin, let&rsquo;s plot the data we want to model:</p>
+<pre><code class="language-r">ggplot(data = Sparrows_df, aes(y = Weight, x = TAvg)) +
+  stat_smooth(method = &quot;lm&quot;) +
+  geom_point() +
+  theme_bw()
+</code></pre>
+<p><img src="6_Regressions---Correlations-for-the-Advanced_files/figure-html/unnamed-chunk-3-1.png" width="1440" />
+I have an inkling that we might run into some issues here, but let&rsquo;s continue for now:</p>
+<p>Let&rsquo;s build the actual model:</p>
+<pre><code class="language-r">H1_ClimateTavg &lt;- lm(Weight ~ TAvg, data = Sparrows_df)
+par(mfrow = c(2, 2))
+plot(H1_ClimateTavg)
+</code></pre>
+<p><img src="6_Regressions---Correlations-for-the-Advanced_files/figure-html/unnamed-chunk-4-1.png" width="1440" />
+While the meeting of most of the assumptions here might be debatable, we certainly cannot accept a linear model with residuals this non-normal distributed. Sow hat do we? We try to remove as many confounding effects as possible!</p>
+<p>Remember the plot-locations, climates, and population statues in the data set (go back <a href="/courses/excursions-into-biostatistics/research-project/" target="_blank"> here</a> if necessary). How about we look exclusively at stations in the Americas which are all housing introduced sparrow populations and almost exclusively lie in coastal habitats? I&rsquo;ll remove all non-coastal climate sites and only consider the central and North America here. Let&rsquo;s do that:</p>
+<pre><code class="language-r"># everything west of -7° is on the Americas
+# every that's coastal climate type is retained
+# everything north of 11° is central and north America
+CentralNorthAm_df &lt;- Sparrows_df[Sparrows_df$Longitude &lt; -7 &amp; Sparrows_df$Climate == &quot;Coastal&quot; &amp; Sparrows_df$Latitude &gt; 11, ]
+ggplot(data = CentralNorthAm_df, aes(y = Weight, x = TAvg)) +
+  stat_smooth(method = &quot;lm&quot;) +
+  geom_point() +
+  theme_bw()
+</code></pre>
+<p><img src="6_Regressions---Correlations-for-the-Advanced_files/figure-html/unnamed-chunk-5-1.png" width="1440" /></p>
+<pre><code class="language-r">H1_ClimateTavg &lt;- lm(Weight ~ TAvg, data = CentralNorthAm_df)
+par(mfrow = c(2, 2))
+plot(H1_ClimateTavg)
+</code></pre>
+<p><img src="6_Regressions---Correlations-for-the-Advanced_files/figure-html/unnamed-chunk-5-2.png" width="1440" />
+This looks sensible to me! The scatterplot shows that sparrows are lighter in warmer areas which makes sense to me.</p>
+<pre><code class="language-r">summary(H1_ClimateTavg)
+</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = Weight ~ TAvg, data = CentralNorthAm_df)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -4.1440 -1.0861  0.0219  0.9823  3.9743 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 45.167990   1.618752  27.903  &lt; 2e-16 ***
+## TAvg        -0.049501   0.005635  -8.785 2.63e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.404 on 248 degrees of freedom
+## Multiple R-squared:  0.2373,	Adjusted R-squared:  0.2343 
+## F-statistic: 77.18 on 1 and 248 DF,  p-value: 2.633e-16
+</code></pre>
+<p>Our model estimates show the same pattern.</p>
+<h4 id="weight-as-a-result-of-temperature-variability-tsd"><code>Weight</code> as a result of temperature variability (<code>TSD</code>)</h4>
+<p>I&rsquo;ll continue with my North American, coastal subset here:</p>
+<pre><code class="language-r"># everything west of -7° is on the Americas
+# every that's coastal climate type is retained
+# everything north of 11° is central and north America
+CentralNorthAm_df &lt;- Sparrows_df[Sparrows_df$Longitude &lt; -7 &amp; Sparrows_df$Climate == &quot;Coastal&quot; &amp; Sparrows_df$Latitude &gt; 11, ]
+ggplot(data = CentralNorthAm_df, aes(y = Weight, x = TSD)) +
+  stat_smooth(method = &quot;lm&quot;) +
+  geom_point() +
+  theme_bw()
+</code></pre>
+<p><img src="6_Regressions---Correlations-for-the-Advanced_files/figure-html/unnamed-chunk-7-1.png" width="1440" /></p>
+<pre><code class="language-r">H1_ClimateTSD &lt;- lm(Weight ~ TSD, data = CentralNorthAm_df)
+par(mfrow = c(2, 2))
+plot(H1_ClimateTSD)
+</code></pre>
+<p><img src="6_Regressions---Correlations-for-the-Advanced_files/figure-html/unnamed-chunk-7-2.png" width="1440" /></p>
+<pre><code class="language-r">summary(H1_ClimateTSD)
+</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = Weight ~ TSD, data = CentralNorthAm_df)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -3.7978 -1.0053  0.0002  1.0042  3.5648 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 29.61266    0.14922  198.45   &lt;2e-16 ***
+## TSD          0.22680    0.02069   10.96   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.319 on 248 degrees of freedom
+## Multiple R-squared:  0.3263,	Adjusted R-squared:  0.3236 
+## F-statistic: 120.1 on 1 and 248 DF,  p-value: &lt; 2.2e-16
+</code></pre>
+<p>Again all assumptions are met and the model itself is very intuitive: The more variable the climate, the heavier the sparrows.</p>
+<h4 id="weight-as-a-result-of-both-temperature-mean-tavg-and-temperature-variability-tsd"><code>Weight</code> as a result of both temperature mean (<code>TAvg</code>) and temperature variability (<code>TSD</code>)</h4>
+<p>Naturally, we continue with the same subset of the data as before:</p>
+<pre><code class="language-r"># everything west of -7° is on the Americas
+# every that's coastal climate type is retained
+# everything north of 11° is central and north America
+CentralNorthAm_df &lt;- Sparrows_df[Sparrows_df$Longitude &lt; -7 &amp; Sparrows_df$Climate == &quot;Coastal&quot; &amp; Sparrows_df$Latitude &gt; 11, ]
+H1_ClimateCont &lt;- lm(Weight ~ TAvg + TSD, data = CentralNorthAm_df)
+par(mfrow = c(2, 2))
+plot(H1_ClimateCont)
+</code></pre>
+<p><img src="6_Regressions---Correlations-for-the-Advanced_files/figure-html/unnamed-chunk-8-1.png" width="1440" /></p>
+<pre><code class="language-r">summary(H1_ClimateCont)
+</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = Weight ~ TAvg + TSD, data = CentralNorthAm_df)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -3.6593 -1.0263  0.0272  0.9207  3.2359 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 16.59866    4.68943   3.540 0.000479 ***
+## TAvg         0.04215    0.01518   2.777 0.005915 ** 
+## TSD          0.38142    0.05931   6.431 6.52e-10 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.302 on 247 degrees of freedom
+## Multiple R-squared:  0.3467,	Adjusted R-squared:  0.3414 
+## F-statistic: 65.54 on 2 and 247 DF,  p-value: &lt; 2.2e-16
+</code></pre>
+<p>Interestingly, average temperature has a different (and weaker) effect now than when investigated in isolation. Variability of temperature has become even more important (i.e. stronger effect). So which model should we use? That&rsquo;s exactly what we&rsquo;ll investigate in our session on <a href="/courses/excursions-into-biostatistics/excursion-into-biostatistics/" target="_blank"> Model Selection and Validation</a>!</p>
+<h3 id="competition">Competition</h3>
+<p>Next, we build models which aim to explain sparrow <code>Weight</code> through variables pertaining to competition. To do so, I first calculate the size for each flock at each site and append these to each bird:</p>
+<pre><code class="language-r">FlockSizes &lt;- with(Sparrows_df, table(Flock, Index))
+Sparrows_df$Flock.Size &lt;- NA
+for (Flock_Iter in rownames(FlockSizes)) { # loop over flocks
+  for (Site_Iter in colnames(FlockSizes)) { # loop over sites
+    Positions &lt;- Sparrows_df$Index == Site_Iter &amp; Sparrows_df$Flock == Flock_Iter
+    Sparrows_df$Flock.Size[Positions] &lt;- FlockSizes[Flock_Iter, Site_Iter]
+  }
+}
+</code></pre>
+<p>With that done, we can now build our models up again like we did with the climate data before.</p>
+<h4 id="weight-as-a-result-of-home-range-size-homerange"><code>Weight</code> as a result of Home Range size (<code>Home.Range</code>)</h4>
+<pre><code class="language-r">ggplot(data = Sparrows_df, aes(x = Home.Range, y = Weight)) +
+  geom_boxplot() +
+  theme_bw()
+</code></pre>
+<p><img src="6_Regressions---Correlations-for-the-Advanced_files/figure-html/unnamed-chunk-10-1.png" width="1440" /></p>
+<pre><code class="language-r">H1_CompetitionHR &lt;- lm(Weight ~ Home.Range, data = Sparrows_df)
+par(mfrow = c(2, 2))
+plot(H1_CompetitionHR)
+</code></pre>
+<p><img src="6_Regressions---Correlations-for-the-Advanced_files/figure-html/unnamed-chunk-10-2.png" width="1440" />
+Nope. Those residuals have me nope out. We won&rsquo;t use this model.</p>
+<h4 id="weight-as-a-result-of-flock-size-size-flocksize"><code>Weight</code> as a result of Flock Size size (<code>Flock.Size</code>)</h4>
+<pre><code class="language-r">ggplot(data = Sparrows_df, aes(x = Flock.Size, y = Weight)) +
+  stat_smooth(method = &quot;lm&quot;) +
+  geom_point() +
+  theme_bw()
+</code></pre>
+<p><img src="6_Regressions---Correlations-for-the-Advanced_files/figure-html/unnamed-chunk-11-1.png" width="1440" /></p>
+<pre><code class="language-r">H1_CompetitionFS &lt;- lm(Weight ~ Flock.Size, data = Sparrows_df)
+par(mfrow = c(2, 2))
+plot(H1_CompetitionFS)
+</code></pre>
+<p><img src="6_Regressions---Correlations-for-the-Advanced_files/figure-html/unnamed-chunk-11-2.png" width="1440" /></p>
+<pre><code class="language-r">summary(H1_CompetitionFS)
+</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = Weight ~ Flock.Size, data = Sparrows_df)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -5.7421 -1.2163  0.0961  1.2823  4.7176 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept) 35.456378   0.114500   309.7   &lt;2e-16 ***
+## Flock.Size  -0.237908   0.003831   -62.1   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.893 on 1064 degrees of freedom
+## Multiple R-squared:  0.7838,	Adjusted R-squared:  0.7836 
+## F-statistic:  3857 on 1 and 1064 DF,  p-value: &lt; 2.2e-16
+</code></pre>
+<p>Now that&rsquo;s a neat model! Not only do the diagnostics plot look spot-on (not showing these here), the relationship is strong and clear to see - the bigger the flock, the lighter the sparrow.</p>
+<h4 id="weight-as-a-result-of-home-range-size-homerange-and-flock-size-size-flocksize"><code>Weight</code> as a result of Home Range size (<code>Home.Range</code>) and Flock Size size (<code>Flock.Size</code>)</h4>
+<pre><code class="language-r">ggplot(data = Sparrows_df, aes(x = Flock.Size, y = Weight, col = Home.Range)) +
+  geom_point() +
+  stat_smooth(method = &quot;lm&quot;) +
+  theme_bw()
+</code></pre>
+<p><img src="6_Regressions---Correlations-for-the-Advanced_files/figure-html/unnamed-chunk-12-1.png" width="1440" /></p>
+<pre><code class="language-r">H1_CompetitionFULL &lt;- lm(Weight ~ Home.Range * Flock.Size, data = Sparrows_df)
+par(mfrow = c(2, 2))
+plot(H1_CompetitionFULL)
+</code></pre>
+<p><img src="6_Regressions---Correlations-for-the-Advanced_files/figure-html/unnamed-chunk-12-2.png" width="1440" /></p>
+<pre><code class="language-r">summary(H1_CompetitionFULL)
+</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = Weight ~ Home.Range * Flock.Size, data = Sparrows_df)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -5.5599 -1.2261  0.0427  1.2806  4.5553 
+## 
+## Coefficients:
+##                             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)                 33.29279    0.31986 104.086  &lt; 2e-16 ***
+## Home.RangeMedium             0.29700    0.89288   0.333    0.739    
+## Home.RangeSmall              1.88176    0.35265   5.336 1.16e-07 ***
+## Flock.Size                  -0.07337    0.01848  -3.970 7.66e-05 ***
+## Home.RangeMedium:Flock.Size -0.03363    0.05787  -0.581    0.561    
+## Home.RangeSmall:Flock.Size  -0.16211    0.01896  -8.548  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.8 on 1060 degrees of freedom
+## Multiple R-squared:  0.8051,	Adjusted R-squared:  0.8042 
+## F-statistic:   876 on 5 and 1060 DF,  p-value: &lt; 2.2e-16
+</code></pre>
+<p>We see that our model is unsure of what to do with the home ranges when it comes to medium-sized ranges. The scatterplot shows that is is probably due to us not having a lot of samples for medium-sized home-ranges. Aside from that, our model meets all assumptions and produces quite intuitive parameter estimates.</p>
+<h3 id="predation">Predation</h3>
+<p>Next, we look at sparrow <code>Weight</code> through the lens of predation. To do so, we need to recode all <code>NA</code>s in the <code>Predator.Type</code> variable into something else for our models ro tun properly. I chose <code>&quot;None&quot;</code> here to indicate that there is no predation-pressure at these sites:</p>
+<pre><code class="language-r">levels(Sparrows_df$Predator.Type) &lt;- c(levels(Sparrows_df$Predator.Type), &quot;None&quot;)
+Sparrows_df$Predator.Type[is.na(Sparrows_df$Predator.Type)] &lt;- &quot;None&quot;
+</code></pre>
+<p>With that taken care of, we again build our models one-by-one.</p>
+<p>Again, because of issues with normality of residuals, we default to our three sites across Central and North America, which are of coastal climate:</p>
+<pre><code class="language-r"># everything west of -7° is on the Americas
+# every that's coastal climate type is retained
+# everything north of 11° is central and north America
+CentralNorthAm_df &lt;- Sparrows_df[Sparrows_df$Longitude &lt; -7 &amp; Sparrows_df$Climate == &quot;Coastal&quot; &amp; Sparrows_df$Latitude &gt; 11, ]
+</code></pre>
+<h4 id="weight-as-a-result-of-predatorpresence"><code>Weight</code> as a result of <code>Predator.Presence</code></h4>
+<pre><code class="language-r">ggplot(data = CentralNorthAm_df, aes(x = Predator.Presence, y = Weight)) +
+  geom_boxplot() +
+  theme_bw()
+</code></pre>
+<p><img src="6_Regressions---Correlations-for-the-Advanced_files/figure-html/unnamed-chunk-15-1.png" width="1440" /></p>
+<pre><code class="language-r">H1_PredationPresence &lt;- lm(Weight ~ Predator.Presence, data = CentralNorthAm_df)
+par(mfrow = c(2, 2))
+plot(H1_PredationPresence)
+</code></pre>
+<p><img src="6_Regressions---Correlations-for-the-Advanced_files/figure-html/unnamed-chunk-15-2.png" width="1440" /></p>
+<pre><code class="language-r">summary(H1_PredationPresence)
+</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = Weight ~ Predator.Presence, data = CentralNorthAm_df)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -4.5051 -1.0701 -0.0396  1.0749  4.2549 
+## 
+## Coefficients:
+##                      Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)           31.4141     0.1752 179.261  &lt; 2e-16 ***
+## Predator.PresenceYes  -0.6589     0.2131  -3.092  0.00222 ** 
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.577 on 248 degrees of freedom
+## Multiple R-squared:  0.03711,	Adjusted R-squared:  0.03323 
+## F-statistic: 9.557 on 1 and 248 DF,  p-value: 0.002219
+</code></pre>
+<p>According to our model, sparrows under pressure of predation are lighter than those which aren&rsquo;t. Does that make sense? Intuitively, yes, but I would argue that there are too many confounding variable here to be sure.</p>
+<h4 id="weight-as-a-result-of-predatortype"><code>Weight</code> as a result of <code>Predator.Type</code></h4>
+<pre><code class="language-r">ggplot(data = CentralNorthAm_df, aes(x = Predator.Type, y = Weight)) +
+  geom_boxplot() +
+  theme_bw()
+</code></pre>
+<p><img src="6_Regressions---Correlations-for-the-Advanced_files/figure-html/unnamed-chunk-16-1.png" width="1440" /></p>
+<pre><code class="language-r">H1_PredationType &lt;- lm(Weight ~ Predator.Type, data = CentralNorthAm_df)
+par(mfrow = c(2, 2))
+plot(H1_PredationType)
+</code></pre>
+<p><img src="6_Regressions---Correlations-for-the-Advanced_files/figure-html/unnamed-chunk-16-2.png" width="1440" /></p>
+<pre><code class="language-r">summary(H1_PredationType)
+</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = Weight ~ Predator.Type, data = CentralNorthAm_df)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -3.6593 -1.0263  0.0272  0.9207  3.2359 
+## 
+## Coefficients:
+##                        Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)             29.9093     0.1270 235.439  &lt; 2e-16 ***
+## Predator.TypeNon-Avian   2.2335     0.2064  10.819  &lt; 2e-16 ***
+## Predator.TypeNone        1.5047     0.1925   7.817 1.56e-13 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.302 on 247 degrees of freedom
+## Multiple R-squared:  0.3467,	Adjusted R-squared:  0.3414 
+## F-statistic: 65.54 on 2 and 247 DF,  p-value: &lt; 2.2e-16
+</code></pre>
+<p>OK. This clearly shows that there are either some confounds present or that our data shows something very counter-intuitive. Sparrows under nor predation are lighter than sparrows under non-avian predation? That makes no sense to me.</p>
+<h4 id="weight-as-a-result-of-predatorpresence-and-predatortype"><code>Weight</code> as a result of <code>Predator.Presence</code> and <code>Predator.Type</code></h4>
+<pre><code class="language-r">ggplot(data = CentralNorthAm_df, aes(x = Predator.Presence, y = Weight, fill = Predator.Type)) +
+  geom_boxplot() +
+  theme_bw()
+</code></pre>
+<p><img src="6_Regressions---Correlations-for-the-Advanced_files/figure-html/unnamed-chunk-17-1.png" width="1440" /></p>
+<pre><code class="language-r">H1_PredationFULL &lt;- lm(Weight ~ Predator.Presence + Predator.Type, data = Sparrows_df)
+par(mfrow = c(2, 2))
+plot(H1_PredationFULL)
+</code></pre>
+<p><img src="6_Regressions---Correlations-for-the-Advanced_files/figure-html/unnamed-chunk-17-2.png" width="1440" /></p>
+<pre><code class="language-r">summary(H1_PredationFULL)
+</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = Weight ~ Predator.Presence + Predator.Type, data = Sparrows_df)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -7.6635 -2.2987 -0.0844  1.9563  9.6165 
+## 
+## Coefficients: (1 not defined because of singularities)
+##                        Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)             30.6145     0.1816  168.60   &lt;2e-16 ***
+## Predator.PresenceYes    -3.5709     0.2387  -14.96   &lt;2e-16 ***
+## Predator.TypeNon-Avian   5.2809     0.2789   18.94   &lt;2e-16 ***
+## Predator.TypeNone            NA         NA      NA       NA    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 3.431 on 1063 degrees of freedom
+## Multiple R-squared:  0.2901,	Adjusted R-squared:  0.2888 
+## F-statistic: 217.2 on 2 and 1063 DF,  p-value: &lt; 2.2e-16
+</code></pre>
+<p>Those residuals don&rsquo;t look good, but that&rsquo;s not what I am after with this model. Immediately, we should notice that our model returns <code>NA</code> for the parameter estimate of <code>Predator.TypeNone</code>. Why does that happen? Because <code>Predator.TypeNone</code> coincides with <code>Predator.PresenceNo</code> (the <code>Intercept</code>) of this model and so does not provide any additional information. In fact, <code>Predator.Type</code> offers all the information of <code>Predator.Presence</code> and then some! Consequently, including both in a model does not make sense and we can immediately disqualify this model.</p>
+<h3 id="null--full-model">Null &amp; Full Model</h3>
+<p>For some comparison further down the line, we need a null model:</p>
+<pre><code class="language-r">H1_Null_Sparrows &lt;- lm(Weight ~ 1, data = Sparrows_df)
+H1_Null_CNA &lt;- lm(Weight ~ 1, data = CentralNorthAm_df)
+</code></pre>
+<p>Our full model contains all of our aforementioned variables/parameters to the best of our knowledge/intuition at this point. We will get to making this model better later. Don&rsquo;t worry:</p>
+<pre><code class="language-r">H1_FULL_Sparrows &lt;- lm(Weight ~ Climate + TAvg + TSD + Home.Range * Flock.Size + Predator.Type, data = Sparrows_df)
+par(mfrow = c(2, 2))
+plot(H1_FULL_Sparrows)
+</code></pre>
+<p><img src="6_Regressions---Correlations-for-the-Advanced_files/figure-html/unnamed-chunk-19-1.png" width="1440" /></p>
+<pre><code class="language-r">summary(H1_FULL_Sparrows)
+</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = Weight ~ Climate + TAvg + TSD + Home.Range * Flock.Size + 
+##     Predator.Type, data = Sparrows_df)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -5.2164 -1.0436  0.0939  1.0495  4.7403 
+## 
+## Coefficients:
+##                             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)                 43.65271    4.09482  10.660  &lt; 2e-16 ***
+## ClimateContinental           2.28851    0.31524   7.259 7.53e-13 ***
+## ClimateSemi-Coastal         -0.79097    0.30663  -2.580  0.01003 *  
+## TAvg                        -0.04252    0.01402  -3.034  0.00247 ** 
+## TSD                          0.01431    0.04032   0.355  0.72272    
+## Home.RangeMedium             1.63110    0.85370   1.911  0.05632 .  
+## Home.RangeSmall              2.36146    0.41639   5.671 1.83e-08 ***
+## Flock.Size                  -0.03445    0.01896  -1.817  0.06955 .  
+## Predator.TypeNon-Avian       0.24253    0.16673   1.455  0.14605    
+## Predator.TypeNone            0.75123    0.17268   4.350 1.49e-05 ***
+## Home.RangeMedium:Flock.Size -0.10115    0.05614  -1.802  0.07186 .  
+## Home.RangeSmall:Flock.Size  -0.16452    0.01990  -8.267 4.09e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.605 on 1054 degrees of freedom
+## Multiple R-squared:  0.846,	Adjusted R-squared:  0.8444 
+## F-statistic: 526.6 on 11 and 1054 DF,  p-value: &lt; 2.2e-16
+</code></pre>
+<p>Already at this point, it is interesting to point out how some previously non-significant effects drop out while other become significant due to the inclusion of all parameters in one model.</p>
+<p>Now we also need a full model for our Central-/North-America data:</p>
+<pre><code class="language-r">H1_FULL_CNA &lt;- lm(Weight ~ TAvg + TSD + Home.Range * Flock.Size + Predator.Type, data = CentralNorthAm_df)
+par(mfrow = c(2, 2))
+plot(H1_FULL_CNA)
+</code></pre>
+<p><img src="6_Regressions---Correlations-for-the-Advanced_files/figure-html/unnamed-chunk-20-1.png" width="1440" /></p>
+<pre><code class="language-r">summary(H1_FULL_CNA)
+</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = Weight ~ TAvg + TSD + Home.Range * Flock.Size + 
+##     Predator.Type, data = CentralNorthAm_df)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -3.6979 -0.9364 -0.0501  1.0483  3.3590 
+## 
+## Coefficients: (2 not defined because of singularities)
+##                             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)                 14.18473    6.20215   2.287   0.0231 *  
+## TAvg                         0.05336    0.02038   2.618   0.0094 ** 
+## TSD                          0.39853    0.07842   5.082 7.48e-07 ***
+## Home.RangeMedium            -3.83588    1.99164  -1.926   0.0553 .  
+## Home.RangeSmall             -1.50681    1.03368  -1.458   0.1462    
+## Flock.Size                  -0.07581    0.05850  -1.296   0.1963    
+## Predator.TypeNon-Avian            NA         NA      NA       NA    
+## Predator.TypeNone                 NA         NA      NA       NA    
+## Home.RangeMedium:Flock.Size  0.29821    0.13273   2.247   0.0256 *  
+## Home.RangeSmall:Flock.Size   0.10097    0.06212   1.625   0.1054    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.285 on 242 degrees of freedom
+## Multiple R-squared:  0.3765,	Adjusted R-squared:  0.3585 
+## F-statistic: 20.88 on 7 and 242 DF,  p-value: &lt; 2.2e-16
+</code></pre>
+<h3 id="summary-of-linear-regression">Summary of Linear Regression</h3>
+<p>To streamline the next few steps of our exercise on <a href="/courses/excursions-into-biostatistics/excursion-into-biostatistics/" target="_blank"> Model Selection and Validation</a>, we combine all of our models into a <code>list</code> object for now:</p>
+<pre><code class="language-r">H1_ModelSparrows_ls &lt;- list(
+  H1_Null_Sparrows,
+  H1_CompetitionFS,
+  H1_CompetitionFULL,
+  H1_FULL_Sparrows
+)
+names(H1_ModelSparrows_ls) &lt;- c(
+  &quot;Null&quot;,
+  &quot;Comp_Flock.Size&quot;, &quot;Comp_Full&quot;,
+  &quot;Full&quot;
+)
+H1_ModelCNA_ls &lt;- list(
+  H1_Null_CNA,
+  H1_ClimateTavg,
+  H1_ClimateTSD,
+  H1_ClimateCont,
+  H1_PredationPresence,
+  H1_PredationType,
+  H1_FULL_CNA
+)
+names(H1_ModelCNA_ls) &lt;- c(
+  &quot;Null&quot;,
+  &quot;Clim_TAvg&quot;, &quot;Clim_TSD&quot;, &quot;Clim_Full&quot;,
+  &quot;Pred_Pres&quot;, &quot;Pred_Type&quot;,
+  &quot;Full&quot;
+)
+</code></pre>
+<h2 id="mixed-effect-models">Mixed Effect Models</h2>
+<p>Remember the <strong>Assumptions of Mixed Effect Models</strong>:</p>
+<ol>
+<li>Variable values follow homoscedasticity (equal variance across entire data range)</li>
+<li>Residuals follow normal distribution (normality)</li>
+<li>Absence of influential outliers</li>
+<li>Response and Predictor are related in a linear fashion</li>
+</ol>
+<h3 id="climate-conditions-1">Climate Conditions</h3>
+<p>Here, I create a mixed effect model that is accounting predicting <code>Weight</code> with a combination <code>TAvg</code> and <code>TSD</code> while accounting for random intercepts of <code>Index</code> and <code>Population.Status</code>. As we learned in our exercise on <a href="/courses/excursions-into-biostatistics/classifications-order-from-chaos/" target="_blank"> Classifications</a>, these two are probably important in controlling for some morphology effects in <code>Weight</code>.</p>
+<p>I create such a model for:</p>
+<ol>
+<li>The <strong>entire sparrow data data set</strong></li>
+<li>Only the <strong>Central-/North-America sparrows</strong></li>
+</ol>
+<p>to make models comparable to our previous basic, linear models.</p>
+<h4 id="global-model">Global Model</h4>
+<pre><code class="language-r">H1_Climate_ME_Sparrows &lt;- lme(Weight ~ TAvg + TSD,
+  random = list(
+    Population.Status = ~1,
+    Index = ~1
+  ),
+  data = Sparrows_df
+)
+par(mfrow = c(2, 2))
+plot(fitted(H1_Climate_ME_Sparrows), resid(H1_Climate_ME_Sparrows)) # Homogeneity of Variances, values around 0, no pattern --&gt; good!
+plot(fitted(H1_Climate_ME_Sparrows), Sparrows_df$Weight) # Linearity, there is a clear pattern here --&gt; bad!
+qqnorm(resid(H1_Climate_ME_Sparrows)) # Normality, residuals are normal distributed -&gt; good!
+hist(leverage(H1_Climate_ME_Sparrows)[, 1]) # Leverage, not really any outliers --&gt; good!
+</code></pre>
+<p><img src="6_Regressions---Correlations-for-the-Advanced_files/figure-html/unnamed-chunk-22-1.png" width="1440" />
+Quite evidently, the assumption of linearity is violated. Notice that we would not like to use this model for predictions, but will carry it forward for the purpose of subsequent <a href="/courses/excursions-into-biostatistics/excursion-into-biostatistics/" target="_blank"> Model Selection and Validation</a>.</p>
+<pre><code class="language-r">summary(H1_Climate_ME_Sparrows)
+</code></pre>
+<pre><code>## Linear mixed-effects model fit by REML
+##   Data: Sparrows_df 
+##        AIC      BIC    logLik
+##   3557.109 3586.922 -1772.554
+## 
+## Random effects:
+##  Formula: ~1 | Population.Status
+##         (Intercept)
+## StdDev: 0.001507855
+## 
+##  Formula: ~1 | Index %in% Population.Status
+##         (Intercept) Residual
+## StdDev:    2.640311 1.237155
+## 
+## Fixed effects:  Weight ~ TAvg + TSD 
+##                Value Std.Error   DF    t-value p-value
+## (Intercept) 37.83099 31.229059 1055  1.2114034  0.2260
+## TAvg        -0.03070  0.104602    7 -0.2934692  0.7777
+## TSD          0.27536  0.265143    7  1.0385452  0.3336
+##  Correlation: 
+##      (Intr) TAvg  
+## TAvg -0.999       
+## TSD  -0.826  0.809
+## 
+## Standardized Within-Group Residuals:
+##          Min           Q1          Med           Q3          Max 
+## -2.956660984 -0.746001839  0.004452834  0.722973350  2.617329146 
+## 
+## Number of Observations: 1066
+## Number of Groups: 
+##            Population.Status Index %in% Population.Status 
+##                            2                           11
+</code></pre>
+<h4 id="central-north-american-model">Central-/North-American Model</h4>
+<p>Accounting for population status in among the Central-/North-American sites makes no sense as all of them are introduced populations.</p>
+<pre><code class="language-r">H1_Climate_ME_CNA &lt;- lme(Weight ~ TAvg + TSD,
+  random = list(Index = ~1),
+  data = CentralNorthAm_df
+)
+par(mfrow = c(2, 2))
+plot(fitted(H1_Climate_ME_CNA), resid(H1_Climate_ME_CNA)) # Homogeneity of Variances, values around 0, no pattern --&gt; good!
+plot(fitted(H1_Climate_ME_CNA), CentralNorthAm_df$Weight) # Linearity, there is no clear pattern here --&gt; good!
+qqnorm(resid(H1_Climate_ME_CNA)) # Normality, residuals are normal distributed -&gt; good!
+hist(leverage(H1_Climate_ME_CNA)[, 1]) # Leverage, not really any outliers --&gt; good!
+</code></pre>
+<p><img src="6_Regressions---Correlations-for-the-Advanced_files/figure-html/unnamed-chunk-24-1.png" width="1440" /></p>
+<p>With this model, all of our assumption are met nicely!</p>
+<pre><code class="language-r">summary(H1_Climate_ME_CNA)
+</code></pre>
+<pre><code>## Linear mixed-effects model fit by REML
+##   Data: CentralNorthAm_df 
+##        AIC      BIC    logLik
+##   863.9566 881.5035 -426.9783
+## 
+## Random effects:
+##  Formula: ~1 | Index
+##         (Intercept) Residual
+## StdDev:   0.3802608 1.301734
+## 
+## Fixed effects:  Weight ~ TAvg + TSD 
+##                 Value Std.Error  DF   t-value p-value
+## (Intercept) 16.598661 13.291655 247 1.2488031  0.2129
+## TAvg         0.042146  0.042863   0 0.9832757     NaN
+## TSD          0.381424  0.174011   0 2.1919464     NaN
+##  Correlation: 
+##      (Intr) TAvg  
+## TAvg -0.999       
+## TSD  -0.953  0.945
+## 
+## Standardized Within-Group Residuals:
+##        Min         Q1        Med         Q3        Max 
+## -2.8111222 -0.7883782  0.0208856  0.7072618  2.4858581 
+## 
+## Number of Observations: 250
+## Number of Groups: 3
+</code></pre>
+<h3 id="competition-1">Competition</h3>
+<p>With competition effects as my goal, I can now include climate classification as one of the random effects! Of course, this is with the exception of the Central-/North-American data as all of these sites are of the type &ldquo;Coastal&rdquo;.</p>
+<p>Again, we do so for a global and a local model:</p>
+<h4 id="global-model-1">Global Model</h4>
+<pre><code class="language-r">H1_Comp_ME_Sparrows &lt;- lme(Weight ~ Home.Range * Flock.Size,
+  random = list(
+    Population.Status = ~1,
+    Climate = ~1
+  ),
+  data = Sparrows_df
+)
+par(mfrow = c(2, 2))
+plot(fitted(H1_Comp_ME_Sparrows), resid(H1_Comp_ME_Sparrows)) # Homogeneity of Variances, values around 0, no pattern --&gt; good!
+plot(fitted(H1_Comp_ME_Sparrows), Sparrows_df$Weight) # Linearity, there is a clear pattern here --&gt; bad!
+qqnorm(resid(H1_Comp_ME_Sparrows)) # Normality, residuals are normal distributed -&gt; good!
+hist(leverage(H1_Comp_ME_Sparrows)[, 1]) # Leverage, not really any outliers --&gt; good!
+</code></pre>
+<p><img src="6_Regressions---Correlations-for-the-Advanced_files/figure-html/unnamed-chunk-26-1.png" width="1440" /></p>
+<h4 id="central-north-american-model-1">Central-/North-American Model</h4>
+<pre><code class="language-r">H1_Comp_ME_CNA &lt;- lme(Weight ~ Home.Range * Flock.Size,
+  random = list(Climate = ~1),
+  data = CentralNorthAm_df
+)
+par(mfrow = c(2, 2))
+plot(fitted(H1_Comp_ME_CNA), resid(H1_Comp_ME_CNA)) # Homogeneity of Variances, values around 0, no pattern --&gt; good!
+plot(fitted(H1_Comp_ME_CNA), CentralNorthAm_df$Weight) # Linearity, there is no clear pattern here --&gt; good!
+qqnorm(resid(H1_Comp_ME_CNA)) # Normality, residuals are normal distributed -&gt; good!
+hist(leverage(H1_Comp_ME_CNA)[, 1]) # Leverage, not really any outliers --&gt; good!
+</code></pre>
+<p><img src="6_Regressions---Correlations-for-the-Advanced_files/figure-html/unnamed-chunk-27-1.png" width="1440" /></p>
+<h3 id="predation-1">Predation</h3>
+<p>With predation effects, I do the same as with competition effects and set a random intercept for climate classification at each site for a global and a local model:</p>
+<h4 id="global-model-2">Global Model</h4>
+<pre><code class="language-r">H1_Pred_ME_Sparrows &lt;- lme(Weight ~ Predator.Type,
+  random = list(
+    Population.Status = ~1,
+    Climate = ~1
+  ),
+  data = Sparrows_df
+)
+par(mfrow = c(2, 2))
+plot(fitted(H1_Pred_ME_Sparrows), resid(H1_Pred_ME_Sparrows)) # Homogeneity of Variances, values around 0, no pattern --&gt; good!
+plot(fitted(H1_Pred_ME_Sparrows), Sparrows_df$Weight) # Linearity, there is a clear pattern here --&gt; bad!
+qqnorm(resid(H1_Pred_ME_Sparrows)) # Normality, residuals are normal distributed -&gt; good!
+hist(leverage(H1_Pred_ME_Sparrows)[, 1]) # Leverage, not really any outliers --&gt; good!
+</code></pre>
+<p><img src="6_Regressions---Correlations-for-the-Advanced_files/figure-html/unnamed-chunk-28-1.png" width="1440" /></p>
+<h4 id="central-north-american-model-2">Central-/North-American Model</h4>
+<pre><code class="language-r">H1_Pred_ME_CNA &lt;- lme(Weight ~ Predator.Type,
+  random = list(Index = ~1),
+  data = CentralNorthAm_df
+)
+par(mfrow = c(2, 2))
+plot(fitted(H1_Pred_ME_CNA), resid(H1_Pred_ME_CNA)) # Homogeneity of Variances, values around 0, no pattern --&gt; good!
+plot(fitted(H1_Pred_ME_CNA), CentralNorthAm_df$Weight) # Linearity, there is no clear pattern here --&gt; good!
+qqnorm(resid(H1_Pred_ME_CNA)) # Normality, residuals are normal distributed -&gt; good!
+hist(leverage(H1_Pred_ME_CNA)[, 1]) # Leverage, not really any outliers --&gt; good!
+</code></pre>
+<p><img src="6_Regressions---Correlations-for-the-Advanced_files/figure-html/unnamed-chunk-29-1.png" width="1440" /></p>
+<h3 id="full-model">Full Model</h3>
+<h4 id="global-model-3">Global Model</h4>
+<pre><code class="language-r">H1_Full_ME_Sparrows &lt;- lme(Weight ~ Predator.Type + Flock.Size * Home.Range + TAvg + TSD,
+  random = list(Population.Status = ~1),
+  data = Sparrows_df
+)
+par(mfrow = c(2, 2))
+plot(fitted(H1_Full_ME_Sparrows), resid(H1_Full_ME_Sparrows)) # Homogeneity of Variances, values around 0, no pattern --&gt; good!
+plot(fitted(H1_Full_ME_Sparrows), Sparrows_df$Weight) # Linearity, there is a clear pattern here --&gt; bad!
+qqnorm(resid(H1_Full_ME_Sparrows)) # Normality, residuals are normal distributed -&gt; good!
+hist(leverage(H1_Full_ME_Sparrows)[, 1]) # Leverage, not really any outliers --&gt; good!
+</code></pre>
+<p><img src="6_Regressions---Correlations-for-the-Advanced_files/figure-html/unnamed-chunk-30-1.png" width="1440" /></p>
+<h4 id="central-north-american-model-3">Central-/North-American Model</h4>
+<pre><code class="language-r">H1_Full_ME_CNA &lt;- lme(Weight ~ Flock.Size * Home.Range + TAvg + TSD,
+  random = list(Index = ~1),
+  data = CentralNorthAm_df
+)
+par(mfrow = c(2, 2))
+plot(fitted(H1_Full_ME_CNA), resid(H1_Full_ME_CNA)) # Homogeneity of Variances, values around 0, no pattern --&gt; good!
+plot(fitted(H1_Full_ME_CNA), CentralNorthAm_df$Weight) # Linearity, there is no clear pattern here --&gt; good!
+qqnorm(resid(H1_Full_ME_CNA)) # Normality, residuals are normal distributed -&gt; good!
+hist(leverage(H1_Full_ME_CNA)[, 1]) # Leverage, not really any outliers --&gt; good!
+</code></pre>
+<p><img src="6_Regressions---Correlations-for-the-Advanced_files/figure-html/unnamed-chunk-31-1.png" width="1440" /></p>
+<h3 id="summary-of-mixed-effect-models">Summary of Mixed Effect Models</h3>
+<p>Mixed effect models are hard and I have certainly not given them full credit for what they are worth here. I highly suggest giving 
+<a href="https://ourcodingclub.github.io/tutorials/mixed-models/#three" target="_blank" rel="noopener">this</a> a read if you see yourself using mixed effect models.</p>
+<p>For now, I want to carry along only the full models for our session on <a href="/courses/excursions-into-biostatistics/excursion-into-biostatistics/" target="_blank"> Model Selection and Validation</a>:</p>
+<pre><code class="language-r">H1_ModelSparrows_ls$Mixed_Full &lt;- H1_Full_ME_Sparrows
+H1_ModelCNA_ls$Mixed_Full &lt;- H1_Full_ME_CNA
+</code></pre>
+<h2 id="generalised-linear-models">Generalised Linear Models</h2>
+<p>For a generalised linear model, we may want to run a logistic regression, which we <a href="/courses/excursions-into-biostatistics/classifications-order-from-chaos/#binary-logistic-regression-1" target="_blank"> already did</a>.</p>
+<p>For a different example, we now turn to <em>poisson models</em> by trying to understand how <code>Flock.Size</code> comes about.</p>
+<p>Firstly, we limit our data set to necessary variables and then cut all duplicate rows:</p>
+<pre><code class="language-r">Flock_df &lt;- Sparrows_df[, c(&quot;Flock.Size&quot;, &quot;TAvg&quot;, &quot;TSD&quot;, &quot;Index&quot;, &quot;Climate&quot;, &quot;Predator.Type&quot;)]
+Flock_df &lt;- unique(Flock_df)
+</code></pre>
+<p>Now we are ready to build a basic linear model:</p>
+<pre><code class="language-r">Flock_lm &lt;- lm(Flock.Size ~ TAvg * TSD * Predator.Type, data = Flock_df)
+par(mfrow = c(2, 2))
+plot(Flock_lm)
+</code></pre>
+<p><img src="6_Regressions---Correlations-for-the-Advanced_files/figure-html/unnamed-chunk-34-1.png" width="1440" /></p>
+<p>Everything looks line but that Scale-Location plot. That one seems to indicate that variance in our <code>Flock.Size</code> increases as the <code>Flock.Size</code> itself increases - a very typical example of a poisson distributed variable.</p>
+<p>GLMs to the rescue with the poisson GLM:</p>
+<pre><code class="language-r">poisson.model &lt;- glm(Flock.Size ~ TAvg * TSD * Predator.Type, data = Flock_df, family = poisson(link = &quot;log&quot;))
+par(mfrow = c(2, 2))
+plot(poisson.model)
+</code></pre>
+<p><img src="6_Regressions---Correlations-for-the-Advanced_files/figure-html/unnamed-chunk-35-1.png" width="1440" />
+We fixed it! Now just for the parameter estimates:</p>
+<pre><code class="language-r">summary(poisson.model)
+</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = Flock.Size ~ TAvg * TSD * Predator.Type, family = poisson(link = &quot;log&quot;), 
+##     data = Flock_df)
+## 
+## Deviance Residuals: 
+##      Min        1Q    Median        3Q       Max  
+## -2.02420  -0.88953  -0.09629   0.94122   2.12737  
+## 
+## Coefficients: (1 not defined because of singularities)
+##                                   Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)                     -13.822674   2.540369  -5.441 5.29e-08 ***
+## TAvg                              0.061744   0.008564   7.209 5.62e-13 ***
+## TSD                               7.243621   1.056843   6.854 7.18e-12 ***
+## Predator.TypeNon-Avian          -48.160439   9.412905  -5.116 3.11e-07 ***
+## Predator.TypeNone                10.338971   8.694652   1.189    0.234    
+## TAvg:TSD                         -0.026895   0.003936  -6.833 8.34e-12 ***
+## TAvg:Predator.TypeNon-Avian       0.171883   0.033327   5.157 2.50e-07 ***
+## TAvg:Predator.TypeNone           -0.039510   0.029180  -1.354    0.176    
+## TSD:Predator.TypeNon-Avian        0.067442   0.041609   1.621    0.105    
+## TSD:Predator.TypeNone            -6.742437   1.177538  -5.726 1.03e-08 ***
+## TAvg:TSD:Predator.TypeNon-Avian         NA         NA      NA       NA    
+## TAvg:TSD:Predator.TypeNone        0.025061   0.004321   5.800 6.64e-09 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## (Dispersion parameter for poisson family taken to be 1)
+## 
+##     Null deviance: 276.538  on 49  degrees of freedom
+## Residual deviance:  53.417  on 39  degrees of freedom
+## AIC: 310.71
+## 
+## Number of Fisher Scoring iterations: 4
+</code></pre>
+<h2 id="final-models">Final Models</h2>
+<p>In our upcoming <a href="/courses/excursions-into-biostatistics/excursion-into-biostatistics/" target="_blank"> Model Selection and Validation</a> Session, we will look into how to compare and validate models. We now need to select some models we have created here today and want to carry forward to said session.</p>
+<p>We have already created <code>list</code> objects for this purpose. Let&rsquo;s save them alongside the data that was used to create them (in the case of the localised models, at least). Let&rsquo;s save these as a separate object ready to be loaded into our <code>R</code> environment in the coming session:</p>
+<pre><code class="language-r">save(H1_ModelSparrows_ls, H1_ModelCNA_ls, CentralNorthAm_df, Sparrows_df, file = file.path(&quot;Data&quot;, &quot;H1_Models.RData&quot;))
+</code></pre>
+<h2 id="sessioninfo">SessionInfo</h2>
+<pre><code class="language-r">sessionInfo()
+</code></pre>
+<pre><code>## R version 4.2.3 (2023-03-15)
+## Platform: x86_64-apple-darwin17.0 (64-bit)
+## Running under: macOS Big Sur ... 10.16
+## 
+## Matrix products: default
+## BLAS:   /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRlapack.dylib
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+## [1] HLMdiag_0.5.0 nlme_3.1-162  ggplot2_3.4.1
+## 
+## loaded via a namespace (and not attached):
+##  [1] styler_1.9.1      tidyselect_1.2.0  xfun_0.37         bslib_0.4.2       janitor_2.2.0     reshape2_1.4.4    purrr_1.0.1       splines_4.2.3     lattice_0.20-45   snakecase_0.11.0 
+## [11] colorspace_2.1-0  vctrs_0.5.2       generics_0.1.3    htmltools_0.5.4   mgcv_1.8-42       yaml_2.3.7        utf8_1.2.3        rlang_1.0.6       R.oo_1.25.0       jquerylib_0.1.4  
+## [21] pillar_1.8.1      glue_1.6.2        withr_2.5.0       R.utils_2.12.2    plyr_1.8.8        R.cache_0.16.0    lifecycle_1.0.3   stringr_1.5.0     munsell_0.5.0     blogdown_1.16    
+## [31] gtable_0.3.1      R.methodsS3_1.8.2 diagonals_6.4.0   evaluate_0.20     labeling_0.4.2    knitr_1.42        fastmap_1.1.1     fansi_1.0.4       highr_0.10        Rcpp_1.0.10      
+## [41] scales_1.2.1      cachem_1.0.7      jsonlite_1.8.4    farver_2.1.1      digest_0.6.31     stringi_1.7.12    bookdown_0.33     dplyr_1.1.0       grid_4.2.3        cli_3.6.0        
+## [51] tools_4.2.3       magrittr_2.0.3    sass_0.4.5        tibble_3.2.0      pkgconfig_2.0.3   MASS_7.3-58.2     Matrix_1.5-3      lubridate_1.9.2   timechange_0.2.0  rmarkdown_2.20   
+## [61] rstudioapi_0.14   R6_2.5.1          compiler_4.2.3
+</code></pre>
+
+          </div>
+
+          
+
+<div class="article-tags">
+  
+  <a class="badge badge-light" href="/tag/r/">R</a>
+  
+  <a class="badge badge-light" href="/tag/statistics/">Statistics</a>
+  
+</div>
+
+
+
+          
+          <div class="article-widget">
+            
+<div class="post-nav">
+  
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">Previous</div>
+    <a href="/courses/excursions-into-biostatistics/classifications-order-from-chaos/" rel="next">Classifications</a>
+  </div>
+  
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">Next</div>
+    <a href="/courses/excursions-into-biostatistics/excursion-into-biostatistics/" rel="prev">Model Selection</a>
+  </div>
+  
+</div>
+
+          </div>
+          
+        </div>
+
+        <div class="body-footer">
+          <p>Last updated on 2020-02-27</p>
+
+          
+
+
+
+
+
+          
+
+
+          
+
+
+  
+  
+  <div class="article-widget content-widget-hr">
+    <h3>Related</h3>
+    <ul>
+      
+      <li><a href="/courses/excursions-into-biostatistics/classifications-order-from-chaos/">Classifications</a></li>
+      
+      <li><a href="/courses/excursions-into-biostatistics/data-handling-and-data-assumptions/">Data Handling and Data Assumptions</a></li>
+      
+      <li><a href="/courses/excursions-into-biostatistics/excursion-into-biostatistics/">Model Selection</a></li>
+      
+      <li><a href="/courses/excursions-into-biostatistics/research-project/">Research Project</a></li>
+      
+      <li><a href="/courses/excursions-into-biostatistics/research-project/">Research Project</a></li>
+      
+    </ul>
+  </div>
+  
+
+
+
+        </div>
+
+      </article>
+
+      <footer class="site-footer">
+  
+  <p class="powered-by">
+    
+      <a href="/privacy/">Privacy Policy</a>
+    
+    
+       &middot; 
+      <a href="/terms/">Terms</a>
+    
+  </p>
+  
+
+  <p class="powered-by">
+    © 2024
+  </p>
+
+  
+  
+
+
+
+
+
+
+  <p class="powered-by">
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+  </p>
+</footer>
+
+
+    </main>
+  </div>
+</div>
+
+
+      
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js" integrity="sha256-eOgo0OtLL4cdq7RdwRUiGKLX9XsIJ7nGhWEKbohmVAQ=" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/languages/r.min.js"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/languages/latex.min.js"></script>
+        
+      
+
+    
+
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.js" integrity="sha256-EErZamuLefUnbMBQbsEqu1USa+btR2oIlCpBJbyD4/g=" crossorigin="anonymous"></script>
+    
+
+    
+    
+    <script>const code_highlighting = true;</script>
+    
+
+    
+    
+    <script>const isSiteThemeDark = false;</script>
+    
+
+    
+    
+    
+    
+    
+    
+    <script>
+      const search_config = {"indexURI":"/index.json","minLength":1,"threshold":0.3};
+      const i18n = {"no_results":"No results found","placeholder":"Search...","results":"results found"};
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks",
+        'slides' : "Slides"
+        };
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.1/anchor.min.js" integrity="sha256-pB/deHc9CGfFpJRjC43imB29Rse8tak+5eXqntO94ck=" crossorigin="anonymous"></script>
+    <script>
+      anchors.add();
+    </script>
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+      <div class="search-hit-content">
+        <div class="search-hit-name">
+          <a href="{{relpermalink}}">{{title}}</a>
+          <div class="article-metadata search-hit-type">{{type}}</div>
+          <p class="search-hit-description">{{snippet}}</p>
+        </div>
+      </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="/js/academic.min.66c553246b0f279a03be6e5597f72b52.js"></script>
+
+    
+
+
+
+
+
+
+  
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

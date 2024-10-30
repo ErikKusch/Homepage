@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>7 | Erik Kusch</title>
+    <link>https://www.erikkusch.com/publication-type/7/</link>
+      <atom:link href="https://www.erikkusch.com/publication-type/7/index.xml" rel="self" type="application/rss+xml" />
+    <description>7</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-gb</language><copyright>© 2024</copyright><lastBuildDate>Sun, 19 May 2019 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg</url>
+      <title>7</title>
+      <link>https://www.erikkusch.com/publication-type/7/</link>
+    </image>
+    
+    <item>
+      <title>Inferring Vegetation Memory from Remote Sensing Data using novel Climate Reconstruction Products</title>
+      <link>https://www.erikkusch.com/publication/journal-article/m.sc._inferring-vegetation-memory-from-remote-copy/</link>
+      <pubDate>Sun, 19 May 2019 00:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/publication/journal-article/m.sc._inferring-vegetation-memory-from-remote-copy/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Inferring Vegetation Memory from Remote Sensing Data using novel Climate Reconstruction Products</title>
+      <link>https://www.erikkusch.com/publication/m.sc._inferring-vegetation-memory-from-remote-copy/</link>
+      <pubDate>Sun, 19 May 2019 00:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/publication/m.sc._inferring-vegetation-memory-from-remote-copy/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Remote Sensing And Predicting Shifts In Biome Distribution And Resilience Using NDVI Data</title>
+      <link>https://www.erikkusch.com/publication/b.sc._inferring-vegetation-memory-from-remote/</link>
+      <pubDate>Fri, 10 Mar 2017 00:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/publication/b.sc._inferring-vegetation-memory-from-remote/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Remote Sensing And Predicting Shifts In Biome Distribution And Resilience Using NDVI Data</title>
+      <link>https://www.erikkusch.com/publication/journal-article/b.sc._inferring-vegetation-memory-from-remote/</link>
+      <pubDate>Fri, 10 Mar 2017 00:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/publication/journal-article/b.sc._inferring-vegetation-memory-from-remote/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

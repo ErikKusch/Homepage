@@ -1,0 +1,617 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>BioStat101 | Erik Kusch</title>
+    <link>https://www.erikkusch.com/category/biostat101/</link>
+      <atom:link href="https://www.erikkusch.com/category/biostat101/index.xml" rel="self" type="application/rss+xml" />
+    <description>BioStat101</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-gb</language><copyright>© 2024</copyright><lastBuildDate>Wed, 10 Jun 2020 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg</url>
+      <title>BioStat101</title>
+      <link>https://www.erikkusch.com/category/biostat101/</link>
+    </image>
+    
+    <item>
+      <title>Basic Statistics for Biologists</title>
+      <link>https://www.erikkusch.com/courses/biostat101/01-an-introduction-to-basic-statistics-for-biologists/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/courses/biostat101/01-an-introduction-to-basic-statistics-for-biologists/</guid>
+      <description>&lt;div class=&#34;alert alert-success&#34;&gt;
+  &lt;div&gt;
+    &lt;details&gt;
+  &lt;summary&gt;Theory slides for this session.&lt;/summary&gt;
+  Click the outline of the presentation below to get to the HTML version of the slides for this session.
+    &lt;a href=&#34;https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/biostat101/01---An-Introduction-to-Basic-Statistics-for-Biologists_Handout.html&#34; target=&#34;_blank&#34;&gt;&lt;img src=&#34;https://www.erikkusch.com/courses/BioStat101/01---BioStat101_featured.png&#34; width=&#34;900&#34; margin-top = &#34;0&#34;/&gt;&lt;/a&gt; 
+&lt;/details&gt; 
+  &lt;/div&gt;
+&lt;/div&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Introduction to R</title>
+      <link>https://www.erikkusch.com/courses/biostat101/introduction-to-r/</link>
+      <pubDate>Wed, 10 Jun 2020 00:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/courses/biostat101/introduction-to-r/</guid>
+      <description>&lt;h2 id=&#34;theory&#34;&gt;Theory&lt;/h2&gt;
+&lt;p&gt;These are the solutions to the exercises contained within the handout to Introduction to R which walks you through the basics of the &lt;code&gt;R&lt;/code&gt; machinery. &lt;code&gt;R&lt;/code&gt; is a coding language that can be highly individualised and hence there are often multiple solutions to the same problem. Within these solutions, I shall only present you with one solution for every given task. However, do keep in mind that there is probably a myriad of other ways to achieve your goal.&lt;/p&gt;
+&lt;div class=&#34;alert alert-success&#34;&gt;
+  &lt;div&gt;
+    &lt;details&gt;
+  &lt;summary&gt;Theory slides for this session.&lt;/summary&gt;
+  Click the outline of the presentation below to get to the HTML version of the slides for this session.
+    &lt;a href=&#34;https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/biostat101/02---Introduction-to-R_Handout.html&#34; target=&#34;_blank&#34;&gt;&lt;img src=&#34;https://www.erikkusch.com/courses/biostat101/02---BioStat101_featured.png&#34; width=&#34;900&#34; margin-top = &#34;0&#34;/&gt;&lt;/a&gt;  
+&lt;/details&gt; 
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;h2 id=&#34;creating-and-inspecting-objects&#34;&gt;Creating and Inspecting Objects&lt;/h2&gt;
+&lt;h3 id=&#34;vector&#34;&gt;Vector&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;A vector reading: &amp;ldquo;A&amp;rdquo;, &amp;ldquo;B&amp;rdquo;, &amp;ldquo;C&amp;rdquo;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;Letters_vec &amp;lt;- c(&amp;quot;A&amp;quot;, &amp;quot;B&amp;quot;, &amp;quot;C&amp;quot;)
+Letters_vec
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] &amp;quot;A&amp;quot; &amp;quot;B&amp;quot; &amp;quot;C&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;length(Letters_vec)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 3
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;A vector reading: 1, 2, 3&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;Numbers_vec &amp;lt;- c(1, 2, 3)
+Numbers_vec
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 1 2 3
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;length(Numbers_vec)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 3
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;A vector reading: &lt;code&gt;TRUE&lt;/code&gt;, &lt;code&gt;FALSE&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;Logic_vec &amp;lt;- c(TRUE, FALSE)
+Logic_vec
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1]  TRUE FALSE
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;length(Logic_vec)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 2
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;A vector of the elements of the first three vectors&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;Big_vec &amp;lt;- c(Letters_vec, Numbers_vec, Logic_vec)
+Big_vec
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] &amp;quot;A&amp;quot;     &amp;quot;B&amp;quot;     &amp;quot;C&amp;quot;     &amp;quot;1&amp;quot;     &amp;quot;2&amp;quot;     &amp;quot;3&amp;quot;     &amp;quot;TRUE&amp;quot;  &amp;quot;FALSE&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;length(Big_vec)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 8
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;A vector reading as a sequence of full numbers from 1 to 20&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;Seq_vec &amp;lt;- c(1:20)
+Seq_vec
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##  [1]  1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19 20
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;length(Seq_vec)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 20
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;factor&#34;&gt;Factor&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;A factor reading: &amp;ldquo;A&amp;rdquo;, &amp;ldquo;B&amp;rdquo;, &amp;ldquo;C&amp;rdquo;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;Letters_fac &amp;lt;- factor(x = c(&amp;quot;A&amp;quot;, &amp;quot;B&amp;quot;, &amp;quot;C&amp;quot;))
+Letters_fac
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] A B C
+## Levels: A B C
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;length(Letters_fac)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 3
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;A factor reading: 1, 2, 3&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;Numbers_fac &amp;lt;- factor(x = c(1, 2, 3))
+Numbers_fac
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 1 2 3
+## Levels: 1 2 3
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;length(Numbers_fac)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 3
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;A factor reading: 1, 2, 3 but only levels 1 and 2 are allowed&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;Constrained_fac &amp;lt;- factor(x = c(1, 2, 3), levels = c(1, 2))
+Constrained_fac
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 1    2    &amp;lt;NA&amp;gt;
+## Levels: 1 2
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;length(Constrained_fac)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 3
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;A factor reading: 1, 2, 3 levels 1 - 4 are allowed&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;Expanded_fac &amp;lt;- factor(x = c(1, 2, 3), levels = c(1, 2, 3, 4))
+Expanded_fac
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 1 2 3
+## Levels: 1 2 3 4
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;length(Expanded_fac)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 3
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;matrix&#34;&gt;Matrix&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;The first two vectors we established in distinct columns of a matrix&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;Combine_mat &amp;lt;- matrix(data = c(Numbers_vec, Letters_vec), ncol = 2)
+Combine_mat
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##      [,1] [,2]
+## [1,] &amp;quot;1&amp;quot;  &amp;quot;A&amp;quot; 
+## [2,] &amp;quot;2&amp;quot;  &amp;quot;B&amp;quot; 
+## [3,] &amp;quot;3&amp;quot;  &amp;quot;C&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;dim(Combine_mat)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 3 2
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;The first two vectors we established in distinct rows of a matrix&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;Pivot_mat &amp;lt;- matrix(data = c(Numbers_vec, Letters_vec), nrow = 2, byrow = TRUE)
+Pivot_mat
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##      [,1] [,2] [,3]
+## [1,] &amp;quot;1&amp;quot;  &amp;quot;2&amp;quot;  &amp;quot;3&amp;quot; 
+## [2,] &amp;quot;A&amp;quot;  &amp;quot;B&amp;quot;  &amp;quot;C&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;dim(Pivot_mat)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 2 3
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;The above matrix with meaningful names&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;Names_mat &amp;lt;- Pivot_mat
+dimnames(Names_mat) &amp;lt;- list(c(&amp;quot;Numbers&amp;quot;, &amp;quot;Letters&amp;quot;))
+Names_mat
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##         [,1] [,2] [,3]
+## Numbers &amp;quot;1&amp;quot;  &amp;quot;2&amp;quot;  &amp;quot;3&amp;quot; 
+## Letters &amp;quot;A&amp;quot;  &amp;quot;B&amp;quot;  &amp;quot;C&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;dim(Names_mat)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 2 3
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;data-frame&#34;&gt;Data Frame&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;The first matrix we established as a data frame&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;Combine_df &amp;lt;- data.frame(Combine_mat)
+Combine_df
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##   X1 X2
+## 1  1  A
+## 2  2  B
+## 3  3  C
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;dim(Combine_df)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 3 2
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;The previous data frame with meaningful names&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;Names_df &amp;lt;- Combine_df
+colnames(Names_df) &amp;lt;- c(&amp;quot;Numbers&amp;quot;, &amp;quot;Letters&amp;quot;)
+Names_df
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##   Numbers Letters
+## 1       1       A
+## 2       2       B
+## 3       3       C
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;dim(Names_df)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 3 2
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;list&#34;&gt;List&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;The first two vectors we created&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;Vectors_ls &amp;lt;- list(Numbers_vec, Letters_vec)
+Vectors_ls
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [[1]]
+## [1] 1 2 3
+## 
+## [[2]]
+## [1] &amp;quot;A&amp;quot; &amp;quot;B&amp;quot; &amp;quot;C&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;length(Vectors_ls)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 2
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;statements-and-loops&#34;&gt;Statements and Loops&lt;/h2&gt;
+&lt;h3 id=&#34;statements&#34;&gt;Statements&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;Numbers_vec&lt;/code&gt; contains more elements than &lt;code&gt;Letters_fac&lt;/code&gt;?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;length(Numbers_vec) &amp;gt; length(Letters_fac)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] FALSE
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;The first column of &lt;code&gt;Combine_df&lt;/code&gt; is shorter than &lt;code&gt;Vectors_ls&lt;/code&gt;?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;length(Combine_df[, 1]) &amp;lt; length(Vectors_ls)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] FALSE
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;The elements of &lt;code&gt;Letters_vec&lt;/code&gt; are the same as the elements of &lt;code&gt;Letters_fac&lt;/code&gt;?&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;Letters_vec == Letters_fac
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] TRUE TRUE TRUE
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;loops&#34;&gt;Loops&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Print each element of &lt;code&gt;Vectors_ls&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;for (i in 1:length(Vectors_ls)) {
+    print(Vectors_ls[[i]])
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 1 2 3
+## [1] &amp;quot;A&amp;quot; &amp;quot;B&amp;quot; &amp;quot;C&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;Print each element of &lt;code&gt;Numbers_vec&lt;/code&gt; + 1&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;Numbers_veca &amp;lt;- Numbers_vec + 1
+for (i in 1:length(Numbers_veca)) {
+    print(Numbers_veca[i])
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 2
+## [1] 3
+## [1] 4
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;Subtract 1 from each element of the first column of &lt;code&gt;Combine_mat&lt;/code&gt; and print each element separately&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;Mat_column &amp;lt;- Combine_mat[, 1]  # extract data
+Mat_column &amp;lt;- as.numeric(Mat_column)  # convert to numeric
+Mat_column &amp;lt;- Mat_column - 1  # substract 1
+for (i in 1:length(Mat_column)) {
+    print(Mat_column[i])
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0
+## [1] 1
+## [1] 2
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;useful-commands&#34;&gt;Useful Commands&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Read out your current working directory (not showing you the result as it is different on every machine, it should start like this &amp;ldquo;C:/Users/&amp;hellip;.&amp;quot;)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;getwd()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;Inspect the &lt;code&gt;Vectors_ls&lt;/code&gt; object using the &lt;code&gt;View()&lt;/code&gt; function (again, I am not showing you the result as this only works directly in &lt;code&gt;R&lt;/code&gt; or Rstudio)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;View(Vectors_ls)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;Inspect the &lt;code&gt;Combine_df&lt;/code&gt; object using the &lt;code&gt;View()&lt;/code&gt; function (again, I am not showing you the result as this only works directly in &lt;code&gt;R&lt;/code&gt; or Rstudio)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;View(Combine_df)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;Get the help documentation for the &lt;code&gt;as.matrix()&lt;/code&gt; function (again, I am not showing you the result as this only works directly in &lt;code&gt;R&lt;/code&gt; or Rstudio)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;`?`(as.matrix)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;Install and load the &lt;code&gt;dplyr&lt;/code&gt; package&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;install.packages(&amp;quot;dplyr&amp;quot;)
+library(dplyr)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;Remove the &lt;code&gt;Logic_vec&lt;/code&gt; object from your working environment&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;rm(Logic_vec)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;ul&gt;
+&lt;li&gt;Clear your entire working environment&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;ls()  # this command shows you all the object in the environment
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##  [1] &amp;quot;Big_vec&amp;quot;         &amp;quot;Combine_df&amp;quot;      &amp;quot;Combine_mat&amp;quot;     &amp;quot;Constrained_fac&amp;quot;
+##  [5] &amp;quot;Expanded_fac&amp;quot;    &amp;quot;i&amp;quot;               &amp;quot;Letters_fac&amp;quot;     &amp;quot;Letters_vec&amp;quot;    
+##  [9] &amp;quot;Mat_column&amp;quot;      &amp;quot;Names_df&amp;quot;        &amp;quot;Names_mat&amp;quot;       &amp;quot;Numbers_fac&amp;quot;    
+## [13] &amp;quot;Numbers_vec&amp;quot;     &amp;quot;Numbers_veca&amp;quot;    &amp;quot;Pivot_mat&amp;quot;       &amp;quot;Seq_vec&amp;quot;        
+## [17] &amp;quot;Vectors_ls&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;rm(list = ls())
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Descriptive Statistics</title>
+      <link>https://www.erikkusch.com/courses/biostat101/descriptive-statistics/</link>
+      <pubDate>Wed, 10 Jun 2020 00:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/courses/biostat101/descriptive-statistics/</guid>
+      <description>&lt;h2 id=&#34;theory&#34;&gt;Theory&lt;/h2&gt;
+&lt;p&gt;These are the solutions to the exercises contained within the handout to Descriptive Statistics which walks you through the basics of descriptive statistics and its parameters. The analyses presented here are using data from the &lt;code&gt;StarWars&lt;/code&gt; data set supplied through the &lt;code&gt;dplyr&lt;/code&gt; package that have been saved as a .csv file. Keep in mind that there is probably a myriad of other ways to reach the same conclusions as presented in these solutions. I have prepared some slides for this session:
+&lt;a href=&#34;https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/biostat101/04---Descriptive-Statistics_Handout.html&#34; target=&#34;_blank&#34;&gt;&lt;img src=&#34;https://www.erikkusch.com/courses/biostat101/04---BioStat101_featured.png&#34; width=&#34;900&#34; margin-top = &#34;0&#34;/&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&#34;data&#34;&gt;Data&lt;/h2&gt;
+&lt;p&gt;Find the data for this exercise &lt;a href=&#34;https://github.com/ErikKusch/Homepage/raw/master/content/courses/biostat101/Data/DescriptiveData.csv&#34; target=&#34;_blank&#34;&gt; here&lt;/a&gt;. Do not worry about downloading it for now.&lt;/p&gt;
+&lt;h2 id=&#34;packages&#34;&gt;Packages&lt;/h2&gt;
+&lt;p&gt;As you will remember from our lecture slides, the calculation of the mode in &lt;code&gt;R&lt;/code&gt; can either be achieved through some intense coding or simply by using the &lt;code&gt;mlv(..., method=&amp;quot;mfv&amp;quot;)&lt;/code&gt; function contained within the &lt;code&gt;modeest&lt;/code&gt; package (unfortunately, this package is out of date and can sometimes be challenging to install).&lt;/p&gt;
+&lt;p&gt;Conclusively, it is now time for you to get familiar with how packages work in &lt;code&gt;R&lt;/code&gt;. Packages are the way by which &lt;code&gt;R&lt;/code&gt; is supplied with user-created and moderator-mediated functionality that exceeds the base applicability of &lt;code&gt;R&lt;/code&gt;. Many things you will want to accomplish in more advanced statistics is impossible without such packages and even basic tasks such as data visualisation (dealt with in our next seminar) are reliant on &lt;code&gt;R&lt;/code&gt; packages.&lt;/p&gt;
+&lt;p&gt;If you want to get a package and its functions into &lt;code&gt;R&lt;/code&gt; there are two ways we will discuss in the following. In general, it pays to load all packages at the beginning of a coding document before any actual analyses happen (in the preamble) so you get a good overview of what the program is calling upon.&lt;/p&gt;
+&lt;h3 id=&#34;basic-preamble&#34;&gt;Basic Preamble&lt;/h3&gt;
+&lt;p&gt;This is the most basic version of getting packages into &lt;code&gt;R&lt;/code&gt; and is widely practised and taught. Unsurprisingly, I am not a big fan of it.&lt;/p&gt;
+&lt;p&gt;First, you use function &lt;code&gt;install.packages()&lt;/code&gt; to download the desired package off dedicated servers (usually CRAN-mirrors) to your machine where it is then unpacked into a library (a folder that&amp;rsquo;s located in your documents section by default). Secondly, you need to invoke the &lt;code&gt;library()&lt;/code&gt; function to load the &lt;code&gt;R&lt;/code&gt; package you need into your active &lt;code&gt;R&lt;/code&gt; session. In our case of the package &lt;code&gt;modeest&lt;/code&gt; it would look something like this:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;install.packages(&amp;quot;modeest&amp;quot;)
+library(modeest)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The reason I am not overly fond of this procedure is that it is clunky, can break easily through spelling mistakes and starts cluttering your preamble super fast if the analyses you are wanting to perform require excessive amounts of packages. Additionally, when you are some place with a bad internet connection you might not want to re-download packages that are already contained on your hard drive.&lt;/p&gt;
+&lt;h3 id=&#34;advanced-preamble&#34;&gt;Advanced Preamble&lt;/h3&gt;
+&lt;p&gt;There is a myriad of different preamble styles (just as there are tons of different, personalised coding styles). I am left with presenting my preamble of choice here but I do not claim that this is the most sophisticated one out there.&lt;/p&gt;
+&lt;p&gt;The way this preamble works is that it is structured around a user-defined function (something we will touch on later in our seminar series) which first checks whether a package is already downloaded and then installs (if necessary) and/or loads it into &lt;code&gt;R&lt;/code&gt;. This function is called &lt;code&gt;install.load.package()&lt;/code&gt; and you can see its specification down below (don&amp;rsquo;t worry if it doesn&amp;rsquo;t make sense to you yet - it is not supposed to at this point). Unfortunately, it can only ever be applied to one package at a time and so we need a workaround to make it work on multiple packages at once. This can be achieved by establishing a vector of all desired package names (&lt;code&gt;package_vec&lt;/code&gt;) and then applying (&lt;code&gt;sapply()&lt;/code&gt;) the &lt;code&gt;install.load.package()&lt;/code&gt; function to every item of the package name vector iteratively as follows:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# function to load packages and install them if they haven&#39;t been installed yet
+install.load.package &amp;lt;- function(x) {
+    if (!require(x, character.only = TRUE))
+        install.packages(x)
+    require(x, character.only = TRUE)
+}
+# packages to load/install if necessary
+package_vec &amp;lt;- c(&amp;quot;modeest&amp;quot;)
+# applying function install.load.package to all packages specified in
+# package_vec
+sapply(package_vec, install.load.package)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Loading required package: modeest
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## modeest 
+##    TRUE
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Why do I prefer this? Firstly, it is way shorter than the basic method when dealing with many packages (which you will get into fast, I promise), reduces the chance for typos by 50% and does not override already installed packages hence speeding up your processing time.&lt;/p&gt;
+&lt;h2 id=&#34;loading-the-excel-data-into-r&#34;&gt;Loading the Excel data into &lt;code&gt;R&lt;/code&gt;&lt;/h2&gt;
+&lt;p&gt;Our data is located in the &lt;code&gt;Data&lt;/code&gt; folder and is called &lt;code&gt;DescriptiveData.csv&lt;/code&gt;. Since it is a .csv file, we can simply use the &lt;code&gt;R&lt;/code&gt; in-built function &lt;code&gt;read.csv()&lt;/code&gt; to load the data by combining the former two identifiers into one long string with a backslash separating the two (the backslash indicates a step down in the folder hierarchy). Given this argument, &lt;code&gt;read.csv()&lt;/code&gt; will produce an object of type &lt;code&gt;data.frame&lt;/code&gt; in &lt;code&gt;R&lt;/code&gt; which we want to keep in our environment and hence need to assign a name to. In our case, let that name be &lt;code&gt;Data_df&lt;/code&gt; (I recommend using endings to your data object names that indicate their type for easier coding without constant type checking):&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# Data_df &amp;lt;- read.csv(&#39;Data/DescriptiveData.csv&#39;) # load data file from Data
+# folder if you downloaded the data as a .csv alternatively, read the csv
+# directly from the url
+Data_df &amp;lt;- read.csv(&amp;quot;https://github.com/ErikKusch/Homepage/raw/master/content/courses/biostat101/Data/DescriptiveData.csv&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;whats-contained-within-our-data&#34;&gt;What&amp;rsquo;s contained within our data?&lt;/h2&gt;
+&lt;p&gt;Now that our data set is finally loaded into &lt;code&gt;R&lt;/code&gt;, we can finally get to trying to make sense of it. Usually, this shouldn&amp;rsquo;t ever be something one has to do in &lt;code&gt;R&lt;/code&gt; but should be manageable through a project-/data-specific README file (we will cover this in our seminar on hypotheses testing and project planning) but for now we are stuck with pure exploration of our data set. Get your goggles on and let&amp;rsquo;s dive in!&lt;/p&gt;
+&lt;p&gt;Firstly, it always pays to asses the basic attributes of any data object (remember the Introduction to &lt;code&gt;R&lt;/code&gt; seminar):&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;em&gt;Name&lt;/em&gt; - we know the name (it is &lt;code&gt;Data_df&lt;/code&gt;) since we named it that&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Type&lt;/em&gt; - we already know that it is a &lt;code&gt;data.frame&lt;/code&gt; because we created it using the &lt;code&gt;read.csv&lt;/code&gt; function&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Mode&lt;/em&gt; - this is an interesting one as it means having to subset our data frame&lt;/li&gt;
+&lt;li&gt;&lt;em&gt;Dimensions&lt;/em&gt; - a crucial information about how many observations and variables are contained within our data set&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;dimensions&#34;&gt;Dimensions&lt;/h3&gt;
+&lt;p&gt;Let&amp;rsquo;s start with the &lt;em&gt;dimensions&lt;/em&gt; because these will tell us how many &lt;em&gt;modes&lt;/em&gt; (these are object attribute modes and not descriptive parameter modes) to asses:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;dim(Data_df)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 87  8
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Using the &lt;code&gt;dim()&lt;/code&gt; function, we arrive at the conclusion that our &lt;code&gt;Data_df&lt;/code&gt; contains 87 rows and 8 columns. Since data frames are usually ordered as observations $\times$ variables, we can conclude that we have 87 observations and 8 variables at our hands.&lt;br&gt;
+You can arrive at the same point by using the function &lt;code&gt;View()&lt;/code&gt; in &lt;code&gt;R&lt;/code&gt;. I&amp;rsquo;m not showing this here because it does not translate well to paper and would make whoever chooses to print this waste paper.&lt;/p&gt;
+&lt;h3 id=&#34;modes&#34;&gt;Modes&lt;/h3&gt;
+&lt;p&gt;Now it&amp;rsquo;s time to get a hang of the &lt;em&gt;modes&lt;/em&gt; of the variable records within our data set. To do so, we have two choices, we can either subset the data frame by columns and apply the &lt;code&gt;class()&lt;/code&gt; function to each column subset or simply apply the &lt;code&gt;str()&lt;/code&gt; function to the data frame object. The reason &lt;code&gt;str()&lt;/code&gt; may be favourable in this case is due to the fact that &lt;code&gt;str()&lt;/code&gt; automatically breaks down the structure of &lt;code&gt;R&lt;/code&gt;-internal objects and hence saves us the sub-setting:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;str(Data_df)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## &#39;data.frame&#39;:	87 obs. of  8 variables:
+##  $ name      : chr  &amp;quot;Luke Skywalker&amp;quot; &amp;quot;C-3PO&amp;quot; &amp;quot;R2-D2&amp;quot; &amp;quot;Darth Vader&amp;quot; ...
+##  $ height    : int  172 167 96 202 150 178 165 97 183 182 ...
+##  $ mass      : num  77 75 32 136 49 120 75 32 84 77 ...
+##  $ hair_color: chr  &amp;quot;blond&amp;quot; &amp;quot;&amp;quot; &amp;quot;&amp;quot; &amp;quot;none&amp;quot; ...
+##  $ skin_color: chr  &amp;quot;fair&amp;quot; &amp;quot;gold&amp;quot; &amp;quot;white, blue&amp;quot; &amp;quot;white&amp;quot; ...
+##  $ eye_color : chr  &amp;quot;blue&amp;quot; &amp;quot;yellow&amp;quot; &amp;quot;red&amp;quot; &amp;quot;yellow&amp;quot; ...
+##  $ birth_year: num  19 112 33 41.9 19 52 47 NA 24 57 ...
+##  $ gender    : chr  &amp;quot;male&amp;quot; &amp;quot;&amp;quot; &amp;quot;&amp;quot; &amp;quot;male&amp;quot; ...
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;As it turns out, our data frame knows the 8 variables of name, height, mass, hair_color, skin_color, eye_color, birth_year, gender which range from &lt;code&gt;integer&lt;/code&gt; to &lt;code&gt;numeric&lt;/code&gt; and &lt;code&gt;factor&lt;/code&gt; modes.&lt;/p&gt;
+&lt;h3 id=&#34;data-content&#34;&gt;Data Content&lt;/h3&gt;
+&lt;p&gt;So what does our data actually tell us? Answering this question usually comes down to some analyses but for now we are only really interested in what kind of information our data frame is storing.&lt;/p&gt;
+&lt;p&gt;Again, this would be easiest to asses using a README file or the &lt;code&gt;View()&lt;/code&gt; function in &lt;code&gt;R&lt;/code&gt;. However, for the sake of brevity we can make due with the following to commands which present the user with the first and last five rows of any respective data frame:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;head(Data_df)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##             name height mass  hair_color  skin_color eye_color birth_year
+## 1 Luke Skywalker    172   77       blond        fair      blue       19.0
+## 2          C-3PO    167   75                    gold    yellow      112.0
+## 3          R2-D2     96   32             white, blue       red       33.0
+## 4    Darth Vader    202  136        none       white    yellow       41.9
+## 5    Leia Organa    150   49       brown       light     brown       19.0
+## 6      Owen Lars    178  120 brown, grey       light      blue       52.0
+##   gender
+## 1   male
+## 2       
+## 3       
+## 4   male
+## 5 female
+## 6   male
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;tail(Data_df)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##                name height mass hair_color skin_color eye_color birth_year
+## 82             Finn     NA   NA      black       dark      dark         NA
+## 83              Rey     NA   NA      brown      light     hazel         NA
+## 84      Poe Dameron     NA   NA      brown      light     brown         NA
+## 85              BB8     NA   NA       none       none     black         NA
+## 86   Captain Phasma     NA   NA    unknown    unknown   unknown         NA
+## 87 Padm\xe9 Amidala    165   45      brown      light     brown         46
+##    gender
+## 82   male
+## 83 female
+## 84   male
+## 85   none
+## 86 female
+## 87 female
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The avid reader will surely have picked up on the fact that all the records in the &lt;code&gt;name&lt;/code&gt; column of &lt;code&gt;Data_df&lt;/code&gt; belong to characters from the Star Wars universe. In fact, this data set is a modified version of the &lt;code&gt;StarWars&lt;/code&gt; data set supplied by the &lt;code&gt;dplyr&lt;/code&gt; package and contains information of many of the important cast members of the Star Wars movie universe.&lt;/p&gt;
+&lt;h2 id=&#34;parameters-of-descriptive-statistics&#34;&gt;Parameters of descriptive statistics&lt;/h2&gt;
+&lt;h3 id=&#34;names&#34;&gt;Names&lt;/h3&gt;
+&lt;p&gt;As it turns out (and should&amp;rsquo;ve been obvious from the onset if we&amp;rsquo;re honest), every major character in the cinematic Star Wars Universe has a unique name to themselves. Conclusively, the calculation of any parameters of descriptive statistics makes no sense with the names of our characters for the two following reasons:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;The name variable is of mode character/factor and only allows for the calculation of the mode&lt;/li&gt;
+&lt;li&gt;Since every name only appears once, there is no mode&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;As long as the calculation of descriptive parameters of the &lt;code&gt;name&lt;/code&gt; variable of our data set is concerned, Admiral Ackbar said it best: &amp;ldquo;It&amp;rsquo;s a trap&amp;rdquo;.&lt;/p&gt;
+&lt;h3 id=&#34;height&#34;&gt;Height&lt;/h3&gt;
+&lt;p&gt;Let&amp;rsquo;s get started on figuring out some parameters of descriptive statistics for the &lt;code&gt;height&lt;/code&gt; variable of our Star Wars characters.&lt;/p&gt;
+&lt;h4 id=&#34;subsetting&#34;&gt;Subsetting&lt;/h4&gt;
+&lt;p&gt;First, we need to extract the data in question from our big data frame object. This can be achieved by indexing through the column name as follows:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;Height &amp;lt;- Data_df$height
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;location-parameters&#34;&gt;Location Parameters&lt;/h4&gt;
+&lt;p&gt;Now, with our &lt;code&gt;Height&lt;/code&gt; vector being the numeric height records of the Star Wars characters in our data set, we are primed to calculate location parameters as follows:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;mean &amp;lt;- mean(Height, na.rm = TRUE)
+median &amp;lt;- median(Height, na.rm = TRUE)
+mode &amp;lt;- mlv(na.omit(Height), method = &amp;quot;mfv&amp;quot;)
+min &amp;lt;- min(Height, na.rm = TRUE)
+max &amp;lt;- max(Height, na.rm = TRUE)
+range &amp;lt;- max - min
+
+# Combining all location parameters into one vector for easier viewing
+LocPars_vec &amp;lt;- c(mean, median, mode, min, max, range)
+names(LocPars_vec) &amp;lt;- c(&amp;quot;mean&amp;quot;, &amp;quot;median&amp;quot;, &amp;quot;mode&amp;quot;, &amp;quot;minimum&amp;quot;, &amp;quot;maximum&amp;quot;, &amp;quot;range&amp;quot;)
+LocPars_vec
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##    mean  median    mode minimum maximum   range 
+## 174.358 180.000 183.000  66.000 264.000 198.000
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;As you can clearly see, there is a big range in the heights of our respective Star Wars characters with mean and median being fairly disjunct due to the outliers in height on especially either end.&lt;/p&gt;
+&lt;h4 id=&#34;distribution-parameters&#34;&gt;Distribution Parameters&lt;/h4&gt;
+&lt;p&gt;Now that we are aware of the location parameters of the Star Wars height records, we can move on to the distribution parameters/parameters of spread. Those can be calculated in &lt;code&gt;R&lt;/code&gt; as follows:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;var &amp;lt;- var(Height, na.rm = TRUE)
+sd &amp;lt;- sd(Height, na.rm = TRUE)
+quantiles &amp;lt;- quantile(Height, na.rm = TRUE)
+
+# Combining all location parameters into one vector for easier viewing
+DisPars_vec &amp;lt;- c(var, sd, quantiles)
+names(DisPars_vec) &amp;lt;- c(&amp;quot;var&amp;quot;, &amp;quot;sd&amp;quot;, &amp;quot;0%&amp;quot;, &amp;quot;25%&amp;quot;, &amp;quot;50%&amp;quot;, &amp;quot;75%&amp;quot;, &amp;quot;100%&amp;quot;)
+DisPars_vec
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##        var         sd         0%        25%        50%        75%       100% 
+## 1208.98272   34.77043   66.00000  167.00000  180.00000  191.00000  264.00000
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Notice how some of the quantiles (actually quartiles in this case) link up with some of the parameters of central tendency.&lt;/p&gt;
+&lt;h4 id=&#34;summary&#34;&gt;Summary&lt;/h4&gt;
+&lt;p&gt;Just to round this off, have a look at what the &lt;code&gt;summary()&lt;/code&gt; function in &lt;code&gt;R&lt;/code&gt; supplies you with:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;summary &amp;lt;- summary(na.omit(Height))
+summary
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##    66.0   167.0   180.0   174.4   191.0   264.0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This is a nice assortment of location and dispersion parameters.&lt;/p&gt;
+&lt;h3 id=&#34;mass&#34;&gt;Mass&lt;/h3&gt;
+&lt;p&gt;Now let&amp;rsquo;s focus on the weight of our Star Wars characters.&lt;/p&gt;
+&lt;h4 id=&#34;subsetting-1&#34;&gt;Subsetting&lt;/h4&gt;
+&lt;p&gt;Again, we need to extract our data from the data frame. For the sake of brevity, I will refrain from showing you the rest of the analysis and only present its results to save some space.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;Mass &amp;lt;- Data_df$mass
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;location-parameters-1&#34;&gt;Location Parameters&lt;/h4&gt;
+&lt;pre&gt;&lt;code&gt;##       mean     median       mode    minimum    maximum      range 
+##   97.31186   79.00000   80.00000   15.00000 1358.00000 1343.00000
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;As you can see, there is a huge range in weight records of Star Wars characters and especially the outlier on the upper end (1358kg) push the mean towards the upper end of the weight range and away from the median. We&amp;rsquo;ve got Jabba Desilijic Tiure to thank for that.&lt;/p&gt;
+&lt;h4 id=&#34;distribution-parameters-1&#34;&gt;Distribution Parameters&lt;/h4&gt;
+&lt;pre&gt;&lt;code&gt;##        var         sd         0%        25%        50%        75%       100% 
+## 28715.7300   169.4572    15.0000    55.6000    79.0000    84.5000  1358.0000
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Quite obviously, the wide range of weight records also prompts a large variance and standard deviation.&lt;/p&gt;
+&lt;h3 id=&#34;hair-color&#34;&gt;Hair Color&lt;/h3&gt;
+&lt;p&gt;Hair colour in our data set is saved in column 4 of our data set and so when sub-setting the data frame to obtain information about a characters hair colour, instead of calling on &lt;code&gt;Data_df$hair_color&lt;/code&gt; we can also do so as follows:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;HCs &amp;lt;- Data_df[, 4]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Of course, hair colour is not a &lt;code&gt;numeric&lt;/code&gt; variable and much better represent by being of mode &lt;code&gt;factor&lt;/code&gt;. Therefore, we are unable to obtain most parameters of descriptive statistics but we can show a frequency count as follows which allows for the calculation of the mode:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;table(HCs)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## HCs
+##                      auburn  auburn, grey auburn, white         black 
+##             5             1             1             1            13 
+##         blond        blonde         brown   brown, grey          grey 
+##             3             1            18             1             1 
+##          none       unknown         white 
+##            37             1             4
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;eye-colour&#34;&gt;Eye Colour&lt;/h3&gt;
+&lt;p&gt;Eye colour is another &lt;code&gt;factor&lt;/code&gt; mode variable:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;ECs &amp;lt;- Data_df$eye_color
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We can only calculate the mode by looking for the maximum in our &lt;code&gt;table()&lt;/code&gt; output:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;table(ECs)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## ECs
+##         black          blue     blue-gray         brown          dark 
+##            10            19             1            21             1 
+##          gold green, yellow         hazel        orange          pink 
+##             1             1             3             8             1 
+##           red     red, blue       unknown         white        yellow 
+##             5             1             3             1            11
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;birth-year&#34;&gt;Birth Year&lt;/h3&gt;
+&lt;h4 id=&#34;subsetting-2&#34;&gt;Subsetting&lt;/h4&gt;
+&lt;p&gt;As another &lt;code&gt;numeric&lt;/code&gt; variable, birth year allows for the calculation of the full range of parameters of descriptive statistics:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;BY &amp;lt;- Data_df$birth_year
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Keep in mind that StarWars operates on a different time reference scale than we do.&lt;/p&gt;
+&lt;h4 id=&#34;location-parameters-2&#34;&gt;Location Parameters&lt;/h4&gt;
+&lt;pre&gt;&lt;code&gt;##      mean    median      mode   minimum   maximum     range 
+##  87.56512  52.00000  19.00000   8.00000 896.00000 888.00000
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Again, there is a big disparity here between mean and median which stems from extreme outliers on both ends of the age spectrum (Yoda and Wicket Systri Warrick, respectively).&lt;/p&gt;
+&lt;h4 id=&#34;distribution-parameters-2&#34;&gt;Distribution Parameters&lt;/h4&gt;
+&lt;pre&gt;&lt;code&gt;##        var         sd         0%        25%        50%        75%       100% 
+## 23929.4414   154.6914     8.0000    35.0000    52.0000    72.0000   896.0000
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Unsurprisingly, there is a big variance and standard deviation for the observed birth year/age records.&lt;/p&gt;
+&lt;h3 id=&#34;gender&#34;&gt;Gender&lt;/h3&gt;
+&lt;p&gt;Gender is another &lt;code&gt;factor&lt;/code&gt; mode variable (obviously):&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;Gender &amp;lt;- Data_df$gender
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We can, again, only judge the mode of our data from the output of the &lt;code&gt;table()&lt;/code&gt; function:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;table(Gender)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Gender
+##                      female hermaphrodite          male          none 
+##             3            19             1            62             2
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Rethinking | Erik Kusch</title>
+    <link>https://www.erikkusch.com/tag/rethinking/</link>
+      <atom:link href="https://www.erikkusch.com/tag/rethinking/index.xml" rel="self" type="application/rss+xml" />
+    <description>Rethinking</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-gb</language><copyright>© 2024</copyright><lastBuildDate>Fri, 01 Jan 2021 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg</url>
+      <title>Rethinking</title>
+      <link>https://www.erikkusch.com/tag/rethinking/</link>
+    </image>
+    
+  </channel>
+</rss>

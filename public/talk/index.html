@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en-us" >
+<!DOCTYPE html><html lang="en-gb" >
 
 <head>
 
@@ -20,17 +20,17 @@
   
   
 
-  <meta name="author" content="Nelson Bighetti">
+  <meta name="author" content="Erik Kusch">
 
   
   
   
     
   
-  <meta name="description" content="Professor of Artificial Intelligence">
+  <meta name="description" content="Mountaineer and macroecologist with a predilection for open science and biostatistics.">
 
   
-  <link rel="alternate" hreflang="en-us" href="/talk/">
+  <link rel="alternate" hreflang="en-gb" href="https://www.erikkusch.com/talk/">
 
   
 
@@ -38,7 +38,7 @@
   
   
   
-  <meta name="theme-color" content="#2962ff">
+  <meta name="theme-color" content="#858383">
   
 
   
@@ -194,7 +194,7 @@
     
       
       
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700%7CRoboto:400,400italic,700%7CRoboto+Mono&display=swap">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cutive+Mono%7CLora:400,700%7CRoboto:400,700&display=swap">
     
   
 
@@ -209,6 +209,44 @@
 
 
 
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-186216138-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+
+  function gtag() {
+      dataLayer.push(arguments);
+  }
+
+  function trackOutboundLink(url, target) {
+    gtag('event', 'click', {
+         'event_category': 'outbound',
+         'event_label': url,
+         'transport_type': 'beacon',
+         'event_callback': function () {
+           if (target !== '_blank') {
+             document.location = url;
+           }
+         }
+    });
+    console.debug("Outbound link clicked: " + url);
+  }
+
+  function onClickCallback(event) {
+    if ((event.target.tagName !== 'A') || (event.target.host === window.location.host)) {
+      return;
+    }
+    trackOutboundLink(event.target, event.target.getAttribute('target'));  
+  }
+
+  gtag('js', new Date());
+  gtag('config', 'UA-186216138-1', {});
+
+  
+  document.addEventListener('click', onClickCallback, false);
+</script>
+
+
   
 
 
@@ -216,14 +254,14 @@
   
 
   
-  <link rel="alternate" href="/talk/index.xml" type="application/rss+xml" title="Academic">
+  <link rel="alternate" href="/talk/index.xml" type="application/rss+xml" title="Erik Kusch">
   
 
   <link rel="manifest" href="/index.webmanifest">
-  <link rel="icon" type="image/png" href="/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_32x32_fill_lanczos_center_2.png">
-  <link rel="apple-touch-icon" type="image/png" href="/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_192x192_fill_lanczos_center_2.png">
+  <link rel="icon" type="image/png" href="/images/icon_hu7658c99d512131214e4d6c003a3f85f7_112593_32x32_fill_lanczos_center_2.png">
+  <link rel="apple-touch-icon" type="image/png" href="/images/icon_hu7658c99d512131214e4d6c003a3f85f7_112593_192x192_fill_lanczos_center_2.png">
 
-  <link rel="canonical" href="/talk/">
+  <link rel="canonical" href="https://www.erikkusch.com/talk/">
 
   
   
@@ -233,35 +271,37 @@
   
   
     
-    
   
   
-  <meta property="twitter:card" content="summary">
+  <meta property="twitter:card" content="summary_large_image">
   
-  <meta property="og:site_name" content="Academic">
-  <meta property="og:url" content="/talk/">
-  <meta property="og:title" content="Recent &amp; Upcoming Talks | Academic">
-  <meta property="og:description" content="Professor of Artificial Intelligence"><meta property="og:image" content="/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_2.png">
-  <meta property="twitter:image" content="/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_2.png"><meta property="og:locale" content="en-us">
+  <meta property="twitter:site" content="@ErikKusch">
+  <meta property="twitter:creator" content="@ErikKusch">
   
-    <meta property="og:updated_time" content="2030-06-01T13:00:00&#43;00:00">
+  <meta property="og:site_name" content="Erik Kusch">
+  <meta property="og:url" content="https://www.erikkusch.com/talk/">
+  <meta property="og:title" content="Recent &amp; Upcoming Talks | Erik Kusch">
+  <meta property="og:description" content="Mountaineer and macroecologist with a predilection for open science and biostatistics."><meta property="og:image" content="https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg">
+  <meta property="twitter:image" content="https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg"><meta property="og:locale" content="en-gb">
   
-
+    <meta property="og:updated_time" content="2023-08-17T14:00:00&#43;00:00">
   
-
-
-
-
-  
-
 
   
 
 
 
 
+  
 
-  <title>Recent &amp; Upcoming Talks | Academic</title>
+
+  
+
+
+
+
+
+  <title>Recent &amp; Upcoming Talks | Erik Kusch</title>
 
 </head>
 <body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" >
@@ -307,13 +347,15 @@
 
 
 
+  
+
 
 <nav class="navbar navbar-expand-lg navbar-light compensate-for-scrollbar" id="navbar-main">
   <div class="container">
 
     
     <div class="d-none d-lg-inline-flex">
-      <a class="navbar-brand" href="/">Academic</a>
+      <a class="navbar-brand" href="/"><img src="/images/logo_huab2266ff59bbac6a094b6da1268adcf9_208479_0x70_resize_lanczos_2.png" alt="Erik Kusch"></a>
     </div>
     
 
@@ -326,13 +368,13 @@
 
     
     <div class="navbar-brand-mobile-wrapper d-inline-flex d-lg-none">
-      <a class="navbar-brand" href="/">Academic</a>
+      <a class="navbar-brand" href="/"><img src="/images/logo_huab2266ff59bbac6a094b6da1268adcf9_208479_0x70_resize_lanczos_2.png" alt="Erik Kusch"></a>
     </div>
     
 
     
     
-    <div class="navbar-collapse main-menu-item collapse justify-content-start" id="navbar-content">
+    <div class="navbar-collapse main-menu-item collapse justify-content-center" id="navbar-content">
 
       
       <ul class="navbar-nav d-md-inline-flex">
@@ -343,54 +385,42 @@
         
         
         
-          
-        
 
         
         
         
         
         
-        
-          
-          
-          
-            
-          
-          
         
 
         <li class="nav-item">
-          <a class="nav-link " href="/#hero"><span>Demo</span></a>
+          <a class="nav-link  active" href="/"><span>Home</span></a>
         </li>
 
         
         
 
         
-
-        
-        
-        
-          
-        
-
-        
-        
-        
-        
-        
-        
-          
-          
-          
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"><span>Courses & Workshops</span><span class="caret"></span>
+          </a>
+          <div class="dropdown-menu">
             
-          
-          
-        
-
-        <li class="nav-item">
-          <a class="nav-link " href="/#posts"><span>Posts</span></a>
+              <a class="dropdown-item" href="/courses/krigr/"><span>KrigR - State-of-the-Art Climate Data within R</span></a>
+            
+              <a class="dropdown-item" href="/courses/gbif/"><span>Accessing and Referencing GBIF Data for Research</span></a>
+            
+              <a class="dropdown-item" href="/courses/rethinking/"><span>Statistical Rethinking - Introduction to Bayesian Statistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/bayes-nets/"><span>Bayesian Networks - Causality through Bayesian Approaches</span></a>
+            
+              <a class="dropdown-item" href="/courses/biostat101/"><span>Biostats 101 - An Introduction to Biostatistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/excursions-into-biostatistics/"><span>Biostats 301 - Excursions into Biostatistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/bftp-biome-detection/"><span>BFTP - First Steps in Macroecology in R</span></a>
+            
+          </div>
         </li>
 
         
@@ -468,9 +498,16 @@
         
         
         
+          
+          
+          
+            
+          
+          
+        
 
         <li class="nav-item">
-          <a class="nav-link " href="/courses/"><span>Courses</span></a>
+          <a class="nav-link " href="/#talks"><span>Talks</span></a>
         </li>
 
         
@@ -490,16 +527,33 @@
         
         
         
-          
-          
+
+        <li class="nav-item">
+          <a class="nav-link " href="/about"><span>Contact</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
           
             
           
-          
+        
+
+        
+        
+        
+        
+        
         
 
         <li class="nav-item">
-          <a class="nav-link " href="/#contact"><span>Contact</span></a>
+          <a class="nav-link " href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/media/CV_ErikKusch.html" target="_blank" rel="noopener"><span>CV</span></a>
         </li>
 
         
@@ -584,7 +638,7 @@
       
       <div class="row" id="talk_list">
         <div class="col-lg-2">
-          <h3>2030</h3>
+          <h3>2023</h3>
         </div>
         <div class="col-lg-10">
 
@@ -613,13 +667,13 @@
   <div class="media-body">
 
     <h3 class="article-title mb-0 mt-0">
-      <a href="/talk/example/" >Example Talk</a>
+      <a href="/talk/2023_08_tangledbank/" >Integrating Ecological Networks in Macroecological Research - Enhancing Projections of Biodiversity in the Anthropocene</a>
     </h3>
 
     
-    <a href="/talk/example/" class="summary-link">
+    <a href="/talk/2023_08_tangledbank/" class="summary-link">
       <div class="article-style">
-        An example talk using Academic&rsquo;s Markdown slides feature.
+        An introduction to my PhD work and ongoing research for colleagues at UiO.
       </div>
     </a>
     
@@ -629,15 +683,412 @@
       
       <div>
         <span>
-          Jun 1, 2030 1:00 PM &mdash; 3:00 PM
+          2023-08-17 14:00 &mdash; 15:15
         </span>
         
         <span class="middot-divider"></span>
-        <span>Source Themes HQ</span>
+        <span>Oslo, Norway</span>
         
       </div>
       
 
+      
+      <div>
+        
+
+  
+  <span ><a href="/author/erik-kusch/">Erik Kusch</a></span>
+      </div>
+      
+    </div>
+
+    
+    <div class="btn-links">
+      
+
+
+
+
+
+
+
+
+  
+    
+  
+
+
+
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/talks/STADIS%20Tangled%20Bank_WEB_KN.html" target="_blank" rel="noopener">
+  PDF
+</a>
+
+
+
+
+
+
+
+  
+  <a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="/project/phd-packages/">
+    Project
+  </a>
+  
+
+  
+  <a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="/project/krigr/">
+    Project
+  </a>
+  
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+    
+
+  </div>
+  <div class="ml-3">
+    
+    
+    
+    <a href="/talk/2023_08_tangledbank/" >
+      <img src="/talk/2023_08_tangledbank/featured_hu0d4c53d2e0f60b2e4a765cdd969b9d40_2600841_150x0_resize_q90_lanczos.jpg" alt="Integrating Ecological Networks in Macroecological Research - Enhancing Projections of Biodiversity in the Anthropocene">
+    </a>
+    
+  </div>
+</div>
+
+            
+          
+
+        </div>
+      </div>
+      
+      <div class="row" id="talk_list">
+        <div class="col-lg-2">
+          <h3>2022</h3>
+        </div>
+        <div class="col-lg-10">
+
+          
+            
+              
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+  
+
+
+<div class="media stream-item">
+  <div class="media-body">
+
+    <h3 class="article-title mb-0 mt-0">
+      <a href="/talk/2022_05_clim4ecol/" >KrigR — A tool for downloading and statistically downscaling climate reanalysis data</a>
+    </h3>
+
+    
+    <a href="/talk/2022_05_clim4ecol/" class="summary-link">
+      <div class="article-style">
+        Another comprehensive overview of the <code>KrigR</code> package.
+      </div>
+    </a>
+    
+
+    <div class="stream-meta article-metadata">
+
+      
+      <div>
+        <span>
+          2022-06-06 11:00
+        </span>
+        
+        <span class="middot-divider"></span>
+        <span>Conference</span>
+        
+      </div>
+      
+
+      
+      <div>
+        
+
+  
+  <span ><a href="/author/erik-kusch/">Erik Kusch</a></span>
+      </div>
+      
+    </div>
+
+    
+    <div class="btn-links">
+      
+
+
+
+
+
+
+
+
+  
+    
+  
+
+
+
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://github.com/ErikKusch/Homepage/raw/master/static/talks/2022_05_Clim4EcolPoster.pdf" target="_blank" rel="noopener">
+  PDF
+</a>
+
+
+
+
+
+
+
+  
+  <a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="/project/krigr/">
+    Project
+  </a>
+  
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+    
+
+  </div>
+  <div class="ml-3">
+    
+    
+    
+    <a href="/talk/2022_05_clim4ecol/" >
+      <img src="/talk/2022_05_clim4ecol/featured_hu66cd26d36df89850e5e6dce7de5740bd_499644_150x0_resize_q90_lanczos.jpg" alt="KrigR — A tool for downloading and statistically downscaling climate reanalysis data">
+    </a>
+    
+  </div>
+</div>
+
+            
+          
+            
+              
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+  
+
+
+<div class="media stream-item">
+  <div class="media-body">
+
+    <h3 class="article-title mb-0 mt-0">
+      <a href="/talk/2022_06_oikos/" >KrigR - Climate Data for your Study Needs</a>
+    </h3>
+
+    
+    <a href="/talk/2022_06_oikos/" class="summary-link">
+      <div class="article-style">
+        A practical guide to the <code>KrigR</code> package.
+      </div>
+    </a>
+    
+
+    <div class="stream-meta article-metadata">
+
+      
+      <div>
+        <span>
+          2022-06-06
+        </span>
+        
+        <span class="middot-divider"></span>
+        <span>Conference</span>
+        
+      </div>
+      
+
+      
+      <div>
+        
+
+  
+  <span ><a href="/author/erik-kusch/">Erik Kusch</a></span>
+      </div>
+      
+    </div>
+
+    
+    <div class="btn-links">
+      
+
+
+
+
+
+
+
+
+  
+    
+  
+
+
+
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/talks/KrigROikos.html" target="_blank" rel="noopener">
+  PDF
+</a>
+
+
+
+
+  
+  
+    
+  
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://github.com/ErikKusch/Homepage/raw/master/static/talks/OikosWorkShop.zip" target="_blank" rel="noopener">
+  Code
+</a>
+
+
+
+
+  
+  <a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="/project/krigr/">
+    Project
+  </a>
+  
+
+
+
+
+
+  
+  
+    
+  
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/talks/KrigRDemo.html" target="_blank" rel="noopener">
+  Slides
+</a>
+
+
+
+
+
+
+
+    </div>
+    
+
+  </div>
+  <div class="ml-3">
+    
+    
+    
+    <a href="/talk/2022_06_oikos/" >
+      <img src="/talk/2022_06_oikos/featured_huce8a4613749052e84ce455d22317b05e_144574_150x0_resize_q90_lanczos.jpg" alt="KrigR - Climate Data for your Study Needs">
+    </a>
+    
+  </div>
+</div>
+
+            
+          
+            
+              
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+  
+
+
+<div class="media stream-item">
+  <div class="media-body">
+
+    <h3 class="article-title mb-0 mt-0">
+      <a href="/talk/2022_02_climate-coffee/" >Climate Data Pipelines for the 21st Century - Efficient Data Retrieval and Processing</a>
+    </h3>
+
+    
+    <a href="/talk/2022_02_climate-coffee/" class="summary-link">
+      <div class="article-style">
+        A comprehensive overview of the <code>KrigR</code> package.
+      </div>
+    </a>
+    
+
+    <div class="stream-meta article-metadata">
+
+      
+      <div>
+        <span>
+          2022-02-24 11:00
+        </span>
+        
+        <span class="middot-divider"></span>
+        <span>Online Meeting</span>
+        
+      </div>
+      
+
+      
+      <div>
+        
+
+  
+  <span ><a href="/author/erik-kusch/">Erik Kusch</a></span>
+      </div>
       
     </div>
 
@@ -663,7 +1114,7 @@
 
 
   
-  <a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="/project/internal-project/">
+  <a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="/project/krigr/">
     Project
   </a>
   
@@ -671,31 +1122,19 @@
 
 
 
-  
-  <a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="/slides/example/" target="_blank">
-    Slides
-  </a>
-  
 
-
-
-
-
-  
   
   
     
   
-  
-  
-  
-  
-    
-  
-  <a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://twitter.com/georgecushen" target="_blank" rel="noopener">
-    <i class="fab fa-twitter mr-1"></i>
-    Follow
-  </a>
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://github.com/ErikKusch/Homepage/raw/master/static/talks/KrigRDemo.pptx" target="_blank" rel="noopener">
+  Slides
+</a>
+
+
+
+
+
 
 
     </div>
@@ -706,8 +1145,1395 @@
     
     
     
-    <a href="/talk/example/" >
-      <img src="/talk/example/featured_hu3d03a01dcc18bc5be0e67db3d8d209a6_620088_150x0_resize_q90_lanczos.jpg" alt="Example Talk">
+    <a href="/talk/2022_02_climate-coffee/" >
+      <img src="/talk/2022_02_climate-coffee/featured_huaf34fbf3356fec395b028e0610cff063_199639_150x0_resize_q90_lanczos.jpg" alt="Climate Data Pipelines for the 21st Century - Efficient Data Retrieval and Processing">
+    </a>
+    
+  </div>
+</div>
+
+            
+          
+
+        </div>
+      </div>
+      
+      <div class="row" id="talk_list">
+        <div class="col-lg-2">
+          <h3>2021</h3>
+        </div>
+        <div class="col-lg-10">
+
+          
+            
+              
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+  
+
+
+<div class="media stream-item">
+  <div class="media-body">
+
+    <h3 class="article-title mb-0 mt-0">
+      <a href="/talk/2021_12_bes/" >Data Simplification  for Ecological Network Inference</a>
+    </h3>
+
+    
+    <a href="/talk/2021_12_bes/" class="summary-link">
+      <div class="article-style">
+        A look at initial results of my second PhD chapter.
+      </div>
+    </a>
+    
+
+    <div class="stream-meta article-metadata">
+
+      
+      <div>
+        <span>
+          2021-12-13 11:00
+        </span>
+        
+        <span class="middot-divider"></span>
+        <span>Conference</span>
+        
+      </div>
+      
+
+      
+      <div>
+        
+
+  
+  <span ><a href="/author/erik-kusch/">Erik Kusch</a></span>
+      </div>
+      
+    </div>
+
+    
+    <div class="btn-links">
+      
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+  
+  <a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="/project/phd-packages/">
+    Project
+  </a>
+  
+
+
+
+
+
+  
+  
+    
+  
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://github.com/ErikKusch/Homepage/raw/master/static/talks/13_12_2021%20-%20%5BBES%5D.pptx" target="_blank" rel="noopener">
+  Slides
+</a>
+
+
+
+
+
+
+
+    </div>
+    
+
+  </div>
+  <div class="ml-3">
+    
+    
+    
+    <a href="/talk/2021_12_bes/" >
+      <img src="/talk/2021_12_bes/featured_huaf34fbf3356fec395b028e0610cff063_142358_150x0_resize_q90_lanczos.jpg" alt="Data Simplification  for Ecological Network Inference">
+    </a>
+    
+  </div>
+</div>
+
+            
+          
+            
+              
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+  
+
+
+<div class="media stream-item">
+  <div class="media-body">
+
+    <h3 class="article-title mb-0 mt-0">
+      <a href="/talk/2021_09_statisticaleducation/" >Statistical Education for Biologists</a>
+    </h3>
+
+    
+    <a href="/talk/2021_09_statisticaleducation/" class="summary-link">
+      <div class="article-style">
+        My personal musings on statistical education for biologists.
+      </div>
+    </a>
+    
+
+    <div class="stream-meta article-metadata">
+
+      
+      <div>
+        <span>
+          2021-09-09 16:00 &mdash; 2023-09-09 17:00
+        </span>
+        
+        <span class="middot-divider"></span>
+        <span>Oxford, United Kingdom</span>
+        
+      </div>
+      
+
+      
+      <div>
+        
+
+  
+  <span ><a href="/author/erik-kusch/">Erik Kusch</a></span>
+      </div>
+      
+    </div>
+
+    
+    <div class="btn-links">
+      
+
+
+
+
+
+
+
+
+  
+    
+  
+
+
+
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/talks/2021-09-09-Statistical-Education-in-Biology.html" target="_blank" rel="noopener">
+  PDF
+</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+    
+
+  </div>
+  <div class="ml-3">
+    
+    
+    
+    <a href="/talk/2021_09_statisticaleducation/" >
+      <img src="/talk/2021_09_statisticaleducation/featured_hu67a12b42f5c475cb1b2fa1b16ecef6dd_362931_150x0_resize_q90_lanczos.jpg" alt="Statistical Education for Biologists">
+    </a>
+    
+  </div>
+</div>
+
+            
+          
+            
+              
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+  
+
+
+<div class="media stream-item">
+  <div class="media-body">
+
+    <h3 class="article-title mb-0 mt-0">
+      <a href="/talk/2021_07_salgoteam/" >Coding Practices in R</a>
+    </h3>
+
+    
+    <a href="/talk/2021_07_salgoteam/" class="summary-link">
+      <div class="article-style">
+        Some of my ideas for how to improve coding practices that I presented to the SalGo-Team.
+      </div>
+    </a>
+    
+
+    <div class="stream-meta article-metadata">
+
+      
+      <div>
+        <span>
+          2021-07-08 10:00
+        </span>
+        
+        <span class="middot-divider"></span>
+        <span>Online Meetings</span>
+        
+      </div>
+      
+
+      
+      <div>
+        
+
+  
+  <span ><a href="/author/erik-kusch/">Erik Kusch</a></span>
+      </div>
+      
+    </div>
+
+    
+    <div class="btn-links">
+      
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  
+    
+  
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://github.com/ErikKusch/Homepage/raw/master/static/courses/Excursions-into-Biostatistics/CodinBackBone.R" target="_blank" rel="noopener">
+  Code
+</a>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/Excursions-into-Biostatistics/2021-07-08-Coding-Practices_Web.html" target="_blank" rel="noopener">
+  Slides
+</a>
+
+
+
+
+
+
+
+    </div>
+    
+
+  </div>
+  <div class="ml-3">
+    
+    
+    
+    <a href="/talk/2021_07_salgoteam/" >
+      <img src="/talk/2021_07_salgoteam/featured_huc797d6fa2b7369e419d851b519145150_381856_150x0_resize_q90_lanczos.jpg" alt="Coding Practices in R">
+    </a>
+    
+  </div>
+</div>
+
+            
+          
+
+        </div>
+      </div>
+      
+      <div class="row" id="talk_list">
+        <div class="col-lg-2">
+          <h3>2020</h3>
+        </div>
+        <div class="col-lg-10">
+
+          
+            
+              
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+  
+
+
+<div class="media stream-item">
+  <div class="media-body">
+
+    <h3 class="article-title mb-0 mt-0">
+      <a href="/talk/2020_12_salgoteam/" >Species Associations Across Scales of Organisation</a>
+    </h3>
+
+    
+    <a href="/talk/2020_12_salgoteam/" class="summary-link">
+      <div class="article-style">
+        A presentation of my PhD plans to the SalGo-Team.
+      </div>
+    </a>
+    
+
+    <div class="stream-meta article-metadata">
+
+      
+      <div>
+        <span>
+          2020-12-03 16:00
+        </span>
+        
+        <span class="middot-divider"></span>
+        <span>Online Meetings</span>
+        
+      </div>
+      
+
+      
+      <div>
+        
+
+  
+  <span ><a href="/author/erik-kusch/">Erik Kusch</a></span>
+      </div>
+      
+    </div>
+
+    
+    <div class="btn-links">
+      
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+  
+  <a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="/project/phd-packages/">
+    Project
+  </a>
+  
+
+
+
+
+
+  
+  
+    
+  
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://github.com/ErikKusch/Homepage/raw/master/static/talks/2020_12_SalGo-Team.pdf" target="_blank" rel="noopener">
+  Slides
+</a>
+
+
+
+
+
+
+
+    </div>
+    
+
+  </div>
+  <div class="ml-3">
+    
+    
+    
+    <a href="/talk/2020_12_salgoteam/" >
+      <img src="/talk/2020_12_salgoteam/featured_hu5d02939aae5c939d5ae7b00e81a27f12_85527_150x0_resize_q90_lanczos.jpg" alt="Species Associations Across Scales of Organisation">
+    </a>
+    
+  </div>
+</div>
+
+            
+          
+            
+              
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+  
+
+
+<div class="media stream-item">
+  <div class="media-body">
+
+    <h3 class="article-title mb-0 mt-0">
+      <a href="/talk/2020_11-krigrworkshop/" >KrigR - Downscaling State-of-the-Art Climate Data for Macroecologists</a>
+    </h3>
+
+    
+    <a href="/talk/2020_11-krigrworkshop/" class="summary-link">
+      <div class="article-style">
+        A web-based workshop to introduce the <code>R</code>-Package <code>KrigR</code> which introduces intuitive downloading and downscaling methods for ERA5(-Land) climate reanalysis data to <code>R</code>-users.
+      </div>
+    </a>
+    
+
+    <div class="stream-meta article-metadata">
+
+      
+      <div>
+        <span>
+          2020-11-12 13:00 &mdash; 16:00
+        </span>
+        
+        <span class="middot-divider"></span>
+        <span>Online Workshop</span>
+        
+      </div>
+      
+
+      
+      <div>
+        
+
+  
+  <span ><a href="/author/erik-kusch/">Erik Kusch</a></span>, <span >Richard Davy</span>
+      </div>
+      
+    </div>
+
+    
+    <div class="btn-links">
+      
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+  
+  <a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="/project/krigr/">
+    Project
+  </a>
+  
+
+
+
+
+
+
+
+  
+  
+    
+  
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://www.youtube.com/watch?v=wwb107L4wVw&amp;ab_channel=ErikKusch" target="_blank" rel="noopener">
+  Video
+</a>
+
+
+
+
+
+    </div>
+    
+
+  </div>
+  <div class="ml-3">
+    
+    
+    
+    <a href="/talk/2020_11-krigrworkshop/" >
+      <img src="/talk/2020_11-krigrworkshop/featured_hu6dd8f0a5ab7c0dc90f74b73c3cd51074_1832559_150x0_resize_q90_lanczos.jpg" alt="KrigR - Downscaling State-of-the-Art Climate Data for Macroecologists">
+    </a>
+    
+  </div>
+</div>
+
+            
+          
+            
+              
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+  
+
+
+<div class="media stream-item">
+  <div class="media-body">
+
+    <h3 class="article-title mb-0 mt-0">
+      <a href="/talk/2020_06_isec_poster/" >Intrinsic vegetation memory as a proxy of engineering resilience may be an oversimplification.</a>
+    </h3>
+
+    
+    <a href="/talk/2020_06_isec_poster/" class="summary-link">
+      <div class="article-style">
+        A poster about my recent vegetation memory in global dryland research I presented at ISEC 2020.
+      </div>
+    </a>
+    
+
+    <div class="stream-meta article-metadata">
+
+      
+      <div>
+        <span>
+          2020-06-25 11:00 &mdash; 12:00
+        </span>
+        
+        <span class="middot-divider"></span>
+        <span>Online Conference</span>
+        
+      </div>
+      
+
+      
+      <div>
+        
+
+  
+  <span ><a href="/author/erik-kusch/">Erik Kusch</a></span>, <span >Richard Davy</span>, <span >Roberto Salguero-Gómez</span>, <span >Alistair Seddon</span>
+      </div>
+      
+    </div>
+
+    
+    <div class="btn-links">
+      
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+  
+  <a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="/project/vegetation-memory-across-global-dryland-regions/">
+    Project
+  </a>
+  
+
+
+
+  
+  
+    
+  
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://github.com/ErikKusch/Homepage/raw/master/static/talks/2020_ISEC_Poster.pdf" target="_blank" rel="noopener">
+  Poster
+</a>
+
+
+
+
+
+
+
+
+
+    </div>
+    
+
+  </div>
+  <div class="ml-3">
+    
+    
+    
+    <a href="/talk/2020_06_isec_poster/" >
+      <img src="/talk/2020_06_isec_poster/featured_hu4ce52221b0d9ed105488bd900e717630_59997_150x0_resize_q90_lanczos.jpg" alt="Intrinsic vegetation memory as a proxy of engineering resilience may be an oversimplification.">
+    </a>
+    
+  </div>
+</div>
+
+            
+          
+            
+              
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+  
+
+
+<div class="media stream-item">
+  <div class="media-body">
+
+    <h3 class="article-title mb-0 mt-0">
+      <a href="/talk/2020_06_isec_presentation/" >KrigR - Climate Data for Your Spatial Study</a>
+    </h3>
+
+    
+    <a href="/talk/2020_06_isec_presentation/" class="summary-link">
+      <div class="article-style">
+        A short introduction talk to my <code>R</code>-Package <code>KrigR</code> in its early development.
+      </div>
+    </a>
+    
+
+    <div class="stream-meta article-metadata">
+
+      
+      <div>
+        <span>
+          2020-06-25 10:30 &mdash; 10:45
+        </span>
+        
+        <span class="middot-divider"></span>
+        <span>Online Conference</span>
+        
+      </div>
+      
+
+      
+      <div>
+        
+
+  
+  <span ><a href="/author/erik-kusch/">Erik Kusch</a></span>, <span >Richard Davy</span>
+      </div>
+      
+    </div>
+
+    
+    <div class="btn-links">
+      
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+  
+  <a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="/project/krigr/">
+    Project
+  </a>
+  
+
+
+
+
+
+  
+  
+    
+  
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://github.com/ErikKusch/Homepage/raw/master/static/talks/2020_ISEC_KrigR.pdf" target="_blank" rel="noopener">
+  Slides
+</a>
+
+
+
+  
+  
+    
+  
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://www.youtube.com/watch?v=ECSZK1J_pno&amp;feature=youtu.be" target="_blank" rel="noopener">
+  Video
+</a>
+
+
+
+
+
+    </div>
+    
+
+  </div>
+  <div class="ml-3">
+    
+    
+    
+    <a href="/talk/2020_06_isec_presentation/" >
+      <img src="/talk/2020_06_isec_presentation/featured_hu004037152f2e986e470f0fa47e1b6653_38382_150x0_resize_lanczos_2.png" alt="KrigR - Climate Data for Your Spatial Study">
+    </a>
+    
+  </div>
+</div>
+
+            
+          
+
+        </div>
+      </div>
+      
+      <div class="row" id="talk_list">
+        <div class="col-lg-2">
+          <h3>2019</h3>
+        </div>
+        <div class="col-lg-10">
+
+          
+            
+              
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+  
+
+
+<div class="media stream-item">
+  <div class="media-body">
+
+    <h3 class="article-title mb-0 mt-0">
+      <a href="/talk/2010_09_isem_talk/" >Identifying Ecological Memory Patterns in Drylands Using Remote Sensing and State-of-the-art Climate Reanalysis Products</a>
+    </h3>
+
+    
+    <a href="/talk/2010_09_isem_talk/" class="summary-link">
+      <div class="article-style">
+        A presentation about my recent vegetation memory in global dryland research I presented and won some awards for at ISEM 2019.
+      </div>
+    </a>
+    
+
+    <div class="stream-meta article-metadata">
+
+      
+      <div>
+        <span>
+          2019-10-04 13:00 &mdash; 13:15
+        </span>
+        
+        <span class="middot-divider"></span>
+        <span>Salzburg, Austria</span>
+        
+      </div>
+      
+
+      
+      <div>
+        
+
+  
+  <span ><a href="/author/erik-kusch/">Erik Kusch</a></span>, <span >Richard Davy</span>, <span >Roberto Salguero-Gómez</span>, <span >Alistair Seddon</span>
+      </div>
+      
+    </div>
+
+    
+    <div class="btn-links">
+      
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+  
+  <a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="/project/vegetation-memory-across-global-dryland-regions/">
+    Project
+  </a>
+  
+
+
+
+  
+  
+    
+  
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://github.com/ErikKusch/Homepage/raw/master/static/talks/2010_09_VegMem.pdf" target="_blank" rel="noopener">
+  Poster
+</a>
+
+
+
+
+
+
+
+
+
+    </div>
+    
+
+  </div>
+  <div class="ml-3">
+    
+    
+    
+    <a href="/talk/2010_09_isem_talk/" >
+      <img src="/talk/2010_09_isem_talk/featured_hu169e2df643e196dfef217378af59f21e_75992_150x0_resize_q90_lanczos.jpg" alt="Identifying Ecological Memory Patterns in Drylands Using Remote Sensing and State-of-the-art Climate Reanalysis Products">
+    </a>
+    
+  </div>
+</div>
+
+            
+          
+            
+              
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+  
+
+
+<div class="media stream-item">
+  <div class="media-body">
+
+    <h3 class="article-title mb-0 mt-0">
+      <a href="/talk/2010_09_isem_poster/" >Intrinsic vegetation memory as a proxy of engineering resilience may be an oversimplification.</a>
+    </h3>
+
+    
+    <a href="/talk/2010_09_isem_poster/" class="summary-link">
+      <div class="article-style">
+        A poster about my recent vegetation memory in global dryland research I presented and won some awards for at ISEM 2019.
+      </div>
+    </a>
+    
+
+    <div class="stream-meta article-metadata">
+
+      
+      <div>
+        <span>
+          2019-10-03 11:00 &mdash; 12:00
+        </span>
+        
+        <span class="middot-divider"></span>
+        <span>Salzburg, Austria</span>
+        
+      </div>
+      
+
+      
+      <div>
+        
+
+  
+  <span ><a href="/author/erik-kusch/">Erik Kusch</a></span>, <span >Richard Davy</span>, <span >Roberto Salguero-Gómez</span>, <span >Alistair Seddon</span>
+      </div>
+      
+    </div>
+
+    
+    <div class="btn-links">
+      
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+  
+  <a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="/project/vegetation-memory-across-global-dryland-regions/">
+    Project
+  </a>
+  
+
+
+
+  
+  
+    
+  
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://github.com/ErikKusch/Homepage/raw/master/static/talks/2010_09_ISEM_Poster.pdf" target="_blank" rel="noopener">
+  Poster
+</a>
+
+
+
+
+
+
+
+
+
+    </div>
+    
+
+  </div>
+  <div class="ml-3">
+    
+    
+    
+    <a href="/talk/2010_09_isem_poster/" >
+      <img src="/talk/2010_09_isem_poster/featured_hu2de773b3a2838352892fec46d579de6d_59400_150x0_resize_q90_lanczos.jpg" alt="Intrinsic vegetation memory as a proxy of engineering resilience may be an oversimplification.">
+    </a>
+    
+  </div>
+</div>
+
+            
+          
+            
+              
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+  
+
+
+<div class="media stream-item">
+  <div class="media-body">
+
+    <h3 class="article-title mb-0 mt-0">
+      <a href="/talk/2019_mscdefense/" >Inferring Vegetation Memory from Remote Sensing Data using novel Climate Reconstruction Products</a>
+    </h3>
+
+    
+    <a href="/talk/2019_mscdefense/" class="summary-link">
+      <div class="article-style">
+        The defense of my <a href="/publication/journal-article/m.sc._inferring-vegetation-memory-from-remote-copy/">M.Sc</a> thesis.
+      </div>
+    </a>
+    
+
+    <div class="stream-meta article-metadata">
+
+      
+      <div>
+        <span>
+          2019-07-05 12:30 &mdash; 13:15
+        </span>
+        
+        <span class="middot-divider"></span>
+        <span>Bergen, Norway</span>
+        
+      </div>
+      
+
+      
+      <div>
+        
+
+  
+  <span ><a href="/author/erik-kusch/">Erik Kusch</a></span>, <span >Richard Davy</span>, <span >Roberto Salguero-Gómez</span>, <span >Alistair Seddon</span>
+      </div>
+      
+    </div>
+
+    
+    <div class="btn-links">
+      
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  
+    
+  
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://github.com/ErikKusch/M.Sc.-Thesis" target="_blank" rel="noopener">
+  Code
+</a>
+
+
+
+
+  
+  <a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="/project/vegetation-memory-across-global-dryland-regions/">
+    Project
+  </a>
+  
+
+
+
+
+
+  
+  
+    
+  
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://github.com/ErikKusch/Homepage/raw/master/static/talks/2019_M.Sc._Defense.pdf" target="_blank" rel="noopener">
+  Slides
+</a>
+
+
+
+
+
+
+
+    </div>
+    
+
+  </div>
+  <div class="ml-3">
+    
+    
+    
+    <a href="/talk/2019_mscdefense/" >
+      <img src="/talk/2019_mscdefense/featured_hu720eea03a5e7cf34d77c456dde034573_126246_150x0_resize_q90_lanczos.jpg" alt="Inferring Vegetation Memory from Remote Sensing Data using novel Climate Reconstruction Products">
+    </a>
+    
+  </div>
+</div>
+
+            
+          
+
+        </div>
+      </div>
+      
+      <div class="row" id="talk_list">
+        <div class="col-lg-2">
+          <h3>2017</h3>
+        </div>
+        <div class="col-lg-10">
+
+          
+            
+              
+
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+  
+
+
+<div class="media stream-item">
+  <div class="media-body">
+
+    <h3 class="article-title mb-0 mt-0">
+      <a href="/talk/2017_bscdefense/" >Remote Sensing And Predicting Shifts In Biome Distribution And Resilience Using NDVI Data</a>
+    </h3>
+
+    
+    <a href="/talk/2017_bscdefense/" class="summary-link">
+      <div class="article-style">
+        The defense of my <a href="/publication/journal-article/b.sc._inferring-vegetation-memory-from-remote/">B.Sc</a> thesis.
+      </div>
+    </a>
+    
+
+    <div class="stream-meta article-metadata">
+
+      
+      <div>
+        <span>
+          2017-02-24 12:30 &mdash; 13:00
+        </span>
+        
+        <span class="middot-divider"></span>
+        <span>Bergen, Norway</span>
+        
+      </div>
+      
+
+      
+      <div>
+        
+
+  
+  <span ><a href="/author/erik-kusch/">Erik Kusch</a></span>, <span >Alistair Seddon</span>
+      </div>
+      
+    </div>
+
+    
+    <div class="btn-links">
+      
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+  
+    
+  
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://github.com/ErikKusch/B.Sc.-Thesis" target="_blank" rel="noopener">
+  Code
+</a>
+
+
+
+
+
+
+  
+  
+    
+  
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://github.com/ErikKusch/Homepage/raw/master/static/talks/2017_B.Sc._Defense.pdf" target="_blank" rel="noopener">
+  Poster
+</a>
+
+
+
+
+
+
+
+
+
+    </div>
+    
+
+  </div>
+  <div class="ml-3">
+    
+    
+    
+    <a href="/talk/2017_bscdefense/" >
+      <img src="/talk/2017_bscdefense/featured_hud0592ccae344c91ffcf5c98c7ad2327f_106477_150x0_resize_q90_lanczos.jpg" alt="Remote Sensing And Predicting Shifts In Biome Distribution And Resilience Using NDVI Data">
     </a>
     
   </div>
@@ -742,6 +2568,8 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js" integrity="sha256-eOgo0OtLL4cdq7RdwRUiGKLX9XsIJ7nGhWEKbohmVAQ=" crossorigin="anonymous"></script>
         
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/languages/r.min.js"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/languages/latex.min.js"></script>
         
       
 
@@ -854,7 +2682,7 @@
   
 
   <p class="powered-by">
-    
+    © 2024
   </p>
 
   

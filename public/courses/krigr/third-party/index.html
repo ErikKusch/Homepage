@@ -1,0 +1,1574 @@
+<!DOCTYPE html><html lang="en-gb" >
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.8.0">
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Erik Kusch">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Using `KrigR` with third-party data.">
+
+  
+  <link rel="alternate" hreflang="en-gb" href="https://www.erikkusch.com/courses/krigr/third-party/">
+
+  
+
+
+  
+  
+  
+  <meta name="theme-color" content="#858383">
+  
+
+  
+  
+  
+  <script src="/js/mathjax-config.js"></script>
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-1/css/all.min.css" integrity="sha256-4w9DunooKSr3MFXHXWyFER38WmPdm361bQS/2KUWZbU=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.css" integrity="sha256-SHMGCYmST46SoyGgo4YR/9AlK1vf3ff84Aq9yK4hdqM=" crossorigin="anonymous">
+    
+
+    
+
+    
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.1.2/lazysizes.min.js" integrity="sha256-Md1qLToewPeKjfAHU1zyPwOutccPAm5tahnaw7Osw0A=" crossorigin="anonymous" async></script>
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" integrity="" crossorigin="anonymous" async></script>
+      
+    
+      
+
+      
+      
+
+      
+    
+
+  
+
+  
+  
+  
+    
+      
+      
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cutive+Mono%7CLora:400,700%7CRoboto:400,700&display=swap">
+    
+  
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/academic.css">
+
+  
+
+
+
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-186216138-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+
+  function gtag() {
+      dataLayer.push(arguments);
+  }
+
+  function trackOutboundLink(url, target) {
+    gtag('event', 'click', {
+         'event_category': 'outbound',
+         'event_label': url,
+         'transport_type': 'beacon',
+         'event_callback': function () {
+           if (target !== '_blank') {
+             document.location = url;
+           }
+         }
+    });
+    console.debug("Outbound link clicked: " + url);
+  }
+
+  function onClickCallback(event) {
+    if ((event.target.tagName !== 'A') || (event.target.host === window.location.host)) {
+      return;
+    }
+    trackOutboundLink(event.target, event.target.getAttribute('target'));  
+  }
+
+  gtag('js', new Date());
+  gtag('config', 'UA-186216138-1', {});
+
+  
+  document.addEventListener('click', onClickCallback, false);
+</script>
+
+
+  
+
+
+  
+  
+
+  
+
+  <link rel="manifest" href="/index.webmanifest">
+  <link rel="icon" type="image/png" href="/images/icon_hu7658c99d512131214e4d6c003a3f85f7_112593_32x32_fill_lanczos_center_2.png">
+  <link rel="apple-touch-icon" type="image/png" href="/images/icon_hu7658c99d512131214e4d6c003a3f85f7_112593_192x192_fill_lanczos_center_2.png">
+
+  <link rel="canonical" href="https://www.erikkusch.com/courses/krigr/third-party/">
+
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  <meta property="twitter:card" content="summary_large_image">
+  
+  <meta property="twitter:site" content="@ErikKusch">
+  <meta property="twitter:creator" content="@ErikKusch">
+  
+  <meta property="og:site_name" content="Erik Kusch">
+  <meta property="og:url" content="https://www.erikkusch.com/courses/krigr/third-party/">
+  <meta property="og:title" content="Third-Party Data | Erik Kusch">
+  <meta property="og:description" content="Using `KrigR` with third-party data."><meta property="og:image" content="https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg">
+  <meta property="twitter:image" content="https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg"><meta property="og:locale" content="en-gb">
+  
+    
+      <meta property="article:published_time" content="2022-05-26T00:00:00&#43;00:00">
+    
+    <meta property="article:modified_time" content="2021-05-26T20:00:00&#43;01:00">
+  
+
+  
+
+
+
+  
+
+
+  
+
+
+  
+
+
+
+
+
+  <title>Third-Party Data | Erik Kusch</title>
+
+</head>
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search" class="form-control">
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+<nav class="navbar navbar-expand-lg navbar-light compensate-for-scrollbar" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="d-none d-lg-inline-flex">
+      <a class="navbar-brand" href="/"><img src="/images/logo_huab2266ff59bbac6a094b6da1268adcf9_208479_0x70_resize_lanczos_2.png" alt="Erik Kusch"></a>
+    </div>
+    
+
+    
+    <button type="button" class="navbar-toggler" data-toggle="collapse"
+            data-target="#navbar-content" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+    <span><i class="fas fa-bars"></i></span>
+    </button>
+    
+
+    
+    <div class="navbar-brand-mobile-wrapper d-inline-flex d-lg-none">
+      <a class="navbar-brand" href="/"><img src="/images/logo_huab2266ff59bbac6a094b6da1268adcf9_208479_0x70_resize_lanczos_2.png" alt="Erik Kusch"></a>
+    </div>
+    
+
+    
+    
+    <div class="navbar-collapse main-menu-item collapse justify-content-center" id="navbar-content">
+
+      
+      <ul class="navbar-nav d-md-inline-flex">
+        
+
+        
+
+        
+        
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link  active" href="/"><span>Home</span></a>
+        </li>
+
+        
+        
+
+        
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"><span>Courses & Workshops</span><span class="caret"></span>
+          </a>
+          <div class="dropdown-menu">
+            
+              <a class="dropdown-item" href="/courses/krigr/"><span>KrigR - State-of-the-Art Climate Data within R</span></a>
+            
+              <a class="dropdown-item" href="/courses/gbif/"><span>Accessing and Referencing GBIF Data for Research</span></a>
+            
+              <a class="dropdown-item" href="/courses/rethinking/"><span>Statistical Rethinking - Introduction to Bayesian Statistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/bayes-nets/"><span>Bayesian Networks - Causality through Bayesian Approaches</span></a>
+            
+              <a class="dropdown-item" href="/courses/biostat101/"><span>Biostats 101 - An Introduction to Biostatistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/excursions-into-biostatistics/"><span>Biostats 301 - Excursions into Biostatistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/bftp-biome-detection/"><span>BFTP - First Steps in Macroecology in R</span></a>
+            
+          </div>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#projects"><span>Projects</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#featured"><span>Publications</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#talks"><span>Talks</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/about"><span>Contact</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+            
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/media/CV_ErikKusch.html" target="_blank" rel="noopener"><span>CV</span></a>
+        </li>
+
+        
+        
+
+      
+
+        
+      </ul>
+    </div>
+
+    <ul class="nav-icons navbar-nav flex-row ml-auto d-flex pl-md-2">
+      
+      <li class="nav-item">
+        <a class="nav-link js-search" href="#" aria-label="Search"><i class="fas fa-search" aria-hidden="true"></i></a>
+      </li>
+      
+
+      
+      <li class="nav-item dropdown theme-dropdown">
+        <a href="#" class="nav-link js-theme-selector" data-toggle="dropdown" aria-haspopup="true">
+          <i class="fas fa-palette" aria-hidden="true"></i>
+        </a>
+        <div class="dropdown-menu">
+          <a href="#" class="dropdown-item js-set-theme-light">
+            <span>Light</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-dark">
+            <span>Dark</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-auto">
+            <span>Automatic</span>
+          </a>
+        </div>
+      </li>
+      
+
+      
+
+    </ul>
+
+  </div>
+</nav>
+
+
+  
+
+<div class="container-fluid docs">
+  <div class="row flex-xl-nowrap">
+    <div class="col-12 col-md-3 col-xl-2 docs-sidebar">
+      
+
+
+
+
+
+  
+    
+  
+
+
+
+
+<form class="docs-search d-flex align-items-center">
+  <button class="btn docs-toggle d-md-none p-0 mr-3" type="button" data-toggle="collapse" data-target="#docs-nav" aria-controls="docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    <span><i class="fas fa-bars"></i></span>
+  </button>
+
+  
+  <input name="q" type="search" class="form-control" placeholder="Search..." autocomplete="off">
+  
+</form>
+
+<nav class="collapse docs-links" id="docs-nav">
+  
+
+  
+  
+  
+  
+  <div class="docs-toc-item">
+    <a class="docs-toc-link" href="/courses/krigr/">Introduction</a>
+    <ul class="nav docs-sidenav">
+      
+      <li >
+        <a href="/courses/krigr/">Motivation &amp; Workshop</a>
+      </li>
+      
+      <li >
+        <a href="/courses/krigr/background/">The Theory Behind KrigR</a>
+      </li>
+      
+    </ul>
+    
+
+  </div>
+  
+  <div class="docs-toc-item">
+    <a class="docs-toc-link" href="/courses/krigr/setup/">Quick Start</a>
+    <ul class="nav docs-sidenav">
+      
+      <li >
+        <a href="/courses/krigr/setup/">Setting up KrigR</a>
+      </li>
+      
+      <li >
+        <a href="/courses/krigr/quickstart/">Quick Guide</a>
+      </li>
+      
+    </ul>
+    
+
+  </div>
+  
+  <div class="docs-toc-item">
+    <a class="docs-toc-link" href="/courses/krigr/prep/">Workshop</a>
+    <ul class="nav docs-sidenav">
+      
+      <li >
+        <a href="/courses/krigr/prep/">Preparing the Workshop</a>
+      </li>
+      
+      <li >
+        <a href="/courses/krigr/download/">Downloading &amp; Processing</a>
+      </li>
+      
+      <li >
+        <a href="/courses/krigr/kriging/">Statistical Downscaling</a>
+      </li>
+      
+      <li >
+        <a href="/courses/krigr/bioclim/">Bioclimatic Variables</a>
+      </li>
+      
+      <li class="active">
+        <a href="/courses/krigr/third-party/">Third-Party Data</a>
+      </li>
+      
+      <li >
+        <a href="/courses/krigr/projections/">Projection Downscaling</a>
+      </li>
+      
+    </ul>
+    
+
+  </div>
+  
+  
+</nav>
+
+    </div>
+
+    
+    <div class="d-none d-xl-block col-xl-2 docs-toc">
+      <ul class="nav toc-top">
+        <li><a href="#" id="back_to_top" class="docs-toc-title">Contents</a></li>
+      </ul>
+
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#matching-third-party-data">Matching Third-Party Data</a>
+      <ul>
+        <li><a href="#third-party-data">Third-Party Data</a></li>
+        <li><a href="#krigr-workflow"><code>KrigR</code> Workflow</a></li>
+      </ul>
+    </li>
+    <li><a href="#using-third-party-data">Using Third-Party Data</a>
+      <ul>
+        <li><a href="#third-party-data-covariates">Third-Party Data Covariates</a></li>
+        <li><a href="#kriging-third-party-data">Kriging Third-Party Data</a></li>
+      </ul>
+    </li>
+    <li><a href="#session-info">Session Info</a></li>
+  </ul>
+</nav>
+
+      
+    </div>
+    
+
+    <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 docs-content" role="main">
+
+      <article class="article">
+
+        <div class="docs-article-container">
+          <h1>Third-Party Data</h1>
+
+          <div class="article-style">
+            <p><div class="alert alert-danger">
+  <div>
+    <strong><code>KrigR</code> is currently undergoing development. As a result, this part of the workshop has become deprecated. Please refer to the <a href="/courses/krigr/setup/">setup</a> <a href="/courses/krigr/quickstart/">quick guide</a> portions of this material as these are up-to-date. </strong>
+  </div>
+</div>
+</p>
+<div class="alert alert-danger">
+  <div>
+    This part of the workshop is dependant on set-up and preparation done previously <a href="/courses/krigr/prep/">here</a>.
+  </div>
+</div>
+<p>First, we load <code>KrigR</code>:</p>
+<pre><code class="language-r">library(KrigR)
+</code></pre>
+<h2 id="matching-third-party-data">Matching Third-Party Data</h2>
+<p>I expect that you won&rsquo;t want to downscale to specific resolutions most of the time, but rather, match an already existing spatial data set in terms of spatial resolution and extent. Again, the <code>KrigR</code> package got you covered!</p>
+<div class="alert alert-warning">
+  <div>
+    Usually, you probably want to downscale data to match a certain pre-existing data set rather than a certain resolution.
+  </div>
+</div>
+<p>Here, we illustrate this with an NDVI-based example. The NDVI is a satellite-derived vegetation index which tells us how green the Earth is. It comes in bi-weekly intervals and at a spatial resolution of <code>.08333</code> (roughly 9km). Here, we download all NDVI data for the year 2015 and then create the annual mean. This time, we do so for all of Germany because of its size and topographical variety.</p>
+<h3 id="third-party-data">Third-Party Data</h3>
+<pre><code class="language-r">Shape_shp &lt;- ne_countries(country = &quot;Germany&quot;)
+</code></pre>
+<pre><code class="language-r">## downloading gimms data
+gimms_files &lt;- downloadGimms(x = as.Date(&quot;2015-01-01&quot;), # download from January 1982
+                             y = as.Date(&quot;2015-12-31&quot;), # download to December 1982
+                             dsn = Dir.Data, # save downloads in data folder
+                             quiet = FALSE # show download progress
+                             )
+## prcoessing gimms data
+gimms_raster &lt;- rasterizeGimms(x = gimms_files, # the data we rasterize
+                               remove_header = TRUE # we don't need the header of the data
+                               )
+indices &lt;- monthlyIndices(gimms_files) # generate month indices from the data
+gimms_raster_mvc &lt;- monthlyComposite(gimms_raster, # the data
+                                     indices = indices # the indices
+                                     )
+Negatives &lt;- which(values(gimms_raster_mvc) &lt; 0) # identify all negative values
+values(gimms_raster_mvc)[Negatives] &lt;- 0 # set threshold for barren land (NDVI&lt;0)
+gimms_raster_mvc &lt;- crop(gimms_raster_mvc, extent(Shape_shp)) # crop to extent
+gimms_mask &lt;- KrigR::mask_Shape(gimms_raster_mvc[[1]], Shape = Shape_shp) # create mask ith KrigR-internal function to ensure all edge cells are contained
+NDVI_ras &lt;- mask(gimms_raster_mvc, gimms_mask) # mask out shape
+NDVI_ras &lt;- calc(NDVI_ras, fun = mean, na.rm = TRUE) # annual mean
+writeRaster(NDVI_ras, format = &quot;CDF&quot;, file = file.path(Dir.Data, &quot;NDVI&quot;)) # save file
+</code></pre>
+<p>So what does this raster look like?</p>
+<pre><code class="language-r">NDVI_ras
+</code></pre>
+<pre><code>## class      : RasterStack 
+## dimensions : 92, 108, 9936, 1  (nrow, ncol, ncell, nlayers)
+## resolution : 0.08333333, 0.08333333  (x, y)
+## extent     : 6, 15, 47.33333, 55  (xmin, xmax, ymin, ymax)
+## crs        : +proj=longlat +datum=WGS84 +no_defs 
+## names      :     layer 
+## min values : 0.2430333 
+## max values : 0.8339083
+</code></pre>
+<p>And a visualisation of the same:</p>
+<pre><code class="language-r">Plot_Raw(NDVI_ras, 
+         Shp = Shape_shp,
+         Dates = &quot;Mean NDVI 2015&quot;, 
+         COL = viridis(100, begin = 0.5, direction = -1))
+</code></pre>
+<p><img src="krigr-third-party_files/figure-html/unnamed-chunk-5-1.png" width="1440" />
+As stated above, we want to match this with our output.</p>
+<h3 id="krigr-workflow"><code>KrigR</code> Workflow</h3>
+<p>We could do this whole analysis in our three steps as outlined above, but why bother when the 
+<a href="/courses/krigr/quickstart/#the-pipeline">pipeline</a> gets the job done just as well?</p>
+<div class="alert alert-info">
+  <div>
+    Matching Kriging outputs with a pre-existing data set is as easy as plugging the pre-existing raster into the <code>Target_res</code> argument of the <code>krigR()</code> or the <code>download_DEM()</code> function.
+  </div>
+</div>
+<p>This time we want to downscale from ERA5 resolution (roughly 30km) because the ERA5-Land data already matches the NDVI resolution (roughly 9km). Here&rsquo;s how we do this:</p>
+<pre><code class="language-r">NDVI_Krig &lt;- krigR(
+  ## download_ERA block
+  Variable = '2m_temperature',
+  Type = 'reanalysis',
+  DataSet = 'era5',
+  DateStart = '2015-01-01',
+  DateStop = '2015-12-31',
+  TResolution = 'year',
+  TStep = 1,
+  Extent = Shape_shp,
+  API_User = API_User,
+  API_Key = API_Key,
+  SingularDL = TRUE,
+  ## download_DEM block
+  Target_res = NDVI_ras,
+  Source = &quot;Drive&quot;,
+  ## krigR block
+  Cores = 1,
+  FileName = &quot;AirTemp_NDVI.nc&quot;,
+  nmax = 80, 
+  Dir = Dir.Exports)
+</code></pre>
+<pre><code>## download_ERA() is starting. Depending on your specifications, this can take a significant time.
+</code></pre>
+<pre><code>## User 39340 for cds service added successfully in keychain
+</code></pre>
+<pre><code>## Staging 1 download(s).
+</code></pre>
+<pre><code>## Staging your request as a singular download now. This can take a long time due to size of required product.
+</code></pre>
+<pre><code>## 0001_2m_temperature_2015-01-01_2015-12-31_year.nc download queried
+</code></pre>
+<pre><code>## Requesting data to the cds service with username 39340
+</code></pre>
+<pre><code>## - staging data transfer at url endpoint or request id:
+</code></pre>
+<pre><code>##   4d24fc1f-2be1-4b65-b588-be3ba2b5938b
+</code></pre>
+<pre><code>## - timeout set to 10.0 hours
+</code></pre>
+<pre><code>## - polling server for a data transfer
+\ polling server for a data transfer
+| polling server for a data transfer
+/ polling server for a data transfer
+- polling server for a data transfer
+\ polling server for a data transfer
+| polling server for a data transfer
+/ polling server for a data transfer
+- polling server for a data transfer
+\ polling server for a data transfer
+| polling server for a data transfer
+/ polling server for a data transfer
+- polling server for a data transfer
+\ polling server for a data transfer
+| polling server for a data transfer
+/ polling server for a data transfer
+- polling server for a data transfer
+\ polling server for a data transfer
+| polling server for a data transfer
+/ polling server for a data transfer
+- polling server for a data transfer
+\ polling server for a data transfer
+| polling server for a data transfer
+/ polling server for a data transfer
+- polling server for a data transfer
+## Downloading file
+</code></pre>
+<pre><code>## 
+  |                                                                                      
+  |                                                                                |   0%
+  |                                                                                      
+  |================================================================================| 100%
+</code></pre>
+<pre><code>## - moved temporary file to -&gt; /Users/erikkus/Documents/HomePage/content/courses/krigr/Exports/0001_2m_temperature_2015-01-01_2015-12-31_year.nc
+## - Delete data from queue for url endpoint or request id:
+##   https://cds.climate.copernicus.eu/api/v2/tasks/4d24fc1f-2be1-4b65-b588-be3ba2b5938b
+## 
+## Checking for known data issues.
+## Loading downloaded data for masking and aggregation.
+## Masking according to shape/buffer polygon
+## Aggregating to temporal resolution of choice
+</code></pre>
+<pre><code>## 
+  |                                                                                      
+  |                                                                                |   0%
+  |                                                                                      
+  |===========================                                                     |  33%
+  |                                                                                      
+  |=====================================================                           |  67%
+  |                                                                                      
+  |================================================================================| 100%
+## 
+</code></pre>
+<pre><code>## Commencing Kriging
+## Kriging of remaining 0 data layers should finish around: 2023-04-03 16:54:51
+</code></pre>
+<pre><code>## 
+  |                                                                                      
+  |                                                                                |   0%
+  |                                                                                      
+  |================================================================================| 100%
+</code></pre>
+<p>So? Did we match the pre-existing data?</p>
+<pre><code class="language-r">NDVI_Krig[[1]]
+</code></pre>
+<pre><code>## class      : RasterBrick 
+## dimensions : 92, 108, 9936, 1  (nrow, ncol, ncell, nlayers)
+## resolution : 0.08333333, 0.08333333  (x, y)
+## extent     : 6, 15, 47.33333, 55  (xmin, xmax, ymin, ymax)
+## crs        : +proj=longlat +datum=WGS84 +no_defs 
+## source     : memory
+## names      : var1.pred 
+## min values :  275.9705 
+## max values :  285.7357
+</code></pre>
+<p>We nailed this!</p>
+<p>Let&rsquo;s take one final look at our (A) raw ERA5 data, (B) NDVI data, (C) Kriged ERA5 data, and (D) standard error of our Kriging output:</p>
+<details><summary> Click here for download plotting calls </summary>
+<pre><code class="language-r">### ERA-Plot
+ERA_df &lt;- as.data.frame(raster(file.path(Dir.Exports, &quot;2m_temperature_2015-01-01_2015-12-31_year.nc&quot;)), xy = TRUE) # turn raster into dataframe
+colnames(ERA_df)[c(-1,-2)] &lt;- &quot;Air Temperature 2015 (ERA5)&quot;
+ERA_df &lt;- gather(data = ERA_df, key = Values, value = &quot;value&quot;, colnames(ERA_df)[c(-1,-2)]) #  make ggplot-ready
+Raw_plot &lt;- ggplot() + # create a plot
+  geom_raster(data = ERA_df , aes(x = x, y = y, fill = value)) + # plot the raw data
+  facet_wrap(~Values) + # split raster layers up
+  theme_bw() + labs(x = &quot;Longitude&quot;, y = &quot;Latitude&quot;) + # make plot more readable
+  scale_fill_gradientn(name = &quot;Air Temperature [K]&quot;, colours = inferno(100)) + # add colour and legend
+  geom_polygon(data = Shape_shp, aes(x = long, y = lat, group = group), colour = &quot;black&quot;, fill = &quot;NA&quot;) # add shape
+### NDVI-Plot
+NDVI_df &lt;- as.data.frame(NDVI_ras, xy = TRUE) # turn raster into dataframe
+colnames(NDVI_df)[c(-1,-2)] &lt;- &quot;NDVI 2015&quot;
+NDVI_df &lt;- gather(data = NDVI_df, key = Values, value = &quot;value&quot;, colnames(NDVI_df)[c(-1,-2)]) #  make ggplot-ready
+NDVI_plot &lt;- ggplot() + # create a plot
+  geom_raster(data = NDVI_df , aes(x = x, y = y, fill = value)) + # plot the raw data
+  facet_wrap(~Values) + # split raster layers up
+  theme_bw() + labs(x = &quot;Longitude&quot;, y = &quot;Latitude&quot;) + # make plot more readable
+  scale_fill_gradientn(name = &quot;NDVI&quot;, colours = rev(terrain.colors(100))) + # add colour and legend
+  geom_polygon(data = Shape_shp, aes(x = long, y = lat, group = group), colour = &quot;black&quot;, fill = &quot;NA&quot;) # add shape
+### KRIGED-Plots
+Dates = c(&quot;Kriged Air Temperature 2015 (NDVI Resolution)&quot;)
+Type_vec &lt;- c(&quot;Prediction&quot;, &quot;Standard Error&quot;) # these are the output types of krigR
+Colours_ls &lt;- list(inferno(100), rev(viridis(100))) # we want separate colours for the types
+Plots_ls &lt;- as.list(NA, NA) # this list will be filled with the output plots
+KrigDF_ls &lt;- as.list(NA, NA) # this list will be filled with the output data
+for(Plot in 1:2){ # loop over both output types
+  Krig_df &lt;- as.data.frame(NDVI_Krig[[Plot]], xy = TRUE) # turn raster into dataframe
+  colnames(Krig_df)[c(-1,-2)] &lt;- paste(Type_vec[Plot], Dates) # set colnames
+  Krig_df &lt;- gather(data = Krig_df, key = Values, value = &quot;value&quot;, colnames(Krig_df)[c(-1,-2)]) # make ggplot-ready
+  Plots_ls[[Plot]] &lt;- ggplot() + # create plot
+    geom_raster(data = Krig_df , aes(x = x, y = y, fill = value)) + # plot the kriged data
+    facet_wrap(~Values) + # split raster layers up
+    theme_bw() + labs(x = &quot;Longitude&quot;, y = &quot;Latitude&quot;) + # make plot more readable
+    scale_fill_gradientn(name = &quot;Air Temperature [K]&quot;, colours = Colours_ls[[Plot]]) + # add colour and legend
+    theme(plot.margin = unit(c(0, 0, 0, 0), &quot;cm&quot;)) + # reduce margins (for fusing of plots)
+    geom_polygon(data = Shape_shp, aes(x = long, y = lat, group = group), colour = &quot;black&quot;, fill = &quot;NA&quot;) # add shape
+  KrigDF_ls[[Plot]] &lt;- Krig_df
+} # end of type-loop
+</code></pre>
+</details>
+<pre><code class="language-r">plot_grid(plotlist = list(Raw_plot, NDVI_plot, Plots_ls[[1]], Plots_ls[[2]]), 
+          nrow = 2, labels = &quot;AUTO&quot;)
+</code></pre>
+<p><img src="krigr-third-party_files/figure-html/unnamed-chunk-9-1.png" width="1440" /></p>
+<p>So what can we learn from this? Let&rsquo;s plot the relation between temperature and NDVI:</p>
+<pre><code class="language-r">plot_df &lt;- as.data.frame(cbind(KrigDF_ls[[1]][,4], 
+                               KrigDF_ls[[2]][,4],
+                               NDVI_df[,4]))
+colnames(plot_df) &lt;- c(&quot;Temperature&quot;, &quot;Uncertainty&quot;, &quot;NDVI&quot;)
+ggplot(plot_df,
+       aes(x = Temperature, y = NDVI, size = Uncertainty)) + 
+  geom_point(alpha = 0.15) + 
+  theme_bw()
+</code></pre>
+<p><img src="krigr-third-party_files/figure-html/unnamed-chunk-10-1.png" width="1440" /></p>
+<p>Looks like NDVI increases as mean annual temperatures rise, but reaches a peak around 281-282 Kelvin with a subsequent decrease as mean annual temperatures rise higher.</p>
+<h2 id="using-third-party-data">Using Third-Party Data</h2>
+<div class="alert alert-danger">
+  <div>
+    <strong>ATTENTION:</strong> Kriging only works on <strong>square-cell spatial products</strong>!
+  </div>
+</div>
+<p>The <code>krigR()</code> function is designed to work with non-ERA5(-Land) data as well as non-GMTED2010 covariate data. To downscale your own spatial products using different covariate data than the GMTED2010 DEM we use as a default, you need to step into the three-step workflow.</p>
+<div class="alert alert-warning">
+  <div>
+    Most spatial products won&rsquo;t be reliably downscaled using only elevation covariate data.
+  </div>
+</div>
+<p><code>krigR()</code> supports any combination of ERA5-family reanalysis, GMTED2010, third-party climate data, and third-party covariate data. Here, we just demonstrate the use of other covariates than the GMTED2010 used by <code>KrigR</code> by default.</p>
+<p>The product we will focus on here is the soil moisture data contained in our <code>BCq_ras</code> product established 
+<a href="/courses/krigr/bioclim/#water-availability-variables">here</a>. With this data set, we also revert back to our original 
+<a href="/courses/krigr/prep/#shape-of-interest-spatialpolygons">study region</a>:</p>
+<p>The reason we focus on soil moisture for this exercise? In 
+<a href="https://iopscience.iop.org/article/10.1088/1748-9326/ac39bf" target="_blank" rel="noopener">this publication (Figure 3)</a>, we demonstrate that soil moisture data can be statistically downscales using kriging with some third-party covariates. As such, we pick up from where we left off when we discussed 
+<a href="/courses/krigr/bioclim/#water-availability-3">kriging of bioclimatic products</a>.</p>
+<details>
+  <summary>Click here for file:</summary>
+      Download 
+<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/krigr/Data/Qsoil_BC.nc">Qsoil_BC.nc</a> and place it into your data directory.
+</details> 
+<pre><code class="language-r">BCq_ras &lt;- stack(file.path(Dir.Data, &quot;Qsoil_BC.nc&quot;))
+</code></pre>
+<h3 id="third-party-data-covariates">Third-Party Data Covariates</h3>
+<p>In 
+<a href="https://iopscience.iop.org/article/10.1088/1748-9326/ac39bf" target="_blank" rel="noopener">this publication</a>, we demonstrate how soil moisture data can be reliably statistically downscaled using soil property data which we obtain from the 
+<a href="http://globalchange.bnu.edu.cn/research/soil4.jsp" target="_blank" rel="noopener">Land-Atmosphere Interaction Research Group at Sun Yat-sen University</a>.</p>
+<p>Below, you will find the code needed to obtain the data of global coverage at roughly 1km spatial resolution. The code chunk below also crops and masks the data according to our study region and subsequently deletes the storage-heavy global files (3.5GB each in size). This process takes a long time due to download speeds.</p>
+<details>
+  <summary>Click here for the covariate file to save yourself downloading and processing of global data:</summary>
+      Download 
+<a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/krigr/Covariates/SoilCovs.nc">SoilCovs.nc</a> and place it into your covariates directory.
+</details> 
+<pre><code class="language-r"># documentation of these can be found here http://globalchange.bnu.edu.cn/research/soil4.jsp
+SoilCovs_vec &lt;- c(&quot;tkdry&quot;, &quot;tksat&quot;, &quot;csol&quot;, &quot;k_s&quot;, &quot;lambda&quot;, &quot;psi&quot;, &quot;theta_s&quot;) # need these names for addressing soil covariates
+if(!file.exists(file.path(Dir.Covariates, &quot;SoilCovs.nc&quot;))){
+  print(&quot;#### Loading SOIL PROPERTY covariate data. ####&quot;) 
+  # create lists to combine soil data into one
+  SoilCovs_ls &lt;- as.list(rep(NA, length(SoilCovs_vec)))
+  names(SoilCovs_ls) &lt;- c(SoilCovs_vec)
+  ## Downloading, unpacking, and loading
+  for(Soil_Iter in SoilCovs_vec){
+    if(!file.exists(file.path(Dir.Covariates, paste0(Soil_Iter, &quot;.nc&quot;)))) { # if not downloaded and processed yet
+      print(paste(&quot;Handling&quot;, Soil_Iter, &quot;data.&quot;))
+      Dir.Soil &lt;- file.path(Dir.Covariates, Soil_Iter)
+      dir.create(Dir.Soil)
+      download.file(paste0(&quot;http://globalchange.bnu.edu.cn/download/data/worldptf/&quot;, Soil_Iter,&quot;.zip&quot;),
+                    destfile = file.path(Dir.Soil, paste0(Soil_Iter, &quot;.zip&quot;))
+      ) # download data
+      unzip(file.path(Dir.Soil, paste0(Soil_Iter, &quot;.zip&quot;)), exdir = Dir.Soil) # unzip data
+      File &lt;- list.files(Dir.Soil, pattern = &quot;.nc&quot;)[1] # only keep first soil layer
+      Soil_ras &lt;- raster(file.path(Dir.Soil, File)) # load data
+      SoilCovs_ls[[which(names(SoilCovs_ls) == Soil_Iter)]] &lt;- Soil_ras # save to list
+      writeRaster(x = Soil_ras, filename = file.path(Dir.Covariates, Soil_Iter), format = &quot;CDF&quot;)
+      unlink(Dir.Soil, recursive = TRUE)
+    }else{
+      print(paste(Soil_Iter, &quot;already downloaded and processed.&quot;))
+      SoilCovs_ls[[which(names(SoilCovs_ls) == Soil_Iter)]] &lt;- raster(file.path(Dir.Covariates, paste0(Soil_Iter, &quot;.nc&quot;)))
+    }
+  }
+  ## data handling and manipulation
+  SoilCovs_stack &lt;- stack(SoilCovs_ls) # stacking raster layers from list
+  SoilCovs_stack &lt;- crop(SoilCovs_stack, extent(BCq_ras)) # cropping to extent of data we have
+  SoilCovs_mask &lt;- KrigR::mask_Shape(SoilCovs_stack[[1]], Shape = Shape_shp) # create mask with KrigR-internal function to ensure all edge cells are contained
+  SoilCovs_stack &lt;- mask(SoilCovs_stack, SoilCovs_mask) # mask out shape
+  ## writing the data
+  writeRaster(x = SoilCovs_stack, filename = file.path(Dir.Covariates, &quot;SoilCovs&quot;), format = &quot;CDF&quot;)
+  ## removing the global files due to their size
+  unlink(file.path(Dir.Covariates, paste0(SoilCovs_vec, &quot;.nc&quot;)))
+}
+SoilCovs_stack &lt;- stack(file.path(Dir.Covariates, &quot;SoilCovs.nc&quot;))
+names(SoilCovs_stack) &lt;- SoilCovs_vec
+</code></pre>
+<p>Let&rsquo;s have a look at these data:</p>
+<pre><code class="language-r">SoilCovs_stack
+</code></pre>
+<pre><code>## class      : RasterStack 
+## dimensions : 408, 648, 264384, 7  (nrow, ncol, ncell, nlayers)
+## resolution : 0.008333333, 0.008333333  (x, y)
+## extent     : 9.725, 15.125, 49.75, 53.15  (xmin, xmax, ymin, ymax)
+## crs        : +proj=longlat +datum=WGS84 +no_defs 
+## names      :         tkdry,         tksat,          csol,           k_s,        lambda,           psi,       theta_s 
+## min values :  5.200000e-02,  1.337000e+00,  2.141000e+06,  5.212523e+00,  8.600000e-02, -5.307258e+01,  3.230000e-01 
+## max values :  2.070000e-01,  2.862000e+00,  2.346400e+06,  2.461686e+02,  3.330000e-01, -5.205317e+00,  5.320000e-01
+</code></pre>
+<p>Now we need to establish target and training resolution of our covariate data.</p>
+<p>First, we focus on the training resolution covariate data. We match our covariate data to our spatial product which we wish to downscale by resampling the covariate data to the coarser resolution:</p>
+<pre><code class="language-r">Coarsecovs &lt;- resample(x = SoilCovs_stack, y = BCq_ras)
+</code></pre>
+<p>Second, we aggregate the covariate data to our desired resolution. In this case, 0.02 as done previously 
+<a href="/courses/krigr/bioclim/#kriging-bioclimatic-products">here</a>:</p>
+<pre><code class="language-r">Finecovs &lt;- aggregate(SoilCovs_stack, fact = 0.02/res(SoilCovs_stack)[1])
+</code></pre>
+<p>Finally, we combine these into a list like the output of <code>download_DEM()</code>:</p>
+<pre><code class="language-r">Covs_ls &lt;- list(Coarsecovs, Finecovs)
+Plot_Covs(Covs = Covs_ls, Shape_shp)
+</code></pre>
+<p><img src="krigr-third-party_files/figure-html/SoilCovs-1.png" width="1440" /></p>
+<div class="alert alert-">
+  <div>
+    Our <a href="/courses/krigr/outlook/">development goals</a> include creating a function that automatically carries out all of the above for you with a specification alike to <code>download_DEM()</code>.
+  </div>
+</div>
+<h3 id="kriging-third-party-data">Kriging Third-Party Data</h3>
+<p>Finally, we can statistically downscale our soil moisture data using the soil property covariates. For this, we need to specify a new <code>KrigingEquation</code>.</p>
+<div class="alert alert-">
+  <div>
+    With the <code>KrigingEquation</code> argument, you may specify non-linear combinations of covariates for your call to <code>krigR()</code>.
+  </div>
+</div>
+<div class="alert alert-info">
+  <div>
+    If you don&rsquo;t specify a <code>KrigingEquation</code> in <code>krigR()</code> and your covariates do not contain a layer called <code>&quot;DEM&quot;</code>, <code>krigR()</code> will notify you that its default formula cannot be executed and will attempt to build an additive formula from the data it can find. <code>krigr()</code> will inform you of this and ask for your approval before proceeding.
+  </div>
+</div>
+<p>This auto-generated formula would be the same as the one we specify here - an additive combination of all covariates found both at coarse and fine resolutions. Of course, this formula can also be specified to reflect interactive effects.</p>
+<p>Here, I automate the generation of our <code>KrigingEquation</code>:</p>
+<pre><code class="language-r">KrigingEquation &lt;- paste0(&quot;ERA ~ &quot;, paste(SoilCovs_vec, collapse = &quot; + &quot;))
+KrigingEquation
+</code></pre>
+<pre><code>## [1] &quot;ERA ~ tkdry + tksat + csol + k_s + lambda + psi + theta_s&quot;
+</code></pre>
+<p>In accordance with our 
+<a href="/courses/krigr/bioclim/#temperatures-3">downscaling of the temperature-portion of the bioclimatic data</a>, (1) I only hand the last 8 layers to the kriging call because those are the soil moisture data, (2) I leave out the <code>Cores</code> argument, so that <code>krigR()</code> determines how many cores your machine has and uses all of them to speed up the computation of the multi-layer raster, and (3) I set <code>nmax</code> to 80 to approximate a typical weather system in size:</p>
+<pre><code class="language-r">BC_Water_Krig  &lt;- krigR(Data = BCq_ras[[12:19]], 
+                    Covariates_coarse = Covs_ls[[1]], 
+                    Covariates_fine = Covs_ls[[2]],
+                    KrigingEquation = KrigingEquation, 
+                    FileName = &quot;BC_Water_Krig&quot;,
+                    Dir = Dir.Covariates,
+                    nmax = 80
+)
+</code></pre>
+<pre><code>## Warning: [writeCDF] for better results use file extension '.nc' or '.cdf'
+## see: https://stackoverflow.com/a/65398262/635245
+</code></pre>
+<pre><code>## Warning: [rast] unknown extent
+</code></pre>
+<pre><code>## Warning: [writeCDF] for better results use file extension '.nc' or '.cdf'
+## see: https://stackoverflow.com/a/65398262/635245
+</code></pre>
+<pre><code>## Warning: [rast] unknown extent
+</code></pre>
+<h4 id="bio12---annual-mean-soil-moisture">BIO12 - Annual Mean Soil Moisture</h4>
+<div class="alert alert-normal">
+  <div>
+    Interpolating this data is just like statistically downscaling any other soil moisture product and can be done without any problems.
+  </div>
+</div>
+<details>
+  <summary>Click here for plotting call and plot:</summary>
+<div class="alert alert-normal">
+  <div>
+    Look at how well the river Elbe sows up in this!
+  </div>
+</div>
+<pre><code class="language-r">Plot_Krigs(lapply(BC_Water_Krig[-3], &quot;[[&quot;, 1), 
+           Shp = Shape_shp,
+           Dates = &quot;BIO12 - Annual Mean Soil Moisture&quot;)
+</code></pre>
+<p><img src="krigr-third-party_files/figure-html/unnamed-chunk-18-1.png" width="1440" /></p>
+</details>
+<h4 id="bio13---soil-moisture-of-wettest-month">BIO13 - Soil Moisture of Wettest Month</h4>
+<div class="alert alert-normal">
+  <div>
+    Interpolating this data is just like statistically downscaling any other soil moisture product and can be done without any problems.
+  </div>
+</div>
+<details>
+  <summary>Click here for plotting call and plot:</summary>
+<pre><code class="language-r">Plot_Krigs(lapply(BC_Water_Krig[-3], &quot;[[&quot;, 2), 
+           Shp = Shape_shp,
+           Dates = &quot;BIO13 - Soil Moisture of Wettest Month&quot;)
+</code></pre>
+<p><img src="krigr-third-party_files/figure-html/unnamed-chunk-19-1.png" width="1440" /></p>
+</details>
+<h4 id="bio14---soil-moisture-of-driest-month">BIO14 - Soil Moisture of Driest Month</h4>
+<div class="alert alert-normal">
+  <div>
+    Interpolating this data is just like statistically downscaling any other soil moisture product and can be done without any problems.
+  </div>
+</div>
+<details>
+  <summary>Click here for plotting call and plot:</summary>
+<pre><code class="language-r">Plot_Krigs(lapply(BC_Water_Krig[-3], &quot;[[&quot;, 3), 
+           Shp = Shape_shp,
+           Dates = &quot;BIO13 - Soil Moisture of Driest Month&quot;)
+</code></pre>
+<p><img src="krigr-third-party_files/figure-html/unnamed-chunk-20-1.png" width="1440" /></p>
+</details>
+<h4 id="bio15---soil-moisture-seasonality">BIO15 - Soil Moisture Seasonality</h4>
+<div class="alert alert-warning">
+  <div>
+    This data product is calculated using the standard deviation of mean values throughout our time frame. Conclusively, it would be interpolated better by first statistically downscaling the underlying data rather than the final bioclimatic variable.
+  </div>
+</div>
+<details>
+  <summary>Click here for plotting call and plot:</summary>
+<pre><code class="language-r">Plot_Krigs(lapply(BC_Water_Krig[-3], &quot;[[&quot;, 4), 
+           Shp = Shape_shp,
+           Dates = &quot;BIO15 - Precipitation Seasonality&quot;)
+</code></pre>
+<p><img src="krigr-third-party_files/figure-html/unnamed-chunk-21-1.png" width="1440" /></p>
+</details>
+<h4 id="bio16--bio17---soil-moisture-of-wettest-and-driest-quarter">BIO16 &amp; BIO17 - Soil Moisture of Wettest and Driest Quarter</h4>
+<div class="alert alert-danger">
+  <div>
+    <strong>I do not recommend you use these kriging outputs!</strong> They rely on mean quarterly soil moisture data which is not being interpolated here. Subsequently, the patchiness of the underlying data is lost and with it: information.
+  </div>
+</div>
+<details>
+  <summary>Click here for plotting call and plot:</summary>
+<pre><code class="language-r">Plot_Krigs(lapply(BC_Water_Krig[-3], &quot;[[&quot;, 5:6), 
+           Shp = Shape_shp,
+           Dates = c(&quot;BIO16 - Soil Moisture of Wettest Quarter&quot;, 
+                     &quot;BIO17 - Soil Moisture of Driest Quarter&quot;)
+           )
+</code></pre>
+<p><img src="krigr-third-party_files/figure-html/unnamed-chunk-22-1.png" width="1440" /></p>
+</details>
+<h4 id="bio18--bio19---precipitation-of-warmest-and-coldest-quarter">BIO18 &amp; BIO19 - Precipitation of Warmest and Coldest Quarter</h4>
+<div class="alert alert-danger">
+  <div>
+    <strong>I do not recommend you use these kriging outputs!</strong> They rely on mean quarterly temperature data which is not being interpolated here. Subsequently, the patchiness of the underlying data is lost and with it: information.
+  </div>
+</div>
+<details>
+  <summary>Click here for plotting call and plot:</summary>
+<pre><code class="language-r">Plot_Krigs(lapply(BC_Water_Krig[-3], &quot;[[&quot;, 7:8), 
+           Shp = Shape_shp,
+           Dates = c(&quot;BIO16 - Soil Moisture of Warmest Quarter&quot;, 
+                     &quot;BIO17 - Soil Moisture of Coldest Quarter&quot;)
+           )
+</code></pre>
+<p><img src="krigr-third-party_files/figure-html/unnamed-chunk-23-1.png" width="1440" /></p>
+</details>
+<p>This concludes our exercise for using third-party data in <code>KrigR</code>.</p>
+<h2 id="session-info">Session Info</h2>
+<pre><code class="language-r">sessionInfo()
+</code></pre>
+<pre><code>## R version 4.2.3 (2023-03-15)
+## Platform: x86_64-apple-darwin17.0 (64-bit)
+## Running under: macOS Big Sur ... 10.16
+## 
+## Matrix products: default
+## BLAS:   /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRblas.0.dylib
+## LAPACK: /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRlapack.dylib
+## 
+## locale:
+## [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+## 
+## attached base packages:
+## [1] parallel  stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+##  [1] mapview_2.11.0          rnaturalearthdata_0.1.0 rnaturalearth_0.3.2    
+##  [4] gimms_1.2.1             ggmap_3.0.2             cowplot_1.1.1          
+##  [7] viridis_0.6.2           viridisLite_0.4.1       ggplot2_3.4.1          
+## [10] tidyr_1.3.0             KrigR_0.1.2             terra_1.7-21           
+## [13] httr_1.4.5              stars_0.6-0             abind_1.4-5            
+## [16] fasterize_1.0.4         sf_1.0-12               lubridate_1.9.2        
+## [19] automap_1.1-9           doSNOW_1.0.20           snow_0.4-4             
+## [22] doParallel_1.0.17       iterators_1.0.14        foreach_1.5.2          
+## [25] rgdal_1.6-5             raster_3.6-20           sp_1.6-0               
+## [28] stringr_1.5.0           keyring_1.3.1           ecmwfr_1.5.0           
+## [31] ncdf4_1.21             
+## 
+## loaded via a namespace (and not attached):
+##  [1] leafem_0.2.0             colorspace_2.1-0         class_7.3-21            
+##  [4] leaflet_2.1.2            satellite_1.0.4          base64enc_0.1-3         
+##  [7] rstudioapi_0.14          proxy_0.4-27             farver_2.1.1            
+## [10] fansi_1.0.4              codetools_0.2-19         cachem_1.0.7            
+## [13] knitr_1.42               jsonlite_1.8.4           png_0.1-8               
+## [16] Kendall_2.2.1            compiler_4.2.3           assertthat_0.2.1        
+## [19] fastmap_1.1.1            cli_3.6.0                htmltools_0.5.4         
+## [22] tools_4.2.3              gtable_0.3.1             glue_1.6.2              
+## [25] dplyr_1.1.0              Rcpp_1.0.10              jquerylib_0.1.4         
+## [28] vctrs_0.6.1              blogdown_1.16            crosstalk_1.2.0         
+## [31] lwgeom_0.2-11            xfun_0.37                timechange_0.2.0        
+## [34] lifecycle_1.0.3          rnaturalearthhires_0.2.1 zoo_1.8-11              
+## [37] scales_1.2.1             gstat_2.1-0              yaml_2.3.7              
+## [40] curl_5.0.0               memoise_2.0.1            gridExtra_2.3           
+## [43] sass_0.4.5               reshape_0.8.9            stringi_1.7.12          
+## [46] highr_0.10               e1071_1.7-13             boot_1.3-28.1           
+## [49] intervals_0.15.3         RgoogleMaps_1.4.5.3      rlang_1.1.0             
+## [52] pkgconfig_2.0.3          bitops_1.0-7             evaluate_0.20           
+## [55] lattice_0.20-45          purrr_1.0.1              htmlwidgets_1.6.1       
+## [58] labeling_0.4.2           tidyselect_1.2.0         plyr_1.8.8              
+## [61] magrittr_2.0.3           bookdown_0.33            R6_2.5.1                
+## [64] generics_0.1.3           DBI_1.1.3                pillar_1.8.1            
+## [67] withr_2.5.0              units_0.8-1              xts_0.13.0              
+## [70] tibble_3.2.1             spacetime_1.2-8          KernSmooth_2.23-20      
+## [73] utf8_1.2.3               rmarkdown_2.20           jpeg_0.1-10             
+## [76] grid_4.2.3               zyp_0.11-1               FNN_1.1.3.2             
+## [79] digest_0.6.31            classInt_0.4-9           webshot_0.5.4           
+## [82] stats4_4.2.3             munsell_0.5.0            bslib_0.4.2
+</code></pre>
+
+          </div>
+
+          
+
+<div class="article-tags">
+  
+  <a class="badge badge-light" href="/tag/climate-data/">Climate Data</a>
+  
+  <a class="badge badge-light" href="/tag/statistical-downscaling/">Statistical Downscaling</a>
+  
+  <a class="badge badge-light" href="/tag/krigr/">KrigR</a>
+  
+</div>
+
+
+
+          
+          <div class="article-widget">
+            
+<div class="post-nav">
+  
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">Previous</div>
+    <a href="/courses/krigr/bioclim/" rel="next">Bioclimatic Variables</a>
+  </div>
+  
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">Next</div>
+    <a href="/courses/krigr/projections/" rel="prev">Projection Downscaling</a>
+  </div>
+  
+</div>
+
+          </div>
+          
+        </div>
+
+        <div class="body-footer">
+          <p>Last updated on 2021-05-26</p>
+
+          
+
+
+
+
+
+          
+
+
+          
+
+
+  
+  
+  <div class="article-widget content-widget-hr">
+    <h3>Related</h3>
+    <ul>
+      
+      <li><a href="/courses/krigr/bioclim/">Bioclimatic Variables</a></li>
+      
+      <li><a href="/courses/krigr/download/">Downloading &amp; Processing</a></li>
+      
+      <li><a href="/courses/krigr/prep/">Preparing the Workshop</a></li>
+      
+      <li><a href="/courses/krigr/projections/">Projection Downscaling</a></li>
+      
+      <li><a href="/courses/krigr/quickstart/">Quick Guide</a></li>
+      
+    </ul>
+  </div>
+  
+
+
+
+        </div>
+
+      </article>
+
+      <footer class="site-footer">
+  
+  <p class="powered-by">
+    
+      <a href="/privacy/">Privacy Policy</a>
+    
+    
+       &middot; 
+      <a href="/terms/">Terms</a>
+    
+  </p>
+  
+
+  <p class="powered-by">
+    © 2024
+  </p>
+
+  
+  
+
+
+
+
+
+
+  <p class="powered-by">
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+  </p>
+</footer>
+
+
+    </main>
+  </div>
+</div>
+
+
+      
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js" integrity="sha256-eOgo0OtLL4cdq7RdwRUiGKLX9XsIJ7nGhWEKbohmVAQ=" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/languages/r.min.js"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/languages/latex.min.js"></script>
+        
+      
+
+    
+
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.js" integrity="sha256-EErZamuLefUnbMBQbsEqu1USa+btR2oIlCpBJbyD4/g=" crossorigin="anonymous"></script>
+    
+
+    
+    
+    <script>const code_highlighting = true;</script>
+    
+
+    
+    
+    <script>const isSiteThemeDark = false;</script>
+    
+
+    
+    
+    
+    
+    
+    
+    <script>
+      const search_config = {"indexURI":"/index.json","minLength":1,"threshold":0.3};
+      const i18n = {"no_results":"No results found","placeholder":"Search...","results":"results found"};
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks",
+        'slides' : "Slides"
+        };
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.1/anchor.min.js" integrity="sha256-pB/deHc9CGfFpJRjC43imB29Rse8tak+5eXqntO94ck=" crossorigin="anonymous"></script>
+    <script>
+      anchors.add();
+    </script>
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+      <div class="search-hit-content">
+        <div class="search-hit-name">
+          <a href="{{relpermalink}}">{{title}}</a>
+          <div class="article-metadata search-hit-type">{{type}}</div>
+          <p class="search-hit-description">{{snippet}}</p>
+        </div>
+      </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="/js/academic.min.66c553246b0f279a03be6e5597f72b52.js"></script>
+
+    
+
+
+
+
+
+
+  
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

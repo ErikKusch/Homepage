@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="en-us" >
+<!DOCTYPE html><html lang="en-gb" >
 
 <head>
 
@@ -20,17 +20,17 @@
   
   
 
-  <meta name="author" content="Nelson Bighetti">
+  <meta name="author" content="Erik Kusch">
 
   
   
   
     
   
-  <meta name="description" content="Professor of Artificial Intelligence">
+  <meta name="description" content="Mountaineer and macroecologist with a predilection for open science and biostatistics.">
 
   
-  <link rel="alternate" hreflang="en-us" href="/publication/">
+  <link rel="alternate" hreflang="en-gb" href="https://www.erikkusch.com/publication/">
 
   
 
@@ -38,7 +38,7 @@
   
   
   
-  <meta name="theme-color" content="#2962ff">
+  <meta name="theme-color" content="#858383">
   
 
   
@@ -194,7 +194,7 @@
     
       
       
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700%7CRoboto:400,400italic,700%7CRoboto+Mono&display=swap">
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cutive+Mono%7CLora:400,700%7CRoboto:400,700&display=swap">
     
   
 
@@ -209,6 +209,44 @@
 
 
 
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-186216138-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+
+  function gtag() {
+      dataLayer.push(arguments);
+  }
+
+  function trackOutboundLink(url, target) {
+    gtag('event', 'click', {
+         'event_category': 'outbound',
+         'event_label': url,
+         'transport_type': 'beacon',
+         'event_callback': function () {
+           if (target !== '_blank') {
+             document.location = url;
+           }
+         }
+    });
+    console.debug("Outbound link clicked: " + url);
+  }
+
+  function onClickCallback(event) {
+    if ((event.target.tagName !== 'A') || (event.target.host === window.location.host)) {
+      return;
+    }
+    trackOutboundLink(event.target, event.target.getAttribute('target'));  
+  }
+
+  gtag('js', new Date());
+  gtag('config', 'UA-186216138-1', {});
+
+  
+  document.addEventListener('click', onClickCallback, false);
+</script>
+
+
   
 
 
@@ -216,14 +254,14 @@
   
 
   
-  <link rel="alternate" href="/publication/index.xml" type="application/rss+xml" title="Academic">
+  <link rel="alternate" href="/publication/index.xml" type="application/rss+xml" title="Erik Kusch">
   
 
   <link rel="manifest" href="/index.webmanifest">
-  <link rel="icon" type="image/png" href="/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_32x32_fill_lanczos_center_2.png">
-  <link rel="apple-touch-icon" type="image/png" href="/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_192x192_fill_lanczos_center_2.png">
+  <link rel="icon" type="image/png" href="/images/icon_hu7658c99d512131214e4d6c003a3f85f7_112593_32x32_fill_lanczos_center_2.png">
+  <link rel="apple-touch-icon" type="image/png" href="/images/icon_hu7658c99d512131214e4d6c003a3f85f7_112593_192x192_fill_lanczos_center_2.png">
 
-  <link rel="canonical" href="/publication/">
+  <link rel="canonical" href="https://www.erikkusch.com/publication/">
 
   
   
@@ -233,35 +271,37 @@
   
   
     
-    
   
   
-  <meta property="twitter:card" content="summary">
+  <meta property="twitter:card" content="summary_large_image">
   
-  <meta property="og:site_name" content="Academic">
-  <meta property="og:url" content="/publication/">
-  <meta property="og:title" content="Publications | Academic">
-  <meta property="og:description" content="Professor of Artificial Intelligence"><meta property="og:image" content="/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_2.png">
-  <meta property="twitter:image" content="/images/icon_hu0b7a4cb9992c9ac0e91bd28ffd38dd00_9727_512x512_fill_lanczos_center_2.png"><meta property="og:locale" content="en-us">
+  <meta property="twitter:site" content="@ErikKusch">
+  <meta property="twitter:creator" content="@ErikKusch">
   
-    <meta property="og:updated_time" content="2019-04-07T00:00:00&#43;00:00">
+  <meta property="og:site_name" content="Erik Kusch">
+  <meta property="og:url" content="https://www.erikkusch.com/publication/">
+  <meta property="og:title" content="Publications | Erik Kusch">
+  <meta property="og:description" content="Mountaineer and macroecologist with a predilection for open science and biostatistics."><meta property="og:image" content="https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg">
+  <meta property="twitter:image" content="https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg"><meta property="og:locale" content="en-gb">
   
-
+    <meta property="og:updated_time" content="2024-07-24T00:00:00&#43;00:00">
   
-
-
-
-
-  
-
 
   
 
 
 
 
+  
 
-  <title>Publications | Academic</title>
+
+  
+
+
+
+
+
+  <title>Publications | Erik Kusch</title>
 
 </head>
 <body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" >
@@ -307,13 +347,15 @@
 
 
 
+  
+
 
 <nav class="navbar navbar-expand-lg navbar-light compensate-for-scrollbar" id="navbar-main">
   <div class="container">
 
     
     <div class="d-none d-lg-inline-flex">
-      <a class="navbar-brand" href="/">Academic</a>
+      <a class="navbar-brand" href="/"><img src="/images/logo_huab2266ff59bbac6a094b6da1268adcf9_208479_0x70_resize_lanczos_2.png" alt="Erik Kusch"></a>
     </div>
     
 
@@ -326,13 +368,13 @@
 
     
     <div class="navbar-brand-mobile-wrapper d-inline-flex d-lg-none">
-      <a class="navbar-brand" href="/">Academic</a>
+      <a class="navbar-brand" href="/"><img src="/images/logo_huab2266ff59bbac6a094b6da1268adcf9_208479_0x70_resize_lanczos_2.png" alt="Erik Kusch"></a>
     </div>
     
 
     
     
-    <div class="navbar-collapse main-menu-item collapse justify-content-start" id="navbar-content">
+    <div class="navbar-collapse main-menu-item collapse justify-content-center" id="navbar-content">
 
       
       <ul class="navbar-nav d-md-inline-flex">
@@ -343,54 +385,42 @@
         
         
         
-          
-        
 
         
         
         
         
         
-        
-          
-          
-          
-            
-          
-          
         
 
         <li class="nav-item">
-          <a class="nav-link " href="/#hero"><span>Demo</span></a>
+          <a class="nav-link  active" href="/"><span>Home</span></a>
         </li>
 
         
         
 
         
-
-        
-        
-        
-          
-        
-
-        
-        
-        
-        
-        
-        
-          
-          
-          
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"><span>Courses & Workshops</span><span class="caret"></span>
+          </a>
+          <div class="dropdown-menu">
             
-          
-          
-        
-
-        <li class="nav-item">
-          <a class="nav-link " href="/#posts"><span>Posts</span></a>
+              <a class="dropdown-item" href="/courses/krigr/"><span>KrigR - State-of-the-Art Climate Data within R</span></a>
+            
+              <a class="dropdown-item" href="/courses/gbif/"><span>Accessing and Referencing GBIF Data for Research</span></a>
+            
+              <a class="dropdown-item" href="/courses/rethinking/"><span>Statistical Rethinking - Introduction to Bayesian Statistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/bayes-nets/"><span>Bayesian Networks - Causality through Bayesian Approaches</span></a>
+            
+              <a class="dropdown-item" href="/courses/biostat101/"><span>Biostats 101 - An Introduction to Biostatistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/excursions-into-biostatistics/"><span>Biostats 301 - Excursions into Biostatistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/bftp-biome-detection/"><span>BFTP - First Steps in Macroecology in R</span></a>
+            
+          </div>
         </li>
 
         
@@ -468,9 +498,16 @@
         
         
         
+          
+          
+          
+            
+          
+          
+        
 
         <li class="nav-item">
-          <a class="nav-link " href="/courses/"><span>Courses</span></a>
+          <a class="nav-link " href="/#talks"><span>Talks</span></a>
         </li>
 
         
@@ -490,16 +527,33 @@
         
         
         
-          
-          
+
+        <li class="nav-item">
+          <a class="nav-link " href="/about"><span>Contact</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
           
             
           
-          
+        
+
+        
+        
+        
+        
+        
         
 
         <li class="nav-item">
-          <a class="nav-link " href="/#contact"><span>Contact</span></a>
+          <a class="nav-link " href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/media/CV_ErikKusch.html" target="_blank" rel="noopener"><span>CV</span></a>
         </li>
 
         
@@ -592,6 +646,66 @@
         
         
       
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
+        
+        
+      
 
       <div class="form-row mb-4">
         <div class="col-auto">
@@ -603,16 +717,16 @@
             <option value="*">Type</option>
             
             
-            <option value=".pubtype-1">
-              Conference paper
-            </option>
-            
             <option value=".pubtype-2">
               Journal article
             </option>
             
             <option value=".pubtype-3">
               Preprint
+            </option>
+            
+            <option value=".pubtype-7">
+              Thesis
             </option>
             
           </select>
@@ -623,16 +737,28 @@
             
             
             
+            <option value=".year-2024">
+              2024
+            </option>
+            
+            <option value=".year-2023">
+              2023
+            </option>
+            
+            <option value=".year-2022">
+              2022
+            </option>
+            
+            <option value=".year-2021">
+              2021
+            </option>
+            
             <option value=".year-2019">
               2019
             </option>
             
-            <option value=".year-2015">
-              2015
-            </option>
-            
-            <option value=".year-2013">
-              2013
+            <option value=".year-2017">
+              2017
             </option>
             
             
@@ -647,24 +773,95 @@
           
         
 
-        <div class="grid-sizer col-lg-12 isotope-item pubtype-3 year-2019">
+        <div class="grid-sizer col-lg-12 isotope-item pubtype-3 year-2024">
           
-            <div class="pub-list-item" style="margin-bottom: 1rem">
-  <i class="far fa-file-alt pub-icon" aria-hidden="true"></i>
+            
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+<div class="card-simple">
+
+  
+    
+
+
+<div class="article-metadata">
 
   
   
-
-  <span class="article-metadata li-cite-author">
+  
+  
+  <div>
     
 
   
-  <span ><a href="/author/nelson-bighetti/">Nelson Bighetti</a></span>
+  <span >Taimur Khan</span>, <span >Koen de Koning</span>, <span >Dag Endresen</span>, <span >Desalegn Chala Gelete</span>, <span ><a href="/author/erik-kusch/">Erik Kusch</a></span>
+  </div>
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    July 2024
   </span>
-  (2019).
-  <a href="/publication/preprint/">An example preprint / working paper</a>.
   
-  <p>
+
+  
+  <span class="middot-divider"></span>
+  <span class="pub-publication">
+    
+      <em>TBD</em>
+    
+  </span>
+  
+
+  
+
+  
+  
+  
+
+  
+  
+
+</div>
+
+  
+
+  
+  
+  
+
+  <h3 class="article-title mb-1 mt-3">
+    <a href="/publication/twineco-a-unified-framework-for-dynamic-data-driven-digital-twins-in-ecology/">TwinEco - A Unified Framework for Dynamic Data-Driven Digital Twins in Ecology</a>
+  </h3>
+
+  
+  <a href="/publication/twineco-a-unified-framework-for-dynamic-data-driven-digital-twins-in-ecology/" class="summary-link">
+    <div class="article-style">
+      <p>Design framework for digital twins in ecological applications.</p>
+    </div>
+  </a>
+  
+
+  
+  <div class="btn-links">
+    
 
 
 
@@ -679,95 +876,35 @@
 
 
 
-<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="http://arxiv.org/pdf/1512.04133v1" target="_blank" rel="noopener">
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://doi.org/10.1101/2024.07.23.604592" target="_blank" rel="noopener">
   PDF
 </a>
 
 
 
 
-  
-  
-    
-  
-<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="/#" target="_blank" rel="noopener">
-  Code
-</a>
-
-
-  
-  
-    
-  
-<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="/#" target="_blank" rel="noopener">
-  Dataset
-</a>
 
 
 
   
-  <a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="/project/internal-project/">
+  <a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="/project/biodt/">
     Project
   </a>
   
 
 
 
-  
-  
-    
-  
-<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="/#" target="_blank" rel="noopener">
-  Poster
-</a>
-
-
-  
-  <a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="/slides/example/" target="_blank">
-    Slides
-  </a>
-  
-
-
-  
-  
-    
-  
-<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="/#" target="_blank" rel="noopener">
-  Video
-</a>
-
-
-  
-  
-    
-  
-<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="/#" target="_blank" rel="noopener">
-  Source Document
-</a>
 
 
 
-  
-  
-  
-    
-  
-  
-  
-  
-  
-    
-  
-  <a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="http://example.org" target="_blank" rel="noopener">
-    
-    Custom Link
-  </a>
 
-</p>
 
+
+
+
+  </div>
   
-  
+
 </div>
 
           
@@ -779,25 +916,95 @@
           
         
 
-        <div class="grid-sizer col-lg-12 isotope-item pubtype-2 year-2015">
+        <div class="grid-sizer col-lg-12 isotope-item pubtype-2 year-2024">
           
-            <div class="pub-list-item" style="margin-bottom: 1rem">
-  <i class="far fa-file-alt pub-icon" aria-hidden="true"></i>
+            
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+<div class="card-simple">
+
+  
+    
+
+
+<div class="article-metadata">
 
   
   
-
-  <span class="article-metadata li-cite-author">
+  
+  
+  <div>
     
 
   
-  <span ><a href="/author/nelson-bighetti/">Nelson Bighetti</a></span><span title="Equal contribution" class="author-notes">(?)</span>, <span >Robert Ford</span><span title="Equal contribution" class="author-notes">(?)</span>
+  <span >Desalegn Chala</span>, <span >Erik Kusch</span>, <span >Claus Weiland</span>, <span >Carrie Andrew</span>, <span >Jonas Grieb</span>, <span >Tuomas Rossi</span>, <span >Tomas Martinovic</span>, <span >Dag Endresen</span>
+  </div>
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    June 2024
   </span>
-  (2015).
-  <a href="/publication/journal-article/">An example journal article</a>.
-  <em>Journal of Source Themes, 1</em>(1).
   
-  <p>
+
+  
+  <span class="middot-divider"></span>
+  <span class="pub-publication">
+    
+      <em>Research Ideas and Outcomes</em>
+    
+  </span>
+  
+
+  
+
+  
+  
+  
+
+  
+  
+
+</div>
+
+  
+
+  
+  
+  
+
+  <h3 class="article-title mb-1 mt-3">
+    <a href="/publication/prototype-biodiversity-digital-twin-crop-wild-relatives-genetic-resources-for-food-security/">Prototype biodiversity digital twin - crop wild relatives genetic resources for food security</a>
+  </h3>
+
+  
+  <a href="/publication/prototype-biodiversity-digital-twin-crop-wild-relatives-genetic-resources-for-food-security/" class="summary-link">
+    <div class="article-style">
+      <p>Early-stage outcome of my contributions to the BioDT project.</p>
+    </div>
+  </a>
+  
+
+  
+  <div class="btn-links">
+    
 
 
 
@@ -812,27 +1019,27 @@
 
 
 
-<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="http://arxiv.org/pdf/1512.04133v1" target="_blank" rel="noopener">
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://doi.org/10.3897/rio.10.e125192" target="_blank" rel="noopener">
   PDF
 </a>
 
 
 
-<button type="button" class="btn btn-outline-primary my-1 mr-1 btn-sm js-cite-modal"
-        data-filename="/publication/journal-article/cite.bib">
-  Cite
-</button>
 
-
-
-
+  
+  
+    
+  
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://github.com/BioDT/uc-CWR" target="_blank" rel="noopener">
+  Code
+</a>
 
 
 
 
   
-  <a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="/slides/example/" target="_blank">
-    Slides
+  <a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="/project/biodt/">
+    Project
   </a>
   
 
@@ -840,10 +1047,15 @@
 
 
 
-</p>
 
+
+
+
+
+
+  </div>
   
-  
+
 </div>
 
           
@@ -855,25 +1067,95 @@
           
         
 
-        <div class="grid-sizer col-lg-12 isotope-item pubtype-1 year-2013">
+        <div class="grid-sizer col-lg-12 isotope-item pubtype-2 year-2024">
           
-            <div class="pub-list-item" style="margin-bottom: 1rem">
-  <i class="far fa-file-alt pub-icon" aria-hidden="true"></i>
+            
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+<div class="card-simple">
+
+  
+    
+
+
+<div class="article-metadata">
 
   
   
-
-  <span class="article-metadata li-cite-author">
+  
+  
+  <div>
     
 
   
-  <span ><a href="/author/nelson-bighetti/">Nelson Bighetti</a></span>, <span >Robert Ford</span>
+  <span >Aud H. Halbritter</span>, <span >Vigdis Vandvik</span>, <span >Sehoya H. Cotner</span>, <span >William Farfan-Rios</span>, <span >Brian S. Maitner</span>, <span >Sean T. Michaletz</span>, <span >Imma Oliveras Menor</span>, <span >Richard J. Telford</span>, <span >Adam Ccahuana</span>, <span >Rudi Cruz</span>, <span >Jhonatan Sallo-Bravo</span>, <span >Paul Efren Santos-Andrade</span>, <span >Lucely L. Vilca-Bustamante</span>, <span >Matiss Castorena</span>, <span >Julia Chacón-Labella</span>, <span >Casper Tai Christiansen</span>, <span >Sandra M. Duran</span>, <span >Dagmar D. Egelkraut</span>, <span >Ragnhild Gya</span>, <span >Siri Vatsø Haugum</span>, <span >Lorah Seltzer</span>, <span >Miles R. Silman</span>, <span >Tanya Strydom</span>, <span >Marcus P. Spiegel</span>, <span >Agustina Barros</span>, <span >Kristine Birkeli</span>, <span >Mickey Boakye</span>, <span >Fernanda Chiappero</span>, <span >Adam Chmurzynski</span>, <span >Josef C. Garen</span>, <span >Joseph Gaudard</span>, <span >Tasha-Leigh J. Gauthier</span>, <span >Sonya R. Geange</span>, <span >Fiorella N. Gonzales</span>, <span >Jonathan J. Henn</span>, <span >Kristýna Hošková</span>, <span >Anders Isaksen</span>, <span >Laura H. Jessup</span>, <span >Will Johnson</span>, <span >Erik Kusch</span>, <span >Kai Lepley</span>, <span >Mackenzie Lift</span>, <span >Trace E. Martyn</span>, <span >Miguel Muñoz Mazon</span>, <span >Sara L. Middleton</span>, <span >Natalia L. Quinteros Casaverde</span>, <span >Jocelyn Navarro</span>, <span >Verónica Zepeda</span>, <span >Korina Ocampo-Zuleta</span>, <span >Andrea Carmeli Palomino-Cardenas</span>, <span >Samuel Pastor Ploskonka</span>, <span >Maria Elisa Pierfederici</span>, <span >Verónica Pinelli</span>, <span >Jess Rickenback</span>, <span >Ruben E. Roos</span>, <span >Hilde Stokland Rui</span>, <span >Eugenia Sanchez Diaz</span>, <span >Andrea Sánchez-Tapia</span>, <span >Alyssa Smith</span>, <span >Erickson Urquiaga-Flores</span>, <span >Jonathan von Oppen</span>, <span >Brian J. Enquist</span>
+  </div>
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    February 2024
   </span>
-  (2013).
-  <a href="/publication/conference-paper/">An example conference paper</a>.
-  In <em>STC</em>.
   
-  <p>
+
+  
+  <span class="middot-divider"></span>
+  <span class="pub-publication">
+    
+      Nature Scientific Data
+    
+  </span>
+  
+
+  
+
+  
+  
+  
+
+  
+  
+
+</div>
+
+  
+
+  
+  
+  
+
+  <h3 class="article-title mb-1 mt-3">
+    <a href="/publication/plant-trait-and-vegetation-data-along-a-1314-m-elevation-gradient-with-fire-history-in-puna-grasslands-peru/">Plant trait and vegetation data along a 1314m elevation gradient with fire history in Puna grasslands, Perú</a>
+  </h3>
+
+  
+  <a href="/publication/plant-trait-and-vegetation-data-along-a-1314-m-elevation-gradient-with-fire-history-in-puna-grasslands-peru/" class="summary-link">
+    <div class="article-style">
+      <p>Plant Functional Trait Campaign Dataset from the Peruvian Andes.</p>
+    </div>
+  </a>
+  
+
+  
+  <div class="btn-links">
+    
 
 
 
@@ -888,100 +1170,2905 @@
 
 
 
-<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="http://eprints.soton.ac.uk/352095/1/Cushen-IMV2013.pdf" target="_blank" rel="noopener">
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="http://dx.doi.org/10.1038/s41597-024-02980-3" target="_blank" rel="noopener">
   PDF
 </a>
 
 
 
-<button type="button" class="btn btn-outline-primary my-1 mr-1 btn-sm js-cite-modal"
-        data-filename="/publication/conference-paper/cite.bib">
-  Cite
-</button>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+        
+          
+        
+
+        <div class="grid-sizer col-lg-12 isotope-item pubtype-3 year-2023">
+          
+            
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+<div class="card-simple">
+
+  
+    
+
+
+<div class="article-metadata">
+
+  
+  
+  
+  
+  <div>
+    
+
+  
+  <span ><a href="/author/erik-kusch/">Erik Kusch</a></span>, <span >Alejandro Ordonez</span>
+  </div>
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    August 2023
+  </span>
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="pub-publication">
+    
+      <em>TBD</em>
+    
+  </span>
+  
+
+  
+
+  
+  
+  
+
+  
+  
+
+</div>
+
+  
+
+  
+  
+  
+
+  <h3 class="article-title mb-1 mt-3">
+    <a href="/publication/ecological-network-resilience-extinction-proxies-updating-projections-of-ecological-networks/">Ecological Network Resilience &amp; Extinction Proxies - Updating Projections of Ecological Networks</a>
+  </h3>
+
+  
+  <a href="/publication/ecological-network-resilience-extinction-proxies-updating-projections-of-ecological-networks/" class="summary-link">
+    <div class="article-style">
+      <p>Exploration of biodiversity scenarios of 81 mutualistic networks following extinction simulations according to different primary extinction risk proxies, ecological network resilience characteristics, and extinction cascade directionalities.</p>
+    </div>
+  </a>
+  
+
+  
+  <div class="btn-links">
+    
+
+
+
+
+
+
+
+
+  
+    
+  
+
+
+
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://doi.org/10.1101/2023.08.02.551629" target="_blank" rel="noopener">
+  PDF
+</a>
+
+
 
 
   
   
     
   
-<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="/#" target="_blank" rel="noopener">
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://github.com/ErikKusch/Ecological-Network-Extinction-Simulations" target="_blank" rel="noopener">
   Code
 </a>
 
 
-  
-  
-    
-  
-<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="/#" target="_blank" rel="noopener">
-  Dataset
-</a>
-
 
 
   
-  <a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="/project/internal-project/">
+  <a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="/project/phd-packages/">
     Project
   </a>
   
 
 
 
+
+
+
+
+
+
+
+
+  </div>
   
+
+</div>
+
+          
+        </div>
+
+        
+
+        
+          
+        
+
+        <div class="grid-sizer col-lg-12 isotope-item pubtype-3 year-2023">
+          
+            
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+<div class="card-simple">
+
+  
+    
+
+
+<div class="article-metadata">
+
+  
+  
+  
+  
+  <div>
+    
+
+  
+  <span ><a href="/author/erik-kusch/">Erik Kusch</a></span>, <span >Anna C. Vinton</span>
+  </div>
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    August 2023
+  </span>
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="pub-publication">
+    
+      <em>TBD</em>
+    
+  </span>
+  
+
+  
+
+  
+  
+  
+
+  
+  
+
+</div>
+
+  
+
+  
+  
+  
+
+  <h3 class="article-title mb-1 mt-3">
+    <a href="/publication/a-novel-simulation-framework-for-validation-of-ecological-network-inference/">A Novel Simulation Framework for Validation of Ecological Network Inference</a>
+  </h3>
+
+  
+  <a href="/publication/a-novel-simulation-framework-for-validation-of-ecological-network-inference/" class="summary-link">
+    <div class="article-style">
+      <p>Simulation framework for generation of data ready for ecological network inference and validation of network inference approaches.</p>
+    </div>
+  </a>
+  
+
+  
+  <div class="btn-links">
+    
+
+
+
+
+
+
+
+
   
     
   
-<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="/#" target="_blank" rel="noopener">
-  Poster
+
+
+
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://doi.org/10.1101/2023.08.05.552122" target="_blank" rel="noopener">
+  PDF
 </a>
 
 
+
+
+
+
+
   
-  <a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="/slides/example/" target="_blank">
-    Slides
+  <a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="/project/phd-packages/">
+    Project
   </a>
   
 
 
-  
-  
-    
-  
-<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="/#" target="_blank" rel="noopener">
-  Video
-</a>
-
-
-  
-  
-    
-  
-<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="/#" target="_blank" rel="noopener">
-  Source Document
-</a>
 
 
 
+
+
+
+
+
+
+  </div>
   
+
+</div>
+
+          
+        </div>
+
+        
+
+        
+          
+        
+
+        <div class="grid-sizer col-lg-12 isotope-item pubtype-3 year-2023">
+          
+            
+
+
+
+
+
   
+
+
+
+
+
+  
+
+
+<div class="card-simple">
+
   
     
+
+
+<div class="article-metadata">
+
   
   
   
   
-  
+  <div>
     
+
   
-  <a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="http://example.org" target="_blank" rel="noopener">
+  <span ><a href="/author/erik-kusch/">Erik Kusch</a></span>, <span >Malyon Bimler</span>, <span >James A. Lutz</span>, <span >Alejandro Ordonez</span>
+  </div>
+  
+  
+
+  
+  <span class="article-date">
     
-    Custom Link
+    
+      
+    
+    August 2023
+  </span>
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="pub-publication">
+    
+      <em>TBD</em>
+    
+  </span>
+  
+
+  
+
+  
+  
+  
+
+  
+  
+
+</div>
+
+  
+
+  
+  
+  
+
+  <h3 class="article-title mb-1 mt-3">
+    <a href="/publication/ecological-network-inference-is-not-consistent-across-sales-or-approaches/">Ecological Network Inference is not Consistent Across Scales or Approaches</a>
+  </h3>
+
+  
+  <a href="/publication/ecological-network-inference-is-not-consistent-across-sales-or-approaches/" class="summary-link">
+    <div class="article-style">
+      <p>Comparison of ecological network inferred with contemporary methodology across ecologically relevant scales.</p>
+    </div>
   </a>
+  
 
-</p>
+  
+  <div class="btn-links">
+    
+
+
+
+
+
+
+
+
+  
+    
+  
+
+
+
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://doi.org/10.1101/2023.07.13.548816" target="_blank" rel="noopener">
+  PDF
+</a>
+
+
+
 
   
   
+    
+  
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://github.com/ErikKusch/Ecological-Network-Inference-Across-Scales" target="_blank" rel="noopener">
+  Code
+</a>
+
+
+
+
+  
+  <a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="/project/phd-packages/">
+    Project
+  </a>
+  
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+        
+          
+        
+
+        <div class="grid-sizer col-lg-12 isotope-item pubtype-2 year-2023">
+          
+            
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+<div class="card-simple">
+
+  
+    
+
+
+<div class="article-metadata">
+
+  
+  
+  
+  
+  <div>
+    
+
+  
+  <span >M.Isidora Ávila-Thieme</span>, <span >Erik Kusch</span>, <span >Derek Corcoran</span>, <span >Simón P. Castillo</span>, <span >Fernanda S. Valdovinos</span>, <span >Sergio A. Navarrete</span>, <span >Pablo A. Marquet</span>
+  </div>
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    June 2023
+  </span>
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="pub-publication">
+    
+      Methods in Ecology and Evolution
+    
+  </span>
+  
+
+  
+
+  
+  
+  
+
+  
+  
+
+</div>
+
+  
+
+  
+  
+  
+
+  <h3 class="article-title mb-1 mt-3">
+    <a href="/publication/networkextinction-an-r-package-to-simulate-extinctions-propagation-and-rewiring-potential-in-ecological-networks/">NetworkExtinction - An R Package to Simulate Extinction Propagation and Rewiring Potential in Ecological Networks</a>
+  </h3>
+
+  
+  <a href="/publication/networkextinction-an-r-package-to-simulate-extinctions-propagation-and-rewiring-potential-in-ecological-networks/" class="summary-link">
+    <div class="article-style">
+      <p>R package for exploration of extinction and rewiring processes in ecological networks.</p>
+    </div>
+  </a>
+  
+
+  
+  <div class="btn-links">
+    
+
+
+
+
+
+
+
+
+  
+    
+  
+
+
+
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://doi.org/10.1111/2041-210X.14126" target="_blank" rel="noopener">
+  PDF
+</a>
+
+
+
+
+
+
+
+  
+  <a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="/project/phd-packages/">
+    Project
+  </a>
+  
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+        
+          
+        
+
+        <div class="grid-sizer col-lg-12 isotope-item pubtype-2 year-2023">
+          
+            
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+<div class="card-simple">
+
+  
+    
+
+
+<div class="article-metadata">
+
+  
+  
+  
+  
+  <div>
+    
+
+  
+  <span >Connor Bernard</span>, <span >Gabriel Silva Santos</span>, <span >Jacques Deere</span>, <span >Roberto Rodriguez-Caro</span>, <span >Pol Capdevila</span>, <span ><a href="/author/erik-kusch/">Erik Kusch</a></span>, <span >Samuel J L Gascoigne</span>, <span >John Jackson</span>, <span >Roberto Salguero-Gómez</span>
+  </div>
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    June 2023
+  </span>
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="pub-publication">
+    
+      Nature Scientific Data
+    
+  </span>
+  
+
+  
+
+  
+  
+  
+
+  
+  
+
+</div>
+
+  
+
+  
+  
+  
+
+  <h3 class="article-title mb-1 mt-3">
+    <a href="/publication/mosaic-a-unified-trait-database-to-complement-structured-population-models/">MOSAIC - A Unified Trait Database to Complement Structured Population Models</a>
+  </h3>
+
+  
+  <a href="/publication/mosaic-a-unified-trait-database-to-complement-structured-population-models/" class="summary-link">
+    <div class="article-style">
+      <p>Integration of multiple demographic data bases into one easily accessible one-stop-shop for your demographic needs.</p>
+    </div>
+  </a>
+  
+
+  
+  <div class="btn-links">
+    
+
+
+
+
+
+
+
+
+  
+    
+  
+
+
+
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://doi.org/10.1038/s41597-023-02070-w" target="_blank" rel="noopener">
+  PDF
+</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+        
+          
+        
+
+        <div class="grid-sizer col-lg-12 isotope-item pubtype-3 year-2022">
+          
+            
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+<div class="card-simple">
+
+  
+    
+
+
+<div class="article-metadata">
+
+  
+  
+  
+  
+  <div>
+    
+
+  
+  <span >M.Isidora Ávila-Thieme</span>, <span >Derek Corcoran</span>, <span >Erik Kusch</span>, <span >Simón P. Castillo</span>, <span >Fernanda S. Valdovinos</span>, <span >Sergio A. Navarrete</span>, <span >Pablo A. Marquet</span>
+  </div>
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    December 2022
+  </span>
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="pub-publication">
+    
+      <em>TBD</em>
+    
+  </span>
+  
+
+  
+
+  
+  
+  
+
+  
+  
+
+</div>
+
+  
+
+  
+  
+  
+
+  <h3 class="article-title mb-1 mt-3">
+    <a href="/publication/in-review/networkextinction-an-r-package-to-simulate-extinctions-propagation-and-rewiring-potential-in-ecological-networks/">NetworkExtinction - an R package to simulate extinction’s propagation and rewiring potential in ecological networks</a>
+  </h3>
+
+  
+  <a href="/publication/in-review/networkextinction-an-r-package-to-simulate-extinctions-propagation-and-rewiring-potential-in-ecological-networks/" class="summary-link">
+    <div class="article-style">
+      <p>R package for exploration of exctinction and rewiring processes in ecological networks.</p>
+    </div>
+  </a>
+  
+
+  
+  <div class="btn-links">
+    
+
+
+
+
+
+
+
+
+  
+    
+  
+
+
+
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://www.biorxiv.org/content/10.1101/2020.10.17.305391v2" target="_blank" rel="noopener">
+  PDF
+</a>
+
+
+
+
+
+
+
+  
+  <a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="/project/phd-packages/">
+    Project
+  </a>
+  
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+        
+          
+        
+
+        <div class="grid-sizer col-lg-12 isotope-item pubtype-2 year-2022">
+          
+            
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+<div class="card-simple">
+
+  
+    
+
+
+<div class="article-metadata">
+
+  
+  
+  
+  
+  <div>
+    
+
+  
+  <span ><a href="/author/erik-kusch/">Erik Kusch</a></span>, <span >Malyon Bimler</span>, <span >James A. Lutz</span>, <span >Alejandro Ordonez</span>
+  </div>
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    August 2022
+  </span>
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="pub-publication">
+    
+      <em>TBD</em>
+    
+  </span>
+  
+
+  
+
+  
+  
+  
+
+  
+  
+
+</div>
+
+  
+
+  
+  
+  
+
+  <h3 class="article-title mb-1 mt-3">
+    <a href="/publication/in-review/ecological-network-inference-is-not-consistent-across-sales-or-approaches/">Ecological network inference is not consistent across sales or approaches</a>
+  </h3>
+
+  
+  <a href="/publication/in-review/ecological-network-inference-is-not-consistent-across-sales-or-approaches/" class="summary-link">
+    <div class="article-style">
+      <p>Comparison of ecological network inferred with contemporary methodology across ecologically relevant scales.</p>
+    </div>
+  </a>
+  
+
+  
+  <div class="btn-links">
+    
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+        
+          
+        
+
+        <div class="grid-sizer col-lg-12 isotope-item pubtype-2 year-2022">
+          
+            
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+<div class="card-simple">
+
+  
+    
+
+
+<div class="article-metadata">
+
+  
+  
+  
+  
+  <div>
+    
+
+  
+  <span >Erick Lundgren</span>, <span >Daniel Ramp</span>, <span >Owen Middleton</span>, <span >Eamonn Wooster</span>, <span >Erik Kusch</span>, <span >Mairin Balisi</span>, <span >William Ripple</span>, <span >Chris Hasselerharm</span>, <span >Jessica Sanchez</span>, <span >Mystyn Mills</span>, <span >Arian Wallach</span>
+  </div>
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    May 2022
+  </span>
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="pub-publication">
+    
+      <em>Journal of Animal Ecology</em>
+    
+  </span>
+  
+
+  
+
+  
+  
+  
+
+  
+  
+
+</div>
+
+  
+
+  
+  
+  
+
+  <h3 class="article-title mb-1 mt-3">
+    <a href="/publication/journal-article/a-novel-trophic-cascade-between-cougars-and-feral-donkeys-shapes-desert-wetlands/">A novel trophic cascade between cougars and feral donkeys shapes desert wetlands</a>
+  </h3>
+
+  
+  <a href="/publication/journal-article/a-novel-trophic-cascade-between-cougars-and-feral-donkeys-shapes-desert-wetlands/" class="summary-link">
+    <div class="article-style">
+      <p>Analysis of spatio-temporal behaviour of donkeys and other grazers in response to predation by cougars.</p>
+    </div>
+  </a>
+  
+
+  
+  <div class="btn-links">
+    
+
+
+
+
+
+
+
+
+  
+    
+  
+
+
+
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://besjournals.onlinelibrary.wiley.com/doi/10.1111/1365-2656.13766" target="_blank" rel="noopener">
+  PDF
+</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+        
+          
+        
+
+        <div class="grid-sizer col-lg-12 isotope-item pubtype-2 year-2022">
+          
+            
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+<div class="card-simple">
+
+  
+    
+
+
+<div class="article-metadata">
+
+  
+  
+  
+  
+  <div>
+    
+
+  
+  <span >Erick Lundgren</span>, <span >Daniel Ramp</span>, <span >Owen Middleton</span>, <span >Eamonn Wooster</span>, <span >Erik Kusch</span>, <span >Mairin Balisi</span>, <span >William Ripple</span>, <span >Chris Hasselerharm</span>, <span >Jessica Sanchez</span>, <span >Mystyn Mills</span>, <span >Arian Wallach</span>
+  </div>
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    May 2022
+  </span>
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="pub-publication">
+    
+      <em>Journal of Animal Ecology</em>
+    
+  </span>
+  
+
+  
+
+  
+  
+  
+
+  
+  
+
+</div>
+
+  
+
+  
+  
+  
+
+  <h3 class="article-title mb-1 mt-3">
+    <a href="/publication/a-novel-trophic-cascade-between-cougars-and-feral-donkeys-shapes-desert-wetlands/">A novel trophic cascade between cougars and feral donkeys shapes desert wetlands</a>
+  </h3>
+
+  
+  <a href="/publication/a-novel-trophic-cascade-between-cougars-and-feral-donkeys-shapes-desert-wetlands/" class="summary-link">
+    <div class="article-style">
+      <p>Analysis of spatio-temporal behaviour of donkeys and other grazers in response to predation by cougars.</p>
+    </div>
+  </a>
+  
+
+  
+  <div class="btn-links">
+    
+
+
+
+
+
+
+
+
+  
+    
+  
+
+
+
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://besjournals.onlinelibrary.wiley.com/doi/10.1111/1365-2656.13766" target="_blank" rel="noopener">
+  PDF
+</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+        
+          
+        
+
+        <div class="grid-sizer col-lg-12 isotope-item pubtype-2 year-2022">
+          
+            
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+<div class="card-simple">
+
+  
+    
+
+
+<div class="article-metadata">
+
+  
+  
+  
+  
+  <div>
+    
+
+  
+  <span ><a href="/author/erik-kusch/">Erik Kusch</a></span>, <span >Richard Davy</span>, <span >Alistair Seddon</span>
+  </div>
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    April 2022
+  </span>
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="pub-publication">
+    
+      <em>Journal of Ecology</em>
+    
+  </span>
+  
+
+  
+
+  
+  
+  
+
+  
+  
+
+</div>
+
+  
+
+  
+  
+  
+
+  <h3 class="article-title mb-1 mt-3">
+    <a href="/publication/vegetation-memory-effects-and-their-association-with-vegetation-resilience-in-global-drylands/">Vegetation memory effects and their association with vegetation resilience in global drylands</a>
+  </h3>
+
+  
+  <a href="/publication/vegetation-memory-effects-and-their-association-with-vegetation-resilience-in-global-drylands/" class="summary-link">
+    <div class="article-style">
+      <p>Expanding on my M.Sc. thesis by applying my vegetation memory framework to global drylands.</p>
+    </div>
+  </a>
+  
+
+  
+  <div class="btn-links">
+    
+
+
+
+
+
+
+
+
+  
+    
+  
+
+
+
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://doi.org/10.1111/1365-2745.13891" target="_blank" rel="noopener">
+  PDF
+</a>
+
+
+
+
+  
+  
+    
+  
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://github.com/ErikKusch/Vegetation-Memory" target="_blank" rel="noopener">
+  Code
+</a>
+
+
+
+
+  
+  <a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="/project/vegetation-memory-across-global-dryland-regions/">
+    Project
+  </a>
+  
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+        
+          
+        
+
+        <div class="grid-sizer col-lg-12 isotope-item pubtype-2 year-2022">
+          
+            
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+<div class="card-simple">
+
+  
+    
+
+
+<div class="article-metadata">
+
+  
+  
+  
+  
+  <div>
+    
+
+  
+  <span ><a href="/author/erik-kusch/">Erik Kusch</a></span>, <span >Richard Davy</span>, <span >Alistair Seddon</span>
+  </div>
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    April 2022
+  </span>
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="pub-publication">
+    
+      <em>Journal of Ecology</em>
+    
+  </span>
+  
+
+  
+
+  
+  
+  
+
+  
+  
+
+</div>
+
+  
+
+  
+  
+  
+
+  <h3 class="article-title mb-1 mt-3">
+    <a href="/publication/journal-article/vegetation-memory-effects-and-their-association-with-vegetation-resilience-in-global-drylands/">Vegetation memory effects and their association with vegetation resilience in global drylands</a>
+  </h3>
+
+  
+  <a href="/publication/journal-article/vegetation-memory-effects-and-their-association-with-vegetation-resilience-in-global-drylands/" class="summary-link">
+    <div class="article-style">
+      <p>Expanding on my M.Sc. thesis by applying my vegetation memory framework to global drylands.</p>
+    </div>
+  </a>
+  
+
+  
+  <div class="btn-links">
+    
+
+
+
+
+
+
+
+
+  
+    
+  
+
+
+
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://doi.org/10.1111/1365-2745.13891" target="_blank" rel="noopener">
+  PDF
+</a>
+
+
+
+
+  
+  
+    
+  
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://github.com/ErikKusch/Vegetation-Memory" target="_blank" rel="noopener">
+  Code
+</a>
+
+
+
+
+  
+  <a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="/project/vegetation-memory-across-global-dryland-regions/">
+    Project
+  </a>
+  
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+        
+          
+        
+
+        <div class="grid-sizer col-lg-12 isotope-item pubtype-3 year-2022">
+          
+            
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+<div class="card-simple">
+
+  
+    
+
+
+<div class="article-metadata">
+
+  
+  
+  
+  
+  <div>
+    
+
+  
+  <span >Connor Bernard</span>, <span >Gabriel Silva Santos</span>, <span >Jacques Deere</span>, <span >Roberto Rodriguez-Caro</span>, <span >Pol Capdevila</span>, <span ><a href="/author/erik-kusch/">Erik Kusch</a></span>, <span >Samuel J L Gascoigne</span>, <span >John Jackson</span>, <span >Roberto Salguero-Gómez</span>
+  </div>
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    March 2022
+  </span>
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="pub-publication">
+    
+      <em>TBD</em>
+    
+  </span>
+  
+
+  
+
+  
+  
+  
+
+  
+  
+
+</div>
+
+  
+
+  
+  
+  
+
+  <h3 class="article-title mb-1 mt-3">
+    <a href="/publication/in-review/mosaic-a-unified-trait-database-to-complement-structured-population-models/">MOSAIC - A Unified Trait Database to Complement Structured Population Models</a>
+  </h3>
+
+  
+  <a href="/publication/in-review/mosaic-a-unified-trait-database-to-complement-structured-population-models/" class="summary-link">
+    <div class="article-style">
+      <p>Integration of multiple demographic data bases into one easily accessible one-stop-shop for your demographic needs.</p>
+    </div>
+  </a>
+  
+
+  
+  <div class="btn-links">
+    
+
+
+
+
+
+
+
+
+  
+    
+  
+
+
+
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://www.biorxiv.org/content/10.1101/2022.03.09.483599v1" target="_blank" rel="noopener">
+  PDF
+</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+        
+          
+        
+
+        <div class="grid-sizer col-lg-12 isotope-item pubtype-2 year-2022">
+          
+            
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+<div class="card-simple">
+
+  
+    
+
+
+<div class="article-metadata">
+
+  
+  
+  
+  
+  <div>
+    
+
+  
+  <span ><a href="/author/erik-kusch/">Erik Kusch</a></span>, <span >Richard Davy</span>
+  </div>
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    January 2022
+  </span>
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="pub-publication">
+    
+      <em>Environmental Research Letters</em>
+    
+  </span>
+  
+
+  
+
+  
+  
+  
+
+  
+  
+
+</div>
+
+  
+
+  
+  
+  
+
+  <h3 class="article-title mb-1 mt-3">
+    <a href="/publication/krigr-a-tool-for-statistically-downscaling-climate-reanalysis-data-for-ecological-applications/">KrigR – A tool for downloading and statistically downscaling climate reanalysis data</a>
+  </h3>
+
+  
+  <a href="/publication/krigr-a-tool-for-statistically-downscaling-climate-reanalysis-data-for-ecological-applications/" class="summary-link">
+    <div class="article-style">
+      <p>An R Package aimed at end-users of state-of-the-art climate reanalysis data to streamline retrieval, pre-processing, and statistical interpolation of ERA5(-Land) data.</p>
+    </div>
+  </a>
+  
+
+  
+  <div class="btn-links">
+    
+
+
+
+
+
+
+
+
+  
+    
+  
+
+
+
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://doi.org/10.1088/1748-9326/ac48b3" target="_blank" rel="noopener">
+  PDF
+</a>
+
+
+
+
+
+
+
+  
+  <a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="/project/krigr/">
+    Project
+  </a>
+  
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+        
+          
+        
+
+        <div class="grid-sizer col-lg-12 isotope-item pubtype-2 year-2022">
+          
+            
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+<div class="card-simple">
+
+  
+    
+
+
+<div class="article-metadata">
+
+  
+  
+  
+  
+  <div>
+    
+
+  
+  <span ><a href="/author/erik-kusch/">Erik Kusch</a></span>, <span >Richard Davy</span>
+  </div>
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    January 2022
+  </span>
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="pub-publication">
+    
+      <em>Environmental Research Letters</em>
+    
+  </span>
+  
+
+  
+
+  
+  
+  
+
+  
+  
+
+</div>
+
+  
+
+  
+  
+  
+
+  <h3 class="article-title mb-1 mt-3">
+    <a href="/publication/journal-article/krigr-a-tool-for-statistically-downscaling-climate-reanalysis-data-for-ecological-applications/">KrigR – A tool for downloading and statistically downscaling climate reanalysis data</a>
+  </h3>
+
+  
+  <a href="/publication/journal-article/krigr-a-tool-for-statistically-downscaling-climate-reanalysis-data-for-ecological-applications/" class="summary-link">
+    <div class="article-style">
+      <p>An R Package aimed at end-users of state-of-the-art climate reanalysis data to streamline retrieval, pre-processing, and statistical interpolation of ERA5(-Land) data.</p>
+    </div>
+  </a>
+  
+
+  
+  <div class="btn-links">
+    
+
+
+
+
+
+
+
+
+  
+    
+  
+
+
+
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://doi.org/10.1088/1748-9326/ac48b3" target="_blank" rel="noopener">
+  PDF
+</a>
+
+
+
+
+
+
+
+  
+  <a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="/project/krigr/">
+    Project
+  </a>
+  
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+        
+          
+        
+
+        <div class="grid-sizer col-lg-12 isotope-item pubtype-2 year-2021">
+          
+            
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+<div class="card-simple">
+
+  
+    
+
+
+<div class="article-metadata">
+
+  
+  
+  
+  
+  <div>
+    
+
+  
+  <span >Richard Davy</span>, <span ><a href="/author/erik-kusch/">Erik Kusch</a></span>
+  </div>
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    November 2021
+  </span>
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="pub-publication">
+    
+      <em>Environmental Research Letters</em>
+    
+  </span>
+  
+
+  
+
+  
+  
+  
+
+  
+  
+
+</div>
+
+  
+
+  
+  
+  
+
+  <h3 class="article-title mb-1 mt-3">
+    <a href="/publication/reconciling-high-resolution-climate-datasets-using-krigr/">Reconciling high resolution climate datasets using KrigR</a>
+  </h3>
+
+  
+  <a href="/publication/reconciling-high-resolution-climate-datasets-using-krigr/" class="summary-link">
+    <div class="article-style">
+      <p>Exploration of the usage of KrigR and implications for the wider field of climate data products for the use in Life Science research.</p>
+    </div>
+  </a>
+  
+
+  
+  <div class="btn-links">
+    
+
+
+
+
+
+
+
+
+  
+    
+  
+
+
+
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://doi.org/10.1088/1748-9326/ac39bf" target="_blank" rel="noopener">
+  PDF
+</a>
+
+
+
+
+
+
+
+  
+  <a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="/project/krigr/">
+    Project
+  </a>
+  
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+        
+          
+        
+
+        <div class="grid-sizer col-lg-12 isotope-item pubtype-2 year-2021">
+          
+            
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+<div class="card-simple">
+
+  
+    
+
+
+<div class="article-metadata">
+
+  
+  
+  
+  
+  <div>
+    
+
+  
+  <span >Richard Davy</span>, <span ><a href="/author/erik-kusch/">Erik Kusch</a></span>
+  </div>
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    November 2021
+  </span>
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="pub-publication">
+    
+      <em>Environmental Research Letters</em>
+    
+  </span>
+  
+
+  
+
+  
+  
+  
+
+  
+  
+
+</div>
+
+  
+
+  
+  
+  
+
+  <h3 class="article-title mb-1 mt-3">
+    <a href="/publication/journal-article/reconciling-high-resolution-climate-datasets-using-krigr/">Reconciling high resolution climate datasets using KrigR</a>
+  </h3>
+
+  
+  <a href="/publication/journal-article/reconciling-high-resolution-climate-datasets-using-krigr/" class="summary-link">
+    <div class="article-style">
+      <p>Exploration of the usage of KrigR and implications for the wider field of climate data products for the use in Life Science research.</p>
+    </div>
+  </a>
+  
+
+  
+  <div class="btn-links">
+    
+
+
+
+
+
+
+
+
+  
+    
+  
+
+
+
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://doi.org/10.1088/1748-9326/ac39bf" target="_blank" rel="noopener">
+  PDF
+</a>
+
+
+
+
+
+
+
+  
+  <a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="/project/krigr/">
+    Project
+  </a>
+  
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+        
+          
+        
+
+        <div class="grid-sizer col-lg-12 isotope-item pubtype-7 year-2019">
+          
+            
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+<div class="card-simple">
+
+  
+    
+
+
+<div class="article-metadata">
+
+  
+  
+  
+  
+  <div>
+    
+
+  
+  <span ><a href="/author/erik-kusch/">Erik Kusch</a></span>
+  </div>
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    May 2019
+  </span>
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="pub-publication">
+    
+      University of Bergen
+    
+  </span>
+  
+
+  
+
+  
+  
+  
+
+  
+  
+
+</div>
+
+  
+
+  
+  
+  
+
+  <h3 class="article-title mb-1 mt-3">
+    <a href="/publication/m.sc._inferring-vegetation-memory-from-remote-copy/">Inferring Vegetation Memory from Remote Sensing Data using novel Climate Reconstruction Products</a>
+  </h3>
+
+  
+  <a href="/publication/m.sc._inferring-vegetation-memory-from-remote-copy/" class="summary-link">
+    <div class="article-style">
+      <p>My M.Sc. thesis at the University of Bergen.</p>
+    </div>
+  </a>
+  
+
+  
+  <div class="btn-links">
+    
+
+
+
+
+
+
+
+
+  
+    
+  
+
+
+
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://github.com/ErikKusch/M.Sc.-Thesis/raw/master/D0_Manuscript.pdf" target="_blank" rel="noopener">
+  PDF
+</a>
+
+
+
+
+  
+  
+    
+  
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://github.com/ErikKusch/M.Sc.-Thesis" target="_blank" rel="noopener">
+  Code
+</a>
+
+
+
+
+  
+  <a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="/project/vegetation-memory-across-global-dryland-regions/">
+    Project
+  </a>
+  
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+        
+          
+        
+
+        <div class="grid-sizer col-lg-12 isotope-item pubtype-7 year-2019">
+          
+            
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+<div class="card-simple">
+
+  
+    
+
+
+<div class="article-metadata">
+
+  
+  
+  
+  
+  <div>
+    
+
+  
+  <span ><a href="/author/erik-kusch/">Erik Kusch</a></span>
+  </div>
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    May 2019
+  </span>
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="pub-publication">
+    
+      University of Bergen
+    
+  </span>
+  
+
+  
+
+  
+  
+  
+
+  
+  
+
+</div>
+
+  
+
+  
+  
+  
+
+  <h3 class="article-title mb-1 mt-3">
+    <a href="/publication/journal-article/m.sc._inferring-vegetation-memory-from-remote-copy/">Inferring Vegetation Memory from Remote Sensing Data using novel Climate Reconstruction Products</a>
+  </h3>
+
+  
+  <a href="/publication/journal-article/m.sc._inferring-vegetation-memory-from-remote-copy/" class="summary-link">
+    <div class="article-style">
+      <p>My M.Sc. thesis at the University of Bergen.</p>
+    </div>
+  </a>
+  
+
+  
+  <div class="btn-links">
+    
+
+
+
+
+
+
+
+
+  
+    
+  
+
+
+
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://github.com/ErikKusch/M.Sc.-Thesis/blob/master/D0_Manuscript.pdf" target="_blank" rel="noopener">
+  PDF
+</a>
+
+
+
+
+  
+  
+    
+  
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://github.com/ErikKusch/M.Sc.-Thesis" target="_blank" rel="noopener">
+  Code
+</a>
+
+
+
+
+  
+  <a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="/project/vegetation-memory-across-global-dryland-regions/">
+    Project
+  </a>
+  
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+        
+          
+        
+
+        <div class="grid-sizer col-lg-12 isotope-item pubtype-7 year-2017">
+          
+            
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+<div class="card-simple">
+
+  
+    
+
+
+<div class="article-metadata">
+
+  
+  
+  
+  
+  <div>
+    
+
+  
+  <span ><a href="/author/erik-kusch/">Erik Kusch</a></span>
+  </div>
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    March 2017
+  </span>
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="pub-publication">
+    
+      Technical University of Dresden
+    
+  </span>
+  
+
+  
+
+  
+  
+  
+
+  
+  
+
+</div>
+
+  
+
+  
+  
+  
+
+  <h3 class="article-title mb-1 mt-3">
+    <a href="/publication/journal-article/b.sc._inferring-vegetation-memory-from-remote/">Remote Sensing And Predicting Shifts In Biome Distribution And Resilience Using NDVI Data</a>
+  </h3>
+
+  
+  <a href="/publication/journal-article/b.sc._inferring-vegetation-memory-from-remote/" class="summary-link">
+    <div class="article-style">
+      <p>My B.Sc. thesis at the Technical University of Dresden and University of Bergen.</p>
+    </div>
+  </a>
+  
+
+  
+  <div class="btn-links">
+    
+
+
+
+
+
+
+
+
+  
+    
+  
+
+
+
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://github.com/ErikKusch/B.Sc.-Thesis/blob/master/Thesis_BSc_EKGit.pdf" target="_blank" rel="noopener">
+  PDF
+</a>
+
+
+
+
+  
+  
+    
+  
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://github.com/ErikKusch/B.Sc.-Thesis" target="_blank" rel="noopener">
+  Code
+</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+        
+          
+        
+
+        <div class="grid-sizer col-lg-12 isotope-item pubtype-7 year-2017">
+          
+            
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+<div class="card-simple">
+
+  
+    
+
+
+<div class="article-metadata">
+
+  
+  
+  
+  
+  <div>
+    
+
+  
+  <span ><a href="/author/erik-kusch/">Erik Kusch</a></span>
+  </div>
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    March 2017
+  </span>
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="pub-publication">
+    
+      Technical University of Dresden
+    
+  </span>
+  
+
+  
+
+  
+  
+  
+
+  
+  
+
+</div>
+
+  
+
+  
+  
+  
+
+  <h3 class="article-title mb-1 mt-3">
+    <a href="/publication/b.sc._inferring-vegetation-memory-from-remote/">Remote Sensing And Predicting Shifts In Biome Distribution And Resilience Using NDVI Data</a>
+  </h3>
+
+  
+  <a href="/publication/b.sc._inferring-vegetation-memory-from-remote/" class="summary-link">
+    <div class="article-style">
+      <p>My B.Sc. thesis at the Technical University of Dresden and University of Bergen.</p>
+    </div>
+  </a>
+  
+
+  
+  <div class="btn-links">
+    
+
+
+
+
+
+
+
+
+  
+    
+  
+
+
+
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://github.com/ErikKusch/B.Sc.-Thesis/raw/master/Thesis_BSc_EKGit.pdf" target="_blank" rel="noopener">
+  PDF
+</a>
+
+
+
+
+  
+  
+    
+  
+<a class="btn btn-outline-primary my-1 mr-1 btn-sm" href="https://github.com/ErikKusch/B.Sc.-Thesis" target="_blank" rel="noopener">
+  Code
+</a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+  
+
 </div>
 
           
@@ -1011,6 +4098,8 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js" integrity="sha256-eOgo0OtLL4cdq7RdwRUiGKLX9XsIJ7nGhWEKbohmVAQ=" crossorigin="anonymous"></script>
         
         <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/languages/r.min.js"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/languages/latex.min.js"></script>
         
       
 
@@ -1123,7 +4212,7 @@
   
 
   <p class="powered-by">
-    
+    © 2024
   </p>
 
   

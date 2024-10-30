@@ -1,0 +1,40 @@
+
+<div id="TOC">
+
+</div>
+
+<!-- # Setting Things Up & Preparing the Workshop -->
+<div id="installing-krigr" class="section level2">
+<h2>Installing <code>KrigR</code></h2>
+<p>First of all, we need to install <code>KrigR</code>.</p>
+<!-- {{% alert info %}} -->
+<p>Until we have implemented our <a href="https://github.com/ErikKusch/KrigR/issues?q=is%3Aopen+is%3Aissue+label%3Aenhancement">development ideas and goals</a>, <code>KrigR</code> will not be submitted to <a href="https://cran.r-project.org/">CRAN</a> to avoid the hassle of updating an already accepted package. For the time being, <code>KrigR</code> is only available through the associated <a href="https://github.com/ErikKusch/KrigR">GitHub</a> repository.
+<!-- {{% /alert %}} --></p>
+<p>Installation of an <code>R</code>-Package from GitHub is facilitated via the <code>devtools</code> package and its <code>install_github()</code> function. Thus, <code>KrigR</code> can be installed and loaded as follows:</p>
+<p>{{% alert danger %}}
+As <code>KrigR</code> is currently undergoing substantial development in response to the establishment of a new CDS and deprecation of previous dependency packages, you have to install the latest development version.
+{{% /alert %}}</p>
+<pre class="r"><code>devtools::install_github(&quot;https://github.com/ErikKusch/KrigR&quot;, ref = &quot;Development&quot;)
+library(KrigR)</code></pre>
+</div>
+<div id="cds-api-access" class="section level2">
+<h2>CDS API Access</h2>
+<p>{{% alert danger %}}
+If you have used <code>KrigR</code> or CDS services before 2024-09-16, please be advised that a new CDS has been established and you will need to create a new account and register your new user credentials with <code>KrigR</code> to ensure continued use of it.
+{{% /alert %}}</p>
+<p>Before you can access <a href="https://cds.climate.copernicus.eu/">Climate Data Store</a> (CDS) products through <code>KrigR</code>, you need to <a href="https://accounts.ecmwf.int/auth/realms/ecmwf/login-actions/registration?client_id=cds&amp;tab_id=13GUMw5dlhU">register an account at CDS</a>. Don’t forget to accept the terms and conditions:</p>
+<p><img src="TermsConditions.png" alt=""  /></p>
+<p>Once you have created your account, you can find your API credentials on your personal page (which you access by clicking your name in the top-right corner of the webpage) on the CDS webpage:</p>
+<p><img src="APIKEY.png" alt=""  /></p>
+<p>Once you have done so, we recommend you register the user ID and API Key as characters as seen below (this will match the naming scheme in our workshop material):</p>
+<pre class="r"><code>API_User &lt;- &quot;youremail@somethingortheother&quot;
+API_Key &lt;- &quot;YourApiKeyGoesHereAsACharacterString&quot;</code></pre>
+<p>{{% alert success %}}
+You are now <strong>ready</strong> for <code>KrigR</code>.
+{{% /alert %}}</p>
+<p>If this is your <strong>first contact</strong> with <code>KrigR</code>, we recommend strongly you <strong>follow the workshop material in order</strong>. If you <strong>return to</strong> <code>KrigR</code> with specific questions or ideas, we recommend you make use of the <strong>search function</strong> at the top left of this page. If you are short on time, the <a href="/courses/krigr/quickstart/">quick start</a> guide will be useful to you.</p>
+<!-- ## Session Info -->
+<!-- ```{r, echo = FALSE} -->
+<!-- sessionInfo() -->
+<!-- ``` -->
+</div>

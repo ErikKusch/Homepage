@@ -1,0 +1,1590 @@
+<!DOCTYPE html><html lang="en-gb" >
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.8.0">
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Erik Kusch">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Answers and solutions to the exercises belonging to Part 1 in [Bayesian Networks with Examples in R](https://www.bnlearn.com/book-crc/) by M. Scutari and J.-B. Denis.">
+
+  
+  <link rel="alternate" hreflang="en-gb" href="https://www.erikkusch.com/courses/bayes-nets/part-1/">
+
+  
+
+
+  
+  
+  
+  <meta name="theme-color" content="#858383">
+  
+
+  
+  
+  
+  <script src="/js/mathjax-config.js"></script>
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-1/css/all.min.css" integrity="sha256-4w9DunooKSr3MFXHXWyFER38WmPdm361bQS/2KUWZbU=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.css" integrity="sha256-SHMGCYmST46SoyGgo4YR/9AlK1vf3ff84Aq9yK4hdqM=" crossorigin="anonymous">
+    
+
+    
+
+    
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.1.2/lazysizes.min.js" integrity="sha256-Md1qLToewPeKjfAHU1zyPwOutccPAm5tahnaw7Osw0A=" crossorigin="anonymous" async></script>
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" integrity="" crossorigin="anonymous" async></script>
+      
+    
+      
+
+      
+      
+
+      
+    
+
+  
+
+  
+  
+  
+    
+      
+      
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cutive+Mono%7CLora:400,700%7CRoboto:400,700&display=swap">
+    
+  
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/academic.css">
+
+  
+
+
+
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-186216138-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+
+  function gtag() {
+      dataLayer.push(arguments);
+  }
+
+  function trackOutboundLink(url, target) {
+    gtag('event', 'click', {
+         'event_category': 'outbound',
+         'event_label': url,
+         'transport_type': 'beacon',
+         'event_callback': function () {
+           if (target !== '_blank') {
+             document.location = url;
+           }
+         }
+    });
+    console.debug("Outbound link clicked: " + url);
+  }
+
+  function onClickCallback(event) {
+    if ((event.target.tagName !== 'A') || (event.target.host === window.location.host)) {
+      return;
+    }
+    trackOutboundLink(event.target, event.target.getAttribute('target'));  
+  }
+
+  gtag('js', new Date());
+  gtag('config', 'UA-186216138-1', {});
+
+  
+  document.addEventListener('click', onClickCallback, false);
+</script>
+
+
+  
+
+
+  
+  
+
+  
+
+  <link rel="manifest" href="/index.webmanifest">
+  <link rel="icon" type="image/png" href="/images/icon_hu7658c99d512131214e4d6c003a3f85f7_112593_32x32_fill_lanczos_center_2.png">
+  <link rel="apple-touch-icon" type="image/png" href="/images/icon_hu7658c99d512131214e4d6c003a3f85f7_112593_192x192_fill_lanczos_center_2.png">
+
+  <link rel="canonical" href="https://www.erikkusch.com/courses/bayes-nets/part-1/">
+
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  <meta property="twitter:card" content="summary_large_image">
+  
+  <meta property="twitter:site" content="@ErikKusch">
+  <meta property="twitter:creator" content="@ErikKusch">
+  
+  <meta property="og:site_name" content="Erik Kusch">
+  <meta property="og:url" content="https://www.erikkusch.com/courses/bayes-nets/part-1/">
+  <meta property="og:title" content="Multinomial Bayesian Networks | Erik Kusch">
+  <meta property="og:description" content="Answers and solutions to the exercises belonging to Part 1 in [Bayesian Networks with Examples in R](https://www.bnlearn.com/book-crc/) by M. Scutari and J.-B. Denis."><meta property="og:image" content="https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg">
+  <meta property="twitter:image" content="https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg"><meta property="og:locale" content="en-gb">
+  
+    
+      <meta property="article:published_time" content="2021-04-13T00:00:00&#43;00:00">
+    
+    <meta property="article:modified_time" content="2021-04-13T20:00:00&#43;01:00">
+  
+
+  
+
+
+
+  
+
+
+  
+
+
+  
+
+
+
+
+
+  <title>Multinomial Bayesian Networks | Erik Kusch</title>
+
+</head>
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search" class="form-control">
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+<nav class="navbar navbar-expand-lg navbar-light compensate-for-scrollbar" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="d-none d-lg-inline-flex">
+      <a class="navbar-brand" href="/"><img src="/images/logo_huab2266ff59bbac6a094b6da1268adcf9_208479_0x70_resize_lanczos_2.png" alt="Erik Kusch"></a>
+    </div>
+    
+
+    
+    <button type="button" class="navbar-toggler" data-toggle="collapse"
+            data-target="#navbar-content" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+    <span><i class="fas fa-bars"></i></span>
+    </button>
+    
+
+    
+    <div class="navbar-brand-mobile-wrapper d-inline-flex d-lg-none">
+      <a class="navbar-brand" href="/"><img src="/images/logo_huab2266ff59bbac6a094b6da1268adcf9_208479_0x70_resize_lanczos_2.png" alt="Erik Kusch"></a>
+    </div>
+    
+
+    
+    
+    <div class="navbar-collapse main-menu-item collapse justify-content-center" id="navbar-content">
+
+      
+      <ul class="navbar-nav d-md-inline-flex">
+        
+
+        
+
+        
+        
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link  active" href="/"><span>Home</span></a>
+        </li>
+
+        
+        
+
+        
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"><span>Courses & Workshops</span><span class="caret"></span>
+          </a>
+          <div class="dropdown-menu">
+            
+              <a class="dropdown-item" href="/courses/krigr/"><span>KrigR - State-of-the-Art Climate Data within R</span></a>
+            
+              <a class="dropdown-item" href="/courses/gbif/"><span>Accessing and Referencing GBIF Data for Research</span></a>
+            
+              <a class="dropdown-item" href="/courses/rethinking/"><span>Statistical Rethinking - Introduction to Bayesian Statistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/bayes-nets/"><span>Bayesian Networks - Causality through Bayesian Approaches</span></a>
+            
+              <a class="dropdown-item" href="/courses/biostat101/"><span>Biostats 101 - An Introduction to Biostatistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/excursions-into-biostatistics/"><span>Biostats 301 - Excursions into Biostatistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/bftp-biome-detection/"><span>BFTP - First Steps in Macroecology in R</span></a>
+            
+          </div>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#projects"><span>Projects</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#featured"><span>Publications</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#talks"><span>Talks</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/about"><span>Contact</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+            
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/media/CV_ErikKusch.html" target="_blank" rel="noopener"><span>CV</span></a>
+        </li>
+
+        
+        
+
+      
+
+        
+      </ul>
+    </div>
+
+    <ul class="nav-icons navbar-nav flex-row ml-auto d-flex pl-md-2">
+      
+      <li class="nav-item">
+        <a class="nav-link js-search" href="#" aria-label="Search"><i class="fas fa-search" aria-hidden="true"></i></a>
+      </li>
+      
+
+      
+      <li class="nav-item dropdown theme-dropdown">
+        <a href="#" class="nav-link js-theme-selector" data-toggle="dropdown" aria-haspopup="true">
+          <i class="fas fa-palette" aria-hidden="true"></i>
+        </a>
+        <div class="dropdown-menu">
+          <a href="#" class="dropdown-item js-set-theme-light">
+            <span>Light</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-dark">
+            <span>Dark</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-auto">
+            <span>Automatic</span>
+          </a>
+        </div>
+      </li>
+      
+
+      
+
+    </ul>
+
+  </div>
+</nav>
+
+
+  
+
+<div class="container-fluid docs">
+  <div class="row flex-xl-nowrap">
+    <div class="col-12 col-md-3 col-xl-2 docs-sidebar">
+      
+
+
+
+
+
+  
+    
+  
+
+
+
+
+<form class="docs-search d-flex align-items-center">
+  <button class="btn docs-toggle d-md-none p-0 mr-3" type="button" data-toggle="collapse" data-target="#docs-nav" aria-controls="docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    <span><i class="fas fa-bars"></i></span>
+  </button>
+
+  
+  <input name="q" type="search" class="form-control" placeholder="Search..." autocomplete="off">
+  
+</form>
+
+<nav class="collapse docs-links" id="docs-nav">
+  
+
+  
+  
+  
+  
+  <div class="docs-toc-item">
+    <a class="docs-toc-link" href="/courses/bayes-nets/">Overview</a>
+
+  </div>
+  
+  <div class="docs-toc-item">
+    <a class="docs-toc-link" href="/courses/bayes-nets/introduction/">1 - Theory</a>
+    <ul class="nav docs-sidenav">
+      
+      <li >
+        <a href="/courses/bayes-nets/introduction/">Graph Theory &amp; Bayes</a>
+      </li>
+      
+      <li >
+        <a href="/courses/bayes-nets/networksr/">(Bayesian) Networks &amp; R</a>
+      </li>
+      
+    </ul>
+    
+
+  </div>
+  
+  <div class="docs-toc-item">
+    <a class="docs-toc-link" href="/courses/bayes-nets/part-1/">2 - Static Networks</a>
+    <ul class="nav docs-sidenav">
+      
+      <li class="active">
+        <a href="/courses/bayes-nets/part-1/">Multinomial Bayesian Networks</a>
+      </li>
+      
+      <li >
+        <a href="/courses/bayes-nets/part-2/">Gaussian Bayesian Networks</a>
+      </li>
+      
+      <li >
+        <a href="/courses/bayes-nets/part-3/">Hybrid Bayesian Networks</a>
+      </li>
+      
+      <li >
+        <a href="/courses/bayes-nets/static/">Additional Static Exercises</a>
+      </li>
+      
+    </ul>
+    
+
+  </div>
+  
+  <div class="docs-toc-item">
+    <a class="docs-toc-link" href="/courses/bayes-nets/dynamic/">3 - Dynamic Networks</a>
+    <ul class="nav docs-sidenav">
+      
+      <li >
+        <a href="/courses/bayes-nets/dynamic/">Dynamic Bayesian Networks</a>
+      </li>
+      
+    </ul>
+    
+
+  </div>
+  
+  <div class="docs-toc-item">
+    <a class="docs-toc-link" href="/courses/bayes-nets/inference/">4 - Network Inference</a>
+    <ul class="nav docs-sidenav">
+      
+      <li >
+        <a href="/courses/bayes-nets/inference/">Bayesian Network Inference</a>
+      </li>
+      
+    </ul>
+    
+
+  </div>
+  
+  
+</nav>
+
+    </div>
+
+    
+    <div class="d-none d-xl-block col-xl-2 docs-toc">
+      <ul class="nav toc-top">
+        <li><a href="#" id="back_to_top" class="docs-toc-title">Contents</a></li>
+      </ul>
+
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#material">Material</a></li>
+    <li><a href="#exercises">Exercises</a>
+      <ul>
+        <li><a href="#r-environment"><code>R</code> Environment</a></li>
+        <li><a href="#scutari-11">Scutari 1.1</a></li>
+        <li><a href="#scutari-12">Scutari 1.2</a></li>
+        <li><a href="#scutari-13">Scutari 1.3</a></li>
+        <li><a href="#scutari-14">Scutari 1.4</a></li>
+        <li><a href="#scutari-15">Scutari 1.5</a></li>
+        <li><a href="#scutari-16">Scutari 1.6</a></li>
+      </ul>
+    </li>
+    <li><a href="#session-info">Session Info</a></li>
+  </ul>
+</nav>
+
+      
+    </div>
+    
+
+    <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 docs-content" role="main">
+
+      <article class="article">
+
+        <div class="docs-article-container">
+          <h1>Multinomial Bayesian Networks</h1>
+
+          <div class="article-style">
+            <style>
+
+blockquote{
+color:#633a00;
+}
+
+</style>
+<h2 id="material">Material</h2>
+<ul>
+<li>
+<a href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/content/courses/bayes-nets/3-Multinomial-Networks_03-10-22.html" target="_blank" rel="noopener">Multinomial Bayesian Networks</a></li>
+</ul>
+<h2 id="exercises">Exercises</h2>
+<p>These are answers and solutions to the exercises at the end of Part 1 in 
+<a href="https://www.bnlearn.com/book-crc/" target="_blank" rel="noopener">Bayesian Networks with Examples in R</a> by M. Scutari and J.-B. Denis. I have created these notes as a part of a study-partnership with 
+<a href="https://www.linkedin.com/in/frederik-have-kallesoe-0584889b/" target="_blank" rel="noopener">Frederik Kallesøe</a>. Much of my inspiration for these solutions, where necessary, has been obtained either from chatting with Frederik or by consulting the solutions provided by the authors themselves as in the appendix.</p>
+<h3 id="r-environment"><code>R</code> Environment</h3>
+<p>For today&rsquo;s exercise, I load the following packages:</p>
+<pre><code class="language-r">library(bnlearn)
+library(gRain)
+library(ggplot2)
+library(lattice)
+library(gridExtra)
+</code></pre>
+<h3 id="scutari-11">Scutari 1.1</h3>
+<blockquote>
+<p>Consider the DAG for the survey studied in this chapter and shown in Figure 1.1.</p>
+</blockquote>
+<p>Here&rsquo;s the DAG in question:</p>
+<img src="/courses/networksscutari/Fig1.1.JPG" width="900"/>
+<h4 id="part-1">Part 1.</h4>
+<blockquote>
+<p>List the parents and the children of each node.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Node</th>
+<th>Parent(s)</th>
+<th>Child(ren)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Age (A)</td>
+<td>{ }</td>
+<td>E</td>
+</tr>
+<tr>
+<td>Sex (S)</td>
+<td>{ }</td>
+<td>E</td>
+</tr>
+<tr>
+<td>Education (E)</td>
+<td>A, S</td>
+<td>O, R</td>
+</tr>
+<tr>
+<td>Occupation (O)</td>
+<td>E</td>
+<td>E</td>
+</tr>
+<tr>
+<td>Residence (R)</td>
+<td>E</td>
+<td>E</td>
+</tr>
+<tr>
+<td>Travel (T)</td>
+<td>O, R</td>
+<td>{ }</td>
+</tr>
+</tbody>
+</table>
+<h4 id="part-2">Part 2.</h4>
+<blockquote>
+<p>List all the fundamental connections present in the DAG, and classify them as either serial, divergent or convergent.</p>
+</blockquote>
+<p>Fundamental connections are those paths who contain three vertices/nodes. In directed graphs, they can be classified into three different categories depending on flow of dependencies.</p>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Classification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A → E ← S</td>
+<td>Convergent</td>
+</tr>
+<tr>
+<td>A → E → O</td>
+<td>Serial</td>
+</tr>
+<tr>
+<td>A → E → R</td>
+<td>Serial</td>
+</tr>
+<tr>
+<td>S → E → O</td>
+<td>Serial</td>
+</tr>
+<tr>
+<td>S → E → R</td>
+<td>Serial</td>
+</tr>
+<tr>
+<td>O ← E → R</td>
+<td>Divergent</td>
+</tr>
+<tr>
+<td>E → O → T</td>
+<td>Serial</td>
+</tr>
+<tr>
+<td>E → R → T</td>
+<td>Serial</td>
+</tr>
+<tr>
+<td>O → T ← R</td>
+<td>Convergent</td>
+</tr>
+</tbody>
+</table>
+<h4 id="part-3">Part 3.</h4>
+<blockquote>
+<p>Add an arc from Age to Occupation, and another arc from Travel to Education. Is the resulting graph still a valid BN? If not, why?</p>
+</blockquote>
+<p>Let&rsquo;s take this one arc at a time:</p>
+<ol>
+<li>A → O. Adding this arc does not lead to the introduction of any cycles and so the Bayesian Network (BN) remains valid. I have added this graph to the figure from the book and highlighted it in green just below.</li>
+<li>T → E. Adding this arc does introduce cyclic paths along T → E → R → T and T → E → O → T thus resulting in a non-valid BN. I have highlighted the added arc in red and shaded the cyclic paths in orange below.</li>
+</ol>
+<img src="/courses/networksscutari/Fig1.1_Arcs.JPG" width="900"/>
+<h3 id="scutari-12">Scutari 1.2</h3>
+<blockquote>
+<p>Consider the probability distribution from the survey in Section 1.3.</p>
+</blockquote>
+<p>The data can be obtained from 
+<a href="https://www.bnlearn.com/book-crc/" target="_blank" rel="noopener">here</a>:</p>
+<pre><code class="language-r">survey &lt;- read.table(&quot;survey.txt&quot;, header = TRUE, colClasses = &quot;factor&quot;)
+A.lv &lt;- c(&quot;young&quot;, &quot;adult&quot;, &quot;old&quot;)
+S.lv &lt;- c(&quot;M&quot;, &quot;F&quot;)
+E.lv &lt;- c(&quot;high&quot;, &quot;uni&quot;)
+O.lv &lt;- c(&quot;emp&quot;, &quot;self&quot;)
+R.lv &lt;- c(&quot;small&quot;, &quot;big&quot;)
+T.lv &lt;- c(&quot;car&quot;, &quot;train&quot;, &quot;other&quot;)
+</code></pre>
+<h4 id="part-1-1">Part 1.</h4>
+<blockquote>
+<p>Compute the number of configurations of the parents of each node.</p>
+</blockquote>
+<p><code>A</code> and <code>S</code> have no parents (refer back to the DAG in exercise 1.1). Therefore, we are only interested in the configurations of parental nodes for <code>E</code>, <code>O</code>, <code>R</code>, and <code>T</code>:</p>
+<pre><code class="language-r">(E &lt;- length(A.lv) * length(S.lv))
+</code></pre>
+<pre><code>## [1] 6
+</code></pre>
+<pre><code class="language-r">(O &lt;- length(E.lv))
+</code></pre>
+<pre><code>## [1] 2
+</code></pre>
+<pre><code class="language-r">(R &lt;- length(E.lv))
+</code></pre>
+<pre><code>## [1] 2
+</code></pre>
+<pre><code class="language-r">(T &lt;- length(O.lv) * length(R.lv))
+</code></pre>
+<pre><code>## [1] 4
+</code></pre>
+<p>This is a simple exercise of combinatorics. The number of parental configurations is simply the number of states each parental node can be in multiplied by the same for all other parental nodes.</p>
+<h4 id="part-2-1">Part 2.</h4>
+<blockquote>
+<p>Compute the number of parameters of the local distributions.</p>
+</blockquote>
+<p>All of this comes down to how many parameters we need to estimate to accurately represent the probability distributions belonging to each node in our DAG. Since all probabilities per node sum up to 1, we effectively only ever need to estimate a number $n-1$ parameters for each node with $n$ being the number of states said node can be in. Let&rsquo;s walk through this.</p>
+<p><code>A</code> has 3 states, so need to estimate 2 parameters ($p_A = 2$). <code>S</code> has 2 states hence we need 1 parameter for this node ($p_S = 1$).</p>
+<p>Now we arrive at <code>E</code> and things get more complicated. The probability distribution for <code>E</code> comes in two parts - one for <code>&quot;high&quot;</code> and one for <code>&quot;low&quot;</code> education level. Both of these contain additional probability distributions of combinations of the levels of <code>S</code> and <code>A</code>. To obtain the number of parameters needed to describe this 3-dimensional distribution, we can simply calculate $p_E = n_S * n_A * (n_E-1) = 2 * 3 * 1 = 6$.</p>
+<p>Moving on to <code>O</code> and <code>R</code>. Both of these need 2 parameters ($p_O = p_r = 2$) because of their two-dimensional distributions being made up of two levels of education and two levels occupation and residency respectively ($2 * (2-1) = 2$).</p>
+<p>Lastly, we arrive at <code>T</code> which we need 8 parameters for ($p_T = 8$). Holy smokes. Why? Basically, this is a repeat of what we did for <code>E</code>. We have a three-dimensional distribution with three levels in T-Space, two levels in-space, and two more levels in O-Space. To arrive at the number of parameters we simply do $p_T = (n_T-1) * n_o * n_R = 2 * 2 * 2 = 8$.</p>
+<h4 id="part-3-1">Part 3.</h4>
+<blockquote>
+<p>Compute the number of parameters of the global distribution.</p>
+</blockquote>
+<p>We can sum all of the local parameters up to arrive at $p_{total} = p_A + p_S + p_E + p_O + p_R + p_T = 2+1+6+2+2+8 = 21$.</p>
+<p>And in <code>R</code>:</p>
+<pre><code class="language-r"># define DAG structure
+dag &lt;- model2network(&quot;[A][S][E|A:S][O|E][R|E][T|O:R]&quot;)
+# define local distributions
+A.prob &lt;- array(c(0.30, 0.50, 0.20), dim = 3, dimnames = list(A = A.lv))
+S.prob &lt;- array(c(0.60, 0.40), dim = 2, dimnames = list(S = S.lv))
+E.prob &lt;- array(
+  c(
+    0.75, 0.25, 0.72, 0.28, 0.88, 0.12, 0.64, 0.36, 0.70,
+    0.30, 0.90, 0.10
+  ),
+  dim = c(2, 3, 2),
+  dimnames = list(E = E.lv, A = A.lv, S = S.lv)
+)
+O.prob &lt;- array(c(0.96, 0.04, 0.92, 0.08),
+  dim = c(2, 2),
+  dimnames = list(O = O.lv, E = E.lv)
+)
+R.prob &lt;- array(c(0.25, 0.75, 0.20, 0.80),
+  dim = c(2, 2),
+  dimnames = list(R = R.lv, E = E.lv)
+)
+T.prob &lt;- array(
+  c(
+    0.48, 0.42, 0.10, 0.56, 0.36, 0.08, 0.58, 0.24, 0.18,
+    0.70, 0.21, 0.09
+  ),
+  dim = c(3, 2, 2),
+  dimnames = list(T = T.lv, O = O.lv, R = R.lv)
+)
+# define set of local distributions
+cpt &lt;- list(
+  A = A.prob, S = S.prob, E = E.prob, O = O.prob,
+  R = R.prob, T = T.prob
+)
+# create BN
+bn &lt;- custom.fit(dag, cpt)
+# obtain parameters
+nparams(bn)
+</code></pre>
+<pre><code>## [1] 21
+</code></pre>
+<p>Note that I pulled the probabilities for the distributions from the book and their values are irrelevant to the number of parameters.</p>
+<h4 id="part-4">Part 4.</h4>
+<blockquote>
+<p>Add an arc from Education to Travel. Recompute the factorisation into local distributions shown in Equation (1.1). How does the number of parameters of each local distribution change?</p>
+</blockquote>
+<p>Adding E → T to Equation (1.1) results in:
+$$P(A, S, E, O, R, T) = P(A) P(S) P(E | A, S) P(O | E) P(R | E) P(T | E, O, R)$$</p>
+<p>Now that <code>T</code> is dependant on <code>E</code> as well as the previous parents, the number of free parameters of the local distribution of <code>T</code> increases
+to 16 ($p_E = 16$). This is because our local distribution of <code>T</code> is now four-dimensional resulting in $p_T = (n_T-1) * n_o * n_R * n_E = 2 * 2 * 2 * 2 = 16$.</p>
+<p>All other local distributions remain the same.</p>
+<h3 id="scutari-13">Scutari 1.3</h3>
+<blockquote>
+<p>Consider again the DAG for the survey.</p>
+</blockquote>
+<h4 id="part-1-2">Part 1.</h4>
+<blockquote>
+<p>Create an object of class <code>bn</code> for the DAG.</p>
+</blockquote>
+<p>Here&rsquo;s the simplest way of doing this by specifying the model string:</p>
+<pre><code class="language-r"># define DAG structure
+bn &lt;- model2network(&quot;[A][S][E|A:S][O|E][R|E][T|O:R]&quot;)
+</code></pre>
+<h4 id="part-2-2">Part 2.</h4>
+<blockquote>
+<p>Use the functions in <code>bnlearn</code> and the R object created in the previous point to extract the nodes and the arcs of the DAG. Also extract the parents and the children of each node.</p>
+</blockquote>
+<p>Here we go:</p>
+<pre><code class="language-r">nodes(bn)
+</code></pre>
+<pre><code>## [1] &quot;A&quot; &quot;E&quot; &quot;O&quot; &quot;R&quot; &quot;S&quot; &quot;T&quot;
+</code></pre>
+<pre><code class="language-r">arcs(bn)
+</code></pre>
+<pre><code>##      from to 
+## [1,] &quot;A&quot;  &quot;E&quot;
+## [2,] &quot;S&quot;  &quot;E&quot;
+## [3,] &quot;E&quot;  &quot;O&quot;
+## [4,] &quot;E&quot;  &quot;R&quot;
+## [5,] &quot;O&quot;  &quot;T&quot;
+## [6,] &quot;R&quot;  &quot;T&quot;
+</code></pre>
+<pre><code class="language-r">sapply(X = nodes(bn), FUN = bnlearn::parents, x = bn)
+</code></pre>
+<pre><code>## $A
+## character(0)
+## 
+## $E
+## [1] &quot;A&quot; &quot;S&quot;
+## 
+## $O
+## [1] &quot;E&quot;
+## 
+## $R
+## [1] &quot;E&quot;
+## 
+## $S
+## character(0)
+## 
+## $T
+## [1] &quot;O&quot; &quot;R&quot;
+</code></pre>
+<pre><code class="language-r">sapply(X = nodes(bn), FUN = bnlearn::children, x = bn)
+</code></pre>
+<pre><code>## $A
+## [1] &quot;E&quot;
+## 
+## $E
+## [1] &quot;O&quot; &quot;R&quot;
+## 
+## $O
+## [1] &quot;T&quot;
+## 
+## $R
+## [1] &quot;T&quot;
+## 
+## $S
+## [1] &quot;E&quot;
+## 
+## $T
+## character(0)
+</code></pre>
+<h4 id="part-3-2">Part 3.</h4>
+<blockquote>
+<p>Print the model formula from <code>bn</code>.</p>
+</blockquote>
+<pre><code class="language-r">modelstring(bn)
+</code></pre>
+<pre><code>## [1] &quot;[A][S][E|A:S][O|E][R|E][T|O:R]&quot;
+</code></pre>
+<h4 id="part-4-1">Part 4.</h4>
+<blockquote>
+<p>Fit the parameters of the network from the data stored in survey.txt using their Bayesian estimators and save the result into an object of class <code>bn.fit</code>.</p>
+</blockquote>
+<pre><code class="language-r">bn_full &lt;- bn.fit(bn, data = survey, method = &quot;bayes&quot;, iss = 10)
+class(bn_full)
+</code></pre>
+<pre><code>## [1] &quot;bn.fit&quot;      &quot;bn.fit.dnet&quot;
+</code></pre>
+<h4 id="part-5">Part 5.</h4>
+<blockquote>
+<p>Remove the arc from Education to Occupation.</p>
+</blockquote>
+<pre><code class="language-r">bn_sparse &lt;- drop.arc(bn, from = &quot;E&quot;, to = &quot;O&quot;)
+</code></pre>
+<h4 id="part-6">Part 6.</h4>
+<blockquote>
+<p>Fit the parameters of the modified network. Which local distributions change, and how?</p>
+</blockquote>
+<pre><code class="language-r">bn_sparse &lt;- bn.fit(bn_sparse, data = survey, method = &quot;bayes&quot;, iss = 10)
+</code></pre>
+<p>We already now that the only local distribution which should change is that of <code>O</code>. Let&rsquo;s check that:</p>
+<pre><code class="language-r">dim(coef(bn_full$O))
+</code></pre>
+<pre><code>## [1] 2 2
+</code></pre>
+<pre><code class="language-r">dim(coef(bn_sparse$O))
+</code></pre>
+<pre><code>## [1] 2
+</code></pre>
+<p>Quite evidently, the local distribution of <code>O</code> has become much simpler in our sparse Bayesian Network. Why? Because it has no parent node now which would parse additional information and complexity onto it.</p>
+<h3 id="scutari-14">Scutari 1.4</h3>
+<blockquote>
+<p>Re-create the <code>bn.mle</code> object used in Section 1.4.</p>
+</blockquote>
+<pre><code class="language-r">bn.mle &lt;- bn.fit(dag, data = survey, method = &quot;mle&quot;)
+</code></pre>
+<h4 id="part-1-3">Part 1.</h4>
+<blockquote>
+<p>Compare the distribution of Occupation conditional on Age with the corresponding marginal distribution using <code>querygrain</code>.</p>
+</blockquote>
+<pre><code class="language-r">## creating object ready for gRain functions
+junction &lt;- compile(as.grain(bn.mle))
+## Overall query
+query_over &lt;- querygrain(junction, nodes = &quot;O&quot;)$O
+## Marginal query when A is young
+jage &lt;- setEvidence(junction, &quot;A&quot;, states = &quot;young&quot;)
+query_young &lt;- querygrain(jage, nodes = &quot;O&quot;)$O
+## Marginal query when A is adult
+jage &lt;- setEvidence(junction, &quot;A&quot;, states = &quot;adult&quot;)
+query_adult &lt;- querygrain(jage, nodes = &quot;O&quot;)$O
+## Marginal query when A is old
+jage &lt;- setEvidence(junction, &quot;A&quot;, states = &quot;old&quot;)
+query_old &lt;- querygrain(jage, nodes = &quot;O&quot;)$O
+## Combining queries
+queries_df &lt;- rbind(query_over, query_young, query_adult, query_old)
+rownames(queries_df) &lt;- c(&quot;Overall&quot;, &quot;Young&quot;, &quot;Adult&quot;, &quot;Old&quot;)
+queries_df
+</code></pre>
+<pre><code>##               emp       self
+## Overall 0.9660248 0.03397517
+## Young   0.9644166 0.03558340
+## Adult   0.9636485 0.03635151
+## Old     0.9738915 0.02610849
+</code></pre>
+<p>As we can see, conditioning on <code>A</code> does not influence the distribution of <code>O</code> that much.</p>
+<h4 id="part-2-3">Part 2.</h4>
+<blockquote>
+<p>How many random observations are needed for <code>cpquery</code> to produce estimates of the parameters of these two distributions with a precision of ±0.01?</p>
+</blockquote>
+<p>I find this question to be difficult to understand. What I assume I am tasked with is to compare the distribution of Occupation conditional on Age (<code>query_over</code>: 0.97, 0.03) with the estimates produced by <code>cpquery</code> given some evidence (i.e. parental node configuration). This would mean comparing each query EXCEPT for query_over to it&rsquo;s counterpart with <code>cpquery()</code>. That&rsquo;s a tad excessive, and so I only compare <code>query_young</code> (0.96, 0.04) from above with the results obtained by <code>cpquery()</code>. What I am looking at is: &ldquo;How high do my sample sizes have to be in <code>cpquery()</code> to be within a ±0.01 margin of <code>query_young</code>.</p>
+<p>Luckily, <code>query_young</code> only has two values and so I can tell <code>cpquery()</code> to only compute one of them as the other follows logically by subtracting the former from 1.</p>
+<p>Here, I want to test this for likelihood weighting (<code>lw</code>) and logic sampling (<code>ls</code>):</p>
+<pre><code class="language-r"># create test list and test sequence
+precis_ls &lt;- as.list(c(0, 0))
+names(precis_ls) &lt;- c(&quot;LW&quot;, &quot;LS&quot;)
+n_seq &lt;- as.integer(seq(from = 1e2, to = 1e5, length.out = 1e2))
+# iterate over our sample sizes
+for (i in n_seq) {
+  precis_ls$LW &lt;- c(
+    precis_ls$LW,
+    cpquery(bn.mle, event = (O == &quot;emp&quot;), evidence = list(A = &quot;young&quot;), method = &quot;lw&quot;, n = i)
+  )
+  precis_ls$LS &lt;- c(
+    precis_ls$LS,
+    cpquery(bn.mle, event = (O == &quot;emp&quot;), evidence = (A == &quot;young&quot;), method = &quot;ls&quot;, n = i)
+  )
+}
+# remove first positions which were blanks
+precis_ls$LW &lt;- precis_ls$LW[-1]
+precis_ls$LS &lt;- precis_ls$LS[-1]
+# plotting the results
+plot_df &lt;- data.frame(
+  N = c(n_seq, n_seq),
+  Precision = c(
+    query_young[1] - precis_ls$LW,
+    query_young[1] - precis_ls$LS
+  ),
+  Method = rep(c(&quot;Likelihood Weighting&quot;, &quot;Logical Sampling&quot;), each = length(n_seq))
+)
+ggplot(data = plot_df, aes(x = N, y = Precision, col = Method)) +
+  geom_line(size = 1.5) +
+  geom_hline(yintercept = 0.01) +
+  geom_hline(yintercept = -0.01) +
+  theme_bw()
+</code></pre>
+<p><img src="2021-04-13-crc_part1_files/figure-html/unnamed-chunk-14-1.png" width="1440" /></p>
+<p>As is evident from this plot, we do not need much in terms of sample to arrive at highly precise results using <code>cpquery()</code> with either method. Still, to be safe, I would probably always run with <code>n = 1e3</code> at least.</p>
+<h4 id="part-3-3">Part 3.</h4>
+<blockquote>
+<p>Use the functions in <code>bnlearn</code> to extract the DAG from <code>bn.mle</code>.</p>
+</blockquote>
+<pre><code class="language-r">dag &lt;- bn.net(bn.mle)
+dag
+</code></pre>
+<pre><code>## 
+##   Random/Generated Bayesian network
+## 
+##   model:
+##    [A][S][E|A:S][O|E][R|E][T|O:R] 
+##   nodes:                                 6 
+##   arcs:                                  6 
+##     undirected arcs:                     0 
+##     directed arcs:                       6 
+##   average markov blanket size:           2.67 
+##   average neighbourhood size:            2.00 
+##   average branching factor:              1.00 
+## 
+##   generation algorithm:                  Empty
+</code></pre>
+<h4 id="part-4-2">Part 4.</h4>
+<blockquote>
+<p>Which nodes d-separate Age and Occupation?</p>
+</blockquote>
+<pre><code class="language-r">sapply(nodes(dag), function(z) dsep(dag, &quot;A&quot;, &quot;O&quot;, z))
+</code></pre>
+<pre><code>##     A     E     O     R     S     T 
+##  TRUE  TRUE  TRUE FALSE FALSE FALSE
+</code></pre>
+<h3 id="scutari-15">Scutari 1.5</h3>
+<blockquote>
+<p>Implement an R function for BN inference via rejection sampling using the description provided in Section 1.4 as a reference.</p>
+</blockquote>
+<p>From the book:</p>
+<blockquote>
+<p>&ldquo;In rejection sampling, we generate random independent observations from the BN. Then we count how many match the evidence we are conditioning on and how many of those observations also match the event whose probability we are computing; the estimated conditional probability is the ratio between the latter and the former.&rdquo;</p>
+</blockquote>
+<pre><code class="language-r">rejection.sampling &lt;- function(bn, nsim, event.node, event.value, evidence.node, evidence.value) {
+  sims &lt;- rbn(x = bn, n = nsim) # random samples for each node from a Bayesian network
+  m1 &lt;- sims[sims[, evidence.node] == evidence.value, ] # retain only those samples where our evidence node matches the evidence condition
+  m2 &lt;- m1[m1[, event.node] == event.value, ] # retain only those samples where our event node matches the event condition
+  return(nrow(m2) / nrow(m1)) # how many percent of the evidence samples also return the event state?
+}
+rejection.sampling(
+  bn = bn.mle, nsim = 10^4,
+  event.node = &quot;O&quot;, event.value = &quot;emp&quot;,
+  evidence.node = &quot;A&quot;, evidence.value = &quot;young&quot;
+)
+</code></pre>
+<pre><code>## [1] 0.9640978
+</code></pre>
+<h3 id="scutari-16">Scutari 1.6</h3>
+<blockquote>
+<p>Using the <code>dag</code> and <code>bn</code> objects from Sections 1.2 and 1.3:</p>
+</blockquote>
+<p>The DAG in question is the same as <code>dag</code> in these solutions. The BN is the same as <code>bn.mle</code> or <code>bn_full</code>. Since I do this for the Bayesian part of Bayesian networks, I use the latter.</p>
+<h4 id="part-1-4">Part 1.</h4>
+<blockquote>
+<p>Plot the DAG using <code>graphviz.plot</code>.</p>
+</blockquote>
+<p>Easy enough:</p>
+<pre><code class="language-r">graphviz.plot(dag)
+</code></pre>
+<p><img src="2021-04-13-crc_part1_files/figure-html/unnamed-chunk-18-1.png" width="1440" /></p>
+<h4 id="part-2-4">Part 2.</h4>
+<blockquote>
+<p>Plot the DAG again, highlighting the nodes and the arcs that are part of one or more v-structures.</p>
+</blockquote>
+<p>A bit meaningless of a plot because all of these nodes are involved in v-structures. However, the paths E → O, and E → R are not highlighted as v-structures. Why? Because they are sequential paths rather than convergent or divergent.</p>
+<pre><code class="language-r">vs &lt;- vstructs(dag, arcs = TRUE)
+hl &lt;- list(nodes = unique(as.character(vs)), arcs = vs)
+graphviz.plot(dag, highlight = hl)
+</code></pre>
+<p><img src="2021-04-13-crc_part1_files/figure-html/unnamed-chunk-19-1.png" width="1440" /></p>
+<h4 id="part-3-4">Part 3.</h4>
+<blockquote>
+<p>Plot the DAG one more time, highlighting the path leading from Age to Occupation.</p>
+</blockquote>
+<p>All we need to do is highlight the paths A → E and E → O:</p>
+<pre><code class="language-r">hl &lt;- matrix(c(&quot;A&quot;, &quot;E&quot;, &quot;E&quot;, &quot;O&quot;), nc = 2, byrow = TRUE)
+graphviz.plot(bn.mle, highlight = list(arcs = hl))
+</code></pre>
+<p><img src="2021-04-13-crc_part1_files/figure-html/unnamed-chunk-20-1.png" width="1440" /></p>
+<h4 id="part-4-3">Part 4.</h4>
+<blockquote>
+<p>Plot the conditional probability table of Education.</p>
+</blockquote>
+<p>There is a ready-made function for that!</p>
+<pre><code class="language-r">bn.fit.barchart(bn_full$E)
+</code></pre>
+<p><img src="2021-04-13-crc_part1_files/figure-html/unnamed-chunk-21-1.png" width="1440" />
+Across all age ranges, women are much higher educated (on average) than men.</p>
+<h4 id="part-5-1">Part 5.</h4>
+<blockquote>
+<p>Compare graphically the distributions of Education for male and female interviewees.</p>
+</blockquote>
+<p>Here, we simply need to extract the relevant proportions and need them into a barchart.</p>
+<pre><code class="language-r">junction &lt;- compile(as.grain(bn.mle))
+jmale &lt;- setEvidence(junction, &quot;S&quot;, states = &quot;M&quot;)
+jfemale &lt;- setEvidence(junction, &quot;S&quot;, states = &quot;F&quot;)
+p1 &lt;- barchart(querygrain(jmale, nodes = &quot;E&quot;)$E, main = &quot;Male&quot;, xlim = c(0, 1))
+p2 &lt;- barchart(querygrain(jfemale, nodes = &quot;E&quot;)$E, main = &quot;Female&quot;, xlim = c(0, 1))
+grid.arrange(p1, p2, ncol = 2)
+</code></pre>
+<p><img src="2021-04-13-crc_part1_files/figure-html/unnamed-chunk-22-1.png" width="1440" /></p>
+<h2 id="session-info">Session Info</h2>
+<pre><code class="language-r">sessionInfo()
+</code></pre>
+<pre><code>## R version 4.2.1 (2022-06-23 ucrt)
+## Platform: x86_64-w64-mingw32/x64 (64-bit)
+## Running under: Windows 10 x64 (build 19044)
+## 
+## Matrix products: default
+## 
+## locale:
+## [1] LC_COLLATE=English_Germany.utf8  LC_CTYPE=English_Germany.utf8    LC_MONETARY=English_Germany.utf8 LC_NUMERIC=C                     LC_TIME=English_Germany.utf8    
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+## [1] gridExtra_2.3   lattice_0.20-45 ggplot2_3.3.6   gRain_1.3.11    gRbase_1.8.7    bnlearn_4.8.1  
+## 
+## loaded via a namespace (and not attached):
+##  [1] Rcpp_1.0.9          assertthat_0.2.1    digest_0.6.29       utf8_1.2.2          R6_2.5.1            stats4_4.2.1        evaluate_0.16       highr_0.9           blogdown_1.13      
+## [10] pillar_1.8.1        rlang_1.0.5         rstudioapi_0.14     Rgraphviz_2.40.0    jquerylib_0.1.4     R.utils_2.12.0      R.oo_1.25.0         Matrix_1.5-1        rmarkdown_2.16     
+## [19] styler_1.8.0        labeling_0.4.2      stringr_1.4.1       igraph_1.3.4        munsell_0.5.0       compiler_4.2.1      xfun_0.33           pkgconfig_2.0.3     BiocGenerics_0.42.0
+## [28] htmltools_0.5.3     tidyselect_1.1.2    tibble_3.1.8        bookdown_0.29       fansi_1.0.3         dplyr_1.0.9         withr_2.5.0         R.methodsS3_1.8.2   grid_4.2.1         
+## [37] RBGL_1.72.0         jsonlite_1.8.0      gtable_0.3.1        lifecycle_1.0.2     DBI_1.1.3           magrittr_2.0.3      scales_1.2.1        graph_1.74.0        cli_3.3.0          
+## [46] stringi_1.7.8       cachem_1.0.6        farver_2.1.1        bslib_0.4.0         vctrs_0.4.1         generics_0.1.3      tools_4.2.1         R.cache_0.16.0      glue_1.6.2         
+## [55] purrr_0.3.4         parallel_4.2.1      fastmap_1.1.0       yaml_2.3.5          colorspace_2.0-3    BiocManager_1.30.18 knitr_1.40          sass_0.4.2
+</code></pre>
+
+          </div>
+
+          
+
+<div class="article-tags">
+  
+  <a class="badge badge-light" href="/tag/bayes/">Bayes</a>
+  
+  <a class="badge badge-light" href="/tag/networks/">Networks</a>
+  
+  <a class="badge badge-light" href="/tag/bayesian-statistics/">Bayesian Statistics</a>
+  
+  <a class="badge badge-light" href="/tag/statistics/">Statistics</a>
+  
+</div>
+
+
+
+          
+          <div class="article-widget">
+            
+<div class="post-nav">
+  
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">Previous</div>
+    <a href="/courses/bayes-nets/introduction/" rel="next">Graph Theory &amp; Bayes</a>
+  </div>
+  
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">Next</div>
+    <a href="/courses/bayes-nets/networksr/" rel="prev">(Bayesian) Networks &amp; R</a>
+  </div>
+  
+</div>
+
+          </div>
+          
+        </div>
+
+        <div class="body-footer">
+          <p>Last updated on 2021-04-13</p>
+
+          
+
+
+
+
+
+          
+
+
+          
+
+
+  
+  
+  <div class="article-widget content-widget-hr">
+    <h3>Related</h3>
+    <ul>
+      
+      <li><a href="/courses/bayes-nets/inference/">Bayesian Network Inference</a></li>
+      
+      <li><a href="/courses/bayes-nets/dynamic/">Dynamic Bayesian Networks</a></li>
+      
+      <li><a href="/courses/bayes-nets/static/">Additional Static Exercises</a></li>
+      
+      <li><a href="/courses/bayes-nets/networksr/">(Bayesian) Networks &amp; R</a></li>
+      
+      <li><a href="/courses/bayes-nets/introduction/">Graph Theory &amp; Bayes</a></li>
+      
+    </ul>
+  </div>
+  
+
+
+
+        </div>
+
+      </article>
+
+      <footer class="site-footer">
+  
+  <p class="powered-by">
+    
+      <a href="/privacy/">Privacy Policy</a>
+    
+    
+       &middot; 
+      <a href="/terms/">Terms</a>
+    
+  </p>
+  
+
+  <p class="powered-by">
+    © 2024
+  </p>
+
+  
+  
+
+
+
+
+
+
+  <p class="powered-by">
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+  </p>
+</footer>
+
+
+    </main>
+  </div>
+</div>
+
+
+      
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js" integrity="sha256-eOgo0OtLL4cdq7RdwRUiGKLX9XsIJ7nGhWEKbohmVAQ=" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/languages/r.min.js"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/languages/latex.min.js"></script>
+        
+      
+
+    
+
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.js" integrity="sha256-EErZamuLefUnbMBQbsEqu1USa+btR2oIlCpBJbyD4/g=" crossorigin="anonymous"></script>
+    
+
+    
+    
+    <script>const code_highlighting = true;</script>
+    
+
+    
+    
+    <script>const isSiteThemeDark = false;</script>
+    
+
+    
+    
+    
+    
+    
+    
+    <script>
+      const search_config = {"indexURI":"/index.json","minLength":1,"threshold":0.3};
+      const i18n = {"no_results":"No results found","placeholder":"Search...","results":"results found"};
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks",
+        'slides' : "Slides"
+        };
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.1/anchor.min.js" integrity="sha256-pB/deHc9CGfFpJRjC43imB29Rse8tak+5eXqntO94ck=" crossorigin="anonymous"></script>
+    <script>
+      anchors.add();
+    </script>
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+      <div class="search-hit-content">
+        <div class="search-hit-name">
+          <a href="{{relpermalink}}">{{title}}</a>
+          <div class="article-metadata search-hit-type">{{type}}</div>
+          <p class="search-hit-description">{{snippet}}</p>
+        </div>
+      </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="/js/academic.min.66c553246b0f279a03be6e5597f72b52.js"></script>
+
+    
+
+
+
+
+
+
+  
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

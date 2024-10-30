@@ -1,0 +1,1439 @@
+<!DOCTYPE html><html lang="en-gb" >
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.8.0">
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Erik Kusch">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Welcome to our third practical experience in R. Throughout the following notes, I will introduce you to a couple statistical correlation approaches that might be useful to you and are, to varying degrees, often used in biology. To do so, I will enlist the sparrow data set we handled in our first exercise.">
+
+  
+  <link rel="alternate" hreflang="en-gb" href="https://www.erikkusch.com/courses/biostat101/correlation-tests/">
+
+  
+
+
+  
+  
+  
+  <meta name="theme-color" content="#858383">
+  
+
+  
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-1/css/all.min.css" integrity="sha256-4w9DunooKSr3MFXHXWyFER38WmPdm361bQS/2KUWZbU=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.css" integrity="sha256-SHMGCYmST46SoyGgo4YR/9AlK1vf3ff84Aq9yK4hdqM=" crossorigin="anonymous">
+    
+
+    
+
+    
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.1.2/lazysizes.min.js" integrity="sha256-Md1qLToewPeKjfAHU1zyPwOutccPAm5tahnaw7Osw0A=" crossorigin="anonymous" async></script>
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+        
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+
+  
+
+  
+  
+  
+    
+      
+      
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cutive+Mono%7CLora:400,700%7CRoboto:400,700&display=swap">
+    
+  
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/academic.css">
+
+  
+
+
+
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-186216138-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+
+  function gtag() {
+      dataLayer.push(arguments);
+  }
+
+  function trackOutboundLink(url, target) {
+    gtag('event', 'click', {
+         'event_category': 'outbound',
+         'event_label': url,
+         'transport_type': 'beacon',
+         'event_callback': function () {
+           if (target !== '_blank') {
+             document.location = url;
+           }
+         }
+    });
+    console.debug("Outbound link clicked: " + url);
+  }
+
+  function onClickCallback(event) {
+    if ((event.target.tagName !== 'A') || (event.target.host === window.location.host)) {
+      return;
+    }
+    trackOutboundLink(event.target, event.target.getAttribute('target'));  
+  }
+
+  gtag('js', new Date());
+  gtag('config', 'UA-186216138-1', {});
+
+  
+  document.addEventListener('click', onClickCallback, false);
+</script>
+
+
+  
+
+
+  
+  
+
+  
+
+  <link rel="manifest" href="/index.webmanifest">
+  <link rel="icon" type="image/png" href="/images/icon_hu7658c99d512131214e4d6c003a3f85f7_112593_32x32_fill_lanczos_center_2.png">
+  <link rel="apple-touch-icon" type="image/png" href="/images/icon_hu7658c99d512131214e4d6c003a3f85f7_112593_192x192_fill_lanczos_center_2.png">
+
+  <link rel="canonical" href="https://www.erikkusch.com/courses/biostat101/correlation-tests/">
+
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  <meta property="twitter:card" content="summary_large_image">
+  
+  <meta property="twitter:site" content="@ErikKusch">
+  <meta property="twitter:creator" content="@ErikKusch">
+  
+  <meta property="og:site_name" content="Erik Kusch">
+  <meta property="og:url" content="https://www.erikkusch.com/courses/biostat101/correlation-tests/">
+  <meta property="og:title" content="Correlation Tests | Erik Kusch">
+  <meta property="og:description" content="Welcome to our third practical experience in R. Throughout the following notes, I will introduce you to a couple statistical correlation approaches that might be useful to you and are, to varying degrees, often used in biology. To do so, I will enlist the sparrow data set we handled in our first exercise."><meta property="og:image" content="https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg">
+  <meta property="twitter:image" content="https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg"><meta property="og:locale" content="en-gb">
+  
+    
+      <meta property="article:published_time" content="2020-06-10T00:00:00&#43;00:00">
+    
+    <meta property="article:modified_time" content="2020-06-10T00:00:00&#43;00:00">
+  
+
+  
+
+
+
+  
+
+
+  
+
+
+  
+
+
+
+
+
+  <title>Correlation Tests | Erik Kusch</title>
+
+</head>
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search" class="form-control">
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+<nav class="navbar navbar-expand-lg navbar-light compensate-for-scrollbar" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="d-none d-lg-inline-flex">
+      <a class="navbar-brand" href="/"><img src="/images/logo_huab2266ff59bbac6a094b6da1268adcf9_208479_0x70_resize_lanczos_2.png" alt="Erik Kusch"></a>
+    </div>
+    
+
+    
+    <button type="button" class="navbar-toggler" data-toggle="collapse"
+            data-target="#navbar-content" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+    <span><i class="fas fa-bars"></i></span>
+    </button>
+    
+
+    
+    <div class="navbar-brand-mobile-wrapper d-inline-flex d-lg-none">
+      <a class="navbar-brand" href="/"><img src="/images/logo_huab2266ff59bbac6a094b6da1268adcf9_208479_0x70_resize_lanczos_2.png" alt="Erik Kusch"></a>
+    </div>
+    
+
+    
+    
+    <div class="navbar-collapse main-menu-item collapse justify-content-center" id="navbar-content">
+
+      
+      <ul class="navbar-nav d-md-inline-flex">
+        
+
+        
+
+        
+        
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link  active" href="/"><span>Home</span></a>
+        </li>
+
+        
+        
+
+        
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"><span>Courses & Workshops</span><span class="caret"></span>
+          </a>
+          <div class="dropdown-menu">
+            
+              <a class="dropdown-item" href="/courses/krigr/"><span>KrigR - State-of-the-Art Climate Data within R</span></a>
+            
+              <a class="dropdown-item" href="/courses/gbif/"><span>Accessing and Referencing GBIF Data for Research</span></a>
+            
+              <a class="dropdown-item" href="/courses/rethinking/"><span>Statistical Rethinking - Introduction to Bayesian Statistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/bayes-nets/"><span>Bayesian Networks - Causality through Bayesian Approaches</span></a>
+            
+              <a class="dropdown-item" href="/courses/biostat101/"><span>Biostats 101 - An Introduction to Biostatistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/excursions-into-biostatistics/"><span>Biostats 301 - Excursions into Biostatistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/bftp-biome-detection/"><span>BFTP - First Steps in Macroecology in R</span></a>
+            
+          </div>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#projects"><span>Projects</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#featured"><span>Publications</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#talks"><span>Talks</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/about"><span>Contact</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+            
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/media/CV_ErikKusch.html" target="_blank" rel="noopener"><span>CV</span></a>
+        </li>
+
+        
+        
+
+      
+
+        
+      </ul>
+    </div>
+
+    <ul class="nav-icons navbar-nav flex-row ml-auto d-flex pl-md-2">
+      
+      <li class="nav-item">
+        <a class="nav-link js-search" href="#" aria-label="Search"><i class="fas fa-search" aria-hidden="true"></i></a>
+      </li>
+      
+
+      
+      <li class="nav-item dropdown theme-dropdown">
+        <a href="#" class="nav-link js-theme-selector" data-toggle="dropdown" aria-haspopup="true">
+          <i class="fas fa-palette" aria-hidden="true"></i>
+        </a>
+        <div class="dropdown-menu">
+          <a href="#" class="dropdown-item js-set-theme-light">
+            <span>Light</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-dark">
+            <span>Dark</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-auto">
+            <span>Automatic</span>
+          </a>
+        </div>
+      </li>
+      
+
+      
+
+    </ul>
+
+  </div>
+</nav>
+
+
+  
+
+<div class="container-fluid docs">
+  <div class="row flex-xl-nowrap">
+    <div class="col-12 col-md-3 col-xl-2 docs-sidebar">
+      
+
+
+
+
+
+  
+    
+  
+
+
+
+
+<form class="docs-search d-flex align-items-center">
+  <button class="btn docs-toggle d-md-none p-0 mr-3" type="button" data-toggle="collapse" data-target="#docs-nav" aria-controls="docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    <span><i class="fas fa-bars"></i></span>
+  </button>
+
+  
+  <input name="q" type="search" class="form-control" placeholder="Search..." autocomplete="off">
+  
+</form>
+
+<nav class="collapse docs-links" id="docs-nav">
+  
+
+  
+  
+  
+  
+  <div class="docs-toc-item">
+    <a class="docs-toc-link" href="/courses/an-introduction-to-biostatistics/">Overview</a>
+
+  </div>
+  
+  <div class="docs-toc-item">
+    <a class="docs-toc-link" href="/courses/an-introduction-to-biostatistics/01-an-introduction-to-basic-statistics-for-biologists/">Sessions</a>
+    <ul class="nav docs-sidenav">
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/01-an-introduction-to-basic-statistics-for-biologists/">01 - Basic Statistics for Biologists</a>
+      </li>
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/introduction-to-r/">02 - Introduction to R</a>
+      </li>
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/a-primer-for-statistical-tests/">03 - A Primer For Statistical Tests</a>
+      </li>
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/descriptive-statistics/">04 - Descriptive Statistics</a>
+      </li>
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/data-visualisation/">05 - Data Visualisation</a>
+      </li>
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/06-inferential-statistics-hypotheses-and-our-research-project/">06 - Inferential Statistics, Hypotheses And Our Research Project</a>
+      </li>
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/data-handling-and-data-mining/">07 - Data Handling and Data Mining</a>
+      </li>
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/nominal-tests/">08 - Nominal Tests</a>
+      </li>
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/correlation-tests/">09 - Correlation Tests</a>
+      </li>
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/ordinal-metric-tests-two-sample-situations/">10 - Ordinal &amp; Metric Tests (Two-Sample Situations)</a>
+      </li>
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/ordinal-metric-tests-more-than-two-sample-situations/">11 - Ordinal &amp; Metric Tests (More-Than-Two-Sample Situations)</a>
+      </li>
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/simple-parametric-tests/">12 - Simple Parametric Tests</a>
+      </li>
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/13-an-outlook-on-advanced-statistics/">13 - Closing &amp; Summary</a>
+      </li>
+      
+    </ul>
+    
+
+  </div>
+  
+  
+</nav>
+
+    </div>
+
+    
+    <div class="d-none d-xl-block col-xl-2 docs-toc">
+      <ul class="nav toc-top">
+        <li><a href="#" id="back_to_top" class="docs-toc-title">Contents</a></li>
+      </ul>
+
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#theory">Theory</a></li>
+    <li><a href="#data">Data</a></li>
+    <li><a href="#preparing-our-procedure">Preparing Our Procedure</a>
+      <ul>
+        <li><a href="#packages">Packages</a></li>
+        <li><a href="#loading-data">Loading Data</a></li>
+      </ul>
+    </li>
+    <li><a href="#nominal-scale---contingency-coefficient">Nominal Scale - Contingency Coefficient</a>
+      <ul>
+        <li><a href="#predation">Predation</a></li>
+        <li><a href="#sexual-dimorphism">Sexual Dimorphism</a></li>
+      </ul>
+    </li>
+    <li><a href="#ordinal-scale---kendalls-tau">Ordinal Scale - Kendall&rsquo;s Tau</a>
+      <ul>
+        <li><a href="#climate-warmingextremes">Climate Warming/Extremes</a></li>
+      </ul>
+    </li>
+    <li><a href="#metric-and-ordinal-scales">Metric and Ordinal Scales</a>
+      <ul>
+        <li><a href="#testing-for-normality">Testing for Normality</a></li>
+        <li><a href="#spearman">Spearman</a></li>
+        <li><a href="#pearson">Pearson</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+      
+    </div>
+    
+
+    <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 docs-content" role="main">
+
+      <article class="article">
+
+        <div class="docs-article-container">
+          <h1>Correlation Tests</h1>
+
+          <div class="article-style">
+            <h2 id="theory">Theory</h2>
+<p>Welcome to our third practical experience in R. Throughout the following notes, I will introduce you to a couple statistical correlation approaches that might be useful to you and are, to varying degrees, often used in biology. To do so, I will enlist the sparrow data set we handled in our first exercise. I have prepared some slides for this session: <a href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/biostat101/09---Correlation-Tests_Handout.html" target="_blank"><img src="/courses/biostat101/09---BioStat101_featured.png" width="900" margin-top = "0"/></a></p>
+<h2 id="data">Data</h2>
+<p>Find the data for this exercise <a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/biostat101/Data/1%20-%20Sparrow_Data_READY.rds" target="_blank"> here</a>.</p>
+<h2 id="preparing-our-procedure">Preparing Our Procedure</h2>
+<p>To ensure others can reproduce our analysis we run the following three lines of code at the beginning of our <code>R</code> coding file.</p>
+<pre><code class="language-r">rm(list=ls()) # clearing environment
+Dir.Base &lt;- getwd() # soft-coding our working directory
+Dir.Data &lt;- paste(Dir.Base, &quot;Data&quot;, sep=&quot;/&quot;) # soft-coding our data directory 
+</code></pre>
+<h3 id="packages">Packages</h3>
+<p>Using the following, user-defined function, we install/load all the necessary packages into our current <code>R</code> session.</p>
+<pre><code class="language-r"># function to load packages and install them if they haven't been installed yet
+install.load.package &lt;- function(x) {
+  if (!require(x, character.only = TRUE))
+    install.packages(x)
+  require(x, character.only = TRUE)
+}
+package_vec &lt;- c(&quot;DescTools&quot;, # Needed for Contingency Coefficient
+                 &quot;ggplot2&quot; # needed for data visualisation
+                 )
+sapply(package_vec, install.load.package)
+</code></pre>
+<pre><code>## Loading required package: DescTools
+</code></pre>
+<pre><code>## Loading required package: ggplot2
+</code></pre>
+<pre><code>## DescTools   ggplot2 
+##      TRUE      TRUE
+</code></pre>
+<h3 id="loading-data">Loading Data</h3>
+<p>During our first exercise (Data Mining and Data Handling - Fixing The Sparrow Data Set) we saved our clean data set as an RDS file. To load this, we use the <code>readRDS()</code> command that comes with base <code>R</code>.</p>
+<pre><code class="language-r">Data_df_base &lt;- readRDS(file = paste(Dir.Data, &quot;/1 - Sparrow_Data_READY.rds&quot;, sep=&quot;&quot;))
+Data_df &lt;- Data_df_base # duplicate and save initial data on a new object
+</code></pre>
+<h2 id="nominal-scale---contingency-coefficient">Nominal Scale - Contingency Coefficient</h2>
+<p>We can analyse correlations/dependencies of variables of the categorical kind using the contingency coefficient by calling the <code>ContCoef()</code> function of base <code>R</code>.</p>
+<p>Keep in mind that the contingency coefficient is not <em>really</em> a measure of correlation but merely of association of variables. A value of $c \approx 0$ indicates independent variables.</p>
+<h3 id="predation">Predation</h3>
+<p><strong>Are colour morphs of Passer domesticus linked to predator presence and/or predator type?</strong></p>
+<p>This analysis builds on our findings within our previous exercise (Nominal Tests - Analysing The Sparrow Data Set). Remember that, using the two-sample situation Chi-Squared Test, we found no change in treatment effects (as far as colour polymorphism went) for predator type values but did so regarding the presence of predators. Let&rsquo;s repeat this here:</p>
+<pre><code class="language-r">table(Data_df$Colour, Data_df$Predator.Presence)
+</code></pre>
+<pre><code>##        
+##          No Yes
+##   Black  64 292
+##   Brown 211  87
+##   Grey   82 331
+</code></pre>
+<pre><code class="language-r">ContCoef(table(Data_df$Colour, Data_df$Predator.Presence))
+</code></pre>
+<pre><code>## [1] 0.4421914
+</code></pre>
+<pre><code class="language-r">table(Data_df$Colour, Data_df$Predator.Type)
+</code></pre>
+<pre><code>##        
+##         Avian Non-Avian
+##   Black   197        95
+##   Brown    60        27
+##   Grey    233        98
+</code></pre>
+<pre><code class="language-r">ContCoef(table(Data_df$Colour, Data_df$Predator.Type))
+</code></pre>
+<pre><code>## [1] 0.02957682
+</code></pre>
+<p>Here, we find the same results as when using the Chi-Squared statistic and conclude that colour morphs of the common house sparrow are likely to be driven by predator presence but not the type of predator that is present.</p>
+<p><strong>Are nesting sites of Passer domesticus linked to predator presence and/or predator type?</strong></p>
+<p>Again, following our two-sample situation Chi-Squared analysis from last exercise, we want to test whether nesting site and predator presence/predator type are linked. The Chi-Squared analyses identified a possible link of nesting site and predator type but nor predator presence.</p>
+<pre><code class="language-r">table(Data_df$Nesting.Site, Data_df$Predator.Presence)
+</code></pre>
+<pre><code>##        
+##          No Yes
+##   Shrub  87 205
+##   Tree   94 137
+</code></pre>
+<pre><code class="language-r">ContCoef(table(Data_df$Nesting.Site, Data_df$Predator.Presence))
+</code></pre>
+<pre><code>## [1] 0.1130328
+</code></pre>
+<pre><code class="language-r">table(Data_df$Nesting.Site, Data_df$Predator.Type)
+</code></pre>
+<pre><code>##        
+##         Avian Non-Avian
+##   Shrub   182        23
+##   Tree     49        88
+</code></pre>
+<pre><code class="language-r">ContCoef(table(Data_df$Nesting.Site, Data_df$Predator.Type))
+</code></pre>
+<pre><code>## [1] 0.4851588
+</code></pre>
+<p>Whilst there doesn&rsquo;t seem to be any strong evidence linking nesting site and predator presence, predator type seems to be linked to what kind of nesting site <em>Passer domesticus</em> prefers thus supporting our Chi-Squared results.</p>
+<h3 id="sexual-dimorphism">Sexual Dimorphism</h3>
+<p><strong>Are sex ratios of Passer domesticus related to climate types?</strong></p>
+<p>Recall that, in our last exercise, we found no discrepancy of proportions of the sexes among the entire data set using a binomial test. What we didn&rsquo;t check yet was whether the sexes are distributed across the sites somewhat homogeneously or whether the sex ratios might be skewed according to climate types. Let&rsquo;s do this:</p>
+<pre><code class="language-r"># prepare climate type testing data
+Data_df &lt;- Data_df_base
+Index &lt;- Data_df$Index
+# select all data belonging to the stations at which all parameters except for climate type are held constant
+Rows &lt;- which(Index == &quot;SI&quot; | Index == &quot;UK&quot; | Index == &quot;RE&quot; | Index == &quot;AU&quot; )
+Data_df &lt;- Data_df[Rows,]
+Data_df$Climate &lt;- droplevels(factor(Data_df$Climate))
+
+# analysis
+table(Data_df$Sex, Data_df$Climate)
+</code></pre>
+<pre><code>##         
+##          Coastal Continental
+##   Female      91          76
+##   Male        72          78
+</code></pre>
+<pre><code class="language-r">ContCoef(table(Data_df$Sex, Data_df$Climate))
+</code></pre>
+<pre><code>## [1] 0.06470702
+</code></pre>
+<p>Quite obviously, they aren&rsquo;t and, if there are any patterns in sex ratios to emerge, these are not likely to stem from climate types. Also keep in mind that we have a plethora of other variables at play whilst the information contained within the climate type variable is somewhat constrained and, in this case, bordering on uninformative (i.e. a coastal site in the Arctic might be more closely resembled by a continental mid-latitude site than by a tropical coastal site).</p>
+<h2 id="ordinal-scale---kendalls-tau">Ordinal Scale - Kendall&rsquo;s Tau</h2>
+<h3 id="climate-warmingextremes">Climate Warming/Extremes</h3>
+<p><strong>Do heavier sparrows have heavier/less eggs?</strong></p>
+<p>A heavier weight of individual females alludes to a higher pool of resources being allocated by said individuals. There are multiple ways they might make use of it, one of them being investment in reproduction. To test how heavier females of <em>Passer domesticus</em> utilise their resources in reproduction, we use a Kendall&rsquo;s Tau approach to finding links between female weight and average egg weight per nest/number of eggs per nest.<br>
+Obviously, both weight variables are metric in nature and so we could use other methods as well. On top of that, we first need to convert these into ranks before being able to run a Kendall&rsquo;s Tau analysis as follows:</p>
+<pre><code class="language-r"># overwriting changes in Data_df with base data
+Data_df &lt;- Data_df_base
+# Establishing Ranks of Egg Weight
+RankedEggWeight &lt;- rank(Data_df$Egg.Weight[which(Data_df$Sex == &quot;Female&quot;)],
+                        ties.method = &quot;average&quot;)
+# Establishing Ranks of Female Weight
+RankedWeight_Female &lt;- rank(Data_df$Weight[which(Data_df$Sex == &quot;Female&quot;)],
+                            ties.method = &quot;average&quot;)
+# Extracting Numbers of Eggs
+RankedEggs &lt;- Data_df$Number.of.Eggs[which(Data_df$Sex == &quot;Female&quot;)]
+</code></pre>
+<p>Luckily enough, the number of eggs per nest already represent a ranked (ordinal) variable and so we can move straight on to running our analyses:</p>
+<pre><code class="language-r"># Test ranked female weight vs. ranked egg weight
+cor.test(x = RankedWeight_Female, y = RankedEggWeight, 
+         use = &quot;pairwise.complete.obs&quot;, method = &quot;kendall&quot;)
+</code></pre>
+<pre><code>## 
+## 	Kendall's rank correlation tau
+## 
+## data:  RankedWeight_Female and RankedEggWeight
+## z = 19.771, p-value &lt; 2.2e-16
+## alternative hypothesis: true tau is not equal to 0
+## sample estimates:
+##       tau 
+## 0.5804546
+</code></pre>
+<p>There is strong evidence to suggest that heavier females tend to lay heavier eggs (tau = 0.5804546 at p $\approx$ 0).</p>
+<pre><code class="language-r"># Test ranked female weight vs. number of eggs
+cor.test(x = RankedWeight_Female, y = RankedEggs, 
+         use = &quot;pairwise.complete.obs&quot;, method = &quot;kendall&quot;)
+</code></pre>
+<pre><code>## 
+## 	Kendall's rank correlation tau
+## 
+## data:  RankedWeight_Female and RankedEggs
+## z = -21.787, p-value &lt; 2.2e-16
+## alternative hypothesis: true tau is not equal to 0
+## sample estimates:
+##        tau 
+## -0.6880932
+</code></pre>
+<p>Additionally, the heavier a female of <em>Passer domesticus</em>, the less eggs she produces (tau = -0.6880932 at p $\approx$ 0).</p>
+<p>Now we can visualise the underlying patterns:</p>
+<pre><code class="language-r">plot_df &lt;- data.frame(RankedWeight = RankedWeight_Female,
+                      RankedEggWeight = RankedEggWeight,
+                      RankedEggNumber = RankedEggs)
+# plot ranked female weight vs. ranked egg weight
+ggplot(data = plot_df, aes(x = RankedWeight, y = RankedEggWeight)) +
+  geom_point() + theme_bw() + stat_smooth(method = &quot;lm&quot;) + 
+  labs(title = &quot;Ranked female weight of Passer domesticus vs. Ranked weigt of eggs&quot;)
+</code></pre>
+<pre><code>## `geom_smooth()` using formula = 'y ~ x'
+</code></pre>
+<p><img src="09---Correlation-Tests_files/figure-html/Kendall.26b-1.png" width="1440" /></p>
+<pre><code class="language-r"># plot ranked female weight vs. number of eggs
+ggplot(data = plot_df, aes(x = RankedWeight, y = RankedEggNumber)) +
+  geom_point() + theme_bw() + stat_smooth(method = &quot;lm&quot;) + 
+  labs(title = &quot;Ranked female weight of Passer domesticus vs. Ranked number of eggs&quot;)
+</code></pre>
+<pre><code>## `geom_smooth()` using formula = 'y ~ x'
+</code></pre>
+<p><img src="09---Correlation-Tests_files/figure-html/Kendall.26b-2.png" width="1440" /></p>
+<p>This highlights an obvious and intuitive trade-off in nature and has us <strong>reject the null hypotheses</strong>.</p>
+<h2 id="metric-and-ordinal-scales">Metric and Ordinal Scales</h2>
+<p>Metric scale correlation analyses call for:</p>
+<ul>
+<li><em>Spearman</em> correlation test (non-parametric)</li>
+<li><em>Pearson</em> correlation test (parametric, requires data to be normal distributed)</li>
+</ul>
+<h3 id="testing-for-normality">Testing for Normality</h3>
+<p><strong>DISCLAIMER:</strong> I do not expect you to do it this way as of right now but wanted to give you reference material of how to automate this testing step.</p>
+<p>Since most of our following analyses are focussing on latitude effects (i.e. &ldquo;climate warming&rdquo;), we need to alter our base data. Before we can run the analyses, we need to eliminate the sites that we have set aside for testing climate extreme effects on (Siberia, United Kingdom, Reunion and Australia) from the data set. We are also not interested in all variables and so reduce the data set further.</p>
+<pre><code class="language-r">Data_df &lt;- Data_df_base
+Index &lt;- Data_df$Index
+Rows &lt;- which(Index != &quot;SI&quot; &amp; Index != &quot;UK&quot; &amp; Index != &quot;RE&quot; &amp; Index != &quot;AU&quot; )
+Data_df &lt;- Data_df[Rows,c(&quot;Index&quot;, &quot;Latitude&quot;, &quot;Weight&quot;, &quot;Height&quot;, &quot;Wing.Chord&quot;, &quot;Nesting.Height&quot;, 
+                             &quot;Number.of.Eggs&quot;, &quot;Egg.Weight&quot;)]
+</code></pre>
+<p>In order to know which test we can use with which variable, we need to first identify whether our data is normal distributed using the Shapiro-Test (Seminar 3) as follows:</p>
+<pre><code class="language-r">Normal_df &lt;- data.frame(Normality = as.character(), stringsAsFactors = FALSE)
+for(i in 2:length(colnames(Data_df))){
+  Normal_df[1,i] &lt;- colnames(Data_df)[i]
+  Normal_df[2,i] &lt;- round(shapiro.test(as.numeric(Data_df[,i]))$p.value, 2)
+}
+colnames(Normal_df) &lt;- c()
+rownames(Normal_df) &lt;- c(&quot;Variable&quot;, &quot;p&quot;)
+Normal_df &lt;- Normal_df[,-1] # removing superfluous Index column
+Normal_df
+</code></pre>
+<pre><code>##                                                                         
+## Variable Latitude Weight Height Wing.Chord Nesting.Height Number.of.Eggs
+## p               0      0      0          0              0              0
+##                    
+## Variable Egg.Weight
+## p                 0
+</code></pre>
+<p>Unfortunately, none of these variables seem to be normal distributed (this was to be expected for some, to be fair) thus barring us from using Pearson correlation on the entire data set leaving us with the Spearman correlation method.</p>
+<h3 id="spearman">Spearman</h3>
+<h4 id="climate-warmingextremes-1">Climate Warming/Extremes</h4>
+<h5 id="heightlength">Height/Length</h5>
+<p><strong>Do height/length records of Passer domesticus and latitude correlate?</strong></p>
+<p>Following Bergmann&rsquo;s rule, we expect a positive correlation between sparrow height/length and absolute values of latitude:</p>
+<pre><code class="language-r">cor.test(x = abs(Data_df$Latitude), y = Data_df$Height, 
+         use = &quot;pairwise.complete.obs&quot;, method = &quot;spearman&quot;)
+</code></pre>
+<pre><code>## Warning in cor.test.default(x = abs(Data_df$Latitude), y = Data_df$Height, :
+## Cannot compute exact p-value with ties
+</code></pre>
+<pre><code>## 
+## 	Spearman's rank correlation rho
+## 
+## data:  abs(Data_df$Latitude) and Data_df$Height
+## S = 128104735, p-value &lt; 2.2e-16
+## alternative hypothesis: true rho is not equal to 0
+## sample estimates:
+##        rho 
+## -0.8219373
+</code></pre>
+<pre><code class="language-r">ggplot(data = Data_df, aes(x = abs(Latitude), y = Height)) +
+  geom_point() + theme_bw() + stat_smooth(method = &quot;lm&quot;) + 
+  labs(title = &quot;Height of Passer domesticus vs. Latitude&quot;)
+</code></pre>
+<pre><code>## `geom_smooth()` using formula = 'y ~ x'
+</code></pre>
+<p><img src="09---Correlation-Tests_files/figure-html/Spearman1-1.png" width="1440" />
+Interestingly enough, our analysis yields a negative correlation which would disproof Bermann&rsquo;s rule. This is a good example to show how important biological background knowledge is when doing biostatistics. Whilst a pure statistician might now believe to have just dis-proven a big rule of biology, it should be apparent to any biologist that Bergmann spoke of &ldquo;bigger&rdquo; organisms in colder climates (higher latitudes) and not of &ldquo;taller&rdquo; individuals. What our sparrows lack in height, they might make up for in circumference. This is an example where we would <strong>reject the null hypothesis</strong> but shouldn&rsquo;t <strong>accept the alternative hypothesis</strong> based on biological understanding.</p>
+<h5 id="weight">Weight</h5>
+<p><strong>Do weight records of Passer domesticus and latitude correlate?</strong></p>
+<p>Again, following Bergmann&rsquo;s rule, we expect a positive correlation between sparrow weight and absolute values of latitude.</p>
+<pre><code class="language-r">cor.test(x = abs(Data_df$Latitude), y = Data_df$Weight, 
+         use = &quot;pairwise.complete.obs&quot;, method = &quot;spearman&quot;)
+</code></pre>
+<pre><code>## Warning in cor.test.default(x = abs(Data_df$Latitude), y = Data_df$Weight, :
+## Cannot compute exact p-value with ties
+</code></pre>
+<pre><code>## 
+## 	Spearman's rank correlation rho
+## 
+## data:  abs(Data_df$Latitude) and Data_df$Weight
+## S = 9349037, p-value &lt; 2.2e-16
+## alternative hypothesis: true rho is not equal to 0
+## sample estimates:
+##       rho 
+## 0.8670357
+</code></pre>
+<pre><code class="language-r">ggplot(data = Data_df, aes(x = abs(Latitude), y = Weight)) +
+  geom_point() + theme_bw() + stat_smooth(method = &quot;lm&quot;) + 
+  labs(title = &quot;Weight of Passer domesticus vs. Latitude&quot;)
+</code></pre>
+<pre><code>## `geom_smooth()` using formula = 'y ~ x'
+</code></pre>
+<p><img src="09---Correlation-Tests_files/figure-html/Spearman-1.png" width="1440" />
+Bergmann was obviously right and we <strong>reject the null hypothesis</strong>.</p>
+<h5 id="wing-chord">Wing Chord</h5>
+<p><strong>Do wing chord/wing span records of Passer domesticus and latitude correlate?</strong></p>
+<p>We would expect sparrows in higher latitudes (e.g. colder climates) to have smaller wings as to radiate less body heat.</p>
+<pre><code class="language-r">cor.test(x = abs(Data_df$Latitude), y = Data_df$Wing.Chord, 
+         use = &quot;pairwise.complete.obs&quot;, method = &quot;spearman&quot;)
+</code></pre>
+<pre><code>## Warning in cor.test.default(x = abs(Data_df$Latitude), y = Data_df$Wing.Chord,
+## : Cannot compute exact p-value with ties
+</code></pre>
+<pre><code>## 
+## 	Spearman's rank correlation rho
+## 
+## data:  abs(Data_df$Latitude) and Data_df$Wing.Chord
+## S = 134573929, p-value &lt; 2.2e-16
+## alternative hypothesis: true rho is not equal to 0
+## sample estimates:
+##        rho 
+## -0.9139437
+</code></pre>
+<pre><code class="language-r">ggplot(data = Data_df, aes(x = abs(Latitude), y = Wing.Chord)) +
+  geom_point() + theme_bw() + stat_smooth(method = &quot;lm&quot;) + 
+  labs(title = &quot;Wing chord of Passer domesticus vs. Latitude&quot;)
+</code></pre>
+<pre><code>## `geom_smooth()` using formula = 'y ~ x'
+</code></pre>
+<p><img src="09---Correlation-Tests_files/figure-html/Spearman2-1.png" width="1440" /></p>
+<p>And we were right! Sparrows have shorter wingspans in higher latitudes and we <strong>reject the null hypothesis</strong>.</p>
+<h5 id="number-of-eggs">Number of Eggs</h5>
+<p><strong>Do numbers of eggs per nest of Passer domesticus and latitude correlate?</strong></p>
+<p>Due to resource constraints in colder climates, we expect female <em>Passer domesticus</em> individuals to invest in quality over quantity by prioritising caring your fledglings by educing the amount of eggs they produce.</p>
+<pre><code class="language-r">cor.test(x = abs(Data_df$Latitude), y = Data_df$Number.of.Eggs, 
+         use = &quot;pairwise.complete.obs&quot;, method = &quot;spearman&quot;)
+</code></pre>
+<pre><code>## Warning in cor.test.default(x = abs(Data_df$Latitude), y =
+## Data_df$Number.of.Eggs, : Cannot compute exact p-value with ties
+</code></pre>
+<pre><code>## 
+## 	Spearman's rank correlation rho
+## 
+## data:  abs(Data_df$Latitude) and Data_df$Number.of.Eggs
+## S = 14501794, p-value &lt; 2.2e-16
+## alternative hypothesis: true rho is not equal to 0
+## sample estimates:
+##      rho 
+## -0.92853
+</code></pre>
+<pre><code class="language-r">ggplot(data = Data_df, aes(x = abs(Latitude), y = Number.of.Eggs)) +
+  geom_point() + theme_bw() + stat_smooth(method = &quot;lm&quot;) + 
+  labs(title = &quot;Number of eggs of Passer domesticus nests vs. Latitude&quot;)
+</code></pre>
+<pre><code>## `geom_smooth()` using formula = 'y ~ x'
+</code></pre>
+<pre><code>## Warning: Removed 394 rows containing non-finite values (`stat_smooth()`).
+</code></pre>
+<pre><code>## Warning: Removed 394 rows containing missing values (`geom_point()`).
+</code></pre>
+<p><img src="09---Correlation-Tests_files/figure-html/Spearman3-1.png" width="1440" />
+We were right. Female house sparrows produce less eggs per capita in higher latitudes and we <strong>reject the null hypothesis</strong>.</p>
+<h5 id="egg-weight">Egg Weight</h5>
+<p><strong>Does average weight of eggs per nest of Passer domesticus and latitude correlate?</strong></p>
+<p>Due to the reduced investment in egg numbers that we have just proven, we expect females of <em>Passer domesticus</em> to allocate some of their saved resources into heavier eggs which may nurture unhatched offspring for longer and more effectively.</p>
+<pre><code class="language-r">cor.test(x = abs(Data_df$Latitude), y = Data_df$Egg.Weight, 
+         use = &quot;pairwise.complete.obs&quot;, method = &quot;spearman&quot;)
+</code></pre>
+<pre><code>## Warning in cor.test.default(x = abs(Data_df$Latitude), y = Data_df$Egg.Weight,
+## : Cannot compute exact p-value with ties
+</code></pre>
+<pre><code>## 
+## 	Spearman's rank correlation rho
+## 
+## data:  abs(Data_df$Latitude) and Data_df$Egg.Weight
+## S = 1318221, p-value &lt; 2.2e-16
+## alternative hypothesis: true rho is not equal to 0
+## sample estimates:
+##     rho 
+## 0.82321
+</code></pre>
+<pre><code class="language-r">ggplot(data = Data_df, aes(x = abs(Latitude), y = Egg.Weight)) +
+  geom_point() + theme_bw() + stat_smooth(method = &quot;lm&quot;) + 
+  labs(title = &quot;Weight of Passer domesticus eggs vs. Latitude&quot;)
+</code></pre>
+<pre><code>## `geom_smooth()` using formula = 'y ~ x'
+</code></pre>
+<pre><code>## Warning: Removed 395 rows containing non-finite values (`stat_smooth()`).
+</code></pre>
+<pre><code>## Warning: Removed 395 rows containing missing values (`geom_point()`).
+</code></pre>
+<p><img src="09---Correlation-Tests_files/figure-html/Spearman4-1.png" width="1440" />
+Indeed, the higher the latitude, the heavier the average egg per nest of <em>Passer domesticus</em> and we <strong>reject the null hypothesis</strong>.</p>
+<h3 id="pearson">Pearson</h3>
+<p>We already know that we can&rsquo;t analyse the entire data set at once for these two variables since their data values are not normal distirbuted. How about site-wise variable value distributions, though?</p>
+<pre><code class="language-r"># Further reducing the data set
+Data_df &lt;- Data_df[,c(&quot;Index&quot;, &quot;Weight&quot;, &quot;Height&quot;)]
+# establishing an empty data frame and an index vector that doesn't repeat
+Normal_df &lt;- data.frame(Normality = as.character(), stringsAsFactors = FALSE)
+Indices &lt;- as.character(unique(Data_df_base$Index[Rows]))
+# site-wise shapiro test
+for(i in 2:length(colnames(Data_df))){ # variables
+  for(k in 1:length(Indices)){ # sites
+    Normal_df[i,k] &lt;- round(shapiro.test(as.numeric(
+          Data_df[,i][which(Data_df_base$Index[Rows] == Indices[k])])
+        )$p.value, 2)}} # site loop, variable loop
+rownames(Normal_df) &lt;- colnames(Data_df)
+colnames(Normal_df) &lt;- Indices
+Normal_df[-1,] # remove superfluous index row
+</code></pre>
+<pre><code>##          NU   MA   LO   BE   FG   SA   FI
+## Weight 0.57 0.12 0.50 0.38 0.18 0.76 0.43
+## Height 0.23 0.03 0.19 0.59 0.88 0.27 0.86
+</code></pre>
+<p>According to these results intra-site correlations of sparrow weight and height can be carried out! So, in order to show Pearson correlation, we run a simple, site-wise correlation analysis.</p>
+<p><strong>Do weight and height records of Passer domesticus correlate within each site?</strong></p>
+<p>To shed some light on our previous findings, we might want to see whether weight and height of sparrows correlate. Without running the analysis, we can conclude that they do because both correlate with latitude and are thus what we call <strong>collinear</strong>. However, now we are running the analysis on a site level - does the correlation still exist?</p>
+<p>Take note that we are now using our entire data set again.</p>
+<pre><code class="language-r"># overwriting altered Data_df
+Data_df &lt;- Data_df_base
+# establishing an empty data frame and an index vector that doesn't repeat
+Pearson_df &lt;- data.frame(Pearson = as.character(), stringsAsFactors = FALSE)
+Indices &lt;- as.character(unique(Data_df$Index))
+# site-internal correlation tests, weight and height
+for(i in 1:length(unique(Data_df$Index))){
+  Weights &lt;- Data_df$Weight[which(Data_df$Index == Indices[i])]
+  Heights &lt;- Data_df$Height[which(Data_df$Index == Indices[i])]
+  Pearson_df[1,i] &lt;- round(cor.test(x = Weights, y = Heights, 
+                                    use = &quot;pairwise.complete.obs&quot;)[[&quot;estimate&quot;]][[&quot;cor&quot;]], 2)
+  Pearson_df[2,i] &lt;- round(cor.test(x = Weights, y = Heights, 
+                                    use = &quot;pairwise.complete.obs&quot;)$p.value, 2)}
+colnames(Pearson_df) &lt;- Indices
+rownames(Pearson_df) &lt;- c(&quot;r&quot;, &quot;p&quot;)
+Pearson_df
+</code></pre>
+<pre><code>##     SI   UK   AU   RE   NU   MA   LO   BE   FG   SA   FI
+## r 0.76 0.83 0.77 0.75 0.84 0.84 0.79 0.82 0.79 0.76 0.81
+## p    0 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00
+</code></pre>
+<p>Apparently, it does. Heavier birds are taller!</p>
+
+          </div>
+
+          
+
+<div class="article-tags">
+  
+  <a class="badge badge-light" href="/tag/r/">R</a>
+  
+  <a class="badge badge-light" href="/tag/statistics/">Statistics</a>
+  
+</div>
+
+
+
+          
+          <div class="article-widget">
+            
+<div class="post-nav">
+  
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">Previous</div>
+    <a href="/courses/biostat101/nominal-tests/" rel="next">Nominal Tests</a>
+  </div>
+  
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">Next</div>
+    <a href="/courses/biostat101/ordinal-metric-tests-two-sample-situations/" rel="prev">Ordinal &amp; Metric Tests (Two-Sample Situations)</a>
+  </div>
+  
+</div>
+
+          </div>
+          
+        </div>
+
+        <div class="body-footer">
+          <p>Last updated on 2020-06-10</p>
+
+          
+
+
+
+
+
+          
+
+
+          
+
+
+  
+  
+  <div class="article-widget content-widget-hr">
+    <h3>Related</h3>
+    <ul>
+      
+      <li><a href="/courses/an-introduction-to-biostatistics/correlation-tests/">Correlation Tests</a></li>
+      
+      <li><a href="/courses/biostat101/a-primer-for-statistical-tests/">A Primer For Statistical Tests</a></li>
+      
+      <li><a href="/courses/an-introduction-to-biostatistics/a-primer-for-statistical-tests/">A Primer For Statistical Tests</a></li>
+      
+      <li><a href="/courses/an-introduction-to-biostatistics/data-handling-and-data-mining/">Data Handling and Data Mining</a></li>
+      
+      <li><a href="/courses/biostat101/data-handling-and-data-mining/">Data Handling and Data Mining</a></li>
+      
+    </ul>
+  </div>
+  
+
+
+
+        </div>
+
+      </article>
+
+      <footer class="site-footer">
+  
+  <p class="powered-by">
+    
+      <a href="/privacy/">Privacy Policy</a>
+    
+    
+       &middot; 
+      <a href="/terms/">Terms</a>
+    
+  </p>
+  
+
+  <p class="powered-by">
+    © 2024
+  </p>
+
+  
+  
+
+
+
+
+
+
+  <p class="powered-by">
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+  </p>
+</footer>
+
+
+    </main>
+  </div>
+</div>
+
+
+      
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js" integrity="sha256-eOgo0OtLL4cdq7RdwRUiGKLX9XsIJ7nGhWEKbohmVAQ=" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/languages/r.min.js"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/languages/latex.min.js"></script>
+        
+      
+
+    
+
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.js" integrity="sha256-EErZamuLefUnbMBQbsEqu1USa+btR2oIlCpBJbyD4/g=" crossorigin="anonymous"></script>
+    
+
+    
+    
+    <script>const code_highlighting = true;</script>
+    
+
+    
+    
+    <script>const isSiteThemeDark = false;</script>
+    
+
+    
+    
+    
+    
+    
+    
+    <script>
+      const search_config = {"indexURI":"/index.json","minLength":1,"threshold":0.3};
+      const i18n = {"no_results":"No results found","placeholder":"Search...","results":"results found"};
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks",
+        'slides' : "Slides"
+        };
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.1/anchor.min.js" integrity="sha256-pB/deHc9CGfFpJRjC43imB29Rse8tak+5eXqntO94ck=" crossorigin="anonymous"></script>
+    <script>
+      anchors.add();
+    </script>
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+      <div class="search-hit-content">
+        <div class="search-hit-name">
+          <a href="{{relpermalink}}">{{title}}</a>
+          <div class="article-metadata search-hit-type">{{type}}</div>
+          <p class="search-hit-description">{{snippet}}</p>
+        </div>
+      </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="/js/academic.min.66c553246b0f279a03be6e5597f72b52.js"></script>
+
+    
+
+
+
+
+
+
+  
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,1802 @@
+<!DOCTYPE html><html lang="en-gb" >
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.8.0">
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Erik Kusch">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Welcome to our sixth practical experience in R. Throughout the following notes, I will introduce you to a couple of simple parametric test. Whilst parametric tests are used extremely often in biological statistics, they can be somewhat challenging to fit to your data as you will see soon. To do so, I will enlist the sparrow data set we handled in our first exercise. Additionally, todays seminar is showing plotting via base plot instead of `ggplot2` to highlight the usefulness of base plot and show you the base notation.">
+
+  
+  <link rel="alternate" hreflang="en-gb" href="https://www.erikkusch.com/courses/biostat101/simple-parametric-tests/">
+
+  
+
+
+  
+  
+  
+  <meta name="theme-color" content="#858383">
+  
+
+  
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-1/css/all.min.css" integrity="sha256-4w9DunooKSr3MFXHXWyFER38WmPdm361bQS/2KUWZbU=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.css" integrity="sha256-SHMGCYmST46SoyGgo4YR/9AlK1vf3ff84Aq9yK4hdqM=" crossorigin="anonymous">
+    
+
+    
+
+    
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.1.2/lazysizes.min.js" integrity="sha256-Md1qLToewPeKjfAHU1zyPwOutccPAm5tahnaw7Osw0A=" crossorigin="anonymous" async></script>
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+        
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+
+  
+
+  
+  
+  
+    
+      
+      
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cutive+Mono%7CLora:400,700%7CRoboto:400,700&display=swap">
+    
+  
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/academic.css">
+
+  
+
+
+
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-186216138-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+
+  function gtag() {
+      dataLayer.push(arguments);
+  }
+
+  function trackOutboundLink(url, target) {
+    gtag('event', 'click', {
+         'event_category': 'outbound',
+         'event_label': url,
+         'transport_type': 'beacon',
+         'event_callback': function () {
+           if (target !== '_blank') {
+             document.location = url;
+           }
+         }
+    });
+    console.debug("Outbound link clicked: " + url);
+  }
+
+  function onClickCallback(event) {
+    if ((event.target.tagName !== 'A') || (event.target.host === window.location.host)) {
+      return;
+    }
+    trackOutboundLink(event.target, event.target.getAttribute('target'));  
+  }
+
+  gtag('js', new Date());
+  gtag('config', 'UA-186216138-1', {});
+
+  
+  document.addEventListener('click', onClickCallback, false);
+</script>
+
+
+  
+
+
+  
+  
+
+  
+
+  <link rel="manifest" href="/index.webmanifest">
+  <link rel="icon" type="image/png" href="/images/icon_hu7658c99d512131214e4d6c003a3f85f7_112593_32x32_fill_lanczos_center_2.png">
+  <link rel="apple-touch-icon" type="image/png" href="/images/icon_hu7658c99d512131214e4d6c003a3f85f7_112593_192x192_fill_lanczos_center_2.png">
+
+  <link rel="canonical" href="https://www.erikkusch.com/courses/biostat101/simple-parametric-tests/">
+
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  <meta property="twitter:card" content="summary_large_image">
+  
+  <meta property="twitter:site" content="@ErikKusch">
+  <meta property="twitter:creator" content="@ErikKusch">
+  
+  <meta property="og:site_name" content="Erik Kusch">
+  <meta property="og:url" content="https://www.erikkusch.com/courses/biostat101/simple-parametric-tests/">
+  <meta property="og:title" content="Simple Parametric Tests | Erik Kusch">
+  <meta property="og:description" content="Welcome to our sixth practical experience in R. Throughout the following notes, I will introduce you to a couple of simple parametric test. Whilst parametric tests are used extremely often in biological statistics, they can be somewhat challenging to fit to your data as you will see soon. To do so, I will enlist the sparrow data set we handled in our first exercise. Additionally, todays seminar is showing plotting via base plot instead of `ggplot2` to highlight the usefulness of base plot and show you the base notation."><meta property="og:image" content="https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg">
+  <meta property="twitter:image" content="https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg"><meta property="og:locale" content="en-gb">
+  
+    
+      <meta property="article:published_time" content="2020-06-10T00:00:00&#43;00:00">
+    
+    <meta property="article:modified_time" content="2020-06-10T00:00:00&#43;00:00">
+  
+
+  
+
+
+
+  
+
+
+  
+
+
+  
+
+
+
+
+
+  <title>Simple Parametric Tests | Erik Kusch</title>
+
+</head>
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search" class="form-control">
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+<nav class="navbar navbar-expand-lg navbar-light compensate-for-scrollbar" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="d-none d-lg-inline-flex">
+      <a class="navbar-brand" href="/"><img src="/images/logo_huab2266ff59bbac6a094b6da1268adcf9_208479_0x70_resize_lanczos_2.png" alt="Erik Kusch"></a>
+    </div>
+    
+
+    
+    <button type="button" class="navbar-toggler" data-toggle="collapse"
+            data-target="#navbar-content" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+    <span><i class="fas fa-bars"></i></span>
+    </button>
+    
+
+    
+    <div class="navbar-brand-mobile-wrapper d-inline-flex d-lg-none">
+      <a class="navbar-brand" href="/"><img src="/images/logo_huab2266ff59bbac6a094b6da1268adcf9_208479_0x70_resize_lanczos_2.png" alt="Erik Kusch"></a>
+    </div>
+    
+
+    
+    
+    <div class="navbar-collapse main-menu-item collapse justify-content-center" id="navbar-content">
+
+      
+      <ul class="navbar-nav d-md-inline-flex">
+        
+
+        
+
+        
+        
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link  active" href="/"><span>Home</span></a>
+        </li>
+
+        
+        
+
+        
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"><span>Courses & Workshops</span><span class="caret"></span>
+          </a>
+          <div class="dropdown-menu">
+            
+              <a class="dropdown-item" href="/courses/krigr/"><span>KrigR - State-of-the-Art Climate Data within R</span></a>
+            
+              <a class="dropdown-item" href="/courses/gbif/"><span>Accessing and Referencing GBIF Data for Research</span></a>
+            
+              <a class="dropdown-item" href="/courses/rethinking/"><span>Statistical Rethinking - Introduction to Bayesian Statistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/bayes-nets/"><span>Bayesian Networks - Causality through Bayesian Approaches</span></a>
+            
+              <a class="dropdown-item" href="/courses/biostat101/"><span>Biostats 101 - An Introduction to Biostatistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/excursions-into-biostatistics/"><span>Biostats 301 - Excursions into Biostatistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/bftp-biome-detection/"><span>BFTP - First Steps in Macroecology in R</span></a>
+            
+          </div>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#projects"><span>Projects</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#featured"><span>Publications</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#talks"><span>Talks</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/about"><span>Contact</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+            
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/media/CV_ErikKusch.html" target="_blank" rel="noopener"><span>CV</span></a>
+        </li>
+
+        
+        
+
+      
+
+        
+      </ul>
+    </div>
+
+    <ul class="nav-icons navbar-nav flex-row ml-auto d-flex pl-md-2">
+      
+      <li class="nav-item">
+        <a class="nav-link js-search" href="#" aria-label="Search"><i class="fas fa-search" aria-hidden="true"></i></a>
+      </li>
+      
+
+      
+      <li class="nav-item dropdown theme-dropdown">
+        <a href="#" class="nav-link js-theme-selector" data-toggle="dropdown" aria-haspopup="true">
+          <i class="fas fa-palette" aria-hidden="true"></i>
+        </a>
+        <div class="dropdown-menu">
+          <a href="#" class="dropdown-item js-set-theme-light">
+            <span>Light</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-dark">
+            <span>Dark</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-auto">
+            <span>Automatic</span>
+          </a>
+        </div>
+      </li>
+      
+
+      
+
+    </ul>
+
+  </div>
+</nav>
+
+
+  
+
+<div class="container-fluid docs">
+  <div class="row flex-xl-nowrap">
+    <div class="col-12 col-md-3 col-xl-2 docs-sidebar">
+      
+
+
+
+
+
+  
+    
+  
+
+
+
+
+<form class="docs-search d-flex align-items-center">
+  <button class="btn docs-toggle d-md-none p-0 mr-3" type="button" data-toggle="collapse" data-target="#docs-nav" aria-controls="docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    <span><i class="fas fa-bars"></i></span>
+  </button>
+
+  
+  <input name="q" type="search" class="form-control" placeholder="Search..." autocomplete="off">
+  
+</form>
+
+<nav class="collapse docs-links" id="docs-nav">
+  
+
+  
+  
+  
+  
+  <div class="docs-toc-item">
+    <a class="docs-toc-link" href="/courses/an-introduction-to-biostatistics/">Overview</a>
+
+  </div>
+  
+  <div class="docs-toc-item">
+    <a class="docs-toc-link" href="/courses/an-introduction-to-biostatistics/01-an-introduction-to-basic-statistics-for-biologists/">Sessions</a>
+    <ul class="nav docs-sidenav">
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/01-an-introduction-to-basic-statistics-for-biologists/">01 - Basic Statistics for Biologists</a>
+      </li>
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/introduction-to-r/">02 - Introduction to R</a>
+      </li>
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/a-primer-for-statistical-tests/">03 - A Primer For Statistical Tests</a>
+      </li>
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/descriptive-statistics/">04 - Descriptive Statistics</a>
+      </li>
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/data-visualisation/">05 - Data Visualisation</a>
+      </li>
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/06-inferential-statistics-hypotheses-and-our-research-project/">06 - Inferential Statistics, Hypotheses And Our Research Project</a>
+      </li>
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/data-handling-and-data-mining/">07 - Data Handling and Data Mining</a>
+      </li>
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/nominal-tests/">08 - Nominal Tests</a>
+      </li>
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/correlation-tests/">09 - Correlation Tests</a>
+      </li>
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/ordinal-metric-tests-two-sample-situations/">10 - Ordinal &amp; Metric Tests (Two-Sample Situations)</a>
+      </li>
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/ordinal-metric-tests-more-than-two-sample-situations/">11 - Ordinal &amp; Metric Tests (More-Than-Two-Sample Situations)</a>
+      </li>
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/simple-parametric-tests/">12 - Simple Parametric Tests</a>
+      </li>
+      
+      <li >
+        <a href="/courses/an-introduction-to-biostatistics/13-an-outlook-on-advanced-statistics/">13 - Closing &amp; Summary</a>
+      </li>
+      
+    </ul>
+    
+
+  </div>
+  
+  
+</nav>
+
+    </div>
+
+    
+    <div class="d-none d-xl-block col-xl-2 docs-toc">
+      <ul class="nav toc-top">
+        <li><a href="#" id="back_to_top" class="docs-toc-title">Contents</a></li>
+      </ul>
+
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#theory">Theory</a></li>
+    <li><a href="#data">Data</a></li>
+    <li><a href="#preparing-our-procedure">Preparing Our Procedure</a>
+      <ul>
+        <li><a href="#packages">Packages</a></li>
+        <li><a href="#loading-data">Loading Data</a></li>
+      </ul>
+    </li>
+    <li><a href="#t-test-unpaired">t-Test (unpaired)</a>
+      <ul>
+        <li><a href="#testing-for-normality-and-homogeneity">Testing For Normality And Homogeneity</a></li>
+        <li><a href="#climate-warmingextremes">Climate Warming/Extremes</a></li>
+        <li><a href="#sexual-dimorphism">Sexual Dimorphism</a></li>
+      </ul>
+    </li>
+    <li><a href="#t-test-paired">t-Test (paired)</a>
+      <ul>
+        <li><a href="#preparing-data">Preparing Data</a></li>
+        <li><a href="#testing-for-normality">Testing for Normality</a></li>
+        <li><a href="#climate-warmingextremes-1">Climate Warming/Extremes</a></li>
+      </ul>
+    </li>
+    <li><a href="#one-way-anova">One-Way ANOVA</a>
+      <ul>
+        <li><a href="#testing-for-assumptions">Testing For Assumptions</a></li>
+        <li><a href="#climate-warmingextremes-2">Climate Warming/Extremes</a></li>
+        <li><a href="#predation">Predation</a></li>
+      </ul>
+    </li>
+    <li><a href="#two-way-anova">Two-Way ANOVA</a>
+      <ul>
+        <li><a href="#testing-for-assumptions-1">Testing For Assumptions</a></li>
+        <li><a href="#sexual-dimorphism-1">Sexual Dimorphism</a></li>
+      </ul>
+    </li>
+    <li><a href="#ancova">ANCOVA</a>
+      <ul>
+        <li><a href="#climate-warmingextremes-3">Climate Warming/Extremes</a></li>
+        <li><a href="#sparrow-characteristics-and-sites">Sparrow Characteristics And Sites</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+      
+    </div>
+    
+
+    <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 docs-content" role="main">
+
+      <article class="article">
+
+        <div class="docs-article-container">
+          <h1>Simple Parametric Tests</h1>
+
+          <div class="article-style">
+            <h2 id="theory">Theory</h2>
+<p>Welcome to our sixth practical experience in R. Throughout the following notes, I will introduce you to a couple of simple parametric test. Whilst parametric tests are used extremely often in biological statistics, they can be somewhat challenging to fit to your data as you will see soon. To do so, I will enlist the sparrow data set we handled in our first exercise. Additionally, todays seminar is showing plotting via base plot instead of <code>ggplot2</code> to highlight the usefulness of base plot and show you the base notation. I have prepared some slides for this session: <a href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/biostat101/12---Simple-Parametric-Tests_Handout.html" target="_blank"><img src="/courses/biostat101/12---BioStat101_featured.png" width="900" margin-top = "0"/></a></p>
+<h2 id="data">Data</h2>
+<p>Find the data for this exercise <a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/biostat101/Data/1%20-%20Sparrow_Data_READY.rds" target="_blank"> here</a> and <a href="https://github.com/ErikKusch/Homepage/raw/master/content/courses/biostat101/Data/2b%20-%20Sparrow_ResettledSIUK_READY.rds" target="_blank"> here</a>.</p>
+<h2 id="preparing-our-procedure">Preparing Our Procedure</h2>
+<p>To ensure others can reproduce our analysis we run the following three lines of code at the beginning of our <code>R</code> coding file.</p>
+<pre><code class="language-r">rm(list=ls()) # clearing environment
+Dir.Base &lt;- getwd() # soft-coding our working directory
+Dir.Data &lt;- paste(Dir.Base, &quot;Data&quot;, sep=&quot;/&quot;) # soft-coding our data directory 
+</code></pre>
+<h3 id="packages">Packages</h3>
+<p>Using the following, user-defined function, we install/load all the necessary packages into our current <code>R</code> session.</p>
+<pre><code class="language-r"># function to load packages and install them if they haven't been installed yet
+install.load.package &lt;- function(x) {
+  if (!require(x, character.only = TRUE))
+    install.packages(x)
+  require(x, character.only = TRUE)
+}
+package_vec &lt;- c(&quot;car&quot;) # needed for the Levene Test for Homogeneity
+sapply(package_vec, install.load.package)
+</code></pre>
+<pre><code>## Loading required package: car
+</code></pre>
+<pre><code>## Loading required package: carData
+</code></pre>
+<pre><code>##  car 
+## TRUE
+</code></pre>
+<h3 id="loading-data">Loading Data</h3>
+<p>During our first exercise (Data Mining and Data Handling - Fixing The Sparrow Data Set) we saved our clean data set as an RDS file. To load this, we use the <code>readRDS()</code> command that comes with base <code>R</code>.</p>
+<pre><code class="language-r">Data_df_base &lt;- readRDS(file = paste(Dir.Data, &quot;/1 - Sparrow_Data_READY.rds&quot;, sep=&quot;&quot;))
+Data_df &lt;- Data_df_base # duplicate and save initial data on a new object
+</code></pre>
+<h2 id="t-test-unpaired">t-Test (unpaired)</h2>
+<p><strong>Assumptions of the unpaired t-Test:</strong></p>
+<ul>
+<li>Predictor variable is binary</li>
+<li>Response variable is metric and <strong>normal distributed</strong> within their groups</li>
+<li>Variable values are <strong>independent</strong> (not paired)</li>
+</ul>
+<p>In addition, test whether variance of response variable values in groups are equal (<code>var.test()</code>) and adjust <code>t.test()</code> argument <code>var.equal</code> accordingly.</p>
+<h3 id="testing-for-normality-and-homogeneity">Testing For Normality And Homogeneity</h3>
+<p>We need to test the distribution of our response variables within each predictor variable group for their normality and variance. Since this involves two Shapiro tests and one variance test per variable for each response variable, we might want to write our own function to do so:</p>
+<pre><code class="language-r">ShapiroTest &lt;- function(Variables, Grouping){
+  Output &lt;- data.frame(x = Variables)
+  for(i in 1:length(Variables)){
+    
+    X &lt;- Data_df[,Variables[i]]
+    Levels &lt;- levels(factor(Data_df[,Grouping]))
+    
+    Output[i,2] &lt;- shapiro.test(X[which(Data_df[,Grouping] == Levels[1])])$p.value
+    Output[i,3] &lt;- shapiro.test(X[which(Data_df[,Grouping] == Levels[2])])$p.value
+    Output[i,4] &lt;- var.test(x = X[which(Data_df[,Grouping] == Levels[1])], 
+                            y = X[which(Data_df[,Grouping] == Levels[2])])$p.value
+  }
+  colnames(Output) &lt;- c(&quot;Variable&quot;, &quot;P.value1&quot;, &quot;P.value2&quot;, &quot;Var.Test&quot;)
+  return(Output)
+}
+</code></pre>
+<p>This function (<code>ShapiroTest()</code>) takes two arguments: (1) <code>Variables</code> - a vector of characters holding the names of the variables we want to have tested, and (2) <code>Grouping</code> - the binary variable by which to group our variables. The function returns a data frame holding the p-values of the Shapiro tests on each variable group values as well as the <code>var.test()</code> p-value.</p>
+<h3 id="climate-warmingextremes">Climate Warming/Extremes</h3>
+<p><strong>Does sparrow morphology change depend on climate?</strong></p>
+<p>Using multiple different methods (i.e. Kruskal-Wallis and Mann-Whitney U Test), we have already identified climate (be it in its binary form or when recorded as a three-level variable) is a strong driving force of sparrow morphology. We expect the same results when using a t-Test.</p>
+<p>Take note that we need to limit our analysis to our climate type testing sites again as follows (we include Manitoba this time as it is at the same latitude as the UK and Siberia and holds a semi-coastal climate type):</p>
+<pre><code class="language-r"># prepare climate type testing data
+Data_df &lt;- Data_df_base
+Index &lt;- Data_df$Index
+Rows &lt;- which(Index == &quot;SI&quot; | Index == &quot;UK&quot; | Index == &quot;RE&quot; | Index == &quot;AU&quot; | Index == &quot;MA&quot;)
+Data_df &lt;- Data_df[Rows,]
+</code></pre>
+<h4 id="testing-for-normality-and-variance">Testing for Normality and Variance</h4>
+<p>Before we can make use of our data with a t-Test, we need to do an <strong>assumption check</strong>. To this end, we first turn <code>Climate</code> records into a binary variable by turning records of a semi-coastal climate into a coastal one.</p>
+<pre><code class="language-r"># Make climate binary
+Data_df$Climate[which(Data_df$Climate == &quot;Semi-Coastal&quot;)] &lt;- &quot;Coastal&quot;
+Data_df$Climate &lt;- droplevels(factor(Data_df$Climate))
+</code></pre>
+<p>Let&rsquo;s make sure our assumptions are met:</p>
+<pre><code class="language-r">ShapiroTest(Variables = c(&quot;Weight&quot;, &quot;Height&quot;, &quot;Wing.Chord&quot;), Grouping = &quot;Climate&quot;)
+</code></pre>
+<pre><code>##     Variable  P.value1  P.value2    Var.Test
+## 1     Weight 0.1699442 0.2521182 0.326240416
+## 2     Height 0.1676977 0.3645040 0.010632158
+## 3 Wing.Chord 0.0538642 0.1722528 0.002942433
+</code></pre>
+<p>Luckily, all of our variables allow for the calculation of t-Test. Take note though that some need different specification of the <code>var.equal</code> argument than others.</p>
+<h4 id="analyses">Analyses</h4>
+<p><strong>Sparrow Weight</strong><br>
+Let&rsquo;s start with the weight of <em>Passer domesticus</em> individuals as grouped by the climate type present at the site weights have been recorded at:</p>
+<pre><code class="language-r">t.test(Data_df$Weight ~ Data_df$Climate, var.equal = TRUE)
+</code></pre>
+<pre><code>## 
+## 	Two Sample t-test
+## 
+## data:  Data_df$Weight by Data_df$Climate
+## t = -14.852, df = 381, p-value &lt; 2.2e-16
+## alternative hypothesis: true difference in means between group Coastal and group Continental is not equal to 0
+## 95 percent confidence interval:
+##  -2.428439 -1.860640
+## sample estimates:
+##     mean in group Coastal mean in group Continental 
+##                  31.23383                  33.37837
+</code></pre>
+<p>According to our analysis, which has us <strong>reject the null hypothesis</strong>, we conclude that binary climate records are valuable information criteria for predicting sparrow weight with sparrows in coastal climates being lighter than sparrows in continental ones thus effectively varifying the results of our non-parametric approaches (Kruskal-Wallis, Mann-Whitney U).</p>
+<p><strong>Sparrow Height</strong><br>
+Let&rsquo;s move on to the height of <em>Passer domesticus</em> individuals as grouped by the climate type present at the site weights have been recorded at:</p>
+<pre><code class="language-r">t.test(Data_df$Height ~ Data_df$Climate, var.equal = FALSE)
+</code></pre>
+<pre><code>## 
+## 	Welch Two Sample t-test
+## 
+## data:  Data_df$Height by Data_df$Climate
+## t = -0.27916, df = 365.69, p-value = 0.7803
+## alternative hypothesis: true difference in means between group Coastal and group Continental is not equal to 0
+## 95 percent confidence interval:
+##  -0.2329126  0.1750052
+## sample estimates:
+##     mean in group Coastal mean in group Continental 
+##                  13.91670                  13.94565
+</code></pre>
+<p>Confirming the results of our Mann-Whitney U Test, we <strong>accept the null hypothesis</strong>.</p>
+<p><strong>Sparrow Wing Chord</strong><br>
+Lastly, we test the wing chords of <em>Passer domesticus</em> individuals as grouped by the climate type present at the site weights have been recorded at:</p>
+<pre><code class="language-r">t.test(Data_df$Wing.Chord ~ Data_df$Climate, var.equal = FALSE)
+</code></pre>
+<pre><code>## 
+## 	Welch Two Sample t-test
+## 
+## data:  Data_df$Wing.Chord by Data_df$Climate
+## t = -0.12285, df = 370.22, p-value = 0.9023
+## alternative hypothesis: true difference in means between group Coastal and group Continental is not equal to 0
+## 95 percent confidence interval:
+##  -0.03985039  0.03516377
+## sample estimates:
+##     mean in group Coastal mean in group Continental 
+##                  6.898696                  6.901039
+</code></pre>
+<p>Without confirming the results of our Mann-Whitney U Test, we <strong>accept the null hypothesis</strong>.</p>
+<p><strong>Conclusion</strong><br>
+Here&rsquo;s what we&rsquo;ve learned from the t-Test so far:</p>
+<ul>
+<li>Sparrow weight depends on (binary) climate types</li>
+<li>Sparrow height does not depend on (binary) climate types</li>
+<li>Sparrow wing chord does not depend on (binary) climate types</li>
+</ul>
+<p>Let&rsquo;s end this by viusalising all of the data:</p>
+<pre><code class="language-r">par(mfrow=c(2,2))
+plot(Data_df$Weight ~ Data_df$Climate)
+plot(Data_df$Height ~ Data_df$Climate)
+plot(Data_df$Wing.Chord ~ Data_df$Climate)
+</code></pre>
+<p><img src="12---Simple-Parametric-Tests_files/figure-html/t-test1-1.png" width="1440" /></p>
+<h3 id="sexual-dimorphism">Sexual Dimorphism</h3>
+<p><strong>Does sparrow morphology change depend on Sex?</strong></p>
+<p>Using the Mann-Whitney U Test, we have already identified the sex of <em>Passer domesticus</em> is a good information criterion for understanding sparrow weight but not sparrow height or wing chord. Let&rsquo;s see if we can reproduce this using a t-Test approach.</p>
+<p>We may wish to use the entirety of our data set again for this purpose:</p>
+<pre><code class="language-r">Data_df &lt;- Data_df_base
+</code></pre>
+<h4 id="testing-for-normality-and-variance-1">Testing for Normality and Variance</h4>
+<p>Again, before we can use our data in a t-Test for this purpose, we have to make sure that our assumptions are met. To this end, we can make use of our user defined <code>ShapiroTest()</code> function as follows:</p>
+<pre><code class="language-r">ShapiroTest(Variables = c(&quot;Weight&quot;, &quot;Height&quot;, &quot;Wing.Chord&quot;), Grouping = &quot;Sex&quot;)
+</code></pre>
+<pre><code>##     Variable     P.value1     P.value2  Var.Test
+## 1     Weight 2.878769e-21 1.744517e-21 0.7475085
+## 2     Height 4.028475e-17 6.600273e-19 0.4006799
+## 3 Wing.Chord 3.438104e-25 1.628147e-26 0.5554935
+</code></pre>
+<p>As it turns out, our data does not allow for any t-Test (this happens often in real studies). However, we can create sex-driven subgroups within each site and test whether these meet the requirements for our t-Test. This is out of the scope of this course though and so we will skip it. Spoler alert: I have done this and the findings did not reveal anything we didn&rsquo;t uncover so far.</p>
+<!-- In order to do so, we need to do some minor tweaking to our `ShapiroTest()` function: -->
+<!-- ```{r ShapiroSex} -->
+<!-- ShapiroTestSites <- function(Variables, Grouping){ -->
+<!--   list <- list() -->
+<!--   for(k in 1:length(unique(Data_df$Index))){ -->
+<!--     Output <- data.frame(x = Variables) -->
+<!--     Data <- Data_df[which(Data_df$Index == unique(Data_df$Index)[k]), ] -->
+<!--     for(i in 1:length(Variables)){ -->
+<!--       X <- Data[,Variables[i]] -->
+<!--       Levels <- levels(Data[,Grouping]) -->
+<!--       Output[i,2] <- shapiro.test(X[which(Data[,Grouping] == Levels[1])])$p.value -->
+<!--       Output[i,3] <- shapiro.test(X[which(Data[,Grouping] == Levels[2])])$p.value -->
+<!--       Output[i,4] <- var.test(x = X[which(Data_df[,Grouping] == Levels[1])],  -->
+<!--                             y = X[which(Data_df[,Grouping] == Levels[2])]) -->
+<!--     } -->
+<!--     colnames(Output) <- c("Variable", "P.value1", "P.value2", "Var.Test") -->
+<!--     list[[k]] <- Output -->
+<!--   } -->
+<!--   return(list) -->
+<!-- } -->
+<!-- ``` -->
+<!-- This function (`ShapiroTestSites()`) takes two arguments: (1) `Variables` - a vector of characters holding the names of the variables we want to have tested, and (2) `Grouping` - the binary variable by which to group our variables. The function returns a list of data frames for each site holding the p-values of the Shapiro tests on each variable group values as well as the `var.test()` p-value.  -->
+<!--  -->
+<!-- Let's put this function to the test: -->
+<!-- ```{r ShapiroSex1} -->
+<!-- ShapiroTestSites(Variables = c("Weight", "Height", "Wing.Chord"), Grouping = "Sex") -->
+<!-- ``` -->
+<!-- With the exception for sparrow morphology records at:   -->
+<!-- - Siberia (SI, height and wing chord of males)   -->
+<!-- - Manitoba (MA, morphology of females)   -->
+<!-- - South Africa (SA, morphology of females)   -->
+<!-- all of our data groups variables are normal distributed with equal variances between the groups per site.   -->
+<!-- Since our problematic sites are still relatively close to fulfilling our requirements of the data, we will use them going forward as if they did. -->
+<!-- ### Analyses -->
+<!-- Running three t-Tests (Weight, Height, Wing Chord) for each of our eleven sites is absolute mania! Therefore, we write our own function again that let's us apply the tests exactly the way we want to: -->
+<!-- ```{r ttestSex0} -->
+<!-- t_testSite <- function(Variables, Grouping, data, VarEqual){ -->
+<!--   Data <- data -->
+<!--   Index <- unique(Data$Index) -->
+<!--   Indexes <- Data$Index -->
+<!--   list <- list() -->
+<!--   for(i in 1:length(Variables)){ -->
+<!--     Output <- data.frame(NA) -->
+<!--     for(k in 1:length(Index)){ -->
+<!--       # data and test -->
+<!--       X <- Data[, Variables[i]][which(Indexes == Index[k])] -->
+<!--       Y <- Data[, Grouping][which(Indexes == Index[k])] -->
+<!--       Test <- t.test(X ~ Y, paired = FALSE, var.equal = VarEqual) -->
+<!--       # filling data frame -->
+<!--       Output[1,k] <- Test[["p.value"]] -->
+<!--       Output[2,k] <- Test[["estimate"]][[1]] -->
+<!--       Output[3,k] <- Test[["estimate"]][[2]] -->
+<!--     } -->
+<!--     # data frame to list -->
+<!--     colnames(Output) <- Index -->
+<!--     rownames(Output) <- c("p", "Mean1", "Mean2") -->
+<!--     list[[i]] <- Output -->
+<!--   } -->
+<!--   return(list) -->
+<!-- } -->
+<!-- ``` -->
+<!-- This `t_testSite()` function takes four arguments: (1) `Variables` - a vector of characters holding the names of the variables we want to have tested, (2) `Grouping` - the binary variable by which to group our variables, (3) `data` - the data frame which contains the `Variables` and the `Grouping` factor, and (4) `VarEqual` - a logical indicator of whether to perform a t-Test assuming equal variance of the groups or not.   -->
+<!-- The function returns a list of data frames (one per variable) containing the p-values of the unpaired t-Tests for each variable at every site as well as the predicted group means. -->
+<!--  -->
+<!-- Although our function `t_testSite()` can handle multiple variables at once, we will now use it on each of our morphological sparrow variables individually to disentangle them a bit easier:   -->
+<!-- \begin{center} -->
+<!-- \textit{Does sparrow weight depend on sex when assessed at each of our sites individually?} -->
+<!-- \end{center} -->
+<!-- ```{r tTestSex1} -->
+<!-- t_testSite(Variables = "Weight", Grouping = "Sex", data = Data_df, VarEqual = TRUE) -->
+<!-- ``` -->
+<!-- As it turns out, sex is a statistically significant predictor for sparrow weight at each site. This was to be expected. Using a binomial test in our second practical, we identified no bias in sexes for our sparrow populations. In addition, using the Mann-Whitney U-Test in our fourth practical, we identified sex to be an important information criterion for sparrow weight across all of our sites. Given these two conditions, we were expecting a results like the one presented here with males being, on average, heavier than females in *Passer domesticus* and we **reject the null hypothesis**.   -->
+<!-- \hfill \linebreak -->
+<!-- \begin{center} -->
+<!-- \textit{Does sparrow height depend on sex when assessed at each of our sites individually?} -->
+<!-- \end{center} -->
+<!-- ```{r tTestSex2} -->
+<!-- t_testSite(Variables = "Height", Grouping = "Sex", data = Data_df, VarEqual = TRUE) -->
+<!-- ``` -->
+<!-- Like with our Mann-Whitney U-Test, we fail to identify a significant effect of sex on sparrow height records at each of our sites and so we **accept the null hypothesis**. -->
+<!-- \hfill \linebreak -->
+<!-- \begin{center} -->
+<!-- \textit{Does sparrow wing chord depend on sex when assessed at each of our sites individually?} -->
+<!-- \end{center} -->
+<!-- ```{r tTestSex3} -->
+<!-- t_testSite(Variables = "Wing.Chord", Grouping = "Sex", data = Data_df, VarEqual = TRUE) -->
+<!-- ``` -->
+<!-- Like with our Mann-Whitney U-Test, we fail to identify a significant effect of sex on sparrow wing chord records at each of our sites and so we **accept the null hypothesis**. -->
+<!--  -->
+<h2 id="t-test-paired">t-Test (paired)</h2>
+<p><strong>Assumptions of the paired t-Test:</strong></p>
+<ul>
+<li>Predictor variable is binary</li>
+<li>Response variable is metric</li>
+<li><em>Difference of response variable pairs</em> is <strong>normal distributed</strong></li>
+<li>Variable values are <strong>dependent</strong> (paired)</li>
+</ul>
+<h3 id="preparing-data">Preparing Data</h3>
+<p>For this purpose, we need an <strong>additional data set with truly paired records</strong> of sparrows and so we implement the same solution as we&rsquo;ve used within our fourth seminar using the Wilcoxon Signed Rank Test. Within our study set-up, think of a <strong>resettling experiment</strong>, were you take <em>Passer domesticus</em> individuals from one site, transfer them to another and check back with them after some time has passed to see whether some of their characteristics have changed in their expression.<br>
+To this end, presume we have taken the entire <em>Passer domesticus</em> population found at our <strong>Siberian</strong> research station and moved them to the <strong>United Kingdom</strong>. Whilst this keeps the latitude stable, the sparrows <em>now experience a coastal climate instead of a continental one</em>. After some time (let&rsquo;s say: a year), we have come back and recorded all the characteristics for the same individuals again.</p>
+<p>You will find the corresponding <em>new data</em> in <code>2b - Sparrow_ResettledSIUK_READY.rds</code>. Take note that this set only contains records for the transferred individuals in the <strong>same order</strong> as in the old data set.</p>
+<pre><code class="language-r">Data_df_Resettled &lt;- readRDS(file = paste(Dir.Data, &quot;/2b - Sparrow_ResettledSIUK_READY.rds&quot;, sep=&quot;&quot;))
+</code></pre>
+<p>Since earlier analysis such as the Wilcoxon Signed Rank test (fourth practical) and the Friedman Test (fifth practical) showed that height and wing chord records do not change when sparrows are resettled at all, we have excluded these here and <strong>focus solely on sparrow weight</strong>.</p>
+<h3 id="testing-for-normality">Testing for Normality</h3>
+<p>Before being able to run our paired t-Test, we must make sure that the <em>difference of response variable pairs</em> is <strong>normal distributed</strong>. We can do so using the <code>shapiro.test()</code> of base <code>R</code> as follows:</p>
+<pre><code class="language-r"># selecting pre-resettling weights
+DataSI &lt;- Data_df$Weight[which(Data_df$Index == &quot;SI&quot;)]
+# calculating difference of before and after resettling weights
+WeightDiff &lt;- DataSI-Data_df_Resettled$Weight
+# shapiro test
+shapiro.test(WeightDiff)
+</code></pre>
+<pre><code>## 
+## 	Shapiro-Wilk normality test
+## 
+## data:  WeightDiff
+## W = 0.97361, p-value = 0.1716
+</code></pre>
+<p>Thankfully, the <strong>assumption of normality</strong> is <strong>met</strong>.</p>
+<p>Now let&rsquo;s visualise that using a qqplot:</p>
+<pre><code class="language-r">qqnorm(WeightDiff)
+qqline(WeightDiff)
+</code></pre>
+<p><img src="12---Simple-Parametric-Tests_files/figure-html/Norm3-1.png" width="576" /></p>
+<h3 id="climate-warmingextremes-1">Climate Warming/Extremes</h3>
+<p><strong>Does sparrow morphology change depend on climate?</strong></p>
+<p>Now let&rsquo;s go on to test whether sparrow weights change significantly per individual due to our relocation experiment (we expect this from future test in our practicals):</p>
+<pre><code class="language-r">t.test(DataSI, Data_df_Resettled$Weight, paired = TRUE)
+</code></pre>
+<pre><code>## 
+## 	Paired t-test
+## 
+## data:  DataSI and Data_df_Resettled$Weight
+## t = 8.4762, df = 65, p-value = 4.17e-12
+## alternative hypothesis: true mean difference is not equal to 0
+## 95 percent confidence interval:
+##  1.583629 2.559914
+## sample estimates:
+## mean difference 
+##        2.071771
+</code></pre>
+<p>We were right, individual sparrow weights change significantly after our relocation experiment and we <strong>reject the null hypothesis</strong>. This is in accordance with the results of the Wilcoxon Signed Rank Test as well as the Friedman Test.</p>
+<p>Let&rsquo;s go on to visualise our data to make better sense of what is going on here:</p>
+<pre><code class="language-r"># Select the sparrow weights
+Weights &lt;- c(DataSI, Data_df_Resettled$Weight)
+# Select the sites
+Sites &lt;- factor(rep(c(&quot;SI&quot;, &quot;SI_UK&quot;), each = length(DataSI)))
+# Plot
+plot(Weights ~ Sites)
+</code></pre>
+<p><img src="12---Simple-Parametric-Tests_files/figure-html/tpaired1-1.png" width="576" /></p>
+<p>Quite obviously sparrows observed in Siberia are heavier than when they are resettled to the United Kingdom (this may be due to the more forgiving climate in the UK). Just like the test stated, the difference of the average weights is roughly 2g between the sparrows at the two sites.</p>
+<h2 id="one-way-anova">One-Way ANOVA</h2>
+<p><strong>Assumptions of the One-Way ANOVA:</strong></p>
+<ul>
+<li>Predictor variable is categorical</li>
+<li>Response variable is metric</li>
+<li><em>Response variable residuals</em> are <strong>normal distributed</strong></li>
+<li>Variance of populations/samples are equal (<strong>homogeneity</strong>)</li>
+<li>Variable values are <strong>independent</strong> (not paired)</li>
+</ul>
+<h3 id="testing-for-assumptions">Testing For Assumptions</h3>
+<p>Firstly, we need to test the assumptions of our One-Way ANOVA. For this purpose, we write another user-defined function.</p>
+<pre><code class="language-r"># User-defined function
+ANOVACheck &lt;- function(Variables, Grouping, data, plotting){
+  Output &lt;- data.frame(x = NA)
+  for(i in 1:length(Variables)){
+    # data
+    Y &lt;- as.numeric(factor(data[,Variables[i]]))
+    X &lt;- data[,Grouping]
+    Levels &lt;- levels(factor(Data_df[,Grouping]))
+    # Residuals?
+    model &lt;- lm(Y ~ X)
+    Output[1,i] &lt;- shapiro.test(residuals(model))$p.value
+    # Homgeneity?
+    Levene &lt;- leveneTest(Y ~ X, 
+                         center = median, 
+                         data = data)
+    Output[2,i] &lt;- Levene[1,3]
+    # Plotting
+    if(plotting == TRUE){
+      plot(model, 2)# Normality
+      plot(model, 3)# Homogeneity
+    }
+  }
+  colnames(Output) &lt;- Variables
+  rownames(Output) &lt;- c(&quot;Residual Normality&quot;, &quot;Homogeneity of Variances&quot;)
+  return(Output)
+}
+</code></pre>
+<p>This <code>ANOVACheck()</code> function takes four arguments: (1) <code>Variables</code> - a vector of characters holding the names of the variables we want to have tested, (2) <code>Grouping</code> - the categorical variable by which to group our variables, (3) <code>data</code> - the data frame which contains the <code>Variables</code> and the <code>Grouping</code> factor, and (4) <code>plotting</code> - a logical indicator of whether to produce plots visualising the test results or not.<br>
+The function returns a data frames containing the p-values indexing whether to accept or reject the notion of the normality of residuals per variable (<code>Residual Normality</code>), and the p-values indexing whether variances between groups are homogeneous or not (<code>Homogeneity of Variances</code>).</p>
+<h3 id="climate-warmingextremes-2">Climate Warming/Extremes</h3>
+<p><strong>Does sparrow morphology change depend on climate?</strong></p>
+<p>Using the Kruskal-Wallis Test in our last exercise, we already identified climate to be an important factor in determining <em>Passer domesticus</em> morphology. Let&rsquo;s see if this holds true.</p>
+<p>Take note that we need to limit our analysis to our climate type testing sites again as follows (we include Manitoba this time as it is at the same latitude as the UK and Siberia and holds a semi-coastal climate type):</p>
+<pre><code class="language-r"># prepare climate type testing data
+Data_df &lt;- Data_df_base
+Index &lt;- Data_df$Index
+Rows &lt;- which(Index == &quot;SI&quot; | Index == &quot;UK&quot; | Index == &quot;RE&quot; | Index == &quot;AU&quot; | Index == &quot;MA&quot;)
+Data_df &lt;- Data_df[Rows,]
+</code></pre>
+<h4 id="assumption-check">Assumption Check</h4>
+<p>Let&rsquo;s use the <code>ANOVACheck()</code> function on our data:</p>
+<pre><code class="language-r">par(mfrow=c(3,2))
+ANOVACheck(Variables = c(&quot;Weight&quot;, &quot;Height&quot;, &quot;Wing.Chord&quot;), Grouping = &quot;Climate&quot;, data = Data_df, plotting = TRUE)
+</code></pre>
+<pre><code>## Warning in leveneTest.default(y = y, group = group, ...): group coerced to
+## factor.
+
+## Warning in leveneTest.default(y = y, group = group, ...): group coerced to
+## factor.
+
+## Warning in leveneTest.default(y = y, group = group, ...): group coerced to
+## factor.
+</code></pre>
+<p><img src="12---Simple-Parametric-Tests_files/figure-html/AssCheck1b-1.png" width="576" /></p>
+<pre><code>##                               Weight       Height  Wing.Chord
+## Residual Normality       0.002521771 2.671414e-05 0.001685579
+## Homogeneity of Variances 0.110120912 1.896577e-01 0.013575440
+</code></pre>
+<p>Unfortunately, neither weight nor wing chord records fullfil our requirements.</p>
+<h4 id="analysis">Analysis</h4>
+<p>Let&rsquo;s run our analysis for height as grouped by the three-level climate variable:</p>
+<pre><code class="language-r">model &lt;- lm(Data_df$Height ~ Data_df$Climate)
+anova(model)
+</code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: Data_df$Height
+##                  Df Sum Sq Mean Sq F value    Pr(&gt;F)    
+## Data_df$Climate   2  14.99  7.4942  7.2494 0.0008129 ***
+## Residuals       381 393.87  1.0338                      
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+</code></pre>
+<p>According to this, climate is a meaningful predictor of height of sparrows and we <strong>reject the null hypothesis</strong> thus confirming the results of our Kruskall-Wallis analysis.</p>
+<p>Now, let&rsquo;s analyse the output a bit more in-depth:</p>
+<pre><code class="language-r">summary(model)
+</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = Data_df$Height ~ Data_df$Climate)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -2.98994 -0.69815 -0.01475  0.67142  2.37045 
+## 
+## Coefficients:
+##                             Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)                 14.07994    0.07964 176.800  &lt; 2e-16 ***
+## Data_df$ClimateContinental  -0.13429    0.11426  -1.175  0.24060    
+## Data_df$ClimateSemi-Coastal -0.56039    0.14755  -3.798  0.00017 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 1.017 on 381 degrees of freedom
+## Multiple R-squared:  0.03666,	Adjusted R-squared:  0.0316 
+## F-statistic: 7.249 on 2 and 381 DF,  p-value: 0.0008129
+</code></pre>
+<ul>
+<li>The mean sparrow height in coastal climates is 14.0799387cm (this is our <strong>Intercept</strong>/<em>Baseline</em>)</li>
+<li>The mean sparrow height in continental climates is -0.1342893cm bigger than the <strong>Intercept</strong></li>
+<li>The mean sparrow height in semi-coastal climates is -0.5603864cm bigger than the <strong>Intercept</strong></li>
+<li>Only the estimates in coastal and semi-coastal climates are statistically significant</li>
+</ul>
+<p>Personally, I would not place too much confidence in these results due to a couple of reasons:</p>
+<ul>
+<li>Our only semi-coastal site is on the northern hemisphere whereas two of our stations are located in the southern hemisphere</li>
+<li>Confounding factors such as population status might have an effect which we are not considering here</li>
+</ul>
+<p>Let&rsquo;s end this by plotting all of our data:</p>
+<pre><code class="language-r">par(mfrow=c(2,2))
+plot(Data_df$Weight ~ factor(Data_df$Climate))
+plot(Data_df$Height ~ factor(Data_df$Climate))
+plot(Data_df$Wing.Chord ~ factor(Data_df$Climate))
+</code></pre>
+<p><img src="12---Simple-Parametric-Tests_files/figure-html/Analysis1-1.png" width="576" /></p>
+<p>As you can see, the variances are definitely not equal between our groups which explains why part of our assumption test failed.</p>
+<h3 id="predation">Predation</h3>
+<p><strong>Does nesting height depend on predator characteristics?</strong></p>
+<p>Again, using the Kruskal-Wallis Test in our last exercise, we already identified predator characteristics to be an important factor in determining <em>Passer domesticus</em> nesting height. Let&rsquo;s see if this holds true.</p>
+<p>We may wish to use the entirety of our data set again for this purpose:</p>
+<pre><code class="language-r">Data_df &lt;- Data_df_base
+</code></pre>
+<h4 id="assumption-check-1">Assumption Check</h4>
+<p>Let&rsquo;s use our <code>ANOVACeck()</code> function to test whether we can run our analysis. Before we can do so, however, we need to slightly adjust our predator type variable just like we did in our last exercise and as follows:</p>
+<pre><code class="language-r"># changing levels in predator type
+levels(Data_df$Predator.Type) &lt;- c(levels(Data_df$Predator.Type), &quot;None&quot;)
+Data_df$Predator.Type[which(is.na(Data_df$Predator.Type))] &lt;- &quot;None&quot;
+
+# Assumption Check
+par(mfrow=c(1,2))
+ANOVACheck(Variables = &quot;Nesting.Height&quot;, Grouping = &quot;Predator.Type&quot;, data = Data_df, plotting = TRUE)
+</code></pre>
+<p><img src="12---Simple-Parametric-Tests_files/figure-html/AssCheck2-1.png" width="576" /></p>
+<pre><code>##                          Nesting.Height
+## Residual Normality         0.0017160318
+## Homogeneity of Variances   0.0005845899
+</code></pre>
+<p>Again, our data fails the assumption check. The residuals are definitely not normal distributed and the variance of nesting height records within our groups are not equal.</p>
+<h4 id="analysis-1">Analysis</h4>
+<p>Since none of our assumptions are met, we cannot run an ANOVA and therefore resort to data visualisation alone:</p>
+<pre><code class="language-r">plot(Data_df$Nesting.Height ~ Data_df$Predator.Type)
+</code></pre>
+<p><img src="12---Simple-Parametric-Tests_files/figure-html/Analysis2-1.png" width="576" />
+Once more, we can see why our homogeneity of variances test failed.</p>
+<h2 id="two-way-anova">Two-Way ANOVA</h2>
+<p><strong>Assumptions of the Two-Way ANOVA:</strong></p>
+<ul>
+<li>Predictor variables are categorical</li>
+<li>Response variable is metric</li>
+<li><em>Response variable residuals</em> are <strong>normal distributed</strong></li>
+<li>Variance of populations/samples are equal (<strong>homogeneity</strong>)</li>
+<li>Variable values are <strong>independent</strong> (not paired)</li>
+</ul>
+<h3 id="testing-for-assumptions-1">Testing For Assumptions</h3>
+<p>Yet again, we need to check if our assumptions are met first. Automating this procedure is definitely a good idea and only needs slight modification from our <code>ANOVACheck()</code> function.</p>
+<pre><code class="language-r"># User-defined function
+ANOVACheck_TWO &lt;- function(Formulas, data, plotting){
+  Output &lt;- data.frame(x = NA)
+  for(i in 1:length(Formulas)){
+    # Check how many formulas there are
+    if(length(Formulas) == 1){
+      Expression &lt;- Formulas[[1]]
+    }else{
+      Expression &lt;- Formulas[[i]]
+    }
+    # Residuals?
+    model &lt;- lm(formula = Expression, data = data)
+    Output[1,i] &lt;- shapiro.test(residuals(model))$p.value
+    # Homgeneity?
+    Levene &lt;- leveneTest(Expression, 
+                         center = median, 
+                         data = data)
+    Output[2,i] &lt;- Levene[1,3]
+    # Plotting
+    if(plotting == TRUE){
+      plot(model, 2)# Normality
+      plot(model, 3)# Homogeneity
+    }
+  }
+  colnames(Output) &lt;- as.character(Formulas)
+  rownames(Output) &lt;- c(&quot;RN&quot;, &quot;HoV&quot;)
+  return(Output)
+}
+</code></pre>
+<p>This <code>ANOVACheck_TWO()</code> function takes four arguments: (1) <code>Formulas</code> - a vector of formula specification for our ANOVA models we want to have tested, (2) <code>data</code> - the data frame which contains the variables and the grouping factor called upon in our <code>Formulas</code>, and (3) <code>plotting</code> - a logical indicator of whether to produce plots visualising the test results or not.<br>
+The function returns a data frames containing the p-values indexing whether to accept or reject the notion of the normality of residuals per variable (<code>RN</code>), and the p-values indexing whether variances between groups are homogeneous or not (<code>HoV</code>).</p>
+<h3 id="sexual-dimorphism-1">Sexual Dimorphism</h3>
+<p><strong>Does sparrow morphology depend on population status and sex?</strong></p>
+<p>Given different factors affecting invasive species, we might expect different patterns of sexual dimorphism for invasive and native populations. Take note that we keep using the northern hemisphere subset our cimate testing sites as these present us with a nice set of invasive/native population records already whilst keeping confounding factors to a minimum.</p>
+<h4 id="assumption-check-2">Assumption Check</h4>
+<p>First, we need to check our assumptions:</p>
+<pre><code class="language-r"># prepare climate type testing data
+Data_df &lt;- Data_df_base
+Index &lt;- Data_df$Index
+Rows &lt;- which(Index == &quot;SI&quot; | Index == &quot;UK&quot; | Index == &quot;MA&quot;)
+Data_df &lt;- Data_df[Rows,]
+
+# analysis
+par(mfrow=c(3,2))
+ANOVACheck_TWO(Formulas = c(Weight ~ Population.Status*Sex, 
+                            Height ~ Population.Status*Sex,
+                            Wing.Chord ~ Population.Status*Sex)
+               , data = Data_df, plotting = TRUE)
+</code></pre>
+<p><img src="12---Simple-Parametric-Tests_files/figure-html/AssCheck5-1.png" width="576" /></p>
+<pre><code>##     Weight ~ Population.Status * Sex Height ~ Population.Status * Sex
+## RN                       0.287959531                        0.2171916
+## HoV                      0.004492103                        0.9057774
+##     Wing.Chord ~ Population.Status * Sex
+## RN                             0.1907782
+## HoV                            0.9174340
+</code></pre>
+<p>Again our assumptions are not met except for sparrow height and wing chord as a product of sex and population status.</p>
+<h4 id="analysis-2">Analysis</h4>
+<p>Let&rsquo;s run our analysis:</p>
+<pre><code class="language-r"># height model
+model &lt;- lm(Height ~ Population.Status*Sex, data = Data_df)
+anova(model)
+</code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: Height
+##                        Df  Sum Sq Mean Sq F value Pr(&gt;F)
+## Population.Status       1   0.338 0.33820  0.3190 0.5729
+## Sex                     1   0.179 0.17896  0.1688 0.6816
+## Population.Status:Sex   1   1.786 1.78585  1.6844 0.1959
+## Residuals             197 208.865 1.06023
+</code></pre>
+<pre><code class="language-r"># wing chord model
+model &lt;- lm(Wing.Chord ~ Population.Status*Sex, data = Data_df)
+anova(model)
+</code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: Wing.Chord
+##                        Df Sum Sq  Mean Sq F value Pr(&gt;F)
+## Population.Status       1 0.0047 0.004669  0.1955 0.6589
+## Sex                     1 0.0041 0.004125  0.1727 0.6782
+## Population.Status:Sex   1 0.0399 0.039856  1.6688 0.1979
+## Residuals             197 4.7049 0.023883
+</code></pre>
+<pre><code class="language-r"># plotting
+par(mfrow=c(1,2))
+boxplot(Height ~ Population.Status*Sex, data = Data_df, col = c(&quot;blue&quot;, &quot;red&quot;))
+boxplot(Wing.Chord ~ Population.Status*Sex, data = Data_df, col = c(&quot;blue&quot;, &quot;red&quot;))
+</code></pre>
+<p><img src="12---Simple-Parametric-Tests_files/figure-html/Analysis5-1.png" width="576" />
+As it turns out, population status and sex are no viable predictors for sparrow height or wing chord and so we <strong>accept the null hypothesis</strong>.</p>
+<h2 id="ancova">ANCOVA</h2>
+<p><strong>Assumptions of the ANCOVA:</strong></p>
+<ul>
+<li>Predictor variables are categorical or continuous</li>
+<li>Response variable is metric</li>
+<li><em>Response variable residuals</em> are <strong>normal distributed</strong></li>
+<li>Variance of populations/samples are equal (<strong>homogeneity</strong>)</li>
+<li>Variable values are <strong>independent</strong> (not paired)</li>
+<li>Relationship between the response and covariate is <strong>linear</strong>.</li>
+</ul>
+<h3 id="climate-warmingextremes-3">Climate Warming/Extremes</h3>
+<p><strong>Do sparrow characteristics depend on climate and latitude?</strong></p>
+<p>Latitude may have masked some effects of climate on sparrow morphology in our preceding analyses and vice-versa. At times, we have been able to account for this by including our site records, which can be seen as binned versions of latitude records. Let&rsquo;s test if the inclusion of raw latitude records are meaningful.</p>
+<h4 id="assumption-check-3">Assumption Check</h4>
+<p>Again, we need to do an assumption check. However, we need a new function for this, since we now need to test whether our response variable and the covariate are linear or not:</p>
+<pre><code class="language-r"># overwriting prior changes in Data_df
+Data_df &lt;- Data_df_base
+Data_df$Latitude &lt;- abs(Data_df$Latitude)
+# User-defined function
+ANCOVACheck &lt;- function(Variables, Grouping, Covariate, data, plotting){
+  Output &lt;- data.frame(x = NA)
+  for(i in 1:length(Variables)){
+    # data
+    Y &lt;- as.numeric(factor(data[,Variables[i]]))
+    X &lt;- factor(data[,Grouping])
+    Z &lt;- data[, Covariate]
+    # Residuals?
+    model &lt;- lm(Y ~ X*Z)
+    Output[1,i] &lt;- shapiro.test(residuals(model))$p.value
+    # Homgeneity?
+    Levene &lt;- leveneTest(Y ~ X, 
+                         center = median, 
+                         data = data)
+    Output[2,i] &lt;- Levene[1,3]
+    # Plotting
+    if(plotting == TRUE){
+      plot(model, 1)# Linearity
+      plot(model, 2)# Normality
+      plot(model, 3)# Homogeneity
+    }
+  }
+  colnames(Output) &lt;- Variables
+  rownames(Output) &lt;- c(&quot;RN&quot;, &quot;HoV&quot;)
+  return(Output)
+}
+</code></pre>
+<p>This <code>ANCOVACheck()</code> function takes five arguments: (1) <code>Variables</code> - a vector of response variables used in our models, (2) <code>Grouping</code> - the categorical variable by which to group our variables, (3) <code>Covariate</code> - the covariate of our analysis, (4)<code>data</code> - the data frame which contains the variables, the grouping factor and our covariate, and (5) <code>plotting</code> - a logical indicator of whether to produce plots visualising the test results or not.<br>
+The function returns a data frames containing the p-values indexing whether to accept or reject the notion of the normality of residuals per variable (<code>RN</code>), and the p-values indexing whether variances between groups are homogeneous or not (<code>HoV</code>).</p>
+<pre><code class="language-r">ANCOVACheck(Variables = c(&quot;Weight&quot;, &quot;Height&quot;, &quot;Wing.Chord&quot;, &quot;Nesting.Height&quot;, &quot;Egg.Weight&quot;, &quot;Number.of.Eggs&quot;, &quot;Home.Range&quot;), 
+            Grouping = &quot;Climate&quot;, Covariate = &quot;Latitude&quot;, 
+            data = Data_df, plotting = FALSE)
+</code></pre>
+<pre><code>##           Weight       Height   Wing.Chord Nesting.Height   Egg.Weight
+## RN  2.082300e-02 1.502944e-04 4.535941e-07   5.190971e-06 2.943560e-03
+## HoV 9.937376e-24 1.929783e-22 1.561040e-33   2.004612e-01 4.816355e-09
+##     Number.of.Eggs   Home.Range
+## RN    1.809197e-09 3.629841e-20
+## HoV   2.750100e-14 1.157673e-08
+</code></pre>
+<p>The assumptions aren&rsquo;t met. I have set the <code>plotting</code> argument to <code>FALSE</code> tu suppress the plotting of model checking visualisation. The would be useful to judge linearity but not necessary here since the other two important assumptions (Homogeneity of variances and Normality of residuals) aren&rsquo;t met to begin with.</p>
+<h4 id="analysis-3">Analysis</h4>
+<p>Since none of our assumptions are met, we cannot run an ANOVA and therefore resort to data visualisation alone. We need a new function for this to do our plotting easily and automatically with some colours indicating our grouping factors whilst plotting response variables versus covariates.</p>
+<pre><code class="language-r">PlotAncovas &lt;- function(Variables, Grouping, Covariate, data){
+  for(i in 1:length(Variables)){
+    Y &lt;- Data_df[,Variables[i]]
+    if(class(Y) == &quot;character&quot;){Y &lt;- factor(Y)}
+    X &lt;- Data_df[,Covariate]
+    G &lt;- factor(Data_df[, Grouping])
+    plot(X, Y, col = G, xlab = Covariate, ylab = Variables[i])
+    legend(&quot;top&quot;, # place legend at the top
+           inset = -0.35, # move legend away from plot centre
+           xpd = TRUE, # allow legend outside of plot area
+           legend=levels(G), # what to include in legend
+           bg = &quot;white&quot;, col = unique(G), ncol=length(levels(G)), # colours
+           pch = 1, # plotting symbols
+           title = Variables[i] # title of legend
+           )
+  }
+}
+</code></pre>
+<p>The <code>PlotAncovas()</code> returns a scatter plot and takes four arguments: (1) <code>Variables</code> - a vector of response variables, (2) <code>Grouping</code> - the name of the grouping factor according to which to colour the symbols in our plot, (3) <code>Covariate</code> - the covariate against which to plot individuals variables, and (4) <code>data</code> - the data frame which holds our variables.</p>
+<p>Let&rsquo;s use our function:</p>
+<pre><code class="language-r">par(mfrow=c(1,2))
+PlotAncovas(Variables = c(&quot;Weight&quot;, &quot;Height&quot;, &quot;Wing.Chord&quot;, &quot;Nesting.Height&quot;, &quot;Egg.Weight&quot;, &quot;Number.of.Eggs&quot;, &quot;Home.Range&quot;), Grouping = &quot;Climate&quot;, Covariate = &quot;Latitude&quot;, data = Data_df)
+</code></pre>
+<p>I will not interpret these plots here in text and leave this to you.</p>
+<p>Take note that this <strong>could&rsquo;ve been achieved much easier with <code>ggplot2</code>!</strong></p>
+<p><img src="12---Simple-Parametric-Tests_files/figure-html/Analysisc-1.png" width="576" /><img src="12---Simple-Parametric-Tests_files/figure-html/Analysisc-2.png" width="576" /><img src="12---Simple-Parametric-Tests_files/figure-html/Analysisc-3.png" width="576" /><img src="12---Simple-Parametric-Tests_files/figure-html/Analysisc-4.png" width="576" /></p>
+<h3 id="sparrow-characteristics-and-sites">Sparrow Characteristics And Sites</h3>
+<p><em>This was not part of what we set out to do according to the lecture slides but has been included as a logical conclusion to an earlier analysis.</em></p>
+<p>Unfortunately, our previous attempt at an ANCOVA didn&rsquo;t work. So what other covariate do we have available for sparrow characteristics?</p>
+<ul>
+<li><em>Latitude</em> doesn&rsquo;t make sense to include when grouping by site index as these two are synonymous</li>
+<li><em>Longitude</em> doesn&rsquo;t make sense to include when grouping by site index as these two are synonymous</li>
+<li><em>Weight</em> is well explained by other variables and we know the causal links</li>
+<li><em>Height</em> is not that well explained by other variables</li>
+<li><em>Wing.Chord</em> is not that well explained by other variables</li>
+</ul>
+<p>Of course, there are more within our data set but it has become apparent that <code>Weight</code> may make for an important covariate in our site-wise ANCOVA set-up. Using the Pearson correlation (third practical), we already identified a causal link between sparrow <code>Weight</code> and <code>Height</code> per site.</p>
+<h4 id="assumption-check-4">Assumption Check</h4>
+<p>Firstly, we test whether assumptions are met. For brevities sake, we only test four variables:</p>
+<pre><code class="language-r">par(mfrow=c(1,3))
+ANCOVACheck(Variables = c(&quot;Height&quot;, &quot;Wing.Chord&quot;, &quot;Egg.Weight&quot;, &quot;Number.of.Eggs&quot;), Grouping = &quot;Index&quot;, Covariate = &quot;Weight&quot;, data = Data_df, plotting = TRUE)
+</code></pre>
+<p><img src="12---Simple-Parametric-Tests_files/figure-html/AssCheck7-1.png" width="576" /><img src="12---Simple-Parametric-Tests_files/figure-html/AssCheck7-2.png" width="576" /><img src="12---Simple-Parametric-Tests_files/figure-html/AssCheck7-3.png" width="576" /><img src="12---Simple-Parametric-Tests_files/figure-html/AssCheck7-4.png" width="576" /></p>
+<pre><code>##           Height   Wing.Chord   Egg.Weight Number.of.Eggs
+## RN  1.499909e-06 5.251393e-08 0.1565038171   9.220862e-07
+## HoV 3.594021e-13 2.434880e-01 0.0002015813   2.660146e-02
+</code></pre>
+<p>As it turns out, we can run our ANCOVA on <code>Egg.Weight</code> when grouped by site <code>Index</code> and driven by <code>Weight</code>.</p>
+<h4 id="analysis-4">Analysis</h4>
+<p>First, let&rsquo;s visualise our data:</p>
+<pre><code class="language-r">PlotAncovas(Variables = &quot;Egg.Weight&quot;, Grouping = &quot;Index&quot;, Covariate = &quot;Weight&quot;, data = Data_df)
+</code></pre>
+<p><img src="12---Simple-Parametric-Tests_files/figure-html/Analysis7-1.png" width="576" /></p>
+<p>Quite obviously, Belize (BE) records are very different from the other stations, whose egg weight and weight records are grouped together. There seems to be some evidence for an overall linkage of sparrow weight and egg weight (a positive correlation).</p>
+<p>Now we run the analysis:</p>
+<pre><code class="language-r">LM_fit5 &lt;- lm(Egg.Weight ~ Weight*Index, data = Data_df)
+anova(LM_fit5)
+</code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: Egg.Weight
+##               Df Sum Sq Mean Sq   F value Pr(&gt;F)    
+## Weight         1 52.531  52.531 1442.5616 &lt;2e-16 ***
+## Index         10  8.087   0.809   22.2064 &lt;2e-16 ***
+## Weight:Index  10  0.129   0.013    0.3536 0.9653    
+## Residuals    455 16.569   0.036                     
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+</code></pre>
+<p>The above ANCOVA output tells us that there is no interaction effect between sites and sparrow weights when determining mean egg weight per nest of <em>Passer domesticus</em> and so we do another iteration of our model and remove the postulated interaction:</p>
+<pre><code class="language-r">LM_fit6 &lt;- lm(Egg.Weight ~ Weight+Index, data = Data_df)
+anova(LM_fit6)
+</code></pre>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: Egg.Weight
+##            Df Sum Sq Mean Sq  F value    Pr(&gt;F)    
+## Weight      1 52.531  52.531 1462.898 &lt; 2.2e-16 ***
+## Index      10  8.087   0.809   22.519 &lt; 2.2e-16 ***
+## Residuals 465 16.698   0.036                       
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+</code></pre>
+<p>By now, all of our model coefficients are significant and we can go on to interpret them:</p>
+<pre><code class="language-r">summary(LM_fit6)
+</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = Egg.Weight ~ Weight + Index, data = Data_df)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.58887 -0.13146 -0.00621  0.12033  0.55135 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)  3.345984   0.280826  11.915  &lt; 2e-16 ***
+## Weight       0.001081   0.008614   0.125 0.900203    
+## IndexBE     -0.708478   0.054864 -12.913  &lt; 2e-16 ***
+## IndexFG     -1.281168   0.099135 -12.923  &lt; 2e-16 ***
+## IndexFI     -0.625287   0.057442 -10.885  &lt; 2e-16 ***
+## IndexLO     -0.550137   0.051754 -10.630  &lt; 2e-16 ***
+## IndexMA     -0.513645   0.051352 -10.003  &lt; 2e-16 ***
+## IndexNU     -0.517015   0.053365  -9.688  &lt; 2e-16 ***
+## IndexRE     -0.612632   0.051418 -11.915  &lt; 2e-16 ***
+## IndexSA     -0.806045   0.056685 -14.220  &lt; 2e-16 ***
+## IndexSI     -0.272580   0.077868  -3.501 0.000509 ***
+## IndexUK     -0.511667   0.051404  -9.954  &lt; 2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.1895 on 465 degrees of freedom
+##   (590 observations deleted due to missingness)
+## Multiple R-squared:  0.784,	Adjusted R-squared:  0.7789 
+## F-statistic: 153.5 on 11 and 465 DF,  p-value: &lt; 2.2e-16
+</code></pre>
+
+          </div>
+
+          
+
+<div class="article-tags">
+  
+  <a class="badge badge-light" href="/tag/r/">R</a>
+  
+  <a class="badge badge-light" href="/tag/statistics/">Statistics</a>
+  
+</div>
+
+
+
+          
+          <div class="article-widget">
+            
+<div class="post-nav">
+  
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">Previous</div>
+    <a href="/courses/biostat101/ordinal-metric-tests-more-than-two-sample-situations/" rel="next">Ordinal &amp; Metric Tests (More-Than-Two-Sample Situations)</a>
+  </div>
+  
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">Next</div>
+    <a href="/courses/biostat101/13-an-outlook-on-advanced-statistics/" rel="prev">Closing &amp; Summary</a>
+  </div>
+  
+</div>
+
+          </div>
+          
+        </div>
+
+        <div class="body-footer">
+          <p>Last updated on 2020-06-10</p>
+
+          
+
+
+
+
+
+          
+
+
+          
+
+
+  
+  
+  <div class="article-widget content-widget-hr">
+    <h3>Related</h3>
+    <ul>
+      
+      <li><a href="/courses/an-introduction-to-biostatistics/simple-parametric-tests/">Simple Parametric Tests</a></li>
+      
+      <li><a href="/courses/biostat101/a-primer-for-statistical-tests/">A Primer For Statistical Tests</a></li>
+      
+      <li><a href="/courses/an-introduction-to-biostatistics/a-primer-for-statistical-tests/">A Primer For Statistical Tests</a></li>
+      
+      <li><a href="/courses/biostat101/correlation-tests/">Correlation Tests</a></li>
+      
+      <li><a href="/courses/an-introduction-to-biostatistics/correlation-tests/">Correlation Tests</a></li>
+      
+    </ul>
+  </div>
+  
+
+
+
+        </div>
+
+      </article>
+
+      <footer class="site-footer">
+  
+  <p class="powered-by">
+    
+      <a href="/privacy/">Privacy Policy</a>
+    
+    
+       &middot; 
+      <a href="/terms/">Terms</a>
+    
+  </p>
+  
+
+  <p class="powered-by">
+    © 2024
+  </p>
+
+  
+  
+
+
+
+
+
+
+  <p class="powered-by">
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+  </p>
+</footer>
+
+
+    </main>
+  </div>
+</div>
+
+
+      
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js" integrity="sha256-eOgo0OtLL4cdq7RdwRUiGKLX9XsIJ7nGhWEKbohmVAQ=" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/languages/r.min.js"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/languages/latex.min.js"></script>
+        
+      
+
+    
+
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.js" integrity="sha256-EErZamuLefUnbMBQbsEqu1USa+btR2oIlCpBJbyD4/g=" crossorigin="anonymous"></script>
+    
+
+    
+    
+    <script>const code_highlighting = true;</script>
+    
+
+    
+    
+    <script>const isSiteThemeDark = false;</script>
+    
+
+    
+    
+    
+    
+    
+    
+    <script>
+      const search_config = {"indexURI":"/index.json","minLength":1,"threshold":0.3};
+      const i18n = {"no_results":"No results found","placeholder":"Search...","results":"results found"};
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks",
+        'slides' : "Slides"
+        };
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.1/anchor.min.js" integrity="sha256-pB/deHc9CGfFpJRjC43imB29Rse8tak+5eXqntO94ck=" crossorigin="anonymous"></script>
+    <script>
+      anchors.add();
+    </script>
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+      <div class="search-hit-content">
+        <div class="search-hit-name">
+          <a href="{{relpermalink}}">{{title}}</a>
+          <div class="article-metadata search-hit-type">{{type}}</div>
+          <p class="search-hit-description">{{snippet}}</p>
+        </div>
+      </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="/js/academic.min.66c553246b0f279a03be6e5597f72b52.js"></script>
+
+    
+
+
+
+
+
+
+  
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,2137 @@
+<!DOCTYPE html><html lang="en-gb" >
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academic 4.8.0">
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Erik Kusch">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Answers and solutions to the exercises belonging to chapter 11 in [Satistical Rethinking 2](https://xcelab.net/rm/statistical-rethinking/) by Richard McElreath.">
+
+  
+  <link rel="alternate" hreflang="en-gb" href="https://www.erikkusch.com/courses/rethinking/chapter-11/">
+
+  
+
+
+  
+  
+  
+  <meta name="theme-color" content="#858383">
+  
+
+  
+  
+  
+  <script src="/js/mathjax-config.js"></script>
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-1/css/all.min.css" integrity="sha256-4w9DunooKSr3MFXHXWyFER38WmPdm361bQS/2KUWZbU=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" integrity="sha256-Vzbj7sDDS/woiFS3uNKo8eIuni59rjyNGtXfstRzStA=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.css" integrity="sha256-SHMGCYmST46SoyGgo4YR/9AlK1vf3ff84Aq9yK4hdqM=" crossorigin="anonymous">
+    
+
+    
+
+    
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.1.2/lazysizes.min.js" integrity="sha256-Md1qLToewPeKjfAHU1zyPwOutccPAm5tahnaw7Osw0A=" crossorigin="anonymous" async></script>
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+    
+      
+
+      
+      
+
+      
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js" integrity="" crossorigin="anonymous" async></script>
+      
+    
+      
+
+      
+      
+
+      
+    
+
+  
+
+  
+  
+  
+    
+      
+      
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cutive+Mono%7CLora:400,700%7CRoboto:400,700&display=swap">
+    
+  
+
+  
+  
+  
+  
+  <link rel="stylesheet" href="/css/academic.css">
+
+  
+
+
+
+
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-186216138-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+
+  function gtag() {
+      dataLayer.push(arguments);
+  }
+
+  function trackOutboundLink(url, target) {
+    gtag('event', 'click', {
+         'event_category': 'outbound',
+         'event_label': url,
+         'transport_type': 'beacon',
+         'event_callback': function () {
+           if (target !== '_blank') {
+             document.location = url;
+           }
+         }
+    });
+    console.debug("Outbound link clicked: " + url);
+  }
+
+  function onClickCallback(event) {
+    if ((event.target.tagName !== 'A') || (event.target.host === window.location.host)) {
+      return;
+    }
+    trackOutboundLink(event.target, event.target.getAttribute('target'));  
+  }
+
+  gtag('js', new Date());
+  gtag('config', 'UA-186216138-1', {});
+
+  
+  document.addEventListener('click', onClickCallback, false);
+</script>
+
+
+  
+
+
+  
+  
+
+  
+
+  <link rel="manifest" href="/index.webmanifest">
+  <link rel="icon" type="image/png" href="/images/icon_hu7658c99d512131214e4d6c003a3f85f7_112593_32x32_fill_lanczos_center_2.png">
+  <link rel="apple-touch-icon" type="image/png" href="/images/icon_hu7658c99d512131214e4d6c003a3f85f7_112593_192x192_fill_lanczos_center_2.png">
+
+  <link rel="canonical" href="https://www.erikkusch.com/courses/rethinking/chapter-11/">
+
+  
+  
+  
+  
+  
+  
+  
+    
+  
+  
+  <meta property="twitter:card" content="summary_large_image">
+  
+  <meta property="twitter:site" content="@ErikKusch">
+  <meta property="twitter:creator" content="@ErikKusch">
+  
+  <meta property="og:site_name" content="Erik Kusch">
+  <meta property="og:url" content="https://www.erikkusch.com/courses/rethinking/chapter-11/">
+  <meta property="og:title" content="Chapter 10 &amp; 11 | Erik Kusch">
+  <meta property="og:description" content="Answers and solutions to the exercises belonging to chapter 11 in [Satistical Rethinking 2](https://xcelab.net/rm/statistical-rethinking/) by Richard McElreath."><meta property="og:image" content="https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg">
+  <meta property="twitter:image" content="https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg"><meta property="og:locale" content="en-gb">
+  
+    
+      <meta property="article:published_time" content="2021-03-18T00:00:00&#43;00:00">
+    
+    <meta property="article:modified_time" content="2021-03-18T20:00:00&#43;01:00">
+  
+
+  
+
+
+
+  
+
+
+  
+
+
+  
+
+
+
+
+
+  <title>Chapter 10 &amp; 11 | Erik Kusch</title>
+
+</head>
+<body id="top" data-spy="scroll" data-offset="70" data-target="#TableOfContents" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        <input name="q" id="search-query" placeholder="Search..." autocapitalize="off"
+        autocomplete="off" autocorrect="off" spellcheck="false" type="search" class="form-control">
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+
+<nav class="navbar navbar-expand-lg navbar-light compensate-for-scrollbar" id="navbar-main">
+  <div class="container">
+
+    
+    <div class="d-none d-lg-inline-flex">
+      <a class="navbar-brand" href="/"><img src="/images/logo_huab2266ff59bbac6a094b6da1268adcf9_208479_0x70_resize_lanczos_2.png" alt="Erik Kusch"></a>
+    </div>
+    
+
+    
+    <button type="button" class="navbar-toggler" data-toggle="collapse"
+            data-target="#navbar-content" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+    <span><i class="fas fa-bars"></i></span>
+    </button>
+    
+
+    
+    <div class="navbar-brand-mobile-wrapper d-inline-flex d-lg-none">
+      <a class="navbar-brand" href="/"><img src="/images/logo_huab2266ff59bbac6a094b6da1268adcf9_208479_0x70_resize_lanczos_2.png" alt="Erik Kusch"></a>
+    </div>
+    
+
+    
+    
+    <div class="navbar-collapse main-menu-item collapse justify-content-center" id="navbar-content">
+
+      
+      <ul class="navbar-nav d-md-inline-flex">
+        
+
+        
+
+        
+        
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link  active" href="/"><span>Home</span></a>
+        </li>
+
+        
+        
+
+        
+        <li class="nav-item dropdown">
+          <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"><span>Courses & Workshops</span><span class="caret"></span>
+          </a>
+          <div class="dropdown-menu">
+            
+              <a class="dropdown-item" href="/courses/krigr/"><span>KrigR - State-of-the-Art Climate Data within R</span></a>
+            
+              <a class="dropdown-item" href="/courses/gbif/"><span>Accessing and Referencing GBIF Data for Research</span></a>
+            
+              <a class="dropdown-item" href="/courses/rethinking/"><span>Statistical Rethinking - Introduction to Bayesian Statistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/bayes-nets/"><span>Bayesian Networks - Causality through Bayesian Approaches</span></a>
+            
+              <a class="dropdown-item" href="/courses/biostat101/"><span>Biostats 101 - An Introduction to Biostatistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/excursions-into-biostatistics/"><span>Biostats 301 - Excursions into Biostatistics</span></a>
+            
+              <a class="dropdown-item" href="/courses/bftp-biome-detection/"><span>BFTP - First Steps in Macroecology in R</span></a>
+            
+          </div>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#projects"><span>Projects</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#featured"><span>Publications</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#talks"><span>Talks</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/about"><span>Contact</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+            
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/media/CV_ErikKusch.html" target="_blank" rel="noopener"><span>CV</span></a>
+        </li>
+
+        
+        
+
+      
+
+        
+      </ul>
+    </div>
+
+    <ul class="nav-icons navbar-nav flex-row ml-auto d-flex pl-md-2">
+      
+      <li class="nav-item">
+        <a class="nav-link js-search" href="#" aria-label="Search"><i class="fas fa-search" aria-hidden="true"></i></a>
+      </li>
+      
+
+      
+      <li class="nav-item dropdown theme-dropdown">
+        <a href="#" class="nav-link js-theme-selector" data-toggle="dropdown" aria-haspopup="true">
+          <i class="fas fa-palette" aria-hidden="true"></i>
+        </a>
+        <div class="dropdown-menu">
+          <a href="#" class="dropdown-item js-set-theme-light">
+            <span>Light</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-dark">
+            <span>Dark</span>
+          </a>
+          <a href="#" class="dropdown-item js-set-theme-auto">
+            <span>Automatic</span>
+          </a>
+        </div>
+      </li>
+      
+
+      
+
+    </ul>
+
+  </div>
+</nav>
+
+
+  
+
+<div class="container-fluid docs">
+  <div class="row flex-xl-nowrap">
+    <div class="col-12 col-md-3 col-xl-2 docs-sidebar">
+      
+
+
+
+
+
+  
+    
+  
+
+
+
+
+<form class="docs-search d-flex align-items-center">
+  <button class="btn docs-toggle d-md-none p-0 mr-3" type="button" data-toggle="collapse" data-target="#docs-nav" aria-controls="docs-nav" aria-expanded="false" aria-label="Toggle section navigation">
+    <span><i class="fas fa-bars"></i></span>
+  </button>
+
+  
+  <input name="q" type="search" class="form-control" placeholder="Search..." autocomplete="off">
+  
+</form>
+
+<nav class="collapse docs-links" id="docs-nav">
+  
+
+  
+  
+  
+  
+  <div class="docs-toc-item">
+    <a class="docs-toc-link" href="/courses/rethinking/">Overview</a>
+
+  </div>
+  
+  <div class="docs-toc-item">
+    <a class="docs-toc-link" href="/courses/rethinking/chapter-02/">Seminars</a>
+    <ul class="nav docs-sidenav">
+      
+      <li >
+        <a href="/courses/rethinking/chapter-02/">Chapter 01 &amp; 02</a>
+      </li>
+      
+      <li >
+        <a href="/courses/rethinking/chapter-03/">Chapter 03</a>
+      </li>
+      
+      <li >
+        <a href="/courses/rethinking/chapter-04/">Chapter 04</a>
+      </li>
+      
+      <li >
+        <a href="/courses/rethinking/chapter-04b/">Chapter 04 (Extra Material)</a>
+      </li>
+      
+      <li >
+        <a href="/courses/rethinking/chapter-05/">Chapter 05</a>
+      </li>
+      
+      <li >
+        <a href="/courses/rethinking/chapter-06/">Chapter 06</a>
+      </li>
+      
+      <li >
+        <a href="/courses/rethinking/chapter-07/">Chapter 07</a>
+      </li>
+      
+      <li >
+        <a href="/courses/rethinking/chapter-08/">Chapter 08</a>
+      </li>
+      
+      <li >
+        <a href="/courses/rethinking/chapter-09/">Chapter 09</a>
+      </li>
+      
+      <li class="active">
+        <a href="/courses/rethinking/chapter-11/">Chapter 10 &amp; 11</a>
+      </li>
+      
+      <li >
+        <a href="/courses/rethinking/chapter-12/">Chapter 12</a>
+      </li>
+      
+      <li >
+        <a href="/courses/rethinking/chapter-13/">Chapter 13</a>
+      </li>
+      
+      <li >
+        <a href="/courses/rethinking/chapter-14/">Chapter 14</a>
+      </li>
+      
+      <li >
+        <a href="/courses/rethinking/chapter-15/">Chapter 15</a>
+      </li>
+      
+      <li >
+        <a href="/courses/rethinking/chapter-16/">Chapter 16</a>
+      </li>
+      
+    </ul>
+    
+
+  </div>
+  
+  
+</nav>
+
+    </div>
+
+    
+    <div class="d-none d-xl-block col-xl-2 docs-toc">
+      <ul class="nav toc-top">
+        <li><a href="#" id="back_to_top" class="docs-toc-title">Contents</a></li>
+      </ul>
+
+      <nav id="TableOfContents">
+  <ul>
+    <li><a href="#material">Material</a></li>
+    <li><a href="#introduction">Introduction</a></li>
+    <li><a href="#r-environment"><code>R</code> Environment</a></li>
+    <li><a href="#easy-exercises">Easy Exercises</a>
+      <ul>
+        <li><a href="#practice-e1">Practice E1</a></li>
+        <li><a href="#practice-e2">Practice E2</a></li>
+        <li><a href="#practice-e3">Practice E3</a></li>
+        <li><a href="#practice-e4">Practice E4</a></li>
+      </ul>
+    </li>
+    <li><a href="#medium-exercises">Medium Exercises</a>
+      <ul>
+        <li><a href="#practice-m1">Practice M1</a></li>
+        <li><a href="#practice-m2">Practice M2</a></li>
+        <li><a href="#practice-m3">Practice M3</a></li>
+        <li><a href="#practice-m4">Practice M4</a></li>
+        <li><a href="#practice-m5">Practice M5</a></li>
+        <li><a href="#practice-m6">Practice M6</a></li>
+      </ul>
+    </li>
+    <li><a href="#hard-exercises">Hard Exercises</a>
+      <ul>
+        <li><a href="#practice-h1">Practice H1</a></li>
+        <li><a href="#practice-h2">Practice H2</a></li>
+        <li><a href="#practice-h3">Practice H3</a></li>
+        <li><a href="#practice-h4">Practice H4</a></li>
+      </ul>
+    </li>
+    <li><a href="#session-info">Session Info</a></li>
+  </ul>
+</nav>
+
+      
+    </div>
+    
+
+    <main class="col-12 col-md-9 col-xl-8 py-md-3 pl-md-5 docs-content" role="main">
+
+      <article class="article">
+
+        <div class="docs-article-container">
+          <h1>Chapter 10 &amp; 11</h1>
+
+          <div class="article-style">
+            <h1 id="god-spiked-the-integers">God Spiked The Integers</h1>
+<h2 id="material">Material</h2>
+<ul>
+<li>
+<a href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/rethinking/11__05-03-2021_SUMMARY_-Generalised-Linear-Models.html" target="_blank" rel="noopener">Slides Chapter 10</a></li>
+<li>
+<a href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/rethinking/13__19-03-2021_SUMMARY_-Discrete-Outcomes.html" target="_blank" rel="noopener">Slides Chapter 11</a></li>
+</ul>
+<h2 id="introduction">Introduction</h2>
+<p>These are answers and solutions to the exercises at the end of chapter 11 in 
+<a href="https://xcelab.net/rm/statistical-rethinking/" target="_blank" rel="noopener">Satistical Rethinking 2</a> by Richard McElreath. For anyone reading through these in order and wondering why I skipped chapter 10: chapter 10 did not contain any exercises (to my dismay, as you can imagine). I have created these notes as a part of my ongoing involvement in the 
+<a href="/project/aubayes/">AU Bayes Study Group</a>. Much of my inspiration for these solutions, where necessary, has been obtained from 
+<a href="https://github.com/jffist/statistical-rethinking-solutions/blob/master/ch10_hw.R" target="_blank" rel="noopener">Taras Svirskyi</a>, 
+<a href="https://github.com/cavaunpeu/statistical-rethinking/blob/master/chapter-10/homework.R" target="_blank" rel="noopener">William Wolf</a>, and 
+<a href="https://www.samples-of-thoughts.com/projects/statistical-rethinking/chapter_10/chp10-ex/" target="_blank" rel="noopener">Corrie Bartelheimer</a> as well as the solutions provided to instructors by Richard McElreath himself.</p>
+<h2 id="r-environment"><code>R</code> Environment</h2>
+<p>For today&rsquo;s exercise, I load the following packages:</p>
+<pre><code class="language-r">library(rethinking)
+library(rstan)
+library(ggplot2)
+library(tidybayes)
+</code></pre>
+<h2 id="easy-exercises">Easy Exercises</h2>
+<h3 id="practice-e1">Practice E1</h3>
+<p><strong>Question:</strong>  If an event has probability 0.35, what are the log-odds of this event?</p>
+<p><strong>Answer:</strong>  When $p = 0.35$ then the log-odds are $log\frac{0.35}{1-0.35}$, or in <code>R</code>:</p>
+<pre><code class="language-r">log(0.35 / (1 - 0.35))
+</code></pre>
+<pre><code>## [1] -0.6190392
+</code></pre>
+<h3 id="practice-e2">Practice E2</h3>
+<p><strong>Question:</strong>  If an event has log-odds 3.2, what is the probability of this event?</p>
+<p><strong>Answer:</strong> To transform log-odds into probability space, we want to use the <code>inv_logit()</code> function:</p>
+<pre><code class="language-r">inv_logit(3.2)
+</code></pre>
+<pre><code>## [1] 0.9608343
+</code></pre>
+<h3 id="practice-e3">Practice E3</h3>
+<p><strong>Question:</strong>  Suppose that a coefficient in a logistic regression has value 1.7. What does this imply about the proportional change in odds of the outcome?</p>
+<p><strong>Answer:</strong></p>
+<pre><code class="language-r">exp(1.7)
+</code></pre>
+<pre><code>## [1] 5.473947
+</code></pre>
+<p>Each one-unit increase in the predictor linked to this coefficient results in a multiplication of the odds of the event occurring by 5.47.</p>
+<p>The linear model behind the logistic regression simply represents the log-odds of an event happening. The odds of the events happening can thus be shown as $exp(odds)$. Comparing how the odds change when increasing the predictor variable by one unit comes down to solving this equation then:</p>
+<p>$$exp(α + βx)Z = exp(α + β(x + 1))$$
+Solving this for $z$ results in:</p>
+<p>$$z = exp(\beta)$$</p>
+<p>which is how we derived the answer to this question.</p>
+<h3 id="practice-e4">Practice E4</h3>
+<p><strong>Question:</strong>  Why do Poisson regressions sometimes require the use of an offset? Provide an example.</p>
+<p><strong>Answer:</strong> When study regimes aren&rsquo;t rigidly standardised, we may end up with count data collected over different time/distance intervals. Comparing these data without accounting for the difference in the underlying sampling frequency will inevitably lead to horribly inadequate predictions of our model(s).</p>
+<p>As an example, think of how many ants leave a hive in a certain interval. If we recorded numbers of ants leaving to forage on a minute-by-minute basis, we would obtain much smaller counts than if our sampling regime dictated hourly observation periods. Any poisson model we want to run between differing sampling regimes has to account for the heterogeneity in the observation period lengths. We do so as follows:</p>
+<p>$$Ants_i∼Poisson(λ)$$
+$$log(λ)=log(period_i)+α+βHive_i$$</p>
+<h2 id="medium-exercises">Medium Exercises</h2>
+<h3 id="practice-m1">Practice M1</h3>
+<p><strong>Question:</strong>  As explained in the chapter, binomial data can be organized in aggregated and disaggregated forms, without any impact on inference. But the likelihood of the data does change when the data are converted between the two formats. Can you explain why?</p>
+<p><strong>Answer:</strong> Think back to the 
+<a href="https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/static/courses/rethinking/statistical-rethinking-chapter-02/" target="_blank" rel="noopener">Card Drawing Example</a> from chapter 2. We know a certain outcome. Let&rsquo;s assume two black face, and one white face card are drawn.</p>
+<p>In the aggregated form of the data, we obtain the probability of our observation as $3p(1-p)$ (a binomial distribution with $3$ trials and a rate of black face cards of $p = \frac{2}{3}$). This tells us how many ways there are to get two black-face cards out of three pulls of cards. The order is irrelevant.</p>
+<p>With disaggregated data, we do not cope with any order, but simply predict the result of each draw of a card by itself and finally multiply our predictions together to form a joint probability according to $p(1-p)$.</p>
+<p>In conclusion, aggregated data is modelled with an extra constant to handle permutations. This does not change our inference, but merely changes the likelihood and log-likelihood.</p>
+<h3 id="practice-m2">Practice M2</h3>
+<p><strong>Question:</strong>  If a coefficient in a Poisson regression has value 1.7, what does this imply about the change in the outcome?</p>
+<p><strong>Answer:</strong> A basic Poisson regression is expressed as such:
+$$log(λ) = α + βx$$
+$$λ = exp(α + βx)$$</p>
+<p>In this specific case $\beta = 1.7$. So what happens to $\lambda$ when $x$ increases by $1$? To solve this, we write a formula for the change in $\lambda$:</p>
+<p>$$Δλ = exp(α + β(x + 1)) − exp(α + βx)$$
+$$Δλ = exp(α + βx)(exp(β) − 1)$$</p>
+<p>Unfortunately, this is about as far as we can take solving this formula. The change in $\lambda$ depends on all contents of the model. But about the ratio of $\lambda$ following a one-unit increase in $x$ compared to $\lambda$ a t base-level? We can compute this ratio as:</p>
+<p>$$\frac{λ_{x+1}}{λx} = \frac{exp(α + β(x + 1))}{exp(α + βx)} = exp(β)$$</p>
+<p>This is reminiscent of the proportional change in odds for logistic regressions. Conclusively, a coefficient of $\beta = 1.7$ in a Poisson model results in a proportional change in the expected count of exp(1.7) =  5.47 when the corresponding predictor variable increases by one unit.</p>
+<h3 id="practice-m3">Practice M3</h3>
+<p><strong>Question:</strong>  Explain why the logit link is appropriate for a binomial generalized linear model.</p>
+<p><strong>Answer:</strong>  With a binomial generalised linear model, we are interested in an outcome space between 0 and 1. With the outcome space denoting probabilities of an event transpiring. Our underlying linear model has no qualms about estimating parameter values outside of this interval. The logit link maps such probability space into $ℝ$ (linear model space).</p>
+<h3 id="practice-m4">Practice M4</h3>
+<p><strong>Question:</strong>  Explain why the log link is appropriate for a Poisson generalized linear model.</p>
+<p><strong>Answer:</strong> Poisson generalised linear models are producing strictly non-negative outputs (negative counts are impossible). As such, the underlying linear model space needs to be matched to the outcome space which is strictly non-negative. The log function maps positive value onto $ℝ$ and thus the function links count values (positive values) to a linear model.</p>
+<h3 id="practice-m5">Practice M5</h3>
+<p><strong>Question:</strong>  What would it imply to use a logit link for the mean of a Poisson generalized linear model? Can you think of a real research problem for which this would make sense?</p>
+<p><strong>Answer:</strong> Using a logit link in a Poisson model implies that the mean of the Poisson distribution lies between 0 and 1:</p>
+<p>$$y_i ∼ Poisson(μ_i)$$
+$$logit(μ_i) = α + βx_i$$
+This would imply that there is at most one event per time interval. This might be the case for very rare or extremely cyclical events such as counting the number of El Niño events every four years or so.</p>
+<h3 id="practice-m6">Practice M6</h3>
+<p><strong>Question:</strong>  State the constraints for which the binomial and Poisson distributions have maximum entropy. Are the constraints different at all for binomial and Poisson? Why or why not?</p>
+<p><strong>Answer:</strong>  For binomial and Poisson distributions to have maximum entropy, we need to meet the following assumptions:</p>
+<ol>
+<li>Discrete, binary outcomes</li>
+<li>Constant probability of event occurring across al trials (this is the same as a constant expected value)</li>
+</ol>
+<p>Both distributions have the same constraints as Poisson is a simplified form of the binomial.</p>
+<h2 id="hard-exercises">Hard Exercises</h2>
+<h3 id="practice-h1">Practice H1</h3>
+<p><strong>Question:</strong>  Use <code>quap</code> to construct a quadratic approximate posterior distribution for the chimpanzee model that includes a unique intercept for each actor, <code>m11.4</code> (page 338). Compare the quadratic approximation to the posterior distribution produced instead from MCMC. Can you explain both the differences and the similarities between the approximate and the MCMC distributions?</p>
+<p><strong>Answer:</strong> Here are the models according to the book:</p>
+<pre><code class="language-r">data(chimpanzees)
+d &lt;- chimpanzees
+d$treatment &lt;- 1 + d$prosoc_left + 2 * d$condition
+dat_list &lt;- list(
+  pulled_left = d$pulled_left,
+  actor = d$actor,
+  treatment = as.integer(d$treatment)
+)
+## MCMC model
+m11.4 &lt;- ulam(
+  alist(
+    pulled_left ~ dbinom(1, p),
+    logit(p) &lt;- a[actor] + b[treatment],
+    a[actor] ~ dnorm(0, 1.5),
+    b[treatment] ~ dnorm(0, 0.5)
+  ),
+  data = dat_list, chains = 4, log_lik = TRUE
+)
+</code></pre>
+<pre><code>## 
+## SAMPLING FOR MODEL '80e2b6267e3dc4ff0c2916d0cf0879e8' NOW (CHAIN 1).
+## Chain 1: 
+## Chain 1: Gradient evaluation took 0.001 seconds
+## Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 10 seconds.
+## Chain 1: Adjust your expectations accordingly!
+## Chain 1: 
+## Chain 1: 
+## Chain 1: Iteration:   1 / 1000 [  0%]  (Warmup)
+## Chain 1: Iteration: 100 / 1000 [ 10%]  (Warmup)
+## Chain 1: Iteration: 200 / 1000 [ 20%]  (Warmup)
+## Chain 1: Iteration: 300 / 1000 [ 30%]  (Warmup)
+## Chain 1: Iteration: 400 / 1000 [ 40%]  (Warmup)
+## Chain 1: Iteration: 500 / 1000 [ 50%]  (Warmup)
+## Chain 1: Iteration: 501 / 1000 [ 50%]  (Sampling)
+## Chain 1: Iteration: 600 / 1000 [ 60%]  (Sampling)
+## Chain 1: Iteration: 700 / 1000 [ 70%]  (Sampling)
+## Chain 1: Iteration: 800 / 1000 [ 80%]  (Sampling)
+## Chain 1: Iteration: 900 / 1000 [ 90%]  (Sampling)
+## Chain 1: Iteration: 1000 / 1000 [100%]  (Sampling)
+## Chain 1: 
+## Chain 1:  Elapsed Time: 1.57 seconds (Warm-up)
+## Chain 1:                1.629 seconds (Sampling)
+## Chain 1:                3.199 seconds (Total)
+## Chain 1: 
+## 
+## SAMPLING FOR MODEL '80e2b6267e3dc4ff0c2916d0cf0879e8' NOW (CHAIN 2).
+## Chain 2: 
+## Chain 2: Gradient evaluation took 0 seconds
+## Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+## Chain 2: Adjust your expectations accordingly!
+## Chain 2: 
+## Chain 2: 
+## Chain 2: Iteration:   1 / 1000 [  0%]  (Warmup)
+## Chain 2: Iteration: 100 / 1000 [ 10%]  (Warmup)
+## Chain 2: Iteration: 200 / 1000 [ 20%]  (Warmup)
+## Chain 2: Iteration: 300 / 1000 [ 30%]  (Warmup)
+## Chain 2: Iteration: 400 / 1000 [ 40%]  (Warmup)
+## Chain 2: Iteration: 500 / 1000 [ 50%]  (Warmup)
+## Chain 2: Iteration: 501 / 1000 [ 50%]  (Sampling)
+## Chain 2: Iteration: 600 / 1000 [ 60%]  (Sampling)
+## Chain 2: Iteration: 700 / 1000 [ 70%]  (Sampling)
+## Chain 2: Iteration: 800 / 1000 [ 80%]  (Sampling)
+## Chain 2: Iteration: 900 / 1000 [ 90%]  (Sampling)
+## Chain 2: Iteration: 1000 / 1000 [100%]  (Sampling)
+## Chain 2: 
+## Chain 2:  Elapsed Time: 1.667 seconds (Warm-up)
+## Chain 2:                1.211 seconds (Sampling)
+## Chain 2:                2.878 seconds (Total)
+## Chain 2: 
+## 
+## SAMPLING FOR MODEL '80e2b6267e3dc4ff0c2916d0cf0879e8' NOW (CHAIN 3).
+## Chain 3: 
+## Chain 3: Gradient evaluation took 0 seconds
+## Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+## Chain 3: Adjust your expectations accordingly!
+## Chain 3: 
+## Chain 3: 
+## Chain 3: Iteration:   1 / 1000 [  0%]  (Warmup)
+## Chain 3: Iteration: 100 / 1000 [ 10%]  (Warmup)
+## Chain 3: Iteration: 200 / 1000 [ 20%]  (Warmup)
+## Chain 3: Iteration: 300 / 1000 [ 30%]  (Warmup)
+## Chain 3: Iteration: 400 / 1000 [ 40%]  (Warmup)
+## Chain 3: Iteration: 500 / 1000 [ 50%]  (Warmup)
+## Chain 3: Iteration: 501 / 1000 [ 50%]  (Sampling)
+## Chain 3: Iteration: 600 / 1000 [ 60%]  (Sampling)
+## Chain 3: Iteration: 700 / 1000 [ 70%]  (Sampling)
+## Chain 3: Iteration: 800 / 1000 [ 80%]  (Sampling)
+## Chain 3: Iteration: 900 / 1000 [ 90%]  (Sampling)
+## Chain 3: Iteration: 1000 / 1000 [100%]  (Sampling)
+## Chain 3: 
+## Chain 3:  Elapsed Time: 1.639 seconds (Warm-up)
+## Chain 3:                2.718 seconds (Sampling)
+## Chain 3:                4.357 seconds (Total)
+## Chain 3: 
+## 
+## SAMPLING FOR MODEL '80e2b6267e3dc4ff0c2916d0cf0879e8' NOW (CHAIN 4).
+## Chain 4: 
+## Chain 4: Gradient evaluation took 0 seconds
+## Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+## Chain 4: Adjust your expectations accordingly!
+## Chain 4: 
+## Chain 4: 
+## Chain 4: Iteration:   1 / 1000 [  0%]  (Warmup)
+## Chain 4: Iteration: 100 / 1000 [ 10%]  (Warmup)
+## Chain 4: Iteration: 200 / 1000 [ 20%]  (Warmup)
+## Chain 4: Iteration: 300 / 1000 [ 30%]  (Warmup)
+## Chain 4: Iteration: 400 / 1000 [ 40%]  (Warmup)
+## Chain 4: Iteration: 500 / 1000 [ 50%]  (Warmup)
+## Chain 4: Iteration: 501 / 1000 [ 50%]  (Sampling)
+## Chain 4: Iteration: 600 / 1000 [ 60%]  (Sampling)
+## Chain 4: Iteration: 700 / 1000 [ 70%]  (Sampling)
+## Chain 4: Iteration: 800 / 1000 [ 80%]  (Sampling)
+## Chain 4: Iteration: 900 / 1000 [ 90%]  (Sampling)
+## Chain 4: Iteration: 1000 / 1000 [100%]  (Sampling)
+## Chain 4: 
+## Chain 4:  Elapsed Time: 2.031 seconds (Warm-up)
+## Chain 4:                2.195 seconds (Sampling)
+## Chain 4:                4.226 seconds (Total)
+## Chain 4:
+</code></pre>
+<pre><code class="language-r">precis(m11.4, depth = 2)
+</code></pre>
+<pre><code>##             mean        sd        5.5%       94.5%    n_eff    Rhat4
+## a[1] -0.45075443 0.3331248 -0.98953991  0.06075382 698.8809 1.005361
+## a[2]  3.91891754 0.8083257  2.74211339  5.24785152 901.5623 0.998913
+## a[3] -0.75442240 0.3312761 -1.28541454 -0.24524706 699.9722 1.003839
+## a[4] -0.76567679 0.3369675 -1.30127846 -0.23894487 857.8075 1.003696
+## a[5] -0.44359742 0.3267862 -0.97201306  0.07594653 674.2582 1.005466
+## a[6]  0.46443104 0.3317285 -0.05869988  0.99613901 810.7556 1.003976
+## a[7]  1.96593450 0.4242551  1.31622570  2.65044970 899.8839 1.001162
+## b[1] -0.03793442 0.2858597 -0.49368201  0.42539507 686.8362 1.005492
+## b[2]  0.48704573 0.2866880  0.03296044  0.95020885 703.0115 1.004415
+## b[3] -0.38805106 0.2815222 -0.82364579  0.06867557 639.3679 1.004886
+## b[4]  0.37075102 0.2834843 -0.08070002  0.83024441 623.7355 1.006236
+</code></pre>
+<pre><code class="language-r">## Quap Model
+m11.4quap &lt;- quap(
+  alist(
+    pulled_left ~ dbinom(1, p),
+    logit(p) &lt;- a[actor] + b[treatment],
+    a[actor] ~ dnorm(0, 1.5),
+    b[treatment] ~ dnorm(0, 0.5)
+  ),
+  data = dat_list
+)
+</code></pre>
+<pre><code class="language-r">plot(coeftab(m11.4, m11.4quap),
+  labels = paste(rep(rownames(coeftab(m11.4, m11.4quap)@coefs), each = 2),
+    rep(c(&quot;MCMC&quot;, &quot;quap&quot;), nrow(coeftab(m11.4, m11.4quap)@coefs) * 2),
+    sep = &quot;-&quot;
+  )
+)
+</code></pre>
+<p><img src="2021-03-18-statistical-rethinking-chapter-11_files/figure-html/unnamed-chunk-6-1.png" width="1440" /></p>
+<p>Looking at these parameter estimates, it is apparent that quadratic approximation is doing a good job in this case. The only noticeable difference lies with <code>a[2]</code> which shows a higher estimate with the <code>ulam</code> model. Let&rsquo;s look at the densities of the estimates of this parameter:</p>
+<pre><code class="language-r">post &lt;- extract.samples(m11.4)
+postq &lt;- extract.samples(m11.4quap)
+dens(post$a[, 2], lwd = 2)
+dens(postq$a[, 2], add = TRUE, lwd = 2, col = rangi2)
+</code></pre>
+<p><img src="2021-03-18-statistical-rethinking-chapter-11_files/figure-html/unnamed-chunk-7-1.png" width="1440" /></p>
+<p>The <code>ulam</code> model (in black) placed more probability mass in the upper end of the tail which ends up pushing the mean of this posterior distribution further to the right when compared to that of the quadratic approximation model. This is because the quadratic approximation assumes the posterior distribution to be Gaussian thus producing a symmetric distribution with less probability mass in the upper tail.</p>
+<h3 id="practice-h2">Practice H2</h3>
+<p><strong>Question:</strong>  Use <code>WAIC</code> to compare the chimpanzee model that includes a unique intercept for each actor, <code>m11.4</code> (page 338), to the simpler models fit in the same section.</p>
+<p><strong>Answer:</strong>  The models in question are:</p>
+<ol>
+<li><em>Intercept only</em> model:</li>
+</ol>
+<pre><code class="language-r">m11.1 &lt;- quap(
+  alist(
+    pulled_left ~ dbinom(1, p),
+    logit(p) &lt;- a,
+    a ~ dnorm(0, 10)
+  ),
+  data = d
+)
+</code></pre>
+<ol start="2">
+<li><em>Intercept and Treatment</em> model:</li>
+</ol>
+<pre><code class="language-r">m11.3 &lt;- quap(
+  alist(
+    pulled_left ~ dbinom(1, p),
+    logit(p) &lt;- a + b[treatment],
+    a ~ dnorm(0, 1.5),
+    b[treatment] ~ dnorm(0, 0.5)
+  ),
+  data = d
+)
+</code></pre>
+<ol start="3">
+<li><em>Individual Intercept and Treatment</em> model:</li>
+</ol>
+<pre><code class="language-r">m11.4 &lt;- ulam(
+  alist(
+    pulled_left ~ dbinom(1, p),
+    logit(p) &lt;- a[actor] + b[treatment],
+    a[actor] ~ dnorm(0, 1.5),
+    b[treatment] ~ dnorm(0, 0.5)
+  ),
+  data = dat_list, chains = 4, log_lik = TRUE
+)
+</code></pre>
+<pre><code>## 
+## SAMPLING FOR MODEL '80e2b6267e3dc4ff0c2916d0cf0879e8' NOW (CHAIN 1).
+## Chain 1: 
+## Chain 1: Gradient evaluation took 0 seconds
+## Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+## Chain 1: Adjust your expectations accordingly!
+## Chain 1: 
+## Chain 1: 
+## Chain 1: Iteration:   1 / 1000 [  0%]  (Warmup)
+## Chain 1: Iteration: 100 / 1000 [ 10%]  (Warmup)
+## Chain 1: Iteration: 200 / 1000 [ 20%]  (Warmup)
+## Chain 1: Iteration: 300 / 1000 [ 30%]  (Warmup)
+## Chain 1: Iteration: 400 / 1000 [ 40%]  (Warmup)
+## Chain 1: Iteration: 500 / 1000 [ 50%]  (Warmup)
+## Chain 1: Iteration: 501 / 1000 [ 50%]  (Sampling)
+## Chain 1: Iteration: 600 / 1000 [ 60%]  (Sampling)
+## Chain 1: Iteration: 700 / 1000 [ 70%]  (Sampling)
+## Chain 1: Iteration: 800 / 1000 [ 80%]  (Sampling)
+## Chain 1: Iteration: 900 / 1000 [ 90%]  (Sampling)
+## Chain 1: Iteration: 1000 / 1000 [100%]  (Sampling)
+## Chain 1: 
+## Chain 1:  Elapsed Time: 0.978 seconds (Warm-up)
+## Chain 1:                0.775 seconds (Sampling)
+## Chain 1:                1.753 seconds (Total)
+## Chain 1: 
+## 
+## SAMPLING FOR MODEL '80e2b6267e3dc4ff0c2916d0cf0879e8' NOW (CHAIN 2).
+## Chain 2: 
+## Chain 2: Gradient evaluation took 0 seconds
+## Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+## Chain 2: Adjust your expectations accordingly!
+## Chain 2: 
+## Chain 2: 
+## Chain 2: Iteration:   1 / 1000 [  0%]  (Warmup)
+## Chain 2: Iteration: 100 / 1000 [ 10%]  (Warmup)
+## Chain 2: Iteration: 200 / 1000 [ 20%]  (Warmup)
+## Chain 2: Iteration: 300 / 1000 [ 30%]  (Warmup)
+## Chain 2: Iteration: 400 / 1000 [ 40%]  (Warmup)
+## Chain 2: Iteration: 500 / 1000 [ 50%]  (Warmup)
+## Chain 2: Iteration: 501 / 1000 [ 50%]  (Sampling)
+## Chain 2: Iteration: 600 / 1000 [ 60%]  (Sampling)
+## Chain 2: Iteration: 700 / 1000 [ 70%]  (Sampling)
+## Chain 2: Iteration: 800 / 1000 [ 80%]  (Sampling)
+## Chain 2: Iteration: 900 / 1000 [ 90%]  (Sampling)
+## Chain 2: Iteration: 1000 / 1000 [100%]  (Sampling)
+## Chain 2: 
+## Chain 2:  Elapsed Time: 0.865 seconds (Warm-up)
+## Chain 2:                0.834 seconds (Sampling)
+## Chain 2:                1.699 seconds (Total)
+## Chain 2: 
+## 
+## SAMPLING FOR MODEL '80e2b6267e3dc4ff0c2916d0cf0879e8' NOW (CHAIN 3).
+## Chain 3: 
+## Chain 3: Gradient evaluation took 0 seconds
+## Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+## Chain 3: Adjust your expectations accordingly!
+## Chain 3: 
+## Chain 3: 
+## Chain 3: Iteration:   1 / 1000 [  0%]  (Warmup)
+## Chain 3: Iteration: 100 / 1000 [ 10%]  (Warmup)
+## Chain 3: Iteration: 200 / 1000 [ 20%]  (Warmup)
+## Chain 3: Iteration: 300 / 1000 [ 30%]  (Warmup)
+## Chain 3: Iteration: 400 / 1000 [ 40%]  (Warmup)
+## Chain 3: Iteration: 500 / 1000 [ 50%]  (Warmup)
+## Chain 3: Iteration: 501 / 1000 [ 50%]  (Sampling)
+## Chain 3: Iteration: 600 / 1000 [ 60%]  (Sampling)
+## Chain 3: Iteration: 700 / 1000 [ 70%]  (Sampling)
+## Chain 3: Iteration: 800 / 1000 [ 80%]  (Sampling)
+## Chain 3: Iteration: 900 / 1000 [ 90%]  (Sampling)
+## Chain 3: Iteration: 1000 / 1000 [100%]  (Sampling)
+## Chain 3: 
+## Chain 3:  Elapsed Time: 0.857 seconds (Warm-up)
+## Chain 3:                0.612 seconds (Sampling)
+## Chain 3:                1.469 seconds (Total)
+## Chain 3: 
+## 
+## SAMPLING FOR MODEL '80e2b6267e3dc4ff0c2916d0cf0879e8' NOW (CHAIN 4).
+## Chain 4: 
+## Chain 4: Gradient evaluation took 0 seconds
+## Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+## Chain 4: Adjust your expectations accordingly!
+## Chain 4: 
+## Chain 4: 
+## Chain 4: Iteration:   1 / 1000 [  0%]  (Warmup)
+## Chain 4: Iteration: 100 / 1000 [ 10%]  (Warmup)
+## Chain 4: Iteration: 200 / 1000 [ 20%]  (Warmup)
+## Chain 4: Iteration: 300 / 1000 [ 30%]  (Warmup)
+## Chain 4: Iteration: 400 / 1000 [ 40%]  (Warmup)
+## Chain 4: Iteration: 500 / 1000 [ 50%]  (Warmup)
+## Chain 4: Iteration: 501 / 1000 [ 50%]  (Sampling)
+## Chain 4: Iteration: 600 / 1000 [ 60%]  (Sampling)
+## Chain 4: Iteration: 700 / 1000 [ 70%]  (Sampling)
+## Chain 4: Iteration: 800 / 1000 [ 80%]  (Sampling)
+## Chain 4: Iteration: 900 / 1000 [ 90%]  (Sampling)
+## Chain 4: Iteration: 1000 / 1000 [100%]  (Sampling)
+## Chain 4: 
+## Chain 4:  Elapsed Time: 0.919 seconds (Warm-up)
+## Chain 4:                0.937 seconds (Sampling)
+## Chain 4:                1.856 seconds (Total)
+## Chain 4:
+</code></pre>
+<p>To compare these, we can run:</p>
+<pre><code class="language-r">(comp &lt;- compare(m11.1, m11.3, m11.4))
+</code></pre>
+<pre><code>##           WAIC        SE    dWAIC      dSE    pWAIC       weight
+## m11.4 532.4794 18.927161   0.0000       NA 8.572123 1.000000e+00
+## m11.3 682.4152  8.973761 149.9358 18.37892 3.553310 2.765987e-33
+## m11.1 687.9540  6.994012 155.4746 18.91781 1.004840 1.734267e-34
+</code></pre>
+<pre><code class="language-r">plot(comp)
+</code></pre>
+<p><img src="2021-03-18-statistical-rethinking-chapter-11_files/figure-html/unnamed-chunk-11-1.png" width="1440" /></p>
+<p>This shows clearly that the model accounting for individual intercepts as well as treatment effects (<code>m11.4</code>) outperforms the simpler models.</p>
+<h3 id="practice-h3">Practice H3</h3>
+<p><strong>Question:</strong> The data contained in <code>library(MASS);data(eagles)</code> are records of salmon pirating attempts by Bald Eagles in Washington State. See <code>?eagles</code> for details. While one eagle feeds, sometimes another will swoop in and try to steal the salmon from it. Call the feeding eagle the “victim” and the thief the “pirate.” Use the available data to build a binomial GLM of successful pirating attempts.</p>
+<p><strong>Answer:</strong></p>
+<pre><code class="language-r">library(MASS)
+data(eagles)
+d &lt;- eagles
+</code></pre>
+<h4 id="part-a">Part A</h4>
+<p><strong>Question:</strong> Consider the following model:</p>
+<p>$$y_i ∼ Binomial(n_i, p_i)$$
+$$log\frac{p_i}{1 − p_i} = α + β_PP_i + β_VV_i + β_AA_i $$
+$$α ∼ Normal(0, 1.5)$$
+$$β_P ∼ Normal(0, 0.5)$$ 
+$$β_V ∼ Normal(0, 0.5)$$ 
+$$β_A ∼ Normal(0, 0.5)$$
+where $y$ is the number of successful attempts, $n$ is the total number of attempts, $P$ is a dummy variable indicating whether or not the pirate had large body size, $V$ is a dummy variable indicating whether or not the victim had large body size, and finally $A$ is a dummy variable indicating whether or not the pirate was an adult.</p>
+<p>Fit the model above to the eagles data, using both <code>quap</code> and <code>ulam</code>. Is the quadratic approximation okay?</p>
+<p><strong>Answer:</strong> First, we have to make our dummy variables:</p>
+<pre><code class="language-r">d$pirateL &lt;- ifelse(d$P == &quot;L&quot;, 1, 0)
+d$victimL &lt;- ifelse(d$V == &quot;L&quot;, 1, 0)
+d$pirateA &lt;- ifelse(d$A == &quot;A&quot;, 1, 0)
+</code></pre>
+<p>Fitting the models is now trivial:</p>
+<pre><code class="language-r"># define model list specification
+f &lt;- alist(
+  y ~ dbinom(n, p),
+  logit(p) &lt;- a + bP * pirateL + bV * victimL + bA * pirateA,
+  a ~ dnorm(0, 1.5),
+  bP ~ dnorm(0, .5),
+  bV ~ dnorm(0, .5),
+  bA ~ dnorm(0, .5)
+)
+## quap model
+mH3quap &lt;- quap(f, data = d)
+## ulam model
+mH3ulam &lt;- ulam(f, data = d, chains = 4, log_lik = TRUE)
+</code></pre>
+<pre><code>## 
+## SAMPLING FOR MODEL '4eaf24dd51e5e9fce10e2cc7d32e0b01' NOW (CHAIN 1).
+## Chain 1: 
+## Chain 1: Gradient evaluation took 0 seconds
+## Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+## Chain 1: Adjust your expectations accordingly!
+## Chain 1: 
+## Chain 1: 
+## Chain 1: Iteration:   1 / 1000 [  0%]  (Warmup)
+## Chain 1: Iteration: 100 / 1000 [ 10%]  (Warmup)
+## Chain 1: Iteration: 200 / 1000 [ 20%]  (Warmup)
+## Chain 1: Iteration: 300 / 1000 [ 30%]  (Warmup)
+## Chain 1: Iteration: 400 / 1000 [ 40%]  (Warmup)
+## Chain 1: Iteration: 500 / 1000 [ 50%]  (Warmup)
+## Chain 1: Iteration: 501 / 1000 [ 50%]  (Sampling)
+## Chain 1: Iteration: 600 / 1000 [ 60%]  (Sampling)
+## Chain 1: Iteration: 700 / 1000 [ 70%]  (Sampling)
+## Chain 1: Iteration: 800 / 1000 [ 80%]  (Sampling)
+## Chain 1: Iteration: 900 / 1000 [ 90%]  (Sampling)
+## Chain 1: Iteration: 1000 / 1000 [100%]  (Sampling)
+## Chain 1: 
+## Chain 1:  Elapsed Time: 0.07 seconds (Warm-up)
+## Chain 1:                0.066 seconds (Sampling)
+## Chain 1:                0.136 seconds (Total)
+## Chain 1: 
+## 
+## SAMPLING FOR MODEL '4eaf24dd51e5e9fce10e2cc7d32e0b01' NOW (CHAIN 2).
+## Chain 2: 
+## Chain 2: Gradient evaluation took 0 seconds
+## Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+## Chain 2: Adjust your expectations accordingly!
+## Chain 2: 
+## Chain 2: 
+## Chain 2: Iteration:   1 / 1000 [  0%]  (Warmup)
+## Chain 2: Iteration: 100 / 1000 [ 10%]  (Warmup)
+## Chain 2: Iteration: 200 / 1000 [ 20%]  (Warmup)
+## Chain 2: Iteration: 300 / 1000 [ 30%]  (Warmup)
+## Chain 2: Iteration: 400 / 1000 [ 40%]  (Warmup)
+## Chain 2: Iteration: 500 / 1000 [ 50%]  (Warmup)
+## Chain 2: Iteration: 501 / 1000 [ 50%]  (Sampling)
+## Chain 2: Iteration: 600 / 1000 [ 60%]  (Sampling)
+## Chain 2: Iteration: 700 / 1000 [ 70%]  (Sampling)
+## Chain 2: Iteration: 800 / 1000 [ 80%]  (Sampling)
+## Chain 2: Iteration: 900 / 1000 [ 90%]  (Sampling)
+## Chain 2: Iteration: 1000 / 1000 [100%]  (Sampling)
+## Chain 2: 
+## Chain 2:  Elapsed Time: 0.08 seconds (Warm-up)
+## Chain 2:                0.109 seconds (Sampling)
+## Chain 2:                0.189 seconds (Total)
+## Chain 2: 
+## 
+## SAMPLING FOR MODEL '4eaf24dd51e5e9fce10e2cc7d32e0b01' NOW (CHAIN 3).
+## Chain 3: 
+## Chain 3: Gradient evaluation took 0 seconds
+## Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+## Chain 3: Adjust your expectations accordingly!
+## Chain 3: 
+## Chain 3: 
+## Chain 3: Iteration:   1 / 1000 [  0%]  (Warmup)
+## Chain 3: Iteration: 100 / 1000 [ 10%]  (Warmup)
+## Chain 3: Iteration: 200 / 1000 [ 20%]  (Warmup)
+## Chain 3: Iteration: 300 / 1000 [ 30%]  (Warmup)
+## Chain 3: Iteration: 400 / 1000 [ 40%]  (Warmup)
+## Chain 3: Iteration: 500 / 1000 [ 50%]  (Warmup)
+## Chain 3: Iteration: 501 / 1000 [ 50%]  (Sampling)
+## Chain 3: Iteration: 600 / 1000 [ 60%]  (Sampling)
+## Chain 3: Iteration: 700 / 1000 [ 70%]  (Sampling)
+## Chain 3: Iteration: 800 / 1000 [ 80%]  (Sampling)
+## Chain 3: Iteration: 900 / 1000 [ 90%]  (Sampling)
+## Chain 3: Iteration: 1000 / 1000 [100%]  (Sampling)
+## Chain 3: 
+## Chain 3:  Elapsed Time: 0.114 seconds (Warm-up)
+## Chain 3:                0.084 seconds (Sampling)
+## Chain 3:                0.198 seconds (Total)
+## Chain 3: 
+## 
+## SAMPLING FOR MODEL '4eaf24dd51e5e9fce10e2cc7d32e0b01' NOW (CHAIN 4).
+## Chain 4: 
+## Chain 4: Gradient evaluation took 0 seconds
+## Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+## Chain 4: Adjust your expectations accordingly!
+## Chain 4: 
+## Chain 4: 
+## Chain 4: Iteration:   1 / 1000 [  0%]  (Warmup)
+## Chain 4: Iteration: 100 / 1000 [ 10%]  (Warmup)
+## Chain 4: Iteration: 200 / 1000 [ 20%]  (Warmup)
+## Chain 4: Iteration: 300 / 1000 [ 30%]  (Warmup)
+## Chain 4: Iteration: 400 / 1000 [ 40%]  (Warmup)
+## Chain 4: Iteration: 500 / 1000 [ 50%]  (Warmup)
+## Chain 4: Iteration: 501 / 1000 [ 50%]  (Sampling)
+## Chain 4: Iteration: 600 / 1000 [ 60%]  (Sampling)
+## Chain 4: Iteration: 700 / 1000 [ 70%]  (Sampling)
+## Chain 4: Iteration: 800 / 1000 [ 80%]  (Sampling)
+## Chain 4: Iteration: 900 / 1000 [ 90%]  (Sampling)
+## Chain 4: Iteration: 1000 / 1000 [100%]  (Sampling)
+## Chain 4: 
+## Chain 4:  Elapsed Time: 0.101 seconds (Warm-up)
+## Chain 4:                0.098 seconds (Sampling)
+## Chain 4:                0.199 seconds (Total)
+## Chain 4:
+</code></pre>
+<p>Again, we visualise the parameter estimates</p>
+<pre><code class="language-r">plot(coeftab(mH3quap, mH3ulam),
+  labels = paste(rep(rownames(coeftab(mH3quap, mH3ulam)@coefs), each = 2),
+    rep(c(&quot;MCMC&quot;, &quot;quap&quot;), nrow(coeftab(mH3quap, mH3ulam)@coefs) * 2),
+    sep = &quot;-&quot;
+  )
+)
+</code></pre>
+<p><img src="2021-03-18-statistical-rethinking-chapter-11_files/figure-html/unnamed-chunk-15-1.png" width="1440" /></p>
+<p>These are pretty similar looking to me.</p>
+<h4 id="part-b">Part B</h4>
+<p><strong>Question:</strong> Now interpret the estimates. If the quadratic approximation turned out okay, then it’s okay
+to use the <code>quap</code> estimates. Otherwise stick to <code>ulam</code> estimates. Then plot the posterior predictions. Compute and display both (1) the predicted <strong>probability</strong> of success and its 89% interval for each row ($i$) in the data, as well as (2) the predicted success <strong>count</strong> and its 89% interval. What different information does each type of posterior prediction provide?</p>
+<p><strong>Answer:</strong> Personally, I don&rsquo;t think there&rsquo;s much difference between the model estimates. Here, I am sticking to the <code>ulam</code> model, because I feel like it. No other reason.</p>
+<p>Let&rsquo;s start by getting a baseline understanding of how often a non-adult, small-bodied pirate is able to fetch a salmon from a small-bodied victim(all dummy variables are at value 0) - this is our intercept <code>a</code>. These are log-odds:</p>
+<pre><code class="language-r">post &lt;- extract.samples(mH3ulam)
+mean(logistic(post$a))
+</code></pre>
+<pre><code>## [1] 0.5695376
+</code></pre>
+<p>We expect about 0.57% of all of our immature, small pirates to be successful when pirating on small victims.</p>
+<p>Now that we are armed with our baseline, we are ready to look at how our slope parameters affect what&rsquo;s happening in our model.</p>
+<p>First, we start with the effect of pirate-body-size (<code>bP</code>):</p>
+<pre><code class="language-r">mean(logistic(post$a + post$bP))
+</code></pre>
+<pre><code>## [1] 0.8678798
+</code></pre>
+<p>Damn. Large-bodied pirates win almost all of the time! We could repeat this for all slope parameters, but I find it prudent to move on to our actual task:</p>
+<ol>
+<li><strong>Probability</strong> of success:</li>
+</ol>
+<pre><code class="language-r">d$psuccess &lt;- d$y / d$n # successes divided by attempts
+p &lt;- link(mH3ulam) # success probability with inverse link
+## Mean and Interval Calculation
+p.mean &lt;- apply(p, 2, mean)
+p.PI &lt;- apply(p, 2, PI)
+# plot raw proportions success for each case
+plot(d$psuccess,
+  col = rangi2,
+  ylab = &quot;successful proportion&quot;, xlab = &quot;case&quot;, xaxt = &quot;n&quot;,
+  xlim = c(0.75, 8.25), pch = 16
+)
+# label cases on horizontal axis
+axis(1,
+  at = 1:8,
+  labels = c(&quot;LLA&quot;, &quot;LSA&quot;, &quot;LLI&quot;, &quot;LSI&quot;, &quot;SLA&quot;, &quot;SSA&quot;, &quot;SLI&quot;, &quot;SSI&quot;) # same order as in data frame d
+)
+# display posterior predicted proportions successful
+points(1:8, p.mean)
+for (i in 1:8) lines(c(i, i), p.PI[, i])
+</code></pre>
+<p><img src="2021-03-18-statistical-rethinking-chapter-11_files/figure-html/unnamed-chunk-18-1.png" width="1440" /></p>
+<ol start="2">
+<li><strong>Counts</strong> of successes:</li>
+</ol>
+<pre><code class="language-r">y &lt;- sim(mH3ulam) # simulate posterior for counts of successes
+## Mean and Interval Calculation
+y.mean &lt;- apply(y, 2, mean)
+y.PI &lt;- apply(y, 2, PI)
+# plot raw counts success for each case
+plot(d$y,
+  col = rangi2,
+  ylab = &quot;successful attempts&quot;, xlab = &quot;case&quot;, xaxt = &quot;n&quot;,
+  xlim = c(0.75, 8.25), pch = 16
+)
+# label cases on horizontal axis
+axis(1,
+  at = 1:8,
+  labels = c(&quot;LAL&quot;, &quot;LAS&quot;, &quot;LIL&quot;, &quot;LIS&quot;, &quot;SAL&quot;, &quot;SAS&quot;, &quot;SIL&quot;, &quot;SIS&quot;)
+)
+# display posterior predicted successes
+points(1:8, y.mean)
+for (i in 1:8) lines(c(i, i), y.PI[, i])
+</code></pre>
+<p><img src="2021-03-18-statistical-rethinking-chapter-11_files/figure-html/unnamed-chunk-19-1.png" width="1440" /></p>
+<p>In conclusion, the probability plot makes the different settings of predictor variables more comparable because the number of piracy attempts are ignored in setting the y-axis. The count plot, however, shows the additional uncertainty stemming from the underlying sample size.</p>
+<h4 id="part-c">Part C</h4>
+<p><strong>Question:</strong> Now try to improve the model. Consider an interaction between the pirate’s size and age(immature or adult). Compare this model to the previous one, using <code>WAIC</code>. Interpret.</p>
+<p><strong>Answer:</strong>  Let&rsquo;s fit a model with <code>ulam</code> containing the interaction effect we were asked for:</p>
+<pre><code class="language-r">mH3c &lt;- ulam(
+  alist(
+    y ~ dbinom(n, p),
+    logit(p) &lt;- a + bP * pirateL + bV * victimL + bA * pirateA + bPA * pirateL * pirateA,
+    a ~ dnorm(0, 1.5),
+    bP ~ dnorm(0, .5),
+    bV ~ dnorm(0, .5),
+    bA ~ dnorm(0, .5),
+    bPA ~ dnorm(0, .5)
+  ),
+  data = d, chains = 4, log_lik = TRUE
+)
+</code></pre>
+<pre><code>## 
+## SAMPLING FOR MODEL '3f6607198507ea4881438baca721629d' NOW (CHAIN 1).
+## Chain 1: 
+## Chain 1: Gradient evaluation took 0 seconds
+## Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+## Chain 1: Adjust your expectations accordingly!
+## Chain 1: 
+## Chain 1: 
+## Chain 1: Iteration:   1 / 1000 [  0%]  (Warmup)
+## Chain 1: Iteration: 100 / 1000 [ 10%]  (Warmup)
+## Chain 1: Iteration: 200 / 1000 [ 20%]  (Warmup)
+## Chain 1: Iteration: 300 / 1000 [ 30%]  (Warmup)
+## Chain 1: Iteration: 400 / 1000 [ 40%]  (Warmup)
+## Chain 1: Iteration: 500 / 1000 [ 50%]  (Warmup)
+## Chain 1: Iteration: 501 / 1000 [ 50%]  (Sampling)
+## Chain 1: Iteration: 600 / 1000 [ 60%]  (Sampling)
+## Chain 1: Iteration: 700 / 1000 [ 70%]  (Sampling)
+## Chain 1: Iteration: 800 / 1000 [ 80%]  (Sampling)
+## Chain 1: Iteration: 900 / 1000 [ 90%]  (Sampling)
+## Chain 1: Iteration: 1000 / 1000 [100%]  (Sampling)
+## Chain 1: 
+## Chain 1:  Elapsed Time: 0.162 seconds (Warm-up)
+## Chain 1:                0.118 seconds (Sampling)
+## Chain 1:                0.28 seconds (Total)
+## Chain 1: 
+## 
+## SAMPLING FOR MODEL '3f6607198507ea4881438baca721629d' NOW (CHAIN 2).
+## Chain 2: 
+## Chain 2: Gradient evaluation took 0 seconds
+## Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+## Chain 2: Adjust your expectations accordingly!
+## Chain 2: 
+## Chain 2: 
+## Chain 2: Iteration:   1 / 1000 [  0%]  (Warmup)
+## Chain 2: Iteration: 100 / 1000 [ 10%]  (Warmup)
+## Chain 2: Iteration: 200 / 1000 [ 20%]  (Warmup)
+## Chain 2: Iteration: 300 / 1000 [ 30%]  (Warmup)
+## Chain 2: Iteration: 400 / 1000 [ 40%]  (Warmup)
+## Chain 2: Iteration: 500 / 1000 [ 50%]  (Warmup)
+## Chain 2: Iteration: 501 / 1000 [ 50%]  (Sampling)
+## Chain 2: Iteration: 600 / 1000 [ 60%]  (Sampling)
+## Chain 2: Iteration: 700 / 1000 [ 70%]  (Sampling)
+## Chain 2: Iteration: 800 / 1000 [ 80%]  (Sampling)
+## Chain 2: Iteration: 900 / 1000 [ 90%]  (Sampling)
+## Chain 2: Iteration: 1000 / 1000 [100%]  (Sampling)
+## Chain 2: 
+## Chain 2:  Elapsed Time: 0.142 seconds (Warm-up)
+## Chain 2:                0.124 seconds (Sampling)
+## Chain 2:                0.266 seconds (Total)
+## Chain 2: 
+## 
+## SAMPLING FOR MODEL '3f6607198507ea4881438baca721629d' NOW (CHAIN 3).
+## Chain 3: 
+## Chain 3: Gradient evaluation took 0 seconds
+## Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+## Chain 3: Adjust your expectations accordingly!
+## Chain 3: 
+## Chain 3: 
+## Chain 3: Iteration:   1 / 1000 [  0%]  (Warmup)
+## Chain 3: Iteration: 100 / 1000 [ 10%]  (Warmup)
+## Chain 3: Iteration: 200 / 1000 [ 20%]  (Warmup)
+## Chain 3: Iteration: 300 / 1000 [ 30%]  (Warmup)
+## Chain 3: Iteration: 400 / 1000 [ 40%]  (Warmup)
+## Chain 3: Iteration: 500 / 1000 [ 50%]  (Warmup)
+## Chain 3: Iteration: 501 / 1000 [ 50%]  (Sampling)
+## Chain 3: Iteration: 600 / 1000 [ 60%]  (Sampling)
+## Chain 3: Iteration: 700 / 1000 [ 70%]  (Sampling)
+## Chain 3: Iteration: 800 / 1000 [ 80%]  (Sampling)
+## Chain 3: Iteration: 900 / 1000 [ 90%]  (Sampling)
+## Chain 3: Iteration: 1000 / 1000 [100%]  (Sampling)
+## Chain 3: 
+## Chain 3:  Elapsed Time: 0.141 seconds (Warm-up)
+## Chain 3:                0.119 seconds (Sampling)
+## Chain 3:                0.26 seconds (Total)
+## Chain 3: 
+## 
+## SAMPLING FOR MODEL '3f6607198507ea4881438baca721629d' NOW (CHAIN 4).
+## Chain 4: 
+## Chain 4: Gradient evaluation took 0 seconds
+## Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+## Chain 4: Adjust your expectations accordingly!
+## Chain 4: 
+## Chain 4: 
+## Chain 4: Iteration:   1 / 1000 [  0%]  (Warmup)
+## Chain 4: Iteration: 100 / 1000 [ 10%]  (Warmup)
+## Chain 4: Iteration: 200 / 1000 [ 20%]  (Warmup)
+## Chain 4: Iteration: 300 / 1000 [ 30%]  (Warmup)
+## Chain 4: Iteration: 400 / 1000 [ 40%]  (Warmup)
+## Chain 4: Iteration: 500 / 1000 [ 50%]  (Warmup)
+## Chain 4: Iteration: 501 / 1000 [ 50%]  (Sampling)
+## Chain 4: Iteration: 600 / 1000 [ 60%]  (Sampling)
+## Chain 4: Iteration: 700 / 1000 [ 70%]  (Sampling)
+## Chain 4: Iteration: 800 / 1000 [ 80%]  (Sampling)
+## Chain 4: Iteration: 900 / 1000 [ 90%]  (Sampling)
+## Chain 4: Iteration: 1000 / 1000 [100%]  (Sampling)
+## Chain 4: 
+## Chain 4:  Elapsed Time: 0.107 seconds (Warm-up)
+## Chain 4:                0.12 seconds (Sampling)
+## Chain 4:                0.227 seconds (Total)
+## Chain 4:
+</code></pre>
+<pre><code class="language-r">compare(mH3ulam, mH3c)
+</code></pre>
+<pre><code>##             WAIC       SE    dWAIC      dSE    pWAIC    weight
+## mH3ulam 59.09875 11.34469 0.000000       NA 8.303613 0.6932173
+## mH3c    60.72916 11.90457 1.630407 1.467142 9.165510 0.3067827
+</code></pre>
+<p>This is quite obviously a tie. So what about the model estimates?</p>
+<pre><code class="language-r">plot(coeftab(mH3ulam, mH3c),
+  labels = paste(rep(rownames(coeftab(mH3ulam, mH3c)@coefs), each = 2),
+    rep(c(&quot;Base&quot;, &quot;Interac&quot;), nrow(coeftab(mH3ulam, mH3c)@coefs) * 2),
+    sep = &quot;-&quot;
+  )
+)
+</code></pre>
+<p><img src="2021-03-18-statistical-rethinking-chapter-11_files/figure-html/unnamed-chunk-21-1.png" width="1440" />
+Jup, there&rsquo;s not really much of a difference here. For the interaction model: the log-odds of successful piracy is just weakly bigger when the pirating individual is large and an adult. That is counter-intuitive, isn&rsquo;t it? It is worth pointing out that the individual parameters for these conditions show the expected effects and the identified negative effect of their interaction may be down to the sparsity of the underlying data and we are also highly uncertain of it&rsquo;s sign to begin with.</p>
+<h3 id="practice-h4">Practice H4</h3>
+<p><strong>Question:</strong> The data contained in <code>data(salamanders)</code> are counts of salamanders (<em>Plethodon elongatus</em>) from 47 different 49$m^2$ plots in northern California. The column <code>SALAMAN</code> is the count in each plot, and the columns <code>PCTCOVER</code> and <code>FORESTAGE</code> are percent of ground cover and age of trees in the plot, respectively. You will model <code>SALAMAN</code> as a Poisson variable.</p>
+<h4 id="part-a-1">Part A</h4>
+<p><strong>Question:</strong> Model the relationship between density and percent cover, using a log-link (same as the ex-
+ample in the book and lecture). Use weakly informative priors of your choosing. Check the quadratic approximation again, by comparing <code>quap</code> to <code>ulam</code>. Then plot the expected counts and their 89% interval against percent cover. In which ways does the model do a good job? In which ways does it do a bad job?</p>
+<p><strong>Answer:</strong>  First, we load the data and standardise the predictors to get around their inconvenient scales which do not overlap well with each other:</p>
+<pre><code class="language-r">data(salamanders)
+d &lt;- salamanders
+d$C &lt;- standardize(d$PCTCOVER)
+d$A &lt;- standardize(d$FORESTAGE)
+</code></pre>
+<p>Now it is time to write our Poisson model:</p>
+<pre><code class="language-r">f &lt;- alist(
+  SALAMAN ~ dpois(lambda),
+  log(lambda) &lt;- a + bC * C,
+  a ~ dnorm(0, 1),
+  bC ~ dnorm(0, 1)
+)
+</code></pre>
+<p>That was easy enough, but do those priors make sense? Let&rsquo;s simulate:</p>
+<pre><code class="language-r">N &lt;- 50 # 50 samples from prior
+a &lt;- rnorm(N, 0, 1)
+bC &lt;- rnorm(N, 0, 1)
+C_seq &lt;- seq(from = -2, to = 2, length.out = 30)
+plot(NULL,
+  xlim = c(-2, 2), ylim = c(0, 20),
+  xlab = &quot;cover(stanardized)&quot;, ylab = &quot;salamanders&quot;
+)
+for (i in 1:N) {
+  lines(C_seq, exp(a[i] + bC[i] * C_seq), col = grau(), lwd = 1.5)
+}
+</code></pre>
+<p><img src="2021-03-18-statistical-rethinking-chapter-11_files/figure-html/unnamed-chunk-24-1.png" width="1440" /></p>
+<p>While not terrible (the prior allows your some explosive trends, but mostly sticks to a reasonable count of individuals), we may want to consider making the prior a bit more informative:</p>
+<pre><code class="language-r">bC &lt;- rnorm(N, 0, 0.5)
+plot(NULL,
+  xlim = c(-2, 2), ylim = c(0, 20),
+  xlab = &quot;cover(stanardized)&quot;, ylab = &quot;salamanders&quot;
+)
+for (i in 1:N) {
+  lines(C_seq, exp(a[i] + bC[i] * C_seq), col = grau(), lwd = 1.5)
+}
+</code></pre>
+<p><img src="2021-03-18-statistical-rethinking-chapter-11_files/figure-html/unnamed-chunk-25-1.png" width="1440" />
+Yup - I am happy with that.</p>
+<p>Let&rsquo;s update the model specification and run it:</p>
+<pre><code class="language-r">f &lt;- alist(
+  SALAMAN ~ dpois(lambda),
+  log(lambda) &lt;- a + bC * C,
+  a ~ dnorm(0, 1),
+  bC ~ dnorm(0, 0.5)
+)
+mH4a &lt;- ulam(f, data = d, chains = 4)
+</code></pre>
+<pre><code>## 
+## SAMPLING FOR MODEL 'ce27f50b1ba56f91eaeb68bb1bf4432c' NOW (CHAIN 1).
+## Chain 1: 
+## Chain 1: Gradient evaluation took 0 seconds
+## Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+## Chain 1: Adjust your expectations accordingly!
+## Chain 1: 
+## Chain 1: 
+## Chain 1: Iteration:   1 / 1000 [  0%]  (Warmup)
+## Chain 1: Iteration: 100 / 1000 [ 10%]  (Warmup)
+## Chain 1: Iteration: 200 / 1000 [ 20%]  (Warmup)
+## Chain 1: Iteration: 300 / 1000 [ 30%]  (Warmup)
+## Chain 1: Iteration: 400 / 1000 [ 40%]  (Warmup)
+## Chain 1: Iteration: 500 / 1000 [ 50%]  (Warmup)
+## Chain 1: Iteration: 501 / 1000 [ 50%]  (Sampling)
+## Chain 1: Iteration: 600 / 1000 [ 60%]  (Sampling)
+## Chain 1: Iteration: 700 / 1000 [ 70%]  (Sampling)
+## Chain 1: Iteration: 800 / 1000 [ 80%]  (Sampling)
+## Chain 1: Iteration: 900 / 1000 [ 90%]  (Sampling)
+## Chain 1: Iteration: 1000 / 1000 [100%]  (Sampling)
+## Chain 1: 
+## Chain 1:  Elapsed Time: 0.045 seconds (Warm-up)
+## Chain 1:                0.046 seconds (Sampling)
+## Chain 1:                0.091 seconds (Total)
+## Chain 1: 
+## 
+## SAMPLING FOR MODEL 'ce27f50b1ba56f91eaeb68bb1bf4432c' NOW (CHAIN 2).
+## Chain 2: 
+## Chain 2: Gradient evaluation took 0 seconds
+## Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+## Chain 2: Adjust your expectations accordingly!
+## Chain 2: 
+## Chain 2: 
+## Chain 2: Iteration:   1 / 1000 [  0%]  (Warmup)
+## Chain 2: Iteration: 100 / 1000 [ 10%]  (Warmup)
+## Chain 2: Iteration: 200 / 1000 [ 20%]  (Warmup)
+## Chain 2: Iteration: 300 / 1000 [ 30%]  (Warmup)
+## Chain 2: Iteration: 400 / 1000 [ 40%]  (Warmup)
+## Chain 2: Iteration: 500 / 1000 [ 50%]  (Warmup)
+## Chain 2: Iteration: 501 / 1000 [ 50%]  (Sampling)
+## Chain 2: Iteration: 600 / 1000 [ 60%]  (Sampling)
+## Chain 2: Iteration: 700 / 1000 [ 70%]  (Sampling)
+## Chain 2: Iteration: 800 / 1000 [ 80%]  (Sampling)
+## Chain 2: Iteration: 900 / 1000 [ 90%]  (Sampling)
+## Chain 2: Iteration: 1000 / 1000 [100%]  (Sampling)
+## Chain 2: 
+## Chain 2:  Elapsed Time: 0.054 seconds (Warm-up)
+## Chain 2:                0.062 seconds (Sampling)
+## Chain 2:                0.116 seconds (Total)
+## Chain 2: 
+## 
+## SAMPLING FOR MODEL 'ce27f50b1ba56f91eaeb68bb1bf4432c' NOW (CHAIN 3).
+## Chain 3: 
+## Chain 3: Gradient evaluation took 0 seconds
+## Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+## Chain 3: Adjust your expectations accordingly!
+## Chain 3: 
+## Chain 3: 
+## Chain 3: Iteration:   1 / 1000 [  0%]  (Warmup)
+## Chain 3: Iteration: 100 / 1000 [ 10%]  (Warmup)
+## Chain 3: Iteration: 200 / 1000 [ 20%]  (Warmup)
+## Chain 3: Iteration: 300 / 1000 [ 30%]  (Warmup)
+## Chain 3: Iteration: 400 / 1000 [ 40%]  (Warmup)
+## Chain 3: Iteration: 500 / 1000 [ 50%]  (Warmup)
+## Chain 3: Iteration: 501 / 1000 [ 50%]  (Sampling)
+## Chain 3: Iteration: 600 / 1000 [ 60%]  (Sampling)
+## Chain 3: Iteration: 700 / 1000 [ 70%]  (Sampling)
+## Chain 3: Iteration: 800 / 1000 [ 80%]  (Sampling)
+## Chain 3: Iteration: 900 / 1000 [ 90%]  (Sampling)
+## Chain 3: Iteration: 1000 / 1000 [100%]  (Sampling)
+## Chain 3: 
+## Chain 3:  Elapsed Time: 0.052 seconds (Warm-up)
+## Chain 3:                0.051 seconds (Sampling)
+## Chain 3:                0.103 seconds (Total)
+## Chain 3: 
+## 
+## SAMPLING FOR MODEL 'ce27f50b1ba56f91eaeb68bb1bf4432c' NOW (CHAIN 4).
+## Chain 4: 
+## Chain 4: Gradient evaluation took 0 seconds
+## Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+## Chain 4: Adjust your expectations accordingly!
+## Chain 4: 
+## Chain 4: 
+## Chain 4: Iteration:   1 / 1000 [  0%]  (Warmup)
+## Chain 4: Iteration: 100 / 1000 [ 10%]  (Warmup)
+## Chain 4: Iteration: 200 / 1000 [ 20%]  (Warmup)
+## Chain 4: Iteration: 300 / 1000 [ 30%]  (Warmup)
+## Chain 4: Iteration: 400 / 1000 [ 40%]  (Warmup)
+## Chain 4: Iteration: 500 / 1000 [ 50%]  (Warmup)
+## Chain 4: Iteration: 501 / 1000 [ 50%]  (Sampling)
+## Chain 4: Iteration: 600 / 1000 [ 60%]  (Sampling)
+## Chain 4: Iteration: 700 / 1000 [ 70%]  (Sampling)
+## Chain 4: Iteration: 800 / 1000 [ 80%]  (Sampling)
+## Chain 4: Iteration: 900 / 1000 [ 90%]  (Sampling)
+## Chain 4: Iteration: 1000 / 1000 [100%]  (Sampling)
+## Chain 4: 
+## Chain 4:  Elapsed Time: 0.065 seconds (Warm-up)
+## Chain 4:                0.058 seconds (Sampling)
+## Chain 4:                0.123 seconds (Total)
+## Chain 4:
+</code></pre>
+<pre><code class="language-r">mH4aquap &lt;- quap(f, data = d)
+plot(coeftab(mH4a, mH4aquap),
+  labels = paste(rep(rownames(coeftab(mH4a, mH4aquap)@coefs), each = 2),
+    rep(c(&quot;MCMC&quot;, &quot;quap&quot;), nrow(coeftab(mH4a, mH4aquap)@coefs) * 2),
+    sep = &quot;-&quot;
+  )
+)
+</code></pre>
+<p><img src="2021-03-18-statistical-rethinking-chapter-11_files/figure-html/unnamed-chunk-26-1.png" width="1440" />
+Again, both models are doing fine and we continue to our plotting of expected counts and their interval with the <code>ulam</code> model:</p>
+<pre><code class="language-r">plot(d$C, d$SALAMAN,
+  col = rangi2, lwd = 2,
+  xlab = &quot;cover(standardized)&quot;, ylab = &quot;salamanders observed&quot;
+)
+C_seq &lt;- seq(from = -2, to = 2, length.out = 30)
+l &lt;- link(mH4a, data = list(C = C_seq))
+lines(C_seq, colMeans(l))
+shade(apply(l, 2, PI), C_seq)
+</code></pre>
+<p><img src="2021-03-18-statistical-rethinking-chapter-11_files/figure-html/unnamed-chunk-27-1.png" width="1440" />
+Well that model doesn&rsquo;t fit all that nicely and the data seems over-dispersed to me.</p>
+<h4 id="part-b-1">Part B</h4>
+<p><strong>Question:</strong> Can you improve the model by using the other predictor, <code>FORESTAGE</code>? Try any models you think useful. Can you explain why <code>FORESTAGE</code> helps or does not help with prediction?</p>
+<p><strong>Answer:</strong> Forest cover might be confounded by forest age. The older a forest, the bigger its coverage? A model to investigate this could look like this:</p>
+<pre><code class="language-r">f2 &lt;- alist(
+  SALAMAN ~ dpois(lambda),
+  log(lambda) &lt;- a + bC * C + bA * A,
+  a ~ dnorm(0, 1),
+  c(bC, bA) ~ dnorm(0, 0.5)
+)
+mH4b &lt;- ulam(f2, data = d, chains = 4)
+</code></pre>
+<pre><code>## 
+## SAMPLING FOR MODEL '4850e2c86bda45f77f837aaee26a4da5' NOW (CHAIN 1).
+## Chain 1: 
+## Chain 1: Gradient evaluation took 0 seconds
+## Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+## Chain 1: Adjust your expectations accordingly!
+## Chain 1: 
+## Chain 1: 
+## Chain 1: Iteration:   1 / 1000 [  0%]  (Warmup)
+## Chain 1: Iteration: 100 / 1000 [ 10%]  (Warmup)
+## Chain 1: Iteration: 200 / 1000 [ 20%]  (Warmup)
+## Chain 1: Iteration: 300 / 1000 [ 30%]  (Warmup)
+## Chain 1: Iteration: 400 / 1000 [ 40%]  (Warmup)
+## Chain 1: Iteration: 500 / 1000 [ 50%]  (Warmup)
+## Chain 1: Iteration: 501 / 1000 [ 50%]  (Sampling)
+## Chain 1: Iteration: 600 / 1000 [ 60%]  (Sampling)
+## Chain 1: Iteration: 700 / 1000 [ 70%]  (Sampling)
+## Chain 1: Iteration: 800 / 1000 [ 80%]  (Sampling)
+## Chain 1: Iteration: 900 / 1000 [ 90%]  (Sampling)
+## Chain 1: Iteration: 1000 / 1000 [100%]  (Sampling)
+## Chain 1: 
+## Chain 1:  Elapsed Time: 0.066 seconds (Warm-up)
+## Chain 1:                0.067 seconds (Sampling)
+## Chain 1:                0.133 seconds (Total)
+## Chain 1: 
+## 
+## SAMPLING FOR MODEL '4850e2c86bda45f77f837aaee26a4da5' NOW (CHAIN 2).
+## Chain 2: 
+## Chain 2: Gradient evaluation took 0 seconds
+## Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+## Chain 2: Adjust your expectations accordingly!
+## Chain 2: 
+## Chain 2: 
+## Chain 2: Iteration:   1 / 1000 [  0%]  (Warmup)
+## Chain 2: Iteration: 100 / 1000 [ 10%]  (Warmup)
+## Chain 2: Iteration: 200 / 1000 [ 20%]  (Warmup)
+## Chain 2: Iteration: 300 / 1000 [ 30%]  (Warmup)
+## Chain 2: Iteration: 400 / 1000 [ 40%]  (Warmup)
+## Chain 2: Iteration: 500 / 1000 [ 50%]  (Warmup)
+## Chain 2: Iteration: 501 / 1000 [ 50%]  (Sampling)
+## Chain 2: Iteration: 600 / 1000 [ 60%]  (Sampling)
+## Chain 2: Iteration: 700 / 1000 [ 70%]  (Sampling)
+## Chain 2: Iteration: 800 / 1000 [ 80%]  (Sampling)
+## Chain 2: Iteration: 900 / 1000 [ 90%]  (Sampling)
+## Chain 2: Iteration: 1000 / 1000 [100%]  (Sampling)
+## Chain 2: 
+## Chain 2:  Elapsed Time: 0.068 seconds (Warm-up)
+## Chain 2:                0.079 seconds (Sampling)
+## Chain 2:                0.147 seconds (Total)
+## Chain 2: 
+## 
+## SAMPLING FOR MODEL '4850e2c86bda45f77f837aaee26a4da5' NOW (CHAIN 3).
+## Chain 3: 
+## Chain 3: Gradient evaluation took 0 seconds
+## Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+## Chain 3: Adjust your expectations accordingly!
+## Chain 3: 
+## Chain 3: 
+## Chain 3: Iteration:   1 / 1000 [  0%]  (Warmup)
+## Chain 3: Iteration: 100 / 1000 [ 10%]  (Warmup)
+## Chain 3: Iteration: 200 / 1000 [ 20%]  (Warmup)
+## Chain 3: Iteration: 300 / 1000 [ 30%]  (Warmup)
+## Chain 3: Iteration: 400 / 1000 [ 40%]  (Warmup)
+## Chain 3: Iteration: 500 / 1000 [ 50%]  (Warmup)
+## Chain 3: Iteration: 501 / 1000 [ 50%]  (Sampling)
+## Chain 3: Iteration: 600 / 1000 [ 60%]  (Sampling)
+## Chain 3: Iteration: 700 / 1000 [ 70%]  (Sampling)
+## Chain 3: Iteration: 800 / 1000 [ 80%]  (Sampling)
+## Chain 3: Iteration: 900 / 1000 [ 90%]  (Sampling)
+## Chain 3: Iteration: 1000 / 1000 [100%]  (Sampling)
+## Chain 3: 
+## Chain 3:  Elapsed Time: 0.064 seconds (Warm-up)
+## Chain 3:                0.062 seconds (Sampling)
+## Chain 3:                0.126 seconds (Total)
+## Chain 3: 
+## 
+## SAMPLING FOR MODEL '4850e2c86bda45f77f837aaee26a4da5' NOW (CHAIN 4).
+## Chain 4: 
+## Chain 4: Gradient evaluation took 0 seconds
+## Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 0 seconds.
+## Chain 4: Adjust your expectations accordingly!
+## Chain 4: 
+## Chain 4: 
+## Chain 4: Iteration:   1 / 1000 [  0%]  (Warmup)
+## Chain 4: Iteration: 100 / 1000 [ 10%]  (Warmup)
+## Chain 4: Iteration: 200 / 1000 [ 20%]  (Warmup)
+## Chain 4: Iteration: 300 / 1000 [ 30%]  (Warmup)
+## Chain 4: Iteration: 400 / 1000 [ 40%]  (Warmup)
+## Chain 4: Iteration: 500 / 1000 [ 50%]  (Warmup)
+## Chain 4: Iteration: 501 / 1000 [ 50%]  (Sampling)
+## Chain 4: Iteration: 600 / 1000 [ 60%]  (Sampling)
+## Chain 4: Iteration: 700 / 1000 [ 70%]  (Sampling)
+## Chain 4: Iteration: 800 / 1000 [ 80%]  (Sampling)
+## Chain 4: Iteration: 900 / 1000 [ 90%]  (Sampling)
+## Chain 4: Iteration: 1000 / 1000 [100%]  (Sampling)
+## Chain 4: 
+## Chain 4:  Elapsed Time: 0.076 seconds (Warm-up)
+## Chain 4:                0.058 seconds (Sampling)
+## Chain 4:                0.134 seconds (Total)
+## Chain 4:
+</code></pre>
+<pre><code class="language-r">precis(mH4b)
+</code></pre>
+<pre><code>##          mean         sd       5.5%     94.5%     n_eff    Rhat4
+## a  0.48361398 0.13609701  0.2618982 0.6896444  873.3384 1.003115
+## bA 0.01904618 0.09647959 -0.1361230 0.1679860 1102.3547 1.002465
+## bC 1.04260846 0.17335950  0.7795899 1.3262340  919.5342 1.000832
+</code></pre>
+<p>Fascinating! The estimate for <code>bA</code> is nearly $0$ with a lot of certainty (i.e. a small interval) behind it. While conditioning on percent cover, forest age does not influence salamander count. This looks like a post-treatment effect to me.</p>
+<h2 id="session-info">Session Info</h2>
+<pre><code class="language-r">sessionInfo()
+</code></pre>
+<pre><code>## R version 4.0.5 (2021-03-31)
+## Platform: x86_64-w64-mingw32/x64 (64-bit)
+## Running under: Windows 10 x64 (build 19043)
+## 
+## Matrix products: default
+## 
+## locale:
+## [1] LC_COLLATE=English_United Kingdom.1252  LC_CTYPE=English_United Kingdom.1252    LC_MONETARY=English_United Kingdom.1252 LC_NUMERIC=C                           
+## [5] LC_TIME=English_United Kingdom.1252    
+## 
+## attached base packages:
+## [1] parallel  stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+## [1] MASS_7.3-53.1        tidybayes_2.3.1      rethinking_2.13      rstan_2.21.2         ggplot2_3.3.6        StanHeaders_2.21.0-7
+## 
+## loaded via a namespace (and not attached):
+##  [1] Rcpp_1.0.7           mvtnorm_1.1-1        lattice_0.20-41      tidyr_1.1.3          prettyunits_1.1.1    ps_1.6.0             assertthat_0.2.1     digest_0.6.27        utf8_1.2.1          
+## [10] V8_3.4.1             plyr_1.8.6           R6_2.5.0             backports_1.2.1      stats4_4.0.5         evaluate_0.14        coda_0.19-4          highr_0.9            blogdown_1.3        
+## [19] pillar_1.6.0         rlang_0.4.11         curl_4.3.2           callr_3.7.0          jquerylib_0.1.4      R.utils_2.10.1       R.oo_1.24.0          rmarkdown_2.7        styler_1.4.1        
+## [28] stringr_1.4.0        loo_2.4.1            munsell_0.5.0        compiler_4.0.5       xfun_0.22            pkgconfig_2.0.3      pkgbuild_1.2.0       shape_1.4.5          htmltools_0.5.1.1   
+## [37] tidyselect_1.1.0     tibble_3.1.1         gridExtra_2.3        bookdown_0.22        arrayhelpers_1.1-0   codetools_0.2-18     matrixStats_0.61.0   fansi_0.4.2          crayon_1.4.1        
+## [46] dplyr_1.0.5          withr_2.4.2          R.methodsS3_1.8.1    distributional_0.2.2 ggdist_2.4.0         grid_4.0.5           jsonlite_1.7.2       gtable_0.3.0         lifecycle_1.0.0     
+## [55] DBI_1.1.1            magrittr_2.0.1       scales_1.1.1         RcppParallel_5.1.2   cli_3.0.0            stringi_1.5.3        farver_2.1.0         bslib_0.2.4          ellipsis_0.3.2      
+## [64] generics_0.1.0       vctrs_0.3.7          rematch2_2.1.2       forcats_0.5.1        tools_4.0.5          svUnit_1.0.6         R.cache_0.14.0       glue_1.4.2           purrr_0.3.4         
+## [73] processx_3.5.1       yaml_2.2.1           inline_0.3.17        colorspace_2.0-0     knitr_1.33           sass_0.3.1
+</code></pre>
+
+          </div>
+
+          
+
+<div class="article-tags">
+  
+  <a class="badge badge-light" href="/tag/statistics/">Statistics</a>
+  
+  <a class="badge badge-light" href="/tag/bayes/">Bayes</a>
+  
+  <a class="badge badge-light" href="/tag/bayesian-statistics/">Bayesian Statistics</a>
+  
+  <a class="badge badge-light" href="/tag/au-bayes-study-group/">AU Bayes Study Group</a>
+  
+</div>
+
+
+
+          
+          <div class="article-widget">
+            
+<div class="post-nav">
+  
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">Previous</div>
+    <a href="/courses/rethinking/chapter-09/" rel="next">Chapter 09</a>
+  </div>
+  
+  
+  
+  <div class="post-nav-item">
+    <div class="meta-nav">Next</div>
+    <a href="/courses/rethinking/chapter-12/" rel="prev">Chapter 12</a>
+  </div>
+  
+</div>
+
+          </div>
+          
+        </div>
+
+        <div class="body-footer">
+          <p>Last updated on 2021-03-18</p>
+
+          
+
+
+
+
+
+          
+
+
+          
+
+
+  
+  
+  <div class="article-widget content-widget-hr">
+    <h3>Related</h3>
+    <ul>
+      
+      <li><a href="/courses/rethinking/chapter-16/">Chapter 16</a></li>
+      
+      <li><a href="/courses/rethinking/chapter-15/">Chapter 15</a></li>
+      
+      <li><a href="/courses/rethinking/chapter-14/">Chapter 14</a></li>
+      
+      <li><a href="/courses/rethinking/chapter-13/">Chapter 13</a></li>
+      
+      <li><a href="/courses/rethinking/chapter-12/">Chapter 12</a></li>
+      
+    </ul>
+  </div>
+  
+
+
+
+        </div>
+
+      </article>
+
+      <footer class="site-footer">
+  
+  <p class="powered-by">
+    
+      <a href="/privacy/">Privacy Policy</a>
+    
+    
+       &middot; 
+      <a href="/terms/">Terms</a>
+    
+  </p>
+  
+
+  <p class="powered-by">
+    © 2024
+  </p>
+
+  
+  
+
+
+
+
+
+
+  <p class="powered-by">
+    Powered by the
+    <a href="https://sourcethemes.com/academic/" target="_blank" rel="noopener">Academic theme</a> for
+    <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+
+    
+  </p>
+</footer>
+
+
+    </main>
+  </div>
+</div>
+
+
+      
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.js" integrity="sha256-yt2kYMy0w8AbtF89WXb2P1rfjcP/HTHLT7097U8Y5b8=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/highlight.min.js" integrity="sha256-eOgo0OtLL4cdq7RdwRUiGKLX9XsIJ7nGhWEKbohmVAQ=" crossorigin="anonymous"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/languages/r.min.js"></script>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.18.1/languages/latex.min.js"></script>
+        
+      
+
+    
+
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.5.1/leaflet.js" integrity="sha256-EErZamuLefUnbMBQbsEqu1USa+btR2oIlCpBJbyD4/g=" crossorigin="anonymous"></script>
+    
+
+    
+    
+    <script>const code_highlighting = true;</script>
+    
+
+    
+    
+    <script>const isSiteThemeDark = false;</script>
+    
+
+    
+    
+    
+    
+    
+    
+    <script>
+      const search_config = {"indexURI":"/index.json","minLength":1,"threshold":0.3};
+      const i18n = {"no_results":"No results found","placeholder":"Search...","results":"results found"};
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks",
+        'slides' : "Slides"
+        };
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.1/anchor.min.js" integrity="sha256-pB/deHc9CGfFpJRjC43imB29Rse8tak+5eXqntO94ck=" crossorigin="anonymous"></script>
+    <script>
+      anchors.add();
+    </script>
+    
+
+    
+    
+    <script id="search-hit-fuse-template" type="text/x-template">
+      <div class="search-hit" id="summary-{{key}}">
+      <div class="search-hit-content">
+        <div class="search-hit-name">
+          <a href="{{relpermalink}}">{{title}}</a>
+          <div class="article-metadata search-hit-type">{{type}}</div>
+          <p class="search-hit-description">{{snippet}}</p>
+        </div>
+      </div>
+      </div>
+    </script>
+    
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.1/fuse.min.js" integrity="sha256-VzgmKYmhsGNNN4Ph1kMW+BjoYJM2jV5i4IlFoeZA9XI=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js" integrity="sha256-4HLtjeVgH0eIB3aZ9mLYF6E8oU5chNdjU6p6rrXpl9U=" crossorigin="anonymous"></script>
+    
+
+    
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+      
+    
+    
+    
+    
+    <script src="/js/academic.min.66c553246b0f279a03be6e5597f72b52.js"></script>
+
+    
+
+
+
+
+
+
+  
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

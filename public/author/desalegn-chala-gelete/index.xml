@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Desalegn Chala Gelete | Erik Kusch</title>
+    <link>https://www.erikkusch.com/author/desalegn-chala-gelete/</link>
+      <atom:link href="https://www.erikkusch.com/author/desalegn-chala-gelete/index.xml" rel="self" type="application/rss+xml" />
+    <description>Desalegn Chala Gelete</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-gb</language><copyright>© 2024</copyright><lastBuildDate>Wed, 24 Jul 2024 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg</url>
+      <title>Desalegn Chala Gelete</title>
+      <link>https://www.erikkusch.com/author/desalegn-chala-gelete/</link>
+    </image>
+    
+    <item>
+      <title>TwinEco - A Unified Framework for Dynamic Data-Driven Digital Twins in Ecology</title>
+      <link>https://www.erikkusch.com/publication/twineco-a-unified-framework-for-dynamic-data-driven-digital-twins-in-ecology/</link>
+      <pubDate>Wed, 24 Jul 2024 00:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/publication/twineco-a-unified-framework-for-dynamic-data-driven-digital-twins-in-ecology/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

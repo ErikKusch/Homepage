@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Functional Traits | Erik Kusch</title>
+    <link>https://www.erikkusch.com/tag/functional-traits/</link>
+      <atom:link href="https://www.erikkusch.com/tag/functional-traits/index.xml" rel="self" type="application/rss+xml" />
+    <description>Functional Traits</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-gb</language><copyright>© 2024</copyright><lastBuildDate>Tue, 29 Dec 2020 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg</url>
+      <title>Functional Traits</title>
+      <link>https://www.erikkusch.com/tag/functional-traits/</link>
+    </image>
+    
+    <item>
+      <title>Causes and Processes of Dryland Vegetation Memory</title>
+      <link>https://www.erikkusch.com/project/functional-traits-and-life-history-effects-on-high-resolution-vegetation-memory/</link>
+      <pubDate>Tue, 29 Dec 2020 00:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/project/functional-traits-and-life-history-effects-on-high-resolution-vegetation-memory/</guid>
+      <description>&lt;h1 id=&#34;disclaimer&#34;&gt;Disclaimer&lt;/h1&gt;
+&lt;p&gt;&lt;strong&gt;This project is currently on hold.&lt;/strong&gt;&lt;/p&gt;
+&lt;h1 id=&#34;motivation&#34;&gt;Motivation&lt;/h1&gt;
+&lt;p&gt;Throughout my previous project concerning 
+&lt;a href=&#34;https://www.erikkusch.com/project/vegetation-memory-across-global-dryland-regions/&#34;&gt;Vegetation Memory across Global Dryland Regions&lt;/a&gt;, I identified prominent spatial patterns of intrinsic and extrinsic vegetation memory components. These patterns may serve us in discerning global and local resistance and recovery potential of vegetation communities to perturbations.&lt;/p&gt;
+&lt;p&gt;However, these patterns alone only tell part of the story. How do these come about? How are they maintained? Understanding these mechanisms would undoubtedly go a long way in predicting responses of vegetation to anthropogenic and climate change-driven disturbances. Ultimately, I expect this exercise to create valuable knowledge for conservation biology and the agricultural sector.&lt;/p&gt;
+&lt;h1 id=&#34;description&#34;&gt;Description&lt;/h1&gt;
+&lt;p&gt;MODIS EVI data is aggregated at bi-weekly intervals and used as a proxy of vegetation response in the dryland study regions between January 2000 and December 2019. Independent climate data is provided using the &lt;code&gt;KrigR&lt;/code&gt; package (
+&lt;a href=&#34;https://www.erikkusch.com/project/krigr/ar&#34;&gt;KrigR - Downloading and Downscaling of ERA5(-Land) data using R&lt;/a&gt;). Doing so allows us to make use of the high temporal resolution of the European Centre for Medium-range Weather Forecasts ReAnalysis 5 (ERA5) data from the European Centre for Medium-Range Weather Forecasts (ECMWF) at spatial resolutions of roughly 1x1km. Effectively, this increases the spatial resolution of vegetation memory products by almost one order of magnitude when compared to my previous project at 9x9km resolution. Vegetation memory is calculated the same way as during my previous project.&lt;/p&gt;
+&lt;p&gt;Using these high-resolution vegetation memory products, we can reasonably argue that ground-data obtained through functional trait campaigns or vegetation plot exercises represents the 1x1km grid reasonably well. Thus we are able to assess correlations between the different vegetation components and ground-truthed expressions of plant life. To identify what shapes vegetation memory expressions, I am investigating a range of three potential predictor families:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;Plant Functional Traits&lt;/strong&gt; - I expect investment in certain functional characteristics to greatly influence resistance and recovery potential. For example, sturdy leaves should grant resistance to temperature fluctuations but are costly to recover once lost.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Life History Traits&lt;/strong&gt; - Life history speed and timing undoubtedly alters vegetation memory expressions. But which life history traits fair best at explaining these processes? For example, a short-lived population may be less resistant to a perturbation than a long-lived one, but surely boasts a reproduction rate that achieves fast recovery.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Abiotic Legacies&lt;/strong&gt; - Biological organisms adapt to their surroundings. On varying time-scales and through varying processes, but they adapt nonetheless. I aim to investigate how strong these adaptations become by computing the impact of the legacy mean and standard deviation of abiotic conditions on vegetation memory components. For example, a species in a highly variable aridity regime may be more resistant to fluctuations in aridity than one used to stable, moist conditions&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

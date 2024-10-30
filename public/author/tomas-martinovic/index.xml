@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tomas Martinovic | Erik Kusch</title>
+    <link>https://www.erikkusch.com/author/tomas-martinovic/</link>
+      <atom:link href="https://www.erikkusch.com/author/tomas-martinovic/index.xml" rel="self" type="application/rss+xml" />
+    <description>Tomas Martinovic</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-gb</language><copyright>© 2024</copyright><lastBuildDate>Tue, 11 Jun 2024 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg</url>
+      <title>Tomas Martinovic</title>
+      <link>https://www.erikkusch.com/author/tomas-martinovic/</link>
+    </image>
+    
+    <item>
+      <title>Prototype biodiversity digital twin - crop wild relatives genetic resources for food security</title>
+      <link>https://www.erikkusch.com/publication/prototype-biodiversity-digital-twin-crop-wild-relatives-genetic-resources-for-food-security/</link>
+      <pubDate>Tue, 11 Jun 2024 00:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/publication/prototype-biodiversity-digital-twin-crop-wild-relatives-genetic-resources-for-food-security/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

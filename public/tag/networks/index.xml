@@ -1,0 +1,3160 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Networks | Erik Kusch</title>
+    <link>https://www.erikkusch.com/tag/networks/</link>
+      <atom:link href="https://www.erikkusch.com/tag/networks/index.xml" rel="self" type="application/rss+xml" />
+    <description>Networks</description>
+    <generator>Source Themes Academic (https://sourcethemes.com/academic/)</generator><language>en-gb</language><copyright>© 2024</copyright><lastBuildDate>Tue, 08 Nov 2022 00:00:00 +0000</lastBuildDate>
+    <image>
+      <url>https://www.erikkusch.com/img/%C3%A5motdalshytta.jpg</url>
+      <title>Networks</title>
+      <link>https://www.erikkusch.com/tag/networks/</link>
+    </image>
+    
+    <item>
+      <title>Bayesian Network Inference</title>
+      <link>https://www.erikkusch.com/courses/bayes-nets/inference/</link>
+      <pubDate>Tue, 08 Nov 2022 00:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/courses/bayes-nets/inference/</guid>
+      <description>&lt;style&gt;
+
+blockquote{
+color:#633a00;
+}
+
+&lt;/style&gt;
+&lt;h2 id=&#34;material&#34;&gt;Material&lt;/h2&gt;
+&lt;p&gt;Most of the material in these chapters has already been covered in previous material, so the following summary is rather brief:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;a href=&#34;https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/content/courses/bayes-nets/8-Bayesian-Network-Inference_08-11-22.html&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Bayesian Network Inference&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Please refer to earlier material for introductions of queries, structure learning, and parameter learning in theory and in &lt;code&gt;R&lt;/code&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;exercises&#34;&gt;Exercises&lt;/h2&gt;
+&lt;p&gt;These are answers and solutions to the exercises at the end of chapter 4 in 
+&lt;a href=&#34;https://link.springer.com/book/10.1007/978-1-4614-6446-4&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Bayesian Networks in R with Applications in Systems Biology&lt;/a&gt; by by Radhakrishnan Nagarajan, Marco Scutari &amp;amp; Sophie Lèbre and Part 4 in 
+&lt;a href=&#34;https://www.bnlearn.com/book-crc/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Bayesian Networks with Examples in R&lt;/a&gt; by M. Scutari and J.-B. Denis. Much of my inspiration for these solutions, where necessary, by consulting the solutions provided by the authors themselves as in the appendix.&lt;/p&gt;
+&lt;h3 id=&#34;r-environment&#34;&gt;&lt;code&gt;R&lt;/code&gt; Environment&lt;/h3&gt;
+&lt;p&gt;For today&amp;rsquo;s exercise, I load the following packages:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;library(bnlearn)
+library(gRain)
+library(GeneNet)
+library(penalized)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;nagarajan-41&#34;&gt;Nagarajan 4.1&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Apply the junction tree algorithm to the validated network structure from Sachs et al. (2005), and draw the resulting undirected triangulated graph.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Taken directly from the solutions:&lt;/p&gt;
+&lt;img src=&#34;https://www.erikkusch.com/courses/bayes-nets/Nagarajan4_1.JPG&#34; width=&#34;900&#34;/&gt;
+&lt;h3 id=&#34;nagarajan-42&#34;&gt;Nagarajan 4.2&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Consider the Sachs et al. (2005) data used in Sect. 4.2.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;First, let&amp;rsquo;s read the data in like it was done in the book:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;isachs &amp;lt;- read.table(&amp;quot;sachs.interventional.txt&amp;quot;, header = TRUE, colClasses = &amp;quot;factor&amp;quot;)
+isachs &amp;lt;- isachs[, 1:11]
+for (i in names(isachs)) {
+  levels(isachs[, i]) &amp;lt;- c(&amp;quot;LOW&amp;quot;, &amp;quot;AVG&amp;quot;, &amp;quot;HIGH&amp;quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This .txt file can be downloaded from 
+&lt;a href=&#34;https://www.bnlearn.com/book-useR/code/sachs.interventional.txt.gz&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;h4 id=&#34;part-a&#34;&gt;Part A&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Perform parameter learning with the &lt;code&gt;bn.fit&lt;/code&gt; function from &lt;code&gt;bnlearn&lt;/code&gt; and the validated network structure. How do the maximum likelihood estimates differ from the Bayesian ones, and how do the latter vary as the imaginary sample size increases?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;sachs_DAG &amp;lt;- model2network(paste0(
+  &amp;quot;[PKC][PKA|PKC][praf|PKC:PKA]&amp;quot;,
+  &amp;quot;[pmek|PKC:PKA:praf][p44.42|pmek:PKA]&amp;quot;,
+  &amp;quot;[pakts473|p44.42:PKA][P38|PKC:PKA]&amp;quot;,
+  &amp;quot;[pjnk|PKC:PKA][plcg][PIP3|plcg]&amp;quot;,
+  &amp;quot;[PIP2|plcg:PIP3]&amp;quot;
+))
+f4.1_mle &amp;lt;- bn.fit(sachs_DAG, isachs, method = &amp;quot;mle&amp;quot;)
+f4.1_bayes1 &amp;lt;- bn.fit(sachs_DAG, isachs, method = &amp;quot;bayes&amp;quot;, iss = 1)
+f4.1_bayes10 &amp;lt;- bn.fit(sachs_DAG, isachs, method = &amp;quot;bayes&amp;quot;, iss = 10)
+f4.1_bayes100 &amp;lt;- bn.fit(sachs_DAG, isachs, method = &amp;quot;bayes&amp;quot;, iss = 100)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;I omit the outputs of the individual objects created above here for space.&lt;/p&gt;
+&lt;p&gt;From a theoretical standpoint mle estimates may contain NA values while bayes-inferred estimates do not. That being said, I did not see any NA outputs in the maximum likelihood estimates here.&lt;/p&gt;
+&lt;p&gt;As far as iss is concerned, higher iss values result in smoother estimates.&lt;/p&gt;
+&lt;h4 id=&#34;part-b&#34;&gt;Part B&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Node &lt;code&gt;PKA&lt;/code&gt; is parent of all the nodes in the &lt;code&gt;praf → pmek → p44.42 → pakts473&lt;/code&gt; chain. Use the junction tree algorithm to explore how our beliefs on those nodes change when we have evidence that &lt;code&gt;PKA&lt;/code&gt; is &lt;code&gt;“LOW”&lt;/code&gt;, and when &lt;code&gt;PKA&lt;/code&gt; is &lt;code&gt;“HIGH”&lt;/code&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;mle_jtree &amp;lt;- compile(as.grain(f4.1_mle))
+query &amp;lt;- c(&amp;quot;praf&amp;quot;, &amp;quot;pmek&amp;quot;, &amp;quot;p44.42&amp;quot;, &amp;quot;pakts473&amp;quot;)
+
+## baseline query
+querygrain(mle_jtree, nodes = query)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## $pmek
+## pmek
+##       LOW       AVG      HIGH 
+## 0.5798148 0.3066667 0.1135185 
+## 
+## $praf
+## praf
+##       LOW       AVG      HIGH 
+## 0.5112963 0.2835185 0.2051852 
+## 
+## $p44.42
+## p44.42
+##       LOW       AVG      HIGH 
+## 0.1361111 0.6062963 0.2575926 
+## 
+## $pakts473
+## pakts473
+##        LOW        AVG       HIGH 
+## 0.60944444 0.31037037 0.08018519
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;## low evidence
+mle_jprop &amp;lt;- setFinding(mle_jtree, nodes = &amp;quot;PKA&amp;quot;, states = &amp;quot;LOW&amp;quot;)
+querygrain(mle_jprop, nodes = query)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## $pmek
+## pmek
+##        LOW        AVG       HIGH 
+## 0.35782443 0.08874046 0.55343511 
+## 
+## $praf
+## praf
+##       LOW       AVG      HIGH 
+## 0.1145038 0.1746183 0.7108779 
+## 
+## $p44.42
+## p44.42
+##       LOW       AVG      HIGH 
+## 0.3435115 0.1965649 0.4599237 
+## 
+## $pakts473
+## pakts473
+##       LOW       AVG      HIGH 
+## 0.2967557 0.2977099 0.4055344
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;## high evidence
+mle_jprop &amp;lt;- setFinding(mle_jtree, nodes = &amp;quot;PKA&amp;quot;, states = &amp;quot;HIGH&amp;quot;)
+querygrain(mle_jprop, nodes = query)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## $pmek
+## pmek
+##         LOW         AVG        HIGH 
+## 0.981418919 0.016891892 0.001689189 
+## 
+## $praf
+## praf
+##        LOW        AVG       HIGH 
+## 0.83614865 0.13006757 0.03378378 
+## 
+## $p44.42
+## p44.42
+##        LOW        AVG       HIGH 
+## 0.07263514 0.68918919 0.23817568 
+## 
+## $pakts473
+## pakts473
+##       LOW       AVG      HIGH 
+## 0.7652027 0.2347973 0.0000000
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;code&gt;PKA&lt;/code&gt; inhibits all other nodes. When &lt;code&gt;PKA&lt;/code&gt; is &lt;code&gt;HIGH&lt;/code&gt; then the &lt;code&gt;LOW&lt;/code&gt; probability of all other nodes increases.&lt;/p&gt;
+&lt;p&gt;When &lt;code&gt;PKA&lt;/code&gt; is &lt;code&gt;HIGH&lt;/code&gt;, the activity of all the proteins corresponding to the query nodes is inhibited (the &lt;code&gt;LOW&lt;/code&gt; probability increases and the &lt;code&gt;HIGH&lt;/code&gt; decreases). When &lt;code&gt;PKA&lt;/code&gt; is &lt;code&gt;LOW&lt;/code&gt;, the opposite is true (the LOW probability decreases and the &lt;code&gt;HIGH&lt;/code&gt; increases).&lt;/p&gt;
+&lt;h4 id=&#34;part-c&#34;&gt;Part C&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Similarly, explore the effects on &lt;code&gt;pjnk&lt;/code&gt; of evidence on &lt;code&gt;PIP2&lt;/code&gt;, &lt;code&gt;PIP3&lt;/code&gt;, and &lt;code&gt;plcg&lt;/code&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;mle_jprop &amp;lt;- setFinding(mle_jtree,
+  nodes = c(&amp;quot;PIP2&amp;quot;, &amp;quot;PIP3&amp;quot;, &amp;quot;plcg&amp;quot;),
+  states = rep(&amp;quot;LOW&amp;quot;, 3)
+)
+
+## baseline query
+querygrain(mle_jtree, nodes = &amp;quot;pjnk&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## $pjnk
+## pjnk
+##        LOW        AVG       HIGH 
+## 0.53944444 0.38277778 0.07777778
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;## low evidence
+querygrain(mle_jprop, nodes = &amp;quot;pjnk&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## $pjnk
+## pjnk
+##        LOW        AVG       HIGH 
+## 0.53944444 0.38277778 0.07777778
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Turns out &lt;code&gt;pjnk&lt;/code&gt; is unaffected by the others. The DAG shown in the answers to exercise Nagarajan 4.1 supports this.&lt;/p&gt;
+&lt;h3 id=&#34;nagarajan-43&#34;&gt;Nagarajan 4.3&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Consider the marks data set analyzed in Sect. 2.3.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;data(marks)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;part-a-1&#34;&gt;Part A&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Learn both the network structure and the parameters with likelihood based approaches, i.e., BIC or AIC, for structure learning and maximum likelihood estimates for the parameters.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;f4.3_dag &amp;lt;- hc(marks, score = &amp;quot;bic-g&amp;quot;)
+f4.3_dag
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## 
+##   Bayesian network learned via Score-based methods
+## 
+##   model:
+##    [MECH][VECT|MECH][ALG|MECH:VECT][ANL|ALG][STAT|ALG:ANL] 
+##   nodes:                                 5 
+##   arcs:                                  6 
+##     undirected arcs:                     0 
+##     directed arcs:                       6 
+##   average markov blanket size:           2.40 
+##   average neighbourhood size:            2.40 
+##   average branching factor:              1.20 
+## 
+##   learning algorithm:                    Hill-Climbing 
+##   score:                                 BIC (Gauss.) 
+##   penalization coefficient:              2.238668 
+##   tests used in the learning procedure:  34 
+##   optimized:                             TRUE
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;f4.3_bn &amp;lt;- bn.fit(f4.3_dag, marks)
+f4.3_bn
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## 
+##   Bayesian network parameters
+## 
+##   Parameters of node MECH (Gaussian distribution)
+## 
+## Conditional density: MECH
+## Coefficients:
+## (Intercept)  
+##    38.95455  
+## Standard deviation of the residuals: 17.48622 
+## 
+##   Parameters of node VECT (Gaussian distribution)
+## 
+## Conditional density: VECT | MECH
+## Coefficients:
+## (Intercept)         MECH  
+##  34.3828788    0.4160755  
+## Standard deviation of the residuals: 11.01373 
+## 
+##   Parameters of node ALG (Gaussian distribution)
+## 
+## Conditional density: ALG | MECH + VECT
+## Coefficients:
+## (Intercept)         MECH         VECT  
+##  25.3619809    0.1833755    0.3577122  
+## Standard deviation of the residuals: 8.080725 
+## 
+##   Parameters of node ANL (Gaussian distribution)
+## 
+## Conditional density: ANL | ALG
+## Coefficients:
+## (Intercept)          ALG  
+##   -3.574130     0.993156  
+## Standard deviation of the residuals: 10.50248 
+## 
+##   Parameters of node STAT (Gaussian distribution)
+## 
+## Conditional density: STAT | ALG + ANL
+## Coefficients:
+## (Intercept)          ALG          ANL  
+## -11.1920114    0.7653499    0.3164056  
+## Standard deviation of the residuals: 12.60646
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;part-b-1&#34;&gt;Part B&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Query the network learned in the previous point for the probability to have the marks for both &lt;code&gt;STAT&lt;/code&gt; and &lt;code&gt;MECH&lt;/code&gt; above 60, given evidence that the mark for &lt;code&gt;ALG&lt;/code&gt; is at most 60. Are the two variables independent given the evidence on &lt;code&gt;ALG&lt;/code&gt;?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;cpquery(f4.3_bn, event = (STAT &amp;gt; 60) &amp;amp; (MECH &amp;gt; 60), evidence = (ALG &amp;lt;= 60), n = 1e7)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.009562571
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;cpquery(f4.3_bn, event = (STAT &amp;gt; 60), evidence = (ALG &amp;lt;= 60), n = 1e7)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.08289571
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;cpquery(f4.3_bn, event = (MECH &amp;gt; 60), evidence = (ALG &amp;lt;= 60), n = 1e7)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.0683385
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The conditional probability of the two outcomes (0.0095912) is not the same as the product of their corresponding marginal probabilities (0.0056668). Conclusively, we can say that &lt;code&gt;STAT&lt;/code&gt; and &lt;code&gt;MECH&lt;/code&gt; are not independent conditional on &lt;code&gt;ALG&lt;/code&gt;.&lt;/p&gt;
+&lt;h4 id=&#34;part-c-1&#34;&gt;Part C&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;What is the (conditional) probability of having an average vote (in the [60,70] range) in both &lt;code&gt;VECT&lt;/code&gt; and &lt;code&gt;MECH&lt;/code&gt; while having an outstanding vote in &lt;code&gt;ALG&lt;/code&gt; (at least 90)?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;cpquery(f4.3_bn,
+  event = ((MECH &amp;gt;= 60) &amp;amp; (MECH &amp;lt;= 70)) | ((VECT &amp;gt;= 60) &amp;amp; (VECT &amp;lt;= 70)),
+  evidence = (ALG &amp;gt;= 90),
+  n = 1e7
+)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.2872254
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;nagarajan-44&#34;&gt;Nagarajan 4.4&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Using the dynamic Bayesian network &lt;code&gt;dbn2&lt;/code&gt; from Sect. 4.3, investigate the effects of genes &lt;code&gt;257710_at&lt;/code&gt; and &lt;code&gt;255070_at&lt;/code&gt; observed at time t-2 on gene &lt;code&gt;265768_at&lt;/code&gt; at time t.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;This is the network in the chapter according to the errata corrige 
+&lt;a href=&#34;https://www.bnlearn.com/book-useR/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;here&lt;/a&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;data(arth800)
+subset &amp;lt;- c(60, 141, 260, 333, 365, 424, 441, 512, 521, 578, 789, 799)
+arth12 &amp;lt;- arth800.expr[, subset]
+x &amp;lt;- arth12[1:(nrow(arth12) - 2), ]
+y &amp;lt;- arth12[-(1:2), &amp;quot;265768_at&amp;quot;]
+lambda &amp;lt;- optL1(response = y, penalized = x, trace = FALSE)$lambda
+lasso.t &amp;lt;- penalized(response = y, penalized = x, lambda1 = lambda, trace = FALSE)
+y &amp;lt;- arth12[-(1:2), &amp;quot;245094_at&amp;quot;]
+colnames(x)[12] &amp;lt;- &amp;quot;245094_at1&amp;quot;
+lambda &amp;lt;- optL1(response = y, penalized = x, trace = FALSE)$lambda
+lasso.s &amp;lt;- penalized(response = y, penalized = x, lambda1 = lambda, trace = FALSE)
+## errate comes in here
+dbn2 &amp;lt;- empty.graph(c(
+  &amp;quot;265768_at&amp;quot;, &amp;quot;245094_at1&amp;quot;,
+  &amp;quot;258736_at&amp;quot;, &amp;quot;257710_at&amp;quot;, &amp;quot;255070_at&amp;quot;,
+  &amp;quot;245319_at&amp;quot;, &amp;quot;245094_at&amp;quot;
+))
+dbn2 &amp;lt;- set.arc(dbn2, &amp;quot;245094_at&amp;quot;, &amp;quot;265768_at&amp;quot;)
+for (node in names(coef(lasso.s))[-c(1, 6)]) {
+  dbn2 &amp;lt;- set.arc(dbn2, node, &amp;quot;245094_at&amp;quot;)
+}
+dbn2 &amp;lt;- set.arc(dbn2, &amp;quot;245094_at1&amp;quot;, &amp;quot;245094_at&amp;quot;)
+dbn2.data &amp;lt;- as.data.frame(x[, nodes(dbn2)[1:6]])
+dbn2.data[, &amp;quot;245094_at&amp;quot;] &amp;lt;- y
+dbn2.data[, &amp;quot;245094_at1&amp;quot;] &amp;lt;- arth12[2:(nrow(arth12) - 1), &amp;quot;245094_at&amp;quot;]
+dbn2.fit &amp;lt;- bn.fit(dbn2, dbn2.data)
+## errata stops here
+dbn2.fit[[&amp;quot;265768_at&amp;quot;]] &amp;lt;- lasso.t
+dbn2.fit[[&amp;quot;245094_at&amp;quot;]] &amp;lt;- lasso.s
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This is the solution to the exercise:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;set.seed(42)
+cpquery(dbn2.fit, event = (`265768_at` &amp;gt; 8), evidence = (`257710_at` &amp;gt; 8))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.3590734
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;cpquery(dbn2.fit, event = (`265768_at` &amp;gt; 8), evidence = (`255070_at` &amp;gt; 8))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.5753049
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;cpquery(dbn2.fit, event = (`265768_at` &amp;gt; 8), evidence = TRUE)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.4396
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;High expression levels of gene 257710_at at time t −2 reduce the probability of high expression levels of gene 265768_at at time t; the opposite is true for gene 255070_at.&lt;/p&gt;
+&lt;h3 id=&#34;scutari-41&#34;&gt;Scutari 4.1&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Consider the survey data set from Chapter 1.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;The data can be obtained from 
+&lt;a href=&#34;https://www.bnlearn.com/book-crc/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;here&lt;/a&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;survey &amp;lt;- read.table(&amp;quot;survey.txt&amp;quot;, header = TRUE, colClasses = &amp;quot;factor&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Remember, this is the corresponding DAG we know to be true:&lt;/p&gt;
+&lt;img src=&#34;https://www.erikkusch.com/courses/networksscutari/Fig1.1.JPG&#34; width=&#34;900&#34;/&gt;
+&lt;h4 id=&#34;part-a-2&#34;&gt;Part A&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Learn a BN with the IAMB algorithm and the asymptotic mutual information test.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;s4.1_dag &amp;lt;- iamb(survey, test = &amp;quot;mi&amp;quot;)
+s4.1_dag
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## 
+##   Bayesian network learned via Constraint-based methods
+## 
+##   model:
+##     [undirected graph]
+##   nodes:                                 6 
+##   arcs:                                  4 
+##     undirected arcs:                     4 
+##     directed arcs:                       0 
+##   average markov blanket size:           1.33 
+##   average neighbourhood size:            1.33 
+##   average branching factor:              0.00 
+## 
+##   learning algorithm:                    IAMB 
+##   conditional independence test:         Mutual Information (disc.) 
+##   alpha threshold:                       0.05 
+##   tests used in the learning procedure:  85
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;part-b-2&#34;&gt;Part B&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Learn a second BN with IAMB but using only the first 100 observations of the data set. Is there a significant loss of information in the resulting BN compared to the BN learned from the whole data set?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;s4.1_dagB &amp;lt;- iamb(survey[1:1e2, ], test = &amp;quot;mi&amp;quot;)
+s4.1_dagB
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## 
+##   Bayesian network learned via Constraint-based methods
+## 
+##   model:
+##     [undirected graph]
+##   nodes:                                 6 
+##   arcs:                                  1 
+##     undirected arcs:                     1 
+##     directed arcs:                       0 
+##   average markov blanket size:           0.33 
+##   average neighbourhood size:            0.33 
+##   average branching factor:              0.00 
+## 
+##   learning algorithm:                    IAMB 
+##   conditional independence test:         Mutual Information (disc.) 
+##   alpha threshold:                       0.05 
+##   tests used in the learning procedure:  42
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We discover far fewer arcs!&lt;/p&gt;
+&lt;h4 id=&#34;part-c-2&#34;&gt;Part C&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Repeat the structure learning in the previous point with IAMB and the Monte Carlo and sequential Monte Carlo mutual information tests. How do the resulting networks compare with the BN learned with the asymptotic test? Is the increased execution time justified?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;s4.1_dagC_mcmc &amp;lt;- iamb(survey[1:1e2, ], test = &amp;quot;mc-mi&amp;quot;)
+s4.1_dagC_mcmc
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## 
+##   Bayesian network learned via Constraint-based methods
+## 
+##   model:
+##     [undirected graph]
+##   nodes:                                 6 
+##   arcs:                                  1 
+##     undirected arcs:                     1 
+##     directed arcs:                       0 
+##   average markov blanket size:           0.33 
+##   average neighbourhood size:            0.33 
+##   average branching factor:              0.00 
+## 
+##   learning algorithm:                    IAMB 
+##   conditional independence test:         Mutual Information (disc., MC) 
+##   alpha threshold:                       0.05 
+##   permutations:                          5000 
+##   tests used in the learning procedure:  38
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;s4.1_dagC_smc &amp;lt;- iamb(survey[1:1e2, ], test = &amp;quot;smc-mi&amp;quot;)
+s4.1_dagC_smc
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## 
+##   Bayesian network learned via Constraint-based methods
+## 
+##   model:
+##     [undirected graph]
+##   nodes:                                 6 
+##   arcs:                                  1 
+##     undirected arcs:                     1 
+##     directed arcs:                       0 
+##   average markov blanket size:           0.33 
+##   average neighbourhood size:            0.33 
+##   average branching factor:              0.00 
+## 
+##   learning algorithm:                    IAMB 
+##   conditional independence test:         Mutual Information (disc., Seq. MC) 
+##   alpha threshold:                       0.05 
+##   permutations:                          5000 
+##   tests used in the learning procedure:  38
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We do not discover more arcs, and the outputs of the two asymptotic tests are equal for this case:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;all.equal(s4.1_dagC_mcmc, s4.1_dagC_smc, s4.1_dagB)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] TRUE
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;scutari-42&#34;&gt;Scutari 4.2&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Consider again the survey data set from Chapter 1.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;The data can be obtained from 
+&lt;a href=&#34;https://www.bnlearn.com/book-crc/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;here&lt;/a&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;survey &amp;lt;- read.table(&amp;quot;survey.txt&amp;quot;, header = TRUE, colClasses = &amp;quot;factor&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;part-a-3&#34;&gt;Part A&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Learn a BN using Bayesian posteriors for both structure and parameter learning, in both cases with &lt;code&gt;iss = 5&lt;/code&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;s4.2_dag &amp;lt;- hc(survey, score = &amp;quot;bde&amp;quot;, iss = 5)
+s4.2_bn &amp;lt;- bn.fit(s4.2_dag, survey, method = &amp;quot;bayes&amp;quot;, iss = 5)
+modelstring(s4.2_bn)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] &amp;quot;[R][E|R][T|R][A|E][O|E][S|E]&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;part-b-3&#34;&gt;Part B&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Repeat structure learning with hc and 3 random restarts and with tabu. How do the BNs differ? Is there any evidence of numerical or convergence problems?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;s4.2_hc &amp;lt;- hc(survey, score = &amp;quot;bde&amp;quot;, iss = 5, restart = 3)
+modelstring(s4.2_hc)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] &amp;quot;[T][R|T][E|R][A|E][O|E][S|E]&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;s4.2_tabu &amp;lt;- tabu(survey, score = &amp;quot;bde&amp;quot;, iss = 5)
+modelstring(s4.2_tabu)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] &amp;quot;[O][S][E|O:S][A|E][R|E][T|R]&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The Bayesian networks inferred here differ quite substantially in their DAG structures.&lt;/p&gt;
+&lt;p&gt;The random-start hill-climbing algorithm builds a DAG structure closer to the validated structure which is supported by the &lt;code&gt;score&lt;/code&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;score(s4.2_hc, survey)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] -1998.432
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;score(s4.2_tabu, survey)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] -1999.733
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;part-c-3&#34;&gt;Part C&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Use increasingly large subsets of the survey data to check empirically that BIC and BDe are asymptotically equivalent.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;set.seed(42)
+breaks &amp;lt;- seq(from = 10, to = 100, by = 10) # percentage of data
+analysis_df &amp;lt;- data.frame(
+  bde = NA,
+  bic = NA,
+  breaks = NA
+)
+for (k in 1:1e3) {
+  bde_vec &amp;lt;- c()
+  bic_vec &amp;lt;- c()
+  for (i in breaks) {
+    samp &amp;lt;- sample(1:nrow(survey), nrow(survey) / i)
+    samp &amp;lt;- survey[samp, ]
+    s4.2_bde &amp;lt;- hc(samp, score = &amp;quot;bde&amp;quot;, iss = 5)
+    s4.2_bic &amp;lt;- hc(samp, score = &amp;quot;bic&amp;quot;)
+    bde_vec &amp;lt;- c(bde_vec, score(s4.2_bde, survey))
+    bic_vec &amp;lt;- c(bic_vec, score(s4.2_bic, survey))
+  }
+  analysis_df &amp;lt;- rbind(
+    analysis_df,
+    data.frame(
+      bde = bde_vec,
+      bic = bic_vec,
+      breaks = breaks
+    )
+  )
+}
+
+analysis_df &amp;lt;- na.omit(analysis_df)
+
+plot(
+  x = analysis_df$breaks,
+  y = abs(analysis_df$bde - analysis_df$bic)
+)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;2022-11-08-network-inference_files/figure-html/unnamed-chunk-21-1.png&#34; width=&#34;1440&#34; /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;scutari-43&#34;&gt;Scutari 4.3&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Consider the marks data set from Section 4.7.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;data(marks)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;part-a-4&#34;&gt;Part A&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Create a bn object describing the graph in the bottom right panel of Figure 4.5 and call it &lt;code&gt;mdag&lt;/code&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;mdag &amp;lt;- model2network(paste0(
+  &amp;quot;[ANL][MECH][LAT|ANL:MECH]&amp;quot;,
+  &amp;quot;[VECT|LAT][ALG|LAT][STAT|LAT]&amp;quot;
+))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;part-b-4&#34;&gt;Part B&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Construct the skeleton, the CPDAG and the moral graph of &lt;code&gt;mdag&lt;/code&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;mdag_skel &amp;lt;- skeleton(mdag)
+mdag_cpdag &amp;lt;- cpdag(mdag)
+mdag_moral &amp;lt;- moral(mdag)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;part-c-4&#34;&gt;Part C&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Discretise the marks data using &amp;ldquo;interval&amp;rdquo; discretisation with 2, 3 and 4 intervals.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;dmarks_2 &amp;lt;- discretize(marks, &amp;quot;interval&amp;quot;, breaks = 2)
+dmarks_3 &amp;lt;- discretize(marks, &amp;quot;interval&amp;quot;, breaks = 3)
+dmarks_4 &amp;lt;- discretize(marks, &amp;quot;interval&amp;quot;, breaks = 4)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;part-d&#34;&gt;Part D&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Perform structure learning with hc on each of the discretised data sets; how do the resulting DAGs differ?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;hc_2 &amp;lt;- hc(dmarks_2)
+modelstring(hc_2)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] &amp;quot;[MECH][VECT|MECH][ALG|VECT][ANL|ALG][STAT|ALG]&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;hc_3 &amp;lt;- hc(dmarks_3)
+modelstring(hc_3)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] &amp;quot;[MECH][ALG|MECH][ANL|ALG][STAT|ALG][VECT|ANL]&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;hc_4 &amp;lt;- hc(dmarks_4)
+modelstring(hc_4)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] &amp;quot;[MECH][VECT][ALG][ANL|ALG][STAT|ANL]&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Quite evidently, as we increase the number of intervals, we break conditional relationships so much so that fewer arcs are identified.&lt;/p&gt;
+&lt;h2 id=&#34;session-info&#34;&gt;Session Info&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;sessionInfo()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## R version 4.2.1 (2022-06-23 ucrt)
+## Platform: x86_64-w64-mingw32/x64 (64-bit)
+## Running under: Windows 10 x64 (build 19044)
+## 
+## Matrix products: default
+## 
+## locale:
+## [1] LC_COLLATE=English_Germany.utf8  LC_CTYPE=English_Germany.utf8    LC_MONETARY=English_Germany.utf8 LC_NUMERIC=C                     LC_TIME=English_Germany.utf8    
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+## [1] penalized_0.9-52    survival_3.4-0      GeneNet_1.2.16      fdrtool_1.2.17      longitudinal_1.1.13 corpcor_1.6.10      gRain_1.3.11        gRbase_1.8.7        bnlearn_4.8.1      
+## 
+## loaded via a namespace (and not attached):
+##  [1] Rcpp_1.0.9          highr_0.9           bslib_0.4.0         compiler_4.2.1      BiocManager_1.30.18 jquerylib_0.1.4     R.methodsS3_1.8.2   R.utils_2.12.0      tools_4.2.1        
+## [10] digest_0.6.29       jsonlite_1.8.0      evaluate_0.16       R.cache_0.16.0      lattice_0.20-45     pkgconfig_2.0.3     rlang_1.0.5         igraph_1.3.4        Matrix_1.5-1       
+## [19] graph_1.74.0        cli_3.3.0           rstudioapi_0.14     Rgraphviz_2.40.0    yaml_2.3.5          parallel_4.2.1      blogdown_1.13       xfun_0.33           fastmap_1.1.0      
+## [28] styler_1.8.0        stringr_1.4.1       knitr_1.40          vctrs_0.4.1         sass_0.4.2          stats4_4.2.1        grid_4.2.1          R6_2.5.1            RBGL_1.72.0        
+## [37] rmarkdown_2.16      bookdown_0.29       purrr_0.3.4         magrittr_2.0.3      splines_4.2.1       BiocGenerics_0.42.0 htmltools_0.5.3     stringi_1.7.8       cachem_1.0.6       
+## [46] R.oo_1.25.0
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Dynamic Bayesian Networks</title>
+      <link>https://www.erikkusch.com/courses/bayes-nets/dynamic/</link>
+      <pubDate>Tue, 01 Nov 2022 00:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/courses/bayes-nets/dynamic/</guid>
+      <description>&lt;style&gt;
+
+blockquote{
+color:#633a00;
+}
+
+&lt;/style&gt;
+&lt;h2 id=&#34;material&#34;&gt;Material&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;a href=&#34;https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/content/courses/bayes-nets/Dynamic-BNs.html&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Dynamic Bayesian Networks&lt;/a&gt; by 
+&lt;a href=&#34;https://gregor-mathes.netlify.app/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Gregor Mathes&lt;/a&gt; (one of our study group members)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;exercises&#34;&gt;Exercises&lt;/h2&gt;
+&lt;p&gt;These are answers and solutions to the exercises at the end of chapter 3 in 
+&lt;a href=&#34;https://link.springer.com/book/10.1007/978-1-4614-6446-4&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Bayesian Networks in R with Applications in Systems Biology&lt;/a&gt; by by Radhakrishnan Nagarajan, Marco Scutari &amp;amp; Sophie Lèbre. Much of my inspiration for these solutions, where necessary, by consulting the solutions provided by the authors themselves as in the appendix.&lt;/p&gt;
+&lt;h3 id=&#34;r-environment&#34;&gt;&lt;code&gt;R&lt;/code&gt; Environment&lt;/h3&gt;
+&lt;p&gt;For today&amp;rsquo;s exercise, I load the following packages:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;library(vars)
+library(lars)
+library(GeneNet)
+library(G1DBN) # might have to run remotes::install_version(&amp;quot;G1DBN&amp;quot;, &amp;quot;3.1.1&amp;quot;) first
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;nagarajan-31&#34;&gt;Nagarajan 3.1&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Consider the &lt;code&gt;Canada&lt;/code&gt; data set from the vars package, which we analyzed in Sect. 3.5.1.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;data(Canada)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;part-a&#34;&gt;Part A&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Load the data set from the &lt;code&gt;vars&lt;/code&gt; package and investigate its properties using the exploratory analysis techniques covered in Chap. 1.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;str(Canada)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##  Time-Series [1:84, 1:4] from 1980 to 2001: 930 930 930 931 933 ...
+##  - attr(*, &amp;quot;dimnames&amp;quot;)=List of 2
+##   ..$ : NULL
+##   ..$ : chr [1:4] &amp;quot;e&amp;quot; &amp;quot;prod&amp;quot; &amp;quot;rw&amp;quot; &amp;quot;U&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;summary(Canada)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##        e              prod             rw              U         
+##  Min.   :928.6   Min.   :401.3   Min.   :386.1   Min.   : 6.700  
+##  1st Qu.:935.4   1st Qu.:404.8   1st Qu.:423.9   1st Qu.: 7.782  
+##  Median :946.0   Median :406.5   Median :444.4   Median : 9.450  
+##  Mean   :944.3   Mean   :407.8   Mean   :440.8   Mean   : 9.321  
+##  3rd Qu.:950.0   3rd Qu.:410.7   3rd Qu.:461.1   3rd Qu.:10.607  
+##  Max.   :961.8   Max.   :418.0   Max.   :470.0   Max.   :12.770
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;part-b&#34;&gt;Part B&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Estimate a VAR(1) process for this data set.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;(var1 &amp;lt;- VAR(Canada, p = 1, type = &amp;quot;const&amp;quot;))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## 
+## VAR Estimation Results:
+## ======================= 
+## 
+## Estimated coefficients for equation e: 
+## ====================================== 
+## Call:
+## e = e.l1 + prod.l1 + rw.l1 + U.l1 + const 
+## 
+##          e.l1       prod.l1         rw.l1          U.l1         const 
+##    1.17353629    0.14479389   -0.07904568    0.52438144 -192.56360758 
+## 
+## 
+## Estimated coefficients for equation prod: 
+## ========================================= 
+## Call:
+## prod = e.l1 + prod.l1 + rw.l1 + U.l1 + const 
+## 
+##         e.l1      prod.l1        rw.l1         U.l1        const 
+##   0.08709510   1.01970070  -0.02629309   0.32299246 -81.55109611 
+## 
+## 
+## Estimated coefficients for equation rw: 
+## ======================================= 
+## Call:
+## rw = e.l1 + prod.l1 + rw.l1 + U.l1 + const 
+## 
+##        e.l1     prod.l1       rw.l1        U.l1       const 
+##  0.06381103 -0.13551199  0.96872851 -0.19538479 11.61375726 
+## 
+## 
+## Estimated coefficients for equation U: 
+## ====================================== 
+## Call:
+## U = e.l1 + prod.l1 + rw.l1 + U.l1 + const 
+## 
+##         e.l1      prod.l1        rw.l1         U.l1        const 
+##  -0.19293575  -0.08086896   0.07538624   0.47530976 186.80892410
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;part-c&#34;&gt;Part C&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Build the auto-regressive matrix $A$ and the constant matrix $B$ defining the VAR(1) model.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;## base object creation
+base_mat &amp;lt;- matrix(0, 4, 5)
+colnames(base_mat) &amp;lt;- c(&amp;quot;e&amp;quot;, &amp;quot;prod&amp;quot;, &amp;quot;rw&amp;quot;, &amp;quot;U&amp;quot;, &amp;quot;constant&amp;quot;)
+p &amp;lt;- 0.05
+## object filling
+pos &amp;lt;- which(coef(var1)$e[, &amp;quot;Pr(&amp;gt;|t|)&amp;quot;] &amp;lt; p)
+base_mat[1, pos] &amp;lt;- coef(var1)$e[pos, &amp;quot;Estimate&amp;quot;]
+pos &amp;lt;- which(coef(var1)$prod[, &amp;quot;Pr(&amp;gt;|t|)&amp;quot;] &amp;lt; p)
+base_mat[2, pos] &amp;lt;- coef(var1)$prod[pos, &amp;quot;Estimate&amp;quot;]
+pos &amp;lt;- which(coef(var1)$rw[, &amp;quot;Pr(&amp;gt;|t|)&amp;quot;] &amp;lt; p)
+base_mat[3, pos] &amp;lt;- coef(var1)$rw[pos, &amp;quot;Estimate&amp;quot;]
+pos &amp;lt;- which(coef(var1)$U[, &amp;quot;Pr(&amp;gt;|t|)&amp;quot;] &amp;lt; p)
+base_mat[4, pos] &amp;lt;- coef(var1)$U[pos, &amp;quot;Estimate&amp;quot;]
+## final objects
+(A &amp;lt;- base_mat[, 1:4])
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##               e        prod          rw         U
+## [1,]  1.1735363  0.14479389 -0.07904568 0.5243814
+## [2,]  0.0000000  1.01970070  0.00000000 0.0000000
+## [3,]  0.0000000 -0.13551199  0.96872851 0.0000000
+## [4,] -0.1929358 -0.08086896  0.07538624 0.4753098
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;(B &amp;lt;- base_mat[, 5])
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] -192.5636    0.0000    0.0000  186.8089
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;part-d&#34;&gt;Part D&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Compare the results with the LASSO matrix when estimating the L1-penalty with cross-validation.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;## data preparation
+data_df &amp;lt;- Canada[-nrow(Canada), ] # remove last row of data
+## Lasso
+Lasso_ls &amp;lt;- lapply(colnames(Canada), function(gene) {
+  y &amp;lt;- Canada[-1, gene] # remove first row of data, and select only target gene
+  lars(y = y, x = data_df, type = &amp;quot;lasso&amp;quot;) # LASSO matrix
+})
+## Cross-validation
+CV_ls &amp;lt;- lapply(1:ncol(Canada), function(gene) {
+  y &amp;lt;- Canada[-1, gene] # remove first row of data, and select only target gene
+  lasso.cv &amp;lt;- cv.lars(y = y, x = data_df, mode = &amp;quot;fraction&amp;quot;)
+  frac &amp;lt;- lasso.cv$index[which.min(lasso.cv$cv)]
+  predict(Lasso_ls[[gene]], s = frac, type = &amp;quot;coef&amp;quot;, mode = &amp;quot;fraction&amp;quot;)
+})
+## output
+rbind(
+  CV_ls[[1]]$coefficients,
+  CV_ls[[2]]$coefficients,
+  CV_ls[[3]]$coefficients,
+  CV_ls[[4]]$coefficients
+)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##                e        prod           rw          U
+## [1,]  1.17353629  0.14479389 -0.079045685  0.5243814
+## [2,]  0.02570001  1.02314558 -0.004878295  0.1994059
+## [3,]  0.09749788 -0.11991692  0.954389035 -0.1023845
+## [4,] -0.17604953 -0.08192783  0.069502065  0.5086115
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;And for comparison the previously identified $A$:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;A
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##               e        prod          rw         U
+## [1,]  1.1735363  0.14479389 -0.07904568 0.5243814
+## [2,]  0.0000000  1.01970070  0.00000000 0.0000000
+## [3,]  0.0000000 -0.13551199  0.96872851 0.0000000
+## [4,] -0.1929358 -0.08086896  0.07538624 0.4753098
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;part-e&#34;&gt;Part E&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;What can you conclude?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;The whole point of LASSO, as far as I understand it, is to shrink parameter estimates towards 0 often times reaching 0 exactly. In the above this has not happened for many parameters, but is the case with the estimation provided by &lt;code&gt;vars&lt;/code&gt;. I assume this might be because there just aren&amp;rsquo;t enough variables and/or observations in time.&lt;/p&gt;
+&lt;h3 id=&#34;nagarajan-32&#34;&gt;Nagarajan 3.2&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Consider the &lt;code&gt;arth800&lt;/code&gt; data set from the GeneNet package, which we analyzed in Sects. 3.5.2 and 3.5.3.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;data(arth800)
+data(arth800.expr)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;part-a-1&#34;&gt;Part A&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Load the data set from the &lt;code&gt;GeneNet&lt;/code&gt; package. The time series expression of the 800 genes is included in a data set called &lt;code&gt;arth800.expr&lt;/code&gt;. Investigate its properties using the exploratory analysis techniques covered in Chap. 1.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;str(arth800.expr)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##  &#39;longitudinal&#39; num [1:22, 1:800] 10.04 10.11 9.77 10.06 10.02 ...
+##  - attr(*, &amp;quot;dimnames&amp;quot;)=List of 2
+##   ..$ : chr [1:22] &amp;quot;0-1&amp;quot; &amp;quot;0-2&amp;quot; &amp;quot;1-1&amp;quot; &amp;quot;1-2&amp;quot; ...
+##   ..$ : chr [1:800] &amp;quot;AFFX-Athal-GAPDH_3_s_at&amp;quot; &amp;quot;AFFX-Athal-Actin_3_f_at&amp;quot; &amp;quot;267612_at&amp;quot; &amp;quot;267520_at&amp;quot; ...
+##  - attr(*, &amp;quot;time&amp;quot;)= num [1:11] 0 1 2 4 8 12 13 14 16 20 ...
+##  - attr(*, &amp;quot;repeats&amp;quot;)= num [1:11] 2 2 2 2 2 2 2 2 2 2 ...
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;summary(arth800.expr)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Longitudinal data:
+##  800 variables measured at 11 different time points
+##  Total number of measurements per variable: 22 
+##  Repeated measurements: yes 
+## 
+##  To obtain the measurement design call &#39;get.time.repeats()&#39;.
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;part-b-1&#34;&gt;Part B&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;For this practical exercise, we will work on a subset of variables (one for each gene) having a large variance. Compute the variance of each of the 800 variables, plot the various variance values in decreasing order, and create a data set with the variables greater than 2.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;## variance calculation
+variance &amp;lt;- diag(var(arth800.expr))
+## plotting
+plot(sort(variance, decreasing = TRUE), type = &amp;quot;l&amp;quot;, ylab = &amp;quot;Variance&amp;quot;)
+abline(h = 2, lty = 2)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;2022-11-01-nagara-dynamic_files/figure-html/unnamed-chunk-10-1.png&#34; width=&#34;1440&#34; /&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;## variables with variances greater than 2
+dataVar2 &amp;lt;- arth800.expr[, which(variance &amp;gt; 2)]
+dim(dataVar2)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 22 49
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;part-c-1&#34;&gt;Part C&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Can you fit a VAR process with a usual approach from this data set?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;I don&amp;rsquo;t think so. There are more variables (genes) than there are samples (time steps):&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;dim(dataVar2)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 22 49
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;part-d-1&#34;&gt;Part D&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Which alternative approaches can be used to fit a VAR process from this data set?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;The chapter discusses these alternatives:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;LASSO&lt;/li&gt;
+&lt;li&gt;James-Stein Shrinkage&lt;/li&gt;
+&lt;li&gt;Low-order conditional dependency approximation&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4 id=&#34;part-e-1&#34;&gt;Part E&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Estimate a dynamic Bayesian network with each of the alternative approaches presented in this chapter.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;First, I prepare the data by re-ordering them:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;## make the data sequential for both repetitions
+dataVar2seq &amp;lt;- dataVar2[c(seq(1, 22, by = 2), seq(2, 22, by = 2)), ]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;em&gt;LASSO&lt;/em&gt; with the &lt;code&gt;lars&lt;/code&gt; package:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;x &amp;lt;- dataVar2seq[-c(21:22), ] # remove final rows (end of sequences)
+Lasso_ls &amp;lt;- lapply(colnames(dataVar2seq), function(gene) {
+  y &amp;lt;- dataVar2seq[-(1:2), gene]
+  lars(y = y, x = x, type = &amp;quot;lasso&amp;quot;)
+})
+CV_ls &amp;lt;- lapply(1:ncol(dataVar2seq), function(gene) {
+  y &amp;lt;- dataVar2seq[-(1:2), gene]
+  lasso.cv &amp;lt;- cv.lars(y = y, x = x, mode = &amp;quot;fraction&amp;quot;, plot.it = FALSE)
+  frac &amp;lt;- lasso.cv$index[which.min(lasso.cv$cv)]
+  predict(Lasso_ls[[gene]], s = frac, type = &amp;quot;coef&amp;quot;, mode = &amp;quot;fraction&amp;quot;)
+})
+Lasso_mat &amp;lt;- matrix(0, dim(dataVar2seq)[2], dim(dataVar2seq)[2])
+for (i in 1:dim(Lasso_mat)[1]) {
+  Lasso_mat[i, ] &amp;lt;- CV_ls[i][[1]]$coefficients
+}
+sum(Lasso_mat != 0) # number of arcs
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 456
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;plot(sort(abs(Lasso_mat), decr = TRUE)[1:500], type = &amp;quot;l&amp;quot;, ylab = &amp;quot;Absolute coefficients&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;2022-11-01-nagara-dynamic_files/figure-html/unnamed-chunk-13-1.png&#34; width=&#34;1440&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;James-Stein shrinkage&lt;/em&gt; with the &lt;code&gt;GeneNet&lt;/code&gt; package:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;DBNGeneNet &amp;lt;- ggm.estimate.pcor(dataVar2, method = &amp;quot;dynamic&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Estimating optimal shrinkage intensity lambda (correlation matrix): 0.0539
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;DBNGeneNet.edges &amp;lt;- network.test.edges(DBNGeneNet) # p-values, q-values and posterior probabilities for each potential arc
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Estimate (local) false discovery rates (partial correlations):
+## Step 1... determine cutoff point
+## Step 2... estimate parameters of null distribution and eta0
+## Step 3... compute p-values and estimate empirical PDF/CDF
+## Step 4... compute q-values and local fdr
+## Step 5... prepare for plotting
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;2022-11-01-nagara-dynamic_files/figure-html/unnamed-chunk-14-1.png&#34; width=&#34;1440&#34; /&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;plot(DBNGeneNet.edges[, &amp;quot;prob&amp;quot;], type = &amp;quot;l&amp;quot;) # arcs probability by decreasing order
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;2022-11-01-nagara-dynamic_files/figure-html/unnamed-chunk-14-2.png&#34; width=&#34;1440&#34; /&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;sum(DBNGeneNet.edges$prob &amp;gt; 0.95) # arcs with prob &amp;gt; 0.95
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 8
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;em&gt;First-order conditional dependency&lt;/em&gt; with the &lt;code&gt;G1DBN&lt;/code&gt; package:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;G1DB_BN &amp;lt;- DBNScoreStep1(dataVar2seq, method = &amp;quot;ls&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## Treating 49 vertices:
+## 10% 20% 30% 40% 50% 60% 70% 80% 90% 100%
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;G1DB_BN &amp;lt;- DBNScoreStep2(G1DB_BN$S1ls, dataVar2seq, method = &amp;quot;ls&amp;quot;, alpha1 = 0.5)
+plot(sort(G1DB_BN, decreasing = TRUE), type = &amp;quot;l&amp;quot;, ylab = &amp;quot;Arcs’ p-values&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;2022-11-01-nagara-dynamic_files/figure-html/unnamed-chunk-15-1.png&#34; width=&#34;1440&#34; /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;nagarajan-33&#34;&gt;Nagarajan 3.3&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Consider the dimension reduction approaches used in the previous exercise and the &lt;code&gt;arth800&lt;/code&gt; data set from the &lt;code&gt;GeneNet&lt;/code&gt; package.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;data(arth800)
+data(arth800.expr)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;part-a-2&#34;&gt;Part A&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;For a comparative analysis of the different approaches, select the top 50 arcs for each approach (function &lt;code&gt;BuildEdges&lt;/code&gt; from the &lt;code&gt;G1DBN&lt;/code&gt; package can be used to that end).&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;em&gt;LASSO&lt;/em&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;lasso_tresh &amp;lt;- mean(sort(abs(Lasso_mat), decreasing = TRUE)[50:51]) # Lasso_mat from exercise 3.2
+lasso_50 &amp;lt;- BuildEdges(score = -abs(Lasso_mat), threshold = -lasso_tresh)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;em&gt;James-Stein shrinkage&lt;/em&gt; with the &lt;code&gt;GeneNet&lt;/code&gt; package:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;DBNGeneNet_50 &amp;lt;- cbind(DBNGeneNet.edges[1:50, &amp;quot;node1&amp;quot;], DBNGeneNet.edges[1:50, &amp;quot;node2&amp;quot;])
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;em&gt;First-order conditional dependency&lt;/em&gt; with the &lt;code&gt;G1DBN&lt;/code&gt; package:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;G1DBN_tresh &amp;lt;- mean(sort(G1DB_BN)[50:51])
+G1DBN.edges &amp;lt;- BuildEdges(score = G1DB_BN, threshold = G1DBN_tresh, prec = 3)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;part-b-2&#34;&gt;Part B&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Plot the four inferred networks with the function plot from package &lt;code&gt;G1DBN&lt;/code&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Four inferred networks? I assume the exercise so far wanted me to also analyse the data using the LASSO approach with the SIMoNe (&lt;code&gt;simone&lt;/code&gt;) package. I will skip over that one and continue with the three I have:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;par(mfrow = c(1, 3))
+
+## LASSO
+LASSO_plot &amp;lt;- graph.edgelist(cbind(lasso_50[, 1], lasso_50[, 2]))
+Lasso_layout &amp;lt;- layout.fruchterman.reingold(LASSO_plot)
+plot(LASSO_plot,
+  layout = Lasso_layout,
+  edge.arrow.size = 0.5, vertex.size = 10,
+  main = &amp;quot;LASSO&amp;quot;
+)
+
+## James-Stein
+DBN_plot &amp;lt;- graph.edgelist(DBNGeneNet_50)
+# DBN_layout &amp;lt;- layout.fruchterman.reingold(DBN_plot)
+plot(DBN_plot,
+  layout = Lasso_layout,
+  edge.arrow.size = 0.5, vertex.size = 10,
+  main = &amp;quot;GeneNet&amp;quot;
+)
+
+## First-order conditional
+G1DBN_plot &amp;lt;- graph.edgelist(cbind(G1DBN.edges[, 1], G1DBN.edges[, 2]))
+# G1DBN_layout = layout.fruchterman.reingold(G1DBN_plot)
+plot(G1DBN_plot,
+  layout = Lasso_layout,
+  edge.arrow.size = 0.5, vertex.size = 10,
+  main = &amp;quot;G1DBN&amp;quot;
+)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;2022-11-01-nagara-dynamic_files/figure-html/unnamed-chunk-20-1.png&#34; width=&#34;1440&#34; /&gt;&lt;/p&gt;
+&lt;h4 id=&#34;part-c-2&#34;&gt;Part C&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;How many arcs are common to the four inferred networks?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;## extract edges
+LASSO_el &amp;lt;- as_edgelist(LASSO_plot)
+DBN_el &amp;lt;- as_edgelist(DBN_plot)
+G1DBN_el &amp;lt;- as_edgelist(G1DBN_plot)
+
+## number of repeated edges in pairwise comparisons
+sum(duplicated(rbind(LASSO_el, DBN_el)))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;sum(duplicated(rbind(LASSO_el, G1DBN_el)))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 6
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;sum(duplicated(rbind(DBN_el, G1DBN_el)))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;### all at once
+sum(duplicated(rbind(LASSO_el, DBN_el, G1DBN_el)))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 7
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;part-d-2&#34;&gt;Part D&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Are the top 50 arcs of each inferred network similar? What can you conclude?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;No, they are not. I can conclude that different dimension reductions produce different DAG structures.&lt;/p&gt;
+&lt;h2 id=&#34;session-info&#34;&gt;Session Info&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;sessionInfo()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## R version 4.2.1 (2022-06-23 ucrt)
+## Platform: x86_64-w64-mingw32/x64 (64-bit)
+## Running under: Windows 10 x64 (build 19044)
+## 
+## Matrix products: default
+## 
+## locale:
+## [1] LC_COLLATE=English_Germany.utf8  LC_CTYPE=English_Germany.utf8    LC_MONETARY=English_Germany.utf8 LC_NUMERIC=C                     LC_TIME=English_Germany.utf8    
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+##  [1] G1DBN_3.1.1         igraph_1.3.4        GeneNet_1.2.16      fdrtool_1.2.17      longitudinal_1.1.13 corpcor_1.6.10      lars_1.3            vars_1.5-6          lmtest_0.9-40      
+## [10] urca_1.3-3          strucchange_1.5-3   sandwich_3.0-2      zoo_1.8-10          MASS_7.3-58.1      
+## 
+## loaded via a namespace (and not attached):
+##  [1] highr_0.9         bslib_0.4.0       compiler_4.2.1    jquerylib_0.1.4   R.methodsS3_1.8.2 R.utils_2.12.0    tools_4.2.1       digest_0.6.29     jsonlite_1.8.0    evaluate_0.16    
+## [11] nlme_3.1-159      R.cache_0.16.0    lattice_0.20-45   pkgconfig_2.0.3   rlang_1.0.5       cli_3.3.0         rstudioapi_0.14   yaml_2.3.5        blogdown_1.13     xfun_0.33        
+## [21] fastmap_1.1.0     styler_1.8.0      stringr_1.4.1     knitr_1.40        vctrs_0.4.1       sass_0.4.2        grid_4.2.1        R6_2.5.1          rmarkdown_2.16    bookdown_0.29    
+## [31] purrr_0.3.4       magrittr_2.0.3    htmltools_0.5.3   stringi_1.7.8     cachem_1.0.6      R.oo_1.25.0
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Graph Theory &amp; Bayes</title>
+      <link>https://www.erikkusch.com/courses/bayes-nets/introduction/</link>
+      <pubDate>Tue, 13 Sep 2022 00:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/courses/bayes-nets/introduction/</guid>
+      <description>&lt;style&gt;
+
+blockquote{
+color:#633a00;
+}
+
+
+&lt;/style&gt; 
+&lt;p&gt;This session of our study group did not include any practical material. For the summary of the theory discussed in this session, please refer to the slides linked below.&lt;/p&gt;
+&lt;h2 id=&#34;material&#34;&gt;Material&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;a href=&#34;https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/content/courses/bayes-nets/1-Bayes-_-Graph-Theory_13-09-22.html&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Introduction&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Multinomial Bayesian Networks</title>
+      <link>https://www.erikkusch.com/courses/bayes-nets/part-1/</link>
+      <pubDate>Tue, 13 Apr 2021 00:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/courses/bayes-nets/part-1/</guid>
+      <description>&lt;style&gt;
+
+blockquote{
+color:#633a00;
+}
+
+&lt;/style&gt;
+&lt;h2 id=&#34;material&#34;&gt;Material&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;a href=&#34;https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/content/courses/bayes-nets/3-Multinomial-Networks_03-10-22.html&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Multinomial Bayesian Networks&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;exercises&#34;&gt;Exercises&lt;/h2&gt;
+&lt;p&gt;These are answers and solutions to the exercises at the end of Part 1 in 
+&lt;a href=&#34;https://www.bnlearn.com/book-crc/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Bayesian Networks with Examples in R&lt;/a&gt; by M. Scutari and J.-B. Denis. I have created these notes as a part of a study-partnership with 
+&lt;a href=&#34;https://www.linkedin.com/in/frederik-have-kallesoe-0584889b/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Frederik Kallesøe&lt;/a&gt;. Much of my inspiration for these solutions, where necessary, has been obtained either from chatting with Frederik or by consulting the solutions provided by the authors themselves as in the appendix.&lt;/p&gt;
+&lt;h3 id=&#34;r-environment&#34;&gt;&lt;code&gt;R&lt;/code&gt; Environment&lt;/h3&gt;
+&lt;p&gt;For today&amp;rsquo;s exercise, I load the following packages:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;library(bnlearn)
+library(gRain)
+library(ggplot2)
+library(lattice)
+library(gridExtra)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;scutari-11&#34;&gt;Scutari 1.1&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Consider the DAG for the survey studied in this chapter and shown in Figure 1.1.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Here&amp;rsquo;s the DAG in question:&lt;/p&gt;
+&lt;img src=&#34;https://www.erikkusch.com/courses/networksscutari/Fig1.1.JPG&#34; width=&#34;900&#34;/&gt;
+&lt;h4 id=&#34;part-1&#34;&gt;Part 1.&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;List the parents and the children of each node.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Node&lt;/th&gt;
+&lt;th&gt;Parent(s)&lt;/th&gt;
+&lt;th&gt;Child(ren)&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;Age (A)&lt;/td&gt;
+&lt;td&gt;{ }&lt;/td&gt;
+&lt;td&gt;E&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Sex (S)&lt;/td&gt;
+&lt;td&gt;{ }&lt;/td&gt;
+&lt;td&gt;E&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Education (E)&lt;/td&gt;
+&lt;td&gt;A, S&lt;/td&gt;
+&lt;td&gt;O, R&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Occupation (O)&lt;/td&gt;
+&lt;td&gt;E&lt;/td&gt;
+&lt;td&gt;E&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Residence (R)&lt;/td&gt;
+&lt;td&gt;E&lt;/td&gt;
+&lt;td&gt;E&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;Travel (T)&lt;/td&gt;
+&lt;td&gt;O, R&lt;/td&gt;
+&lt;td&gt;{ }&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id=&#34;part-2&#34;&gt;Part 2.&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;List all the fundamental connections present in the DAG, and classify them as either serial, divergent or convergent.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Fundamental connections are those paths who contain three vertices/nodes. In directed graphs, they can be classified into three different categories depending on flow of dependencies.&lt;/p&gt;
+&lt;table&gt;
+&lt;thead&gt;
+&lt;tr&gt;
+&lt;th&gt;Path&lt;/th&gt;
+&lt;th&gt;Classification&lt;/th&gt;
+&lt;/tr&gt;
+&lt;/thead&gt;
+&lt;tbody&gt;
+&lt;tr&gt;
+&lt;td&gt;A → E ← S&lt;/td&gt;
+&lt;td&gt;Convergent&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;A → E → O&lt;/td&gt;
+&lt;td&gt;Serial&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;A → E → R&lt;/td&gt;
+&lt;td&gt;Serial&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;S → E → O&lt;/td&gt;
+&lt;td&gt;Serial&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;S → E → R&lt;/td&gt;
+&lt;td&gt;Serial&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;O ← E → R&lt;/td&gt;
+&lt;td&gt;Divergent&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;E → O → T&lt;/td&gt;
+&lt;td&gt;Serial&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;E → R → T&lt;/td&gt;
+&lt;td&gt;Serial&lt;/td&gt;
+&lt;/tr&gt;
+&lt;tr&gt;
+&lt;td&gt;O → T ← R&lt;/td&gt;
+&lt;td&gt;Convergent&lt;/td&gt;
+&lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+&lt;h4 id=&#34;part-3&#34;&gt;Part 3.&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Add an arc from Age to Occupation, and another arc from Travel to Education. Is the resulting graph still a valid BN? If not, why?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Let&amp;rsquo;s take this one arc at a time:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;A → O. Adding this arc does not lead to the introduction of any cycles and so the Bayesian Network (BN) remains valid. I have added this graph to the figure from the book and highlighted it in green just below.&lt;/li&gt;
+&lt;li&gt;T → E. Adding this arc does introduce cyclic paths along T → E → R → T and T → E → O → T thus resulting in a non-valid BN. I have highlighted the added arc in red and shaded the cyclic paths in orange below.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;img src=&#34;https://www.erikkusch.com/courses/networksscutari/Fig1.1_Arcs.JPG&#34; width=&#34;900&#34;/&gt;
+&lt;h3 id=&#34;scutari-12&#34;&gt;Scutari 1.2&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Consider the probability distribution from the survey in Section 1.3.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;The data can be obtained from 
+&lt;a href=&#34;https://www.bnlearn.com/book-crc/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;here&lt;/a&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;survey &amp;lt;- read.table(&amp;quot;survey.txt&amp;quot;, header = TRUE, colClasses = &amp;quot;factor&amp;quot;)
+A.lv &amp;lt;- c(&amp;quot;young&amp;quot;, &amp;quot;adult&amp;quot;, &amp;quot;old&amp;quot;)
+S.lv &amp;lt;- c(&amp;quot;M&amp;quot;, &amp;quot;F&amp;quot;)
+E.lv &amp;lt;- c(&amp;quot;high&amp;quot;, &amp;quot;uni&amp;quot;)
+O.lv &amp;lt;- c(&amp;quot;emp&amp;quot;, &amp;quot;self&amp;quot;)
+R.lv &amp;lt;- c(&amp;quot;small&amp;quot;, &amp;quot;big&amp;quot;)
+T.lv &amp;lt;- c(&amp;quot;car&amp;quot;, &amp;quot;train&amp;quot;, &amp;quot;other&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;part-1-1&#34;&gt;Part 1.&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Compute the number of configurations of the parents of each node.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;&lt;code&gt;A&lt;/code&gt; and &lt;code&gt;S&lt;/code&gt; have no parents (refer back to the DAG in exercise 1.1). Therefore, we are only interested in the configurations of parental nodes for &lt;code&gt;E&lt;/code&gt;, &lt;code&gt;O&lt;/code&gt;, &lt;code&gt;R&lt;/code&gt;, and &lt;code&gt;T&lt;/code&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;(E &amp;lt;- length(A.lv) * length(S.lv))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 6
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;(O &amp;lt;- length(E.lv))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 2
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;(R &amp;lt;- length(E.lv))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 2
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;(T &amp;lt;- length(O.lv) * length(R.lv))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 4
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This is a simple exercise of combinatorics. The number of parental configurations is simply the number of states each parental node can be in multiplied by the same for all other parental nodes.&lt;/p&gt;
+&lt;h4 id=&#34;part-2-1&#34;&gt;Part 2.&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Compute the number of parameters of the local distributions.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;All of this comes down to how many parameters we need to estimate to accurately represent the probability distributions belonging to each node in our DAG. Since all probabilities per node sum up to 1, we effectively only ever need to estimate a number $n-1$ parameters for each node with $n$ being the number of states said node can be in. Let&amp;rsquo;s walk through this.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;A&lt;/code&gt; has 3 states, so need to estimate 2 parameters ($p_A = 2$). &lt;code&gt;S&lt;/code&gt; has 2 states hence we need 1 parameter for this node ($p_S = 1$).&lt;/p&gt;
+&lt;p&gt;Now we arrive at &lt;code&gt;E&lt;/code&gt; and things get more complicated. The probability distribution for &lt;code&gt;E&lt;/code&gt; comes in two parts - one for &lt;code&gt;&amp;quot;high&amp;quot;&lt;/code&gt; and one for &lt;code&gt;&amp;quot;low&amp;quot;&lt;/code&gt; education level. Both of these contain additional probability distributions of combinations of the levels of &lt;code&gt;S&lt;/code&gt; and &lt;code&gt;A&lt;/code&gt;. To obtain the number of parameters needed to describe this 3-dimensional distribution, we can simply calculate $p_E = n_S * n_A * (n_E-1) = 2 * 3 * 1 = 6$.&lt;/p&gt;
+&lt;p&gt;Moving on to &lt;code&gt;O&lt;/code&gt; and &lt;code&gt;R&lt;/code&gt;. Both of these need 2 parameters ($p_O = p_r = 2$) because of their two-dimensional distributions being made up of two levels of education and two levels occupation and residency respectively ($2 * (2-1) = 2$).&lt;/p&gt;
+&lt;p&gt;Lastly, we arrive at &lt;code&gt;T&lt;/code&gt; which we need 8 parameters for ($p_T = 8$). Holy smokes. Why? Basically, this is a repeat of what we did for &lt;code&gt;E&lt;/code&gt;. We have a three-dimensional distribution with three levels in T-Space, two levels in-space, and two more levels in O-Space. To arrive at the number of parameters we simply do $p_T = (n_T-1) * n_o * n_R = 2 * 2 * 2 = 8$.&lt;/p&gt;
+&lt;h4 id=&#34;part-3-1&#34;&gt;Part 3.&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Compute the number of parameters of the global distribution.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;We can sum all of the local parameters up to arrive at $p_{total} = p_A + p_S + p_E + p_O + p_R + p_T = 2+1+6+2+2+8 = 21$.&lt;/p&gt;
+&lt;p&gt;And in &lt;code&gt;R&lt;/code&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# define DAG structure
+dag &amp;lt;- model2network(&amp;quot;[A][S][E|A:S][O|E][R|E][T|O:R]&amp;quot;)
+# define local distributions
+A.prob &amp;lt;- array(c(0.30, 0.50, 0.20), dim = 3, dimnames = list(A = A.lv))
+S.prob &amp;lt;- array(c(0.60, 0.40), dim = 2, dimnames = list(S = S.lv))
+E.prob &amp;lt;- array(
+  c(
+    0.75, 0.25, 0.72, 0.28, 0.88, 0.12, 0.64, 0.36, 0.70,
+    0.30, 0.90, 0.10
+  ),
+  dim = c(2, 3, 2),
+  dimnames = list(E = E.lv, A = A.lv, S = S.lv)
+)
+O.prob &amp;lt;- array(c(0.96, 0.04, 0.92, 0.08),
+  dim = c(2, 2),
+  dimnames = list(O = O.lv, E = E.lv)
+)
+R.prob &amp;lt;- array(c(0.25, 0.75, 0.20, 0.80),
+  dim = c(2, 2),
+  dimnames = list(R = R.lv, E = E.lv)
+)
+T.prob &amp;lt;- array(
+  c(
+    0.48, 0.42, 0.10, 0.56, 0.36, 0.08, 0.58, 0.24, 0.18,
+    0.70, 0.21, 0.09
+  ),
+  dim = c(3, 2, 2),
+  dimnames = list(T = T.lv, O = O.lv, R = R.lv)
+)
+# define set of local distributions
+cpt &amp;lt;- list(
+  A = A.prob, S = S.prob, E = E.prob, O = O.prob,
+  R = R.prob, T = T.prob
+)
+# create BN
+bn &amp;lt;- custom.fit(dag, cpt)
+# obtain parameters
+nparams(bn)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 21
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Note that I pulled the probabilities for the distributions from the book and their values are irrelevant to the number of parameters.&lt;/p&gt;
+&lt;h4 id=&#34;part-4&#34;&gt;Part 4.&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Add an arc from Education to Travel. Recompute the factorisation into local distributions shown in Equation (1.1). How does the number of parameters of each local distribution change?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Adding E → T to Equation (1.1) results in:
+$$P(A, S, E, O, R, T) = P(A) P(S) P(E | A, S) P(O | E) P(R | E) P(T | E, O, R)$$&lt;/p&gt;
+&lt;p&gt;Now that &lt;code&gt;T&lt;/code&gt; is dependant on &lt;code&gt;E&lt;/code&gt; as well as the previous parents, the number of free parameters of the local distribution of &lt;code&gt;T&lt;/code&gt; increases
+to 16 ($p_E = 16$). This is because our local distribution of &lt;code&gt;T&lt;/code&gt; is now four-dimensional resulting in $p_T = (n_T-1) * n_o * n_R * n_E = 2 * 2 * 2 * 2 = 16$.&lt;/p&gt;
+&lt;p&gt;All other local distributions remain the same.&lt;/p&gt;
+&lt;h3 id=&#34;scutari-13&#34;&gt;Scutari 1.3&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Consider again the DAG for the survey.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id=&#34;part-1-2&#34;&gt;Part 1.&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Create an object of class &lt;code&gt;bn&lt;/code&gt; for the DAG.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Here&amp;rsquo;s the simplest way of doing this by specifying the model string:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# define DAG structure
+bn &amp;lt;- model2network(&amp;quot;[A][S][E|A:S][O|E][R|E][T|O:R]&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;part-2-2&#34;&gt;Part 2.&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Use the functions in &lt;code&gt;bnlearn&lt;/code&gt; and the R object created in the previous point to extract the nodes and the arcs of the DAG. Also extract the parents and the children of each node.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Here we go:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;nodes(bn)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] &amp;quot;A&amp;quot; &amp;quot;E&amp;quot; &amp;quot;O&amp;quot; &amp;quot;R&amp;quot; &amp;quot;S&amp;quot; &amp;quot;T&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;arcs(bn)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##      from to 
+## [1,] &amp;quot;A&amp;quot;  &amp;quot;E&amp;quot;
+## [2,] &amp;quot;S&amp;quot;  &amp;quot;E&amp;quot;
+## [3,] &amp;quot;E&amp;quot;  &amp;quot;O&amp;quot;
+## [4,] &amp;quot;E&amp;quot;  &amp;quot;R&amp;quot;
+## [5,] &amp;quot;O&amp;quot;  &amp;quot;T&amp;quot;
+## [6,] &amp;quot;R&amp;quot;  &amp;quot;T&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;sapply(X = nodes(bn), FUN = bnlearn::parents, x = bn)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## $A
+## character(0)
+## 
+## $E
+## [1] &amp;quot;A&amp;quot; &amp;quot;S&amp;quot;
+## 
+## $O
+## [1] &amp;quot;E&amp;quot;
+## 
+## $R
+## [1] &amp;quot;E&amp;quot;
+## 
+## $S
+## character(0)
+## 
+## $T
+## [1] &amp;quot;O&amp;quot; &amp;quot;R&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;sapply(X = nodes(bn), FUN = bnlearn::children, x = bn)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## $A
+## [1] &amp;quot;E&amp;quot;
+## 
+## $E
+## [1] &amp;quot;O&amp;quot; &amp;quot;R&amp;quot;
+## 
+## $O
+## [1] &amp;quot;T&amp;quot;
+## 
+## $R
+## [1] &amp;quot;T&amp;quot;
+## 
+## $S
+## [1] &amp;quot;E&amp;quot;
+## 
+## $T
+## character(0)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;part-3-2&#34;&gt;Part 3.&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Print the model formula from &lt;code&gt;bn&lt;/code&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;modelstring(bn)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] &amp;quot;[A][S][E|A:S][O|E][R|E][T|O:R]&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;part-4-1&#34;&gt;Part 4.&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Fit the parameters of the network from the data stored in survey.txt using their Bayesian estimators and save the result into an object of class &lt;code&gt;bn.fit&lt;/code&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;bn_full &amp;lt;- bn.fit(bn, data = survey, method = &amp;quot;bayes&amp;quot;, iss = 10)
+class(bn_full)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] &amp;quot;bn.fit&amp;quot;      &amp;quot;bn.fit.dnet&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;part-5&#34;&gt;Part 5.&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Remove the arc from Education to Occupation.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;bn_sparse &amp;lt;- drop.arc(bn, from = &amp;quot;E&amp;quot;, to = &amp;quot;O&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;part-6&#34;&gt;Part 6.&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Fit the parameters of the modified network. Which local distributions change, and how?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;bn_sparse &amp;lt;- bn.fit(bn_sparse, data = survey, method = &amp;quot;bayes&amp;quot;, iss = 10)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We already now that the only local distribution which should change is that of &lt;code&gt;O&lt;/code&gt;. Let&amp;rsquo;s check that:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;dim(coef(bn_full$O))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 2 2
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;dim(coef(bn_sparse$O))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 2
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Quite evidently, the local distribution of &lt;code&gt;O&lt;/code&gt; has become much simpler in our sparse Bayesian Network. Why? Because it has no parent node now which would parse additional information and complexity onto it.&lt;/p&gt;
+&lt;h3 id=&#34;scutari-14&#34;&gt;Scutari 1.4&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Re-create the &lt;code&gt;bn.mle&lt;/code&gt; object used in Section 1.4.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;bn.mle &amp;lt;- bn.fit(dag, data = survey, method = &amp;quot;mle&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;part-1-3&#34;&gt;Part 1.&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Compare the distribution of Occupation conditional on Age with the corresponding marginal distribution using &lt;code&gt;querygrain&lt;/code&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;## creating object ready for gRain functions
+junction &amp;lt;- compile(as.grain(bn.mle))
+## Overall query
+query_over &amp;lt;- querygrain(junction, nodes = &amp;quot;O&amp;quot;)$O
+## Marginal query when A is young
+jage &amp;lt;- setEvidence(junction, &amp;quot;A&amp;quot;, states = &amp;quot;young&amp;quot;)
+query_young &amp;lt;- querygrain(jage, nodes = &amp;quot;O&amp;quot;)$O
+## Marginal query when A is adult
+jage &amp;lt;- setEvidence(junction, &amp;quot;A&amp;quot;, states = &amp;quot;adult&amp;quot;)
+query_adult &amp;lt;- querygrain(jage, nodes = &amp;quot;O&amp;quot;)$O
+## Marginal query when A is old
+jage &amp;lt;- setEvidence(junction, &amp;quot;A&amp;quot;, states = &amp;quot;old&amp;quot;)
+query_old &amp;lt;- querygrain(jage, nodes = &amp;quot;O&amp;quot;)$O
+## Combining queries
+queries_df &amp;lt;- rbind(query_over, query_young, query_adult, query_old)
+rownames(queries_df) &amp;lt;- c(&amp;quot;Overall&amp;quot;, &amp;quot;Young&amp;quot;, &amp;quot;Adult&amp;quot;, &amp;quot;Old&amp;quot;)
+queries_df
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##               emp       self
+## Overall 0.9660248 0.03397517
+## Young   0.9644166 0.03558340
+## Adult   0.9636485 0.03635151
+## Old     0.9738915 0.02610849
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;As we can see, conditioning on &lt;code&gt;A&lt;/code&gt; does not influence the distribution of &lt;code&gt;O&lt;/code&gt; that much.&lt;/p&gt;
+&lt;h4 id=&#34;part-2-3&#34;&gt;Part 2.&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;How many random observations are needed for &lt;code&gt;cpquery&lt;/code&gt; to produce estimates of the parameters of these two distributions with a precision of ±0.01?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;I find this question to be difficult to understand. What I assume I am tasked with is to compare the distribution of Occupation conditional on Age (&lt;code&gt;query_over&lt;/code&gt;: 0.97, 0.03) with the estimates produced by &lt;code&gt;cpquery&lt;/code&gt; given some evidence (i.e. parental node configuration). This would mean comparing each query EXCEPT for query_over to it&amp;rsquo;s counterpart with &lt;code&gt;cpquery()&lt;/code&gt;. That&amp;rsquo;s a tad excessive, and so I only compare &lt;code&gt;query_young&lt;/code&gt; (0.96, 0.04) from above with the results obtained by &lt;code&gt;cpquery()&lt;/code&gt;. What I am looking at is: &amp;ldquo;How high do my sample sizes have to be in &lt;code&gt;cpquery()&lt;/code&gt; to be within a ±0.01 margin of &lt;code&gt;query_young&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;Luckily, &lt;code&gt;query_young&lt;/code&gt; only has two values and so I can tell &lt;code&gt;cpquery()&lt;/code&gt; to only compute one of them as the other follows logically by subtracting the former from 1.&lt;/p&gt;
+&lt;p&gt;Here, I want to test this for likelihood weighting (&lt;code&gt;lw&lt;/code&gt;) and logic sampling (&lt;code&gt;ls&lt;/code&gt;):&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# create test list and test sequence
+precis_ls &amp;lt;- as.list(c(0, 0))
+names(precis_ls) &amp;lt;- c(&amp;quot;LW&amp;quot;, &amp;quot;LS&amp;quot;)
+n_seq &amp;lt;- as.integer(seq(from = 1e2, to = 1e5, length.out = 1e2))
+# iterate over our sample sizes
+for (i in n_seq) {
+  precis_ls$LW &amp;lt;- c(
+    precis_ls$LW,
+    cpquery(bn.mle, event = (O == &amp;quot;emp&amp;quot;), evidence = list(A = &amp;quot;young&amp;quot;), method = &amp;quot;lw&amp;quot;, n = i)
+  )
+  precis_ls$LS &amp;lt;- c(
+    precis_ls$LS,
+    cpquery(bn.mle, event = (O == &amp;quot;emp&amp;quot;), evidence = (A == &amp;quot;young&amp;quot;), method = &amp;quot;ls&amp;quot;, n = i)
+  )
+}
+# remove first positions which were blanks
+precis_ls$LW &amp;lt;- precis_ls$LW[-1]
+precis_ls$LS &amp;lt;- precis_ls$LS[-1]
+# plotting the results
+plot_df &amp;lt;- data.frame(
+  N = c(n_seq, n_seq),
+  Precision = c(
+    query_young[1] - precis_ls$LW,
+    query_young[1] - precis_ls$LS
+  ),
+  Method = rep(c(&amp;quot;Likelihood Weighting&amp;quot;, &amp;quot;Logical Sampling&amp;quot;), each = length(n_seq))
+)
+ggplot(data = plot_df, aes(x = N, y = Precision, col = Method)) +
+  geom_line(size = 1.5) +
+  geom_hline(yintercept = 0.01) +
+  geom_hline(yintercept = -0.01) +
+  theme_bw()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;2021-04-13-crc_part1_files/figure-html/unnamed-chunk-14-1.png&#34; width=&#34;1440&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;As is evident from this plot, we do not need much in terms of sample to arrive at highly precise results using &lt;code&gt;cpquery()&lt;/code&gt; with either method. Still, to be safe, I would probably always run with &lt;code&gt;n = 1e3&lt;/code&gt; at least.&lt;/p&gt;
+&lt;h4 id=&#34;part-3-3&#34;&gt;Part 3.&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Use the functions in &lt;code&gt;bnlearn&lt;/code&gt; to extract the DAG from &lt;code&gt;bn.mle&lt;/code&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;dag &amp;lt;- bn.net(bn.mle)
+dag
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## 
+##   Random/Generated Bayesian network
+## 
+##   model:
+##    [A][S][E|A:S][O|E][R|E][T|O:R] 
+##   nodes:                                 6 
+##   arcs:                                  6 
+##     undirected arcs:                     0 
+##     directed arcs:                       6 
+##   average markov blanket size:           2.67 
+##   average neighbourhood size:            2.00 
+##   average branching factor:              1.00 
+## 
+##   generation algorithm:                  Empty
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;part-4-2&#34;&gt;Part 4.&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Which nodes d-separate Age and Occupation?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;sapply(nodes(dag), function(z) dsep(dag, &amp;quot;A&amp;quot;, &amp;quot;O&amp;quot;, z))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##     A     E     O     R     S     T 
+##  TRUE  TRUE  TRUE FALSE FALSE FALSE
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;scutari-15&#34;&gt;Scutari 1.5&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Implement an R function for BN inference via rejection sampling using the description provided in Section 1.4 as a reference.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;From the book:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;&amp;ldquo;In rejection sampling, we generate random independent observations from the BN. Then we count how many match the evidence we are conditioning on and how many of those observations also match the event whose probability we are computing; the estimated conditional probability is the ratio between the latter and the former.&amp;rdquo;&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;rejection.sampling &amp;lt;- function(bn, nsim, event.node, event.value, evidence.node, evidence.value) {
+  sims &amp;lt;- rbn(x = bn, n = nsim) # random samples for each node from a Bayesian network
+  m1 &amp;lt;- sims[sims[, evidence.node] == evidence.value, ] # retain only those samples where our evidence node matches the evidence condition
+  m2 &amp;lt;- m1[m1[, event.node] == event.value, ] # retain only those samples where our event node matches the event condition
+  return(nrow(m2) / nrow(m1)) # how many percent of the evidence samples also return the event state?
+}
+rejection.sampling(
+  bn = bn.mle, nsim = 10^4,
+  event.node = &amp;quot;O&amp;quot;, event.value = &amp;quot;emp&amp;quot;,
+  evidence.node = &amp;quot;A&amp;quot;, evidence.value = &amp;quot;young&amp;quot;
+)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.9640978
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;scutari-16&#34;&gt;Scutari 1.6&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Using the &lt;code&gt;dag&lt;/code&gt; and &lt;code&gt;bn&lt;/code&gt; objects from Sections 1.2 and 1.3:&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;The DAG in question is the same as &lt;code&gt;dag&lt;/code&gt; in these solutions. The BN is the same as &lt;code&gt;bn.mle&lt;/code&gt; or &lt;code&gt;bn_full&lt;/code&gt;. Since I do this for the Bayesian part of Bayesian networks, I use the latter.&lt;/p&gt;
+&lt;h4 id=&#34;part-1-4&#34;&gt;Part 1.&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Plot the DAG using &lt;code&gt;graphviz.plot&lt;/code&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Easy enough:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;graphviz.plot(dag)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;2021-04-13-crc_part1_files/figure-html/unnamed-chunk-18-1.png&#34; width=&#34;1440&#34; /&gt;&lt;/p&gt;
+&lt;h4 id=&#34;part-2-4&#34;&gt;Part 2.&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Plot the DAG again, highlighting the nodes and the arcs that are part of one or more v-structures.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;A bit meaningless of a plot because all of these nodes are involved in v-structures. However, the paths E → O, and E → R are not highlighted as v-structures. Why? Because they are sequential paths rather than convergent or divergent.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;vs &amp;lt;- vstructs(dag, arcs = TRUE)
+hl &amp;lt;- list(nodes = unique(as.character(vs)), arcs = vs)
+graphviz.plot(dag, highlight = hl)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;2021-04-13-crc_part1_files/figure-html/unnamed-chunk-19-1.png&#34; width=&#34;1440&#34; /&gt;&lt;/p&gt;
+&lt;h4 id=&#34;part-3-4&#34;&gt;Part 3.&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Plot the DAG one more time, highlighting the path leading from Age to Occupation.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;All we need to do is highlight the paths A → E and E → O:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;hl &amp;lt;- matrix(c(&amp;quot;A&amp;quot;, &amp;quot;E&amp;quot;, &amp;quot;E&amp;quot;, &amp;quot;O&amp;quot;), nc = 2, byrow = TRUE)
+graphviz.plot(bn.mle, highlight = list(arcs = hl))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;2021-04-13-crc_part1_files/figure-html/unnamed-chunk-20-1.png&#34; width=&#34;1440&#34; /&gt;&lt;/p&gt;
+&lt;h4 id=&#34;part-4-3&#34;&gt;Part 4.&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Plot the conditional probability table of Education.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;There is a ready-made function for that!&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;bn.fit.barchart(bn_full$E)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;2021-04-13-crc_part1_files/figure-html/unnamed-chunk-21-1.png&#34; width=&#34;1440&#34; /&gt;
+Across all age ranges, women are much higher educated (on average) than men.&lt;/p&gt;
+&lt;h4 id=&#34;part-5-1&#34;&gt;Part 5.&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Compare graphically the distributions of Education for male and female interviewees.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Here, we simply need to extract the relevant proportions and need them into a barchart.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;junction &amp;lt;- compile(as.grain(bn.mle))
+jmale &amp;lt;- setEvidence(junction, &amp;quot;S&amp;quot;, states = &amp;quot;M&amp;quot;)
+jfemale &amp;lt;- setEvidence(junction, &amp;quot;S&amp;quot;, states = &amp;quot;F&amp;quot;)
+p1 &amp;lt;- barchart(querygrain(jmale, nodes = &amp;quot;E&amp;quot;)$E, main = &amp;quot;Male&amp;quot;, xlim = c(0, 1))
+p2 &amp;lt;- barchart(querygrain(jfemale, nodes = &amp;quot;E&amp;quot;)$E, main = &amp;quot;Female&amp;quot;, xlim = c(0, 1))
+grid.arrange(p1, p2, ncol = 2)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;2021-04-13-crc_part1_files/figure-html/unnamed-chunk-22-1.png&#34; width=&#34;1440&#34; /&gt;&lt;/p&gt;
+&lt;h2 id=&#34;session-info&#34;&gt;Session Info&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;sessionInfo()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## R version 4.2.1 (2022-06-23 ucrt)
+## Platform: x86_64-w64-mingw32/x64 (64-bit)
+## Running under: Windows 10 x64 (build 19044)
+## 
+## Matrix products: default
+## 
+## locale:
+## [1] LC_COLLATE=English_Germany.utf8  LC_CTYPE=English_Germany.utf8    LC_MONETARY=English_Germany.utf8 LC_NUMERIC=C                     LC_TIME=English_Germany.utf8    
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+## [1] gridExtra_2.3   lattice_0.20-45 ggplot2_3.3.6   gRain_1.3.11    gRbase_1.8.7    bnlearn_4.8.1  
+## 
+## loaded via a namespace (and not attached):
+##  [1] Rcpp_1.0.9          assertthat_0.2.1    digest_0.6.29       utf8_1.2.2          R6_2.5.1            stats4_4.2.1        evaluate_0.16       highr_0.9           blogdown_1.13      
+## [10] pillar_1.8.1        rlang_1.0.5         rstudioapi_0.14     Rgraphviz_2.40.0    jquerylib_0.1.4     R.utils_2.12.0      R.oo_1.25.0         Matrix_1.5-1        rmarkdown_2.16     
+## [19] styler_1.8.0        labeling_0.4.2      stringr_1.4.1       igraph_1.3.4        munsell_0.5.0       compiler_4.2.1      xfun_0.33           pkgconfig_2.0.3     BiocGenerics_0.42.0
+## [28] htmltools_0.5.3     tidyselect_1.1.2    tibble_3.1.8        bookdown_0.29       fansi_1.0.3         dplyr_1.0.9         withr_2.5.0         R.methodsS3_1.8.2   grid_4.2.1         
+## [37] RBGL_1.72.0         jsonlite_1.8.0      gtable_0.3.1        lifecycle_1.0.2     DBI_1.1.3           magrittr_2.0.3      scales_1.2.1        graph_1.74.0        cli_3.3.0          
+## [46] stringi_1.7.8       cachem_1.0.6        farver_2.1.1        bslib_0.4.0         vctrs_0.4.1         generics_0.1.3      tools_4.2.1         R.cache_0.16.0      glue_1.6.2         
+## [55] purrr_0.3.4         parallel_4.2.1      fastmap_1.1.0       yaml_2.3.5          colorspace_2.0-3    BiocManager_1.30.18 knitr_1.40          sass_0.4.2
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>(Bayesian) Networks &amp; R</title>
+      <link>https://www.erikkusch.com/courses/bayes-nets/networksr/</link>
+      <pubDate>Tue, 27 Sep 2022 00:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/courses/bayes-nets/networksr/</guid>
+      <description>&lt;style&gt;
+
+blockquote{
+color:#633a00;
+}
+
+&lt;/style&gt; 
+&lt;h2 id=&#34;material&#34;&gt;Material&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;a href=&#34;https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/content/courses/bayes-nets/2-Networks-in-R_27-09-22.html&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Networks in &lt;code&gt;R&lt;/code&gt;&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;exercises&#34;&gt;Exercises&lt;/h2&gt;
+&lt;p&gt;These are answers and solutions to the exercises at the end of chapter 1 in 
+&lt;a href=&#34;https://link.springer.com/book/10.1007/978-1-4614-6446-4&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Bayesian Networks in R with Applications in Systems Biology&lt;/a&gt;  by Radhakrishnan Nagarajan, Marco Scutari &amp;amp; Sophie Lèbre. Much of my inspiration for these solutions, where necessary, by consulting the solutions provided by the authors themselves as in the appendix.&lt;/p&gt;
+&lt;h3 id=&#34;nagarajan-11&#34;&gt;Nagarajan 1.1&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;1.1. Consider a directed acyclic graph with n nodes.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;(a) Show that at least one node must not have any incoming arc, i.e., the graph must contain at least one root node.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;A graph without a root node violates the premise of acyclicity inherent to Bayesian Networks.&lt;/p&gt;
+&lt;p&gt;Assuming our graph is directed with G = (&lt;strong&gt;V&lt;/strong&gt;, A), and assuming that there is no root node present, for any vertex $V_i$ that we chose of the set &lt;strong&gt;V&lt;/strong&gt;, we can find a path that $V_i \rightarrow &amp;hellip; \rightarrow V_n$ which spans all nodes in &lt;strong&gt;V&lt;/strong&gt;. However, $V_n$ must have an outgoing arc ($V_n \rightarrow &amp;hellip;$) which must connect to any of the nodes already on the path between $V_i$ and $V_n$ thereby incurring a loop or cycle.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;(b) Show that such a graph can have at most n(n−1) arcs.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;This can be explained as an iterative process. Starting with any node $V_1 \in \boldsymbol V$, not violating the prerequisite for acyclicity, $V_1$ may only contain $n-1$ outgoing arcs (an arc linking to itself would create a cycle). Continuing now to another node $V_2 \in \boldsymbol V$ and $V_2 \neq V_1$, this node may only contain $n-2$ outgoing arcs as any arc linking to itself or $V_1$ would introduce a cycle or loop.&lt;/p&gt;
+&lt;p&gt;Continuing this process to its logical conclusion of $V_n$, we can summarise the number of possible outgoing arcs thusly:&lt;/p&gt;
+&lt;p&gt;\begin{equation}
+A \leq (n-1) + (n-2) + &amp;hellip; + (1) = \left( n\atop{2} \right) = \frac{n(n-1)}{2}
+\end{equation}&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;(c) Show that a path can span at most n−1 arcs.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Any arc contains two nodes - one tail and one head. Therefore, a path spanning n arcs would have to contain n+1 vertices, thus passing trough one vertex twice and introducing a cycle.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;(d) Describe an algorithm to determine the topological ordering of the graph.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Two prominent examples are 
+&lt;a href=&#34;https://en.wikipedia.org/wiki/Breadth-first_search&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;breadth-first&lt;/a&gt; (BF) and 
+&lt;a href=&#34;https://en.wikipedia.org/wiki/Depth-first_search&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;depth-first&lt;/a&gt; (DF) algorithms.&lt;/p&gt;
+&lt;p&gt;The former (BF) attempts to locate a node that satisfies a certain query conditions by exploring a graph from a root node and subsequently evaluating nodes which are equidistant to the root (at a distance of one arc). If none of these nodes satisfies the search criteria, the distance to root node is increased by an additional arc distance.&lt;/p&gt;
+&lt;p&gt;DF, on the other hand, starts at a root node and fully explores a randomly chosen path until either a node satisfying the search criteria is reached or the path has ended in which case a new path is explored starting at the root node.&lt;/p&gt;
+&lt;h3 id=&#34;nagarajan-12&#34;&gt;Nagarajan 1.2&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;1.2. Consider the graphs shown in Fig. 1.1.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;!-- Figure 1.1 is the following: --&gt;
+&lt;img src=&#34;https://www.erikkusch.com/courses/bayes-nets/Nagara1.1.JPG&#34; width=&#34;900&#34;/&gt;
+&lt;blockquote&gt;
+&lt;p&gt;(a) Obtain the skeleton of the partially directed and directed graphs.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;I start by loading the &lt;code&gt;visNetwork&lt;/code&gt; &lt;code&gt;R&lt;/code&gt; package. I chose this package simply because I like how it creates interactive visualisations - try it out! Click some of the vertices below or try and drag them around.&lt;/p&gt;
+&lt;p&gt;I also load additional html libraries with which I can include the thml outputs produced by &lt;code&gt;visNetwork&lt;/code&gt; in this blog:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;library(visNetwork)
+library(htmlwidgets)
+library(htmltools)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Next, I register the node set as well as the two arc sets we are working with:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;V &amp;lt;- data.frame(
+  id = c(&amp;quot;A&amp;quot;, &amp;quot;B&amp;quot;, &amp;quot;C&amp;quot;, &amp;quot;D&amp;quot;, &amp;quot;E&amp;quot;),
+  label = c(&amp;quot;A&amp;quot;, &amp;quot;B&amp;quot;, &amp;quot;C&amp;quot;, &amp;quot;D&amp;quot;, &amp;quot;E&amp;quot;)
+)
+A_directed &amp;lt;- data.frame(
+  from = c(&amp;quot;C&amp;quot;, &amp;quot;C&amp;quot;, &amp;quot;C&amp;quot;, &amp;quot;D&amp;quot;, &amp;quot;A&amp;quot;),
+  to = c(&amp;quot;E&amp;quot;, &amp;quot;A&amp;quot;, &amp;quot;D&amp;quot;, &amp;quot;B&amp;quot;, &amp;quot;B&amp;quot;)
+)
+A_partial &amp;lt;- data.frame(
+  from = c(&amp;quot;E&amp;quot;, &amp;quot;D&amp;quot;, &amp;quot;A&amp;quot;, &amp;quot;C&amp;quot;, &amp;quot;C&amp;quot;),
+  to = c(&amp;quot;B&amp;quot;, &amp;quot;E&amp;quot;, &amp;quot;D&amp;quot;, &amp;quot;D&amp;quot;, &amp;quot;A&amp;quot;)
+)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Note that I still have to register a direction even for undirected edges.&lt;/p&gt;
+&lt;p&gt;Now, to visualise the skeletons, we simply plot the graphs without any edge directionality:&lt;/p&gt;
+&lt;details&gt;
+  &lt;summary&gt;Click here for the plotting call of the skeleton of the directed graph:&lt;/summary&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;## skeleton of directed graph
+Nagara1.2aD &amp;lt;- visNetwork(
+  nodes = V,
+  edges = A_directed
+) %&amp;gt;%
+  visNodes(
+    shape = &amp;quot;circle&amp;quot;,
+    font = list(size = 40, color = &amp;quot;white&amp;quot;),
+    color = list(
+      background = &amp;quot;darkgrey&amp;quot;,
+      border = &amp;quot;black&amp;quot;,
+      highlight = &amp;quot;orange&amp;quot;
+    ),
+    shadow = list(enabled = TRUE, size = 10)
+  ) %&amp;gt;%
+  visEdges(color = list(
+    color = &amp;quot;green&amp;quot;,
+    highlight = &amp;quot;red&amp;quot;
+  )) %&amp;gt;%
+  visLayout(randomSeed = 42)
+saveWidget(Nagara1.2aD, &amp;quot;Nagara1.2aD.html&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/details&gt;
+&lt;iframe seamless src=&#34;https://www.erikkusch.com/courses/bayes-nets/Nagara1.2aD.html&#34; width=&#34;900&#34; height=&#34;500&#34;&gt;&lt;/iframe&gt;
+&lt;details&gt;
+  &lt;summary&gt;Click here for the plotting call of the skeleton of the partially directed graph:&lt;/summary&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;## skeleton of partially directed graph
+Nagara1.2aP &amp;lt;- visNetwork(
+  nodes = V,
+  edges = A_partial
+) %&amp;gt;%
+  visNodes(
+    shape = &amp;quot;circle&amp;quot;,
+    font = list(size = 40, color = &amp;quot;white&amp;quot;),
+    color = list(
+      background = &amp;quot;darkgrey&amp;quot;,
+      border = &amp;quot;black&amp;quot;,
+      highlight = &amp;quot;orange&amp;quot;
+    ),
+    shadow = list(enabled = TRUE, size = 10)
+  ) %&amp;gt;%
+  visEdges(color = list(
+    color = &amp;quot;green&amp;quot;,
+    highlight = &amp;quot;red&amp;quot;
+  )) %&amp;gt;%
+  visLayout(randomSeed = 42)
+
+saveWidget(Nagara1.2aP, &amp;quot;Nagara1.2aP.html&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/details&gt;
+&lt;iframe seamless src=&#34;https://www.erikkusch.com/courses/bayes-nets/Nagara1.2aP.html&#34; width=&#34;900&#34; height=&#34;500&#34;&gt;&lt;/iframe&gt;
+&lt;blockquote&gt;
+&lt;p&gt;(b) Enumerate the acyclic graphs that can be obtained by orienting the undirected arcs of the partially directed graph.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Right. Sorting this out using &lt;code&gt;visNetwork&lt;/code&gt; would be a royal pain. So I instead opt for using &lt;code&gt;igraph&lt;/code&gt; for this exercise.&lt;/p&gt;
+&lt;p&gt;First, I load the necessary &lt;code&gt;R&lt;/code&gt; package:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;library(igraph)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Next, I consider the edge and node set of the partially directed graph:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;V &amp;lt;- data.frame(id = c(&amp;quot;A&amp;quot;, &amp;quot;B&amp;quot;, &amp;quot;C&amp;quot;, &amp;quot;D&amp;quot;, &amp;quot;E&amp;quot;))
+A_partial &amp;lt;- data.frame(
+  from = c(&amp;quot;E&amp;quot;, &amp;quot;D&amp;quot;, &amp;quot;A&amp;quot;, &amp;quot;C&amp;quot;, &amp;quot;C&amp;quot;),
+  to = c(&amp;quot;B&amp;quot;, &amp;quot;E&amp;quot;, &amp;quot;D&amp;quot;, &amp;quot;D&amp;quot;, &amp;quot;A&amp;quot;)
+)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;To enumerate all DAGs from these sets, I may only change the directions of the last three edges listed in my edge set.&lt;/p&gt;
+&lt;p&gt;Objectively, this exercise could be solved by simply &lt;em&gt;thinking&lt;/em&gt; about the different constellations. &lt;strong&gt;However&lt;/strong&gt;, I code for a living. One may argue that thinking is not necessarily in my wheelhouse (on may also claim the opposite). Hence, I will automate the procedure.&lt;/p&gt;
+&lt;p&gt;To do so, I will need to create all possible combinations of directions of currently undirected edges in the graph in question and check whether they create cycles or not.&lt;/p&gt;
+&lt;p&gt;To do so, I load the &lt;code&gt;bnlearn&lt;/code&gt; package as it comes with an error message when trying to assign an arc set that introduces cycles. I also register a base graph consisting of only our vertex set:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;library(bnlearn)
+base_bn &amp;lt;- empty.graph(nodes = V$id)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now, I simply loop over my three arcs in question and alternate which direction they are pointing. At the deepest level of this monstrosity, I am then assingning the final arcs to the base graph and only retain it if the cyclicity error has not been thrown:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;A_iter &amp;lt;- A_partial
+A_ls &amp;lt;- list()
+counter &amp;lt;- 1
+for (AD in 1:2) {
+  A_iter[3, ] &amp;lt;- if (AD == 1) {
+    A_partial[3, ]
+  } else {
+    rev(A_partial[3, ])
+  }
+  for (CD in 1:2) {
+    A_iter[4, ] &amp;lt;- if (CD == 1) {
+      A_partial[4, ]
+    } else {
+      rev(A_partial[4, ])
+    }
+    for (CA in 1:2) {
+      A_iter[5, ] &amp;lt;- if (CA == 1) {
+        A_partial[5, ]
+      } else {
+        rev(A_partial[5, ])
+      }
+      A_check &amp;lt;- tryCatch(
+        {
+          arcs(base_bn) &amp;lt;- A_iter
+        },
+        error = function(e) {
+          &amp;quot;error&amp;quot;
+        }
+      )
+      if (all(A_check != &amp;quot;error&amp;quot;)) {
+        A_ls[[counter]] &amp;lt;- base_bn
+        counter &amp;lt;- counter + 1
+      }
+    }
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;How many valid DAGs did this result in?&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;length(A_ls)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 6
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Let&amp;rsquo;s plot these out and be done with it:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;par(mfrow = c(2, 3))
+for (plot_iter in A_ls) {
+  dag_igraph &amp;lt;- graph_from_edgelist(arcs(plot_iter))
+  plot(dag_igraph,
+    layout = layout.circle,
+    vertex.size = 30
+  )
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;2022-09-27-practice_files/figure-html/unnamed-chunk-10-1.png&#34; width=&#34;1440&#34; /&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;(c) List the arcs that can be reversed (i.e., turned in the opposite direction), one at a time, without introducing cycles in the directed graph.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;All arcs of the directed graph can be reversed without introducing cycles.&lt;/p&gt;
+&lt;h3 id=&#34;nagarajan-13&#34;&gt;Nagarajan 1.3&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;1.3. The (famous) iris data set reports the measurements in centimeters of the sepal length and width and the petal length and width for 50 flowers from each of 3 species of iris (“setosa,” “versicolor,” and “virginica”).&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;(a) Load the iris data set (it is included in the datasets package, which is part of the base R distribution and does not need to be loaded explicitly) and read its manual page.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;data(iris)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;?iris
+&lt;/code&gt;&lt;/pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;(b) Investigate the structure of the data set.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;str(iris)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## &#39;data.frame&#39;:	150 obs. of  5 variables:
+##  $ Sepal.Length: num  5.1 4.9 4.7 4.6 5 5.4 4.6 5 4.4 4.9 ...
+##  $ Sepal.Width : num  3.5 3 3.2 3.1 3.6 3.9 3.4 3.4 2.9 3.1 ...
+##  $ Petal.Length: num  1.4 1.4 1.3 1.5 1.4 1.7 1.4 1.5 1.4 1.5 ...
+##  $ Petal.Width : num  0.2 0.2 0.2 0.2 0.2 0.4 0.3 0.2 0.2 0.1 ...
+##  $ Species     : Factor w/ 3 levels &amp;quot;setosa&amp;quot;,&amp;quot;versicolor&amp;quot;,..: 1 1 1 1 1 1 1 1 1 1 ...
+&lt;/code&gt;&lt;/pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;(c) Compare the sepal length among the three species by plotting histograms side by side.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;library(ggplot2)
+ggplot(iris, aes(x = Sepal.Length)) +
+  geom_histogram() +
+  facet_wrap(~Species) +
+  theme_bw()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;2022-09-27-practice_files/figure-html/unnamed-chunk-14-1.png&#34; width=&#34;1440&#34; /&gt;&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;(d) Repeat the previous point using boxplots.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;library(ggplot2)
+ggplot(iris, aes(x = Species, y = Sepal.Length)) +
+  geom_boxplot() +
+  theme_bw()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;2022-09-27-practice_files/figure-html/unnamed-chunk-15-1.png&#34; width=&#34;1440&#34; /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;nagarajan-14&#34;&gt;Nagarajan 1.4&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;1.4. Consider again the iris data set from Exercise 1.3.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;(a) Write the data frame holding iris data frame into a space-separated text file named “iris.txt,” and read it back into a second data frame called iris2.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;write.table(iris, file = &amp;quot;iris.txt&amp;quot;, row.names = FALSE)
+iris2 &amp;lt;- read.table(&amp;quot;iris.txt&amp;quot;, header = TRUE)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;(b) Check that iris and iris2 are identical.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;identical(iris, iris2)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] FALSE
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Why are they not identical? That&amp;rsquo;s because &lt;code&gt;iris&lt;/code&gt; stores &lt;code&gt;Species&lt;/code&gt; as a &lt;code&gt;factor&lt;/code&gt;. Information which is lost when writing to a .txt file. Let&amp;rsquo;s reformat this and check again:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;iris2$Species &amp;lt;- factor(iris2$Species)
+identical(iris, iris2)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] TRUE
+&lt;/code&gt;&lt;/pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;(c) Repeat the previous two steps with a file compressed with bzip2 named “iris.txt.bz2.”&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;bzfd &amp;lt;- bzfile(&amp;quot;iris.txt.bz2&amp;quot;, open = &amp;quot;w&amp;quot;)
+write.table(iris, file = bzfd, row.names = FALSE)
+close(bzfd)
+bzfd &amp;lt;- bzfile(&amp;quot;iris.txt.bz2&amp;quot;, open = &amp;quot;r&amp;quot;)
+iris2 &amp;lt;- read.table(bzfd, header = TRUE)
+close(bzfd)
+iris2$Species &amp;lt;- factor(iris2$Species)
+identical(iris, iris2)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] TRUE
+&lt;/code&gt;&lt;/pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;(d) Save iris directly (e.g., without converting it to a text table) into a file called “iris.rda,” and read it back.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;save(iris, file = &amp;quot;iris.rda&amp;quot;)
+load(&amp;quot;iris.rda&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;(e) List all R objects in the global environment and remove all of them apart from iris.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;ls()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##  [1] &amp;quot;A_check&amp;quot;     &amp;quot;A_directed&amp;quot;  &amp;quot;A_iter&amp;quot;      &amp;quot;A_ls&amp;quot;        &amp;quot;A_partial&amp;quot;   &amp;quot;AD&amp;quot;          &amp;quot;base_bn&amp;quot;     &amp;quot;bzfd&amp;quot;        &amp;quot;CA&amp;quot;          &amp;quot;CD&amp;quot;          &amp;quot;counter&amp;quot;     &amp;quot;dag_igraph&amp;quot;  &amp;quot;iris&amp;quot;        &amp;quot;iris2&amp;quot;      
+## [15] &amp;quot;Nagara1.2aD&amp;quot; &amp;quot;Nagara1.2aP&amp;quot; &amp;quot;plot_iter&amp;quot;   &amp;quot;V&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;l &amp;lt;- ls()
+rm(list = l[l != &amp;quot;iris&amp;quot;])
+&lt;/code&gt;&lt;/pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;(f) Exit the R saving the contents of the current session.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;quit(save = &amp;quot;yes&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;nagarajan-15&#34;&gt;Nagarajan 1.5&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;1.5. Consider the gaussian.test data set included in bnlearn.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;(a) Print the column names.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;colnames(gaussian.test)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] &amp;quot;A&amp;quot; &amp;quot;B&amp;quot; &amp;quot;C&amp;quot; &amp;quot;D&amp;quot; &amp;quot;E&amp;quot; &amp;quot;F&amp;quot; &amp;quot;G&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;(b) Print the range and the quartiles of each variable.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;## range
+for (var in names(gaussian.test)) {
+  print(range(gaussian.test[, var]))
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] -2.246520  4.847388
+## [1] -10.09456  14.21538
+## [1] -15.80996  32.44077
+## [1] -9.043796 26.977326
+## [1] -3.558768 11.494383
+## [1] -1.170247 45.849594
+## [1] -1.365823 12.409607
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;## quantiles
+for (var in names(gaussian.test)) {
+  print(quantile(gaussian.test[, var]))
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##         0%        25%        50%        75%       100% 
+## -2.2465197  0.3240041  0.9836491  1.6896519  4.8473877 
+##           0%          25%          50%          75%         100% 
+## -10.09455807  -0.01751825   2.00025495   4.07692065  14.21537969 
+##         0%        25%        50%        75%       100% 
+## -15.809961   3.718150   8.056369  12.373614  32.440769 
+##        0%       25%       50%       75%      100% 
+## -9.043796  5.984274  8.994232 12.164417 26.977326 
+##        0%       25%       50%       75%      100% 
+## -3.558768  2.095676  3.508567  4.873497 11.494383 
+##        0%       25%       50%       75%      100% 
+## -1.170247 17.916175 21.982997 26.330886 45.849594 
+##        0%       25%       50%       75%      100% 
+## -1.365823  3.738940  5.028420  6.344179 12.409607
+&lt;/code&gt;&lt;/pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;(c) Print all the observations for which A falls in the interval [3,4] and B in (−∞,−5]∪[10,∞).&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;TestA &amp;lt;- (gaussian.test[, &amp;quot;A&amp;quot;] &amp;gt;= 3) &amp;amp; (gaussian.test[, &amp;quot;A&amp;quot;] &amp;lt;= 4)
+TestB &amp;lt;- (gaussian.test[, &amp;quot;B&amp;quot;] &amp;lt;= -4) | (gaussian.test[, &amp;quot;B&amp;quot;] &amp;gt;= 4)
+gaussian.test[TestA &amp;amp; TestB, ]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##             A         B          C           D         E        F         G
+## 134  3.000115  5.677259 19.6165914 13.90710134 1.2399546 29.66208 6.1184117
+## 171  3.912097  5.000325 19.5261459 13.31373543 0.2807556 32.51754 7.3699037
+## 954  3.735995  4.052434 18.1856087 12.09431457 3.7080579 26.97241 3.0517690
+## 1034 3.317637  4.837303 18.1044125 13.32279487 2.9563555 28.40041 3.9876290
+## 1042 3.372036  4.197395 17.6533233 12.52777893 4.8983597 31.08633 3.7283984
+## 1078 3.157623  5.184670 19.0430676 13.89072391 3.2572347 37.08646 8.9429136
+## 1127 3.141251  4.269507 17.1939411 12.42629251 2.6622288 29.53266 4.4132469
+## 1237 3.031727  4.341881 17.6020776 12.43625964 2.7949498 27.74622 5.4084005
+## 1755 3.052266  4.612071 18.1180989 13.19968750 5.6471997 27.78189 1.5129846
+## 1819 3.290631  7.143942 22.6867359 16.14048867 4.8648686 37.51501 8.0241134
+## 2030 3.289162  5.787095 20.0194963 14.52479092 5.2423368 37.46786 7.6643575
+## 2153 3.037955  4.797399 17.1331929 13.58727751 2.7524554 31.84176 5.5202624
+## 2179 3.114916  5.414628 19.3677155 14.14501162 3.4438786 31.06106 3.8799064
+## 2576 3.458761  4.471637 18.1722539 13.36940122 2.3688318 23.60165 0.7689322
+## 2865 3.140513  7.269383 22.5686681 16.86773531 4.0260061 36.17848 6.1028714
+## 3035 3.476832  4.109519 17.0599625 11.55995675 4.4027366 29.83397 3.6381844
+## 3133 3.667252  4.953129 19.6575484 13.31833594 5.0080665 31.78321 3.9031780
+## 3434 3.418895  6.412021 21.8072576 15.48090391 5.6847825 29.41806 1.3941551
+## 3481 3.050811  6.203747 21.1427355 15.39309314 4.2068982 33.79386 5.1348785
+## 3573 3.612315  4.741220 18.4841065 13.08992732 5.4532191 31.22224 3.3986084
+## 3695 3.284053  4.899003 17.7691812 13.73467842 4.5814578 39.96773 9.5808916
+## 3893 3.070645  6.111989 20.6963754 15.34110860 2.0329921 29.92680 4.1352188
+## 3999 3.493238  5.307218 19.1502279 14.10123450 4.8567953 35.69970 5.8485995
+## 4144 3.045976  4.925688 18.8388604 13.28690773 7.3473994 34.12657 4.0527848
+## 4164 3.624343  5.411443 20.3400016 13.35879870 7.4107565 32.20646 2.5717899
+## 4220 3.133246  4.950543 17.9604182 13.91087282 4.2105519 30.01146 3.7960603
+## 4229 3.119493  7.255816 22.4329800 16.59886045 2.4893039 33.62491 5.0819631
+## 4258 3.777205  7.189762 23.9019969 16.75321069 4.0727603 37.66095 6.6653238
+## 4671 3.455920 -4.198865  0.1452861 -0.27503006 1.9954874 16.60534 4.7261660
+## 4703 3.301100 -4.109750  0.2244686 -0.07441052 6.2531813 23.58530 6.4627941
+## 4739 3.010097  9.775164 28.1861733 20.54659992 5.1594216 40.50032 5.8467280
+## 4779 3.215547  6.393758 20.7043512 15.59370075 3.2628127 33.35600 5.8151547
+## 4866 3.873728 -4.257339  0.8213114 -0.31665717 0.2758219 14.94325 5.4011586
+## 4987 3.058566  8.128704 24.9419446 18.56396890 5.8402279 35.29171 4.4032448
+&lt;/code&gt;&lt;/pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;(d) Sample 50 rows without replacement.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;I&amp;rsquo;m leaving out the output to save some space.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;set.seed(42)
+gaussian.test[sample(50, replace = FALSE), ]
+&lt;/code&gt;&lt;/pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;(e) Draw a bootstrap sample (e.g., sample 5,000 observations with replacement) and compute the mean of each variable.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;colMeans(gaussian.test[sample(5000, replace = TRUE), ])
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##         A         B         C         D         E         F         G 
+##  1.007428  2.076592  8.157574  9.101292  3.532690 22.160643  4.998093
+&lt;/code&gt;&lt;/pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;(f) Standardize each variable.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;I&amp;rsquo;m leaving out the oputput to save some space.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;scale(gaussian.test)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;nagarajan-16&#34;&gt;Nagarajan 1.6&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;1.6. Generate a data frame with 100 observations for the following variables:&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;p&gt;(a) A categorical variable with two levels, low and high. The first 50 observations should be set to low, the others to high.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;A &amp;lt;- factor(c(rep(&amp;quot;low&amp;quot;, 50), rep(&amp;quot;high&amp;quot;, 50)), levels = c(&amp;quot;low&amp;quot;, &amp;quot;high&amp;quot;))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;(b) A categorical variable with two levels, good and bad, nested within the first variable, i.e., the first 25 observations should be set to good, the second 25 to bad, and so on.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;nesting &amp;lt;- c(rep(&amp;quot;good&amp;quot;, 25), rep(&amp;quot;bad&amp;quot;, 25))
+B &amp;lt;- factor(rep(nesting, 2), levels = c(&amp;quot;good&amp;quot;, &amp;quot;bad&amp;quot;))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;(c) A continuous, numerical variable following a Gaussian distribution with mean 2 and variance 4 when the first variable is equal to low and with mean 4 and variance 1 if the first variable is equal to high. In addition, compute the standard deviation of the last variable for each configuration of the first two variables.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;set.seed(42)
+C &amp;lt;- c(rnorm(50, mean = 2, sd = 2), rnorm(50, mean = 4, sd = 1))
+data &amp;lt;- data.frame(A = A, B = B, C = C)
+aggregate(C ~ A + B, data = data, FUN = sd)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##      A    B         C
+## 1  low good 2.6127294
+## 2 high good 0.9712271
+## 3  low  bad 1.8938398
+## 4 high  bad 0.8943556
+&lt;/code&gt;&lt;/pre&gt;
+&lt;!-- ### Scutari Exercises --&gt;
+&lt;!-- These are answers and solutions to the exercises at the end of Part 5 in [Bayesian Networks with Examples in R](https://www.bnlearn.com/book-crc/) by M. Scutari and J.-B. Denis. Much of my inspiration for these solutions, where necessary, by consulting the solutions provided by the authors themselves as in the appendix. --&gt;
+&lt;!-- #### Scutari 5.1 --&gt;
+&lt;!-- &gt; One essential task in any analysis is to import and export the R objects describing models from different packages. This is all the more true in the case of BN modelling, as no package implements all of structure learning, parameter learning and inference. --&gt;
+&lt;!-- &gt; 1. Create the dag.bnlearn object from Section 5.1.1. --&gt;
+&lt;!-- &gt; 2. Export it to deal. --&gt;
+&lt;!-- &gt;3. Import the result back into bnlearn. --&gt;
+&lt;!-- &gt; 4. Export dag.bnlearn to catnet and import it back in bnlearn. --&gt;
+&lt;!-- &gt; 5. Perform parameter learning using the discretised dmarks and dag.bnlearn and export it to a DSC file, which can be read in Hugin and GeNIe. --&gt;
+&lt;!-- #### Scutari 5.2 --&gt;
+&lt;!-- &gt; Learn a GBN from the marks data (without the LAT variable) using pcalg and a custom test that defines dependence as significant if the corresponding partial correlation is greater than 0.50. --&gt;
+&lt;!-- #### Scutari 5.3 --&gt;
+&lt;!-- &gt; Reproduce the example of structure learning from Section 5.1.1 using deal, but set the imaginary sample size to 20. How does the resulting network change? --&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Gaussian Bayesian Networks</title>
+      <link>https://www.erikkusch.com/courses/bayes-nets/part-2/</link>
+      <pubDate>Tue, 01 Jun 2021 00:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/courses/bayes-nets/part-2/</guid>
+      <description>&lt;style&gt;
+
+blockquote{
+color:#633a00;
+}
+
+&lt;/style&gt;
+&lt;h2 id=&#34;material&#34;&gt;Material&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;a href=&#34;https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/content/courses/bayes-nets/4-Gaussian-Networks_11-10-22.html&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Gaussian Bayesian Networks&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;exercises&#34;&gt;Exercises&lt;/h2&gt;
+&lt;p&gt;These are answers and solutions to the exercises at the end of Part 2 in 
+&lt;a href=&#34;https://www.bnlearn.com/book-crc/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Bayesian Networks with Examples in R&lt;/a&gt; by M. Scutari and J.-B. Denis. Much of my inspiration for these solutions, where necessary, by consulting the solutions provided by the authors themselves as in the appendix.&lt;/p&gt;
+&lt;h3 id=&#34;r-environment&#34;&gt;&lt;code&gt;R&lt;/code&gt; Environment&lt;/h3&gt;
+&lt;p&gt;For today&amp;rsquo;s exercise, I load the following packages:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;library(bnlearn)
+library(ggplot2)
+library(tidyr)
+library(tidybayes)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;scutari-21&#34;&gt;Scutari 2.1&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Prove that Equation (2.2) implies Equation (2.3).&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Equation 2.2 reads:&lt;/p&gt;
+&lt;p&gt;$$f(C | G = g) \neq f(C)$$&lt;/p&gt;
+&lt;p&gt;Equation 2.3 reads:&lt;/p&gt;
+&lt;p&gt;$$f(G | C = c) \neq f(G)$$&lt;/p&gt;
+&lt;p&gt;So how do we go about demonstrating that the first implies the latter? Well, we are using Bayesian theory here so why not use the Bayes&#39; theorem? So let&amp;rsquo;s start by rewriting equation 2.2:&lt;/p&gt;
+&lt;p&gt;$$f(C | G) = \frac{f(C, G)}{f(G)} = \frac{f(G | C) f(C)}{f(G)}$$
+So how does this relate to the question that equation 2.2 implies equation 2.3? Well, if $f(C|G) = f(C)$ then this equation would reveal that $f(G|C) = f(G)$ (so that the $f(G)$ terms factor out). Our proof stipulates that these statements aren&amp;rsquo;t true, but one still implies the other and we land of quod erat demonstrandum.&lt;/p&gt;
+&lt;h3 id=&#34;scutari-22&#34;&gt;Scutari 2.2&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Within the context of the DAG shown in Figure 2.1, prove that Equation (2.5) is true using Equation (2.6).&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;This is the DAG in question:&lt;/p&gt;
+&lt;img src=&#34;https://www.erikkusch.com/courses/networksscutari/Screenshot 2021-06-02 135704.png&#34; width=&#34;900&#34;/&gt;
+&lt;p&gt;The equation to prove (2.5) is:&lt;/p&gt;
+&lt;p&gt;$$f(N, W | V = v) = f(N | V = v) f(W | V = v)$$&lt;/p&gt;
+&lt;p&gt;and we use this equation (2.6) for our proof:&lt;/p&gt;
+&lt;p&gt;$$f(G, E, V, N, W, C) = f(G) f(E) f(V | G, E) f(N | V) f(W | V) f(C | N, W)$$&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s start the proof by integrating over all variables that aren&amp;rsquo;t $N$, $W$, and $V$ (the variables contained in the equation we are tasked to prove):&lt;/p&gt;
+&lt;p&gt;$$f(V, W, N) = \int_G \int_E \int_Cf(G,E,V,N,W,C)$$&lt;/p&gt;
+&lt;p&gt;We do this to remove all but the variables we are after from our equation so let&amp;rsquo;s follow this rationale:&lt;/p&gt;
+&lt;p&gt;$$
+\begin{aligned}
+\int_G \int_E \int_Cf(G,E,V,N,W,C) = &amp;amp;f(V) f(N|V) f(W|V)  \newline
+&amp;amp;\times \left( \int_G \int_E f(G) f(E) f(V|G,E) \right) \newline
+&amp;amp;\left( \int_C f(C|N,W) \right)
+\end{aligned}
+$$&lt;/p&gt;
+&lt;p&gt;Simplifying this mess, we arrive at:&lt;/p&gt;
+&lt;p&gt;$$f(V, W, N) = f(V) f(N|V) f(W|V)$$&lt;/p&gt;
+&lt;p&gt;Finally, we can obtain our original formula:&lt;/p&gt;
+&lt;p&gt;$$f(W,N|V) = \frac{f(V,W,N)}{f(V)} = \frac{f(V) f(N|V) f(W|V)}{f(V)} = f(N|V) f(W|N)$$&lt;/p&gt;
+&lt;p&gt;Another case of the quod erat demonstrandums.&lt;/p&gt;
+&lt;h3 id=&#34;scutari-23&#34;&gt;Scutari 2.3&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Compute the marginal variance of the two nodes with two parents from the local distributions proposed in Table 2.1. Why is it much more complicated for C than for V?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Table 2.1 is hardly a table at all, but I did locate it. Basically, it is an amalgamation of the probability distributions proposed for the DAG from the previous exercise:&lt;/p&gt;
+&lt;img src=&#34;https://www.erikkusch.com/courses/networksscutari/Screenshot 2021-06-02 141404.png&#34; width=&#34;900&#34;/&gt;
+&lt;p&gt;Note that the parameter $07v$ in the second-to-last row should read $0.7v$.&lt;/p&gt;
+&lt;p&gt;The two nodes we are after are $V$ and $C$. Since the task already tells us that the computation of the marginal variance for $V$ is easier than for $C$, I start with this one.&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Computation for $V$&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Simply translating the probability distribution into a linear model, we receive:&lt;/p&gt;
+&lt;p&gt;$$V = -10.35534 + 0.5G + 0.70711E + \epsilon_V$$&lt;/p&gt;
+&lt;p&gt;with the variances of our independent variables $G$, $E$, and $\epsilon_V$ being $10^2$, $10^2$, and $5^2$ respectively. Consequently the variance of $V$ can be calculated as follows:&lt;/p&gt;
+&lt;p&gt;$$VAR(V) = 0.5^2VAR(G) + 0.70711^2VAR(E) + VAR(\epsilon_V)$$
+$$VAR(V) = 0.5^210^2+0.70711^210^2+5^2 = 10$$&lt;/p&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;Computation for $C$&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;For $C$, we can transform our portability distribution into a linear model again:&lt;/p&gt;
+&lt;p&gt;$$C = 0.3N+0.7W+\epsilon_C$$&lt;/p&gt;
+&lt;p&gt;this time, however the &lt;strong&gt;predictors variables&lt;/strong&gt; are &lt;strong&gt;not independent&lt;/strong&gt; since they share node $V$ as their parent. Consequently, we have to compute their covariance:&lt;/p&gt;
+&lt;p&gt;$$COV(N,W) = COV(0.1V, 0.7V) = 0.1 * 0.7 * Var(V) = 0.1 * 0.7 * 10^2$$&lt;/p&gt;
+&lt;p&gt;So we actually needed to calculate the variance for $V$ to even be able to calculate the variance for $C$. Let&amp;rsquo;s round this out now, then:&lt;/p&gt;
+&lt;p&gt;$$
+\begin{aligned}
+Var(C) &amp;amp;= 0.3^2 * VAR(N) + 0.7^2VAR(W) \newline
+&amp;amp;+ VAR(\epsilon_C) + 2 * 0.3 * 0.7 * COV(N,W)
+\end{aligned}
+$$&lt;/p&gt;
+&lt;p&gt;Now, I simply plug the values into the formula and arrive at:&lt;/p&gt;
+&lt;p&gt;$$
+\begin{aligned}
+Var(C) &amp;amp;= 0.3^2 * 9.949874^2+0.7^2 * 7.141428 \newline
+&amp;amp;+6.25^2+2 * 0.3 * 0.7 * 0.1 * 0.7 * 10^2  \newline
+&amp;amp; = 54.4118
+\end{aligned}
+$$&lt;/p&gt;
+&lt;p&gt;Curiously, the book suggest this as the solution:&lt;/p&gt;
+&lt;p&gt;$$Var(C) = (0.3^2+0.7^2+0.3 * 0.7 * 0.14)10^2+6.25^2 = 100.0024$$&lt;/p&gt;
+&lt;p&gt;I am not sure where the values for VAR(N) and VAR(W) have gone here. If anyone who is reading this knows the answer to it, please contact me and let me know as well.&lt;/p&gt;
+&lt;h3 id=&#34;scutari-24&#34;&gt;Scutari 2.4&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Write an R script using only the &lt;code&gt;rnorm&lt;/code&gt; and &lt;code&gt;cbind&lt;/code&gt; functions to create a 100 × 6 matrix of 100 observations simulated from the BN defined in Table 2.1. Compare the result with those produced by a call to &lt;code&gt;cpdist&lt;/code&gt; function.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;To simulate a table of observation using the formulae in the probability distribution collection from the previous question (Table 1), we simply select random values for all parent nodes according to their distributions and let the distributions for all offspring nodes do the rest. One important note here, is that the &lt;code&gt;rnorm()&lt;/code&gt; function in &lt;code&gt;R&lt;/code&gt; takes as an argument of variation the standard deviation $\sigma$ rather than the variance $\sigma^2$:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;set.seed(42) # making things reproducible
+n &amp;lt;- 1e2 # number of replicates
+G &amp;lt;- rnorm(n, 50, 10)
+E &amp;lt;- rnorm(n, 50, 10)
+V &amp;lt;- rnorm(n, -10.35534 + 0.5 * G + 0.70711 * E, 5)
+N &amp;lt;- rnorm(n, 45 + 0.1 * V, 9.949874)
+W &amp;lt;- rnorm(n, 15 + 0.7 * V, 7.141428)
+C &amp;lt;- rnorm(n, 0.3 * N + 0.7 * W, 6.25)
+sim1 &amp;lt;- data.frame(cbind(G, E, V, N, W, C))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now we do this using the &lt;code&gt;cpdist()&lt;/code&gt; function. To do so, we first have to create our Bayesian Network:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;dag.bnlearn &amp;lt;- model2network(&amp;quot;[G][E][V|G:E][N|V][W|V][C|N:W]&amp;quot;)
+disE &amp;lt;- list(coef = c(&amp;quot;(Intercept)&amp;quot; = 50), sd = 10)
+disG &amp;lt;- list(coef = c(&amp;quot;(Intercept)&amp;quot; = 50), sd = 10)
+disV &amp;lt;- list(coef = c(&amp;quot;(Intercept)&amp;quot; = -10.35534, E = 0.70711, G = 0.5), sd = 5)
+disN &amp;lt;- list(coef = c(&amp;quot;(Intercept)&amp;quot; = 45, V = 0.1), sd = 9.949874)
+disW &amp;lt;- list(coef = c(&amp;quot;(Intercept)&amp;quot; = 15, V = 0.7), sd = 7.141428)
+disC &amp;lt;- list(coef = c(&amp;quot;(Intercept)&amp;quot; = 0, N = 0.3, W = 0.7), sd = 6.25)
+dis.list &amp;lt;- list(E = disE, G = disG, V = disV, N = disN, W = disW, C = disC)
+gbn.bnlearn &amp;lt;- custom.fit(dag.bnlearn, dist = dis.list)
+sim2 &amp;lt;- data.frame(cpdist(gbn.bnlearn, nodes = nodes(gbn.bnlearn), evidence = TRUE))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;this is pretty much exactly what is done in the chapter.&lt;/p&gt;
+&lt;p&gt;So let&amp;rsquo;s compare these simulation outputs:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# preparing all data together in one data frame for plotting
+sim1$sim &amp;lt;- 1
+sim2$sim &amp;lt;- 2
+Plot_df &amp;lt;- rbind(sim1, sim2[, match(colnames(sim1), colnames(sim2))])
+Plot_df &amp;lt;- gather(data = Plot_df, key = &amp;quot;node&amp;quot;, value = &amp;quot;value&amp;quot;, G:C)
+Plot_df$sim &amp;lt;- as.factor(Plot_df$sim)
+## plotting
+ggplot(Plot_df, aes(x = value, y = sim)) +
+  stat_halfeye() +
+  facet_wrap(~node, scales = &amp;quot;free&amp;quot;) +
+  theme_bw()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;2021-05-25-crc_part2_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;1440&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;As is apparent from this, all results fall close to the expected values of roughly 50. There are noticeable differences between the simulations. I would suggest that these are due to the fairly low sample size for &lt;code&gt;sim1&lt;/code&gt;.&lt;/p&gt;
+&lt;h3 id=&#34;scutari-25&#34;&gt;Scutari 2.5&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Imagine two ways other than changing the size of the points (as in Section 2.7.2) to introduce a third variable in the plot.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;The plot in question is this one:&lt;/p&gt;
+&lt;img src=&#34;https://www.erikkusch.com/courses/networksscutari/Screenshot 2021-06-02 163301.png&#34; width=&#34;900&#34;/&gt;
+&lt;p&gt;this plot is aimed at showing the distribution of $C$ when both $E$ and $V$ vary. Here, the variation in $V$ is shown along the x-axis, while the variation of $E$ is contained within the sizes of the circles. The y-axis represents the values of $C$ according to its distributions.&lt;/p&gt;
+&lt;p&gt;So how else could we add information of $E$ to a plot of $V$ and $C$? I reckon we could:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Make three scatter plots. One for each pairing of our variables.&lt;/li&gt;
+&lt;li&gt;Represent the values of $E$ with a colour saturation gradient.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3 id=&#34;scutari-26&#34;&gt;Scutari 2.6&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Can GBNs be extended to log-normal distributions? If so how, if not, why?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;GBNs are Gaussian Bayesian Networks - Bayesian Networks where each node follows a Gaussian distribution.&lt;/p&gt;
+&lt;p&gt;Yes, absolutely they can! We can simply take the logarithm of all initial variables and apply the GBN right away. Of course, all values that shall be transformed using the logarithm have to be positive.&lt;/p&gt;
+&lt;h3 id=&#34;scutari-27&#34;&gt;Scutari 2.7&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;How can we generalise GBNs as defined in Section 2.3 in order to make each node’s variance depend on the node’s parents?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;I see absolutely no problem here. Let&amp;rsquo;s say we have two nodes:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;$A$; parent node with a constant variance&lt;/li&gt;
+&lt;li&gt;$B$; child node with a variance dependant the parent node&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Then we can easily define the variance of $B$ given $A$ ($VAR(B|A)$) as follows:&lt;/p&gt;
+&lt;p&gt;$$VAR(B|A) = \left(A-E(A)\right)^2 * \sigma^2_B$$&lt;/p&gt;
+&lt;h3 id=&#34;scutari-28&#34;&gt;Scutari 2.8&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;From the first three lines of Table 2.1, prove that the joint distribution of E, G and V is trivariate normal.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;This one is a doozy and I really needed to consult the solutions in the book for this one. Let&amp;rsquo;s first remind ourselves of the first lines of said table:&lt;/p&gt;
+&lt;img src=&#34;https://www.erikkusch.com/courses/networksscutari/Screenshot 2021-06-02 141404_2.png&#34; width=&#34;900&#34;/&gt;
+&lt;p&gt;To approach this problem it is useful to point out that the logarithm of the density of a multivariate normal distribution is defined as such:&lt;/p&gt;
+&lt;p&gt;$$f(x) \propto -\frac{1}{2}(x-\mu)^T\sum^{-2}(x-\mu)$$&lt;/p&gt;
+&lt;p&gt;with $x$ being a random vector and $\mu$ denoting our expectation. $\sum$ identifies the covariance matrix.&lt;/p&gt;
+&lt;p&gt;Simplifying this, we can transform our variables $G$, $E$, and $V$ to give them a zero marginal expectation and a unity marginal variance. That is a very long-winded way of saying: we normalise our variables:&lt;/p&gt;
+&lt;p&gt;$$\overline G = \frac{G-E(G)}{\sqrt{VAR(G)}} = \frac{G-50}{10} \sim Normal(0, 1)$$
+$$\overline E = \frac{E-E(E)}{\sqrt{VAR(E)}} = \frac{E-50}{10} \sim Normal(0, 1)$$
+$$\overline V = \frac{V-E(V)}{\sqrt{VAR(V)}} = \frac{V-50}{10}$$
+Solving for $\overline V | \overline G, \overline E$, we obtain:&lt;/p&gt;
+&lt;p&gt;\begin{equation}
+\overline V | \overline G, \overline E = Normal\left(\frac{1}{2} \overline G + \sqrt{\frac{1}{2}} \overline E , (\frac{1}{2})^2 \right)
+\end{equation}&lt;/p&gt;
+&lt;!-- $$\overline V | \overline G, \overline E = Normal\left(\frac{1}{2} \overline G + \sqrt{\frac{1}{2}} \overline E , (\frac{1}{2})^2 \right)$$ --&gt;
+&lt;p&gt;I have to honestly that I don&amp;rsquo;t quite understand how this happened and if anyone reading this has intuition for this solution, please let me know.&lt;/p&gt;
+&lt;p&gt;Now, we can compute the joint density distribution of these three normalised variables:&lt;/p&gt;
+&lt;p&gt;$$\begin{eqnarray}  f(\overline G, \overline E, \overline V) &amp;amp;\propto&amp;amp; f(\overline G)+f(\overline E)+f(\overline V | \overline G, \overline E) \newline 
+&amp;amp;=&amp;amp; -\frac{g^2}{2}-\frac{e^2}{2}-2 \left( v- \frac{1}{2}g - \sqrt{\frac{1}{2}}e \right)^2     \newline
+&amp;amp;=&amp;amp; -\begin{bmatrix} g \newline e \newline v\end{bmatrix}^T \begin{bmatrix} 1 &amp;amp; \frac{\sqrt{2}}{2} &amp;amp; -1\newline \frac{\sqrt{2}}{2} &amp;amp; \frac{3}{2} &amp;amp; -\sqrt{2} \newline -1 &amp;amp; -\sqrt{2} &amp;amp; 2 \end{bmatrix} \begin{bmatrix} g \newline e \newline v\end{bmatrix}  \newline
+&amp;amp;=&amp;amp; -\frac{1}{2} \begin{bmatrix} g \newline e \newline v\end{bmatrix}^T \begin{bmatrix} 1 &amp;amp; 0 &amp;amp; \frac{1}{2}\newline 0 &amp;amp; 1 &amp;amp; \frac{1}{2} \newline \frac{1}{2} &amp;amp; \sqrt{\frac{1}{2}} &amp;amp; 1 \end{bmatrix} \begin{bmatrix} g \newline e \newline v\end{bmatrix}  \newline
+\end{eqnarray}$$&lt;/p&gt;
+&lt;p&gt;I have to admit that most of this is, as of right now, beyond me as I came to this book for the &amp;ldquo;&lt;em&gt;applications in R&lt;/em&gt;&amp;rdquo; in the first place. The book concludes that this results in:&lt;/p&gt;
+&lt;p&gt;$$VAR \left( \begin{bmatrix} \overline G \newline \overline E \newline \overline V\end{bmatrix} \right) = \begin{bmatrix} 1 &amp;amp; 0 &amp;amp; \frac{1}{2}\newline 0 &amp;amp; 1 &amp;amp; \frac{1}{2} \newline \frac{1}{2} &amp;amp; \sqrt{\frac{1}{2}} &amp;amp; 1 \end{bmatrix} $$&lt;/p&gt;
+&lt;p&gt;which results in our proof.&lt;/p&gt;
+&lt;h2 id=&#34;session-info&#34;&gt;Session Info&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;sessionInfo()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## R version 4.2.1 (2022-06-23 ucrt)
+## Platform: x86_64-w64-mingw32/x64 (64-bit)
+## Running under: Windows 10 x64 (build 19044)
+## 
+## Matrix products: default
+## 
+## locale:
+## [1] LC_COLLATE=English_Germany.utf8  LC_CTYPE=English_Germany.utf8    LC_MONETARY=English_Germany.utf8 LC_NUMERIC=C                     LC_TIME=English_Germany.utf8    
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+## [1] tidybayes_3.0.2 tidyr_1.2.0     ggplot2_3.3.6   bnlearn_4.8.1  
+## 
+## loaded via a namespace (and not attached):
+##  [1] styler_1.8.0         tidyselect_1.1.2     xfun_0.33            bslib_0.4.0          purrr_0.3.4          lattice_0.20-45      colorspace_2.0-3     vctrs_0.4.1          generics_0.1.3      
+## [10] htmltools_0.5.3      yaml_2.3.5           utf8_1.2.2           rlang_1.0.5          R.oo_1.25.0          jquerylib_0.1.4      pillar_1.8.1         glue_1.6.2           withr_2.5.0         
+## [19] DBI_1.1.3            R.utils_2.12.0       distributional_0.3.1 R.cache_0.16.0       lifecycle_1.0.2      stringr_1.4.1        posterior_1.3.1      munsell_0.5.0        blogdown_1.13       
+## [28] gtable_0.3.1         R.methodsS3_1.8.2    coda_0.19-4          evaluate_0.16        labeling_0.4.2       knitr_1.40           fastmap_1.1.0        parallel_4.2.1       fansi_1.0.3         
+## [37] highr_0.9            arrayhelpers_1.1-0   backports_1.4.1      checkmate_2.1.0      scales_1.2.1         cachem_1.0.6         jsonlite_1.8.0       abind_1.4-5          farver_2.1.1        
+## [46] tensorA_0.36.2       digest_0.6.29        svUnit_1.0.6         stringi_1.7.8        bookdown_0.29        dplyr_1.0.9          grid_4.2.1           ggdist_3.2.0         cli_3.3.0           
+## [55] tools_4.2.1          magrittr_2.0.3       sass_0.4.2           tibble_3.1.8         pkgconfig_2.0.3      ellipsis_0.3.2       assertthat_0.2.1     rmarkdown_2.16       rstudioapi_0.14     
+## [64] R6_2.5.1             compiler_4.2.1
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Hybrid Bayesian Networks</title>
+      <link>https://www.erikkusch.com/courses/bayes-nets/part-3/</link>
+      <pubDate>Tue, 08 Jun 2021 00:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/courses/bayes-nets/part-3/</guid>
+      <description>&lt;style&gt;
+
+blockquote{
+color:#633a00;
+}
+
+&lt;/style&gt;
+&lt;h2 id=&#34;material&#34;&gt;Material&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;a href=&#34;https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/content/courses/bayes-nets/5-Hybrid-Bayesian-Networks_18-10-22.html&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Hybrid Bayesian Networks&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;
+&lt;a href=&#34;https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/content/courses/bayes-nets/Hybrid-BNs.html&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Hybrid Bayesian Networks&lt;/a&gt; by 
+&lt;a href=&#34;https://github.com/arielsaffer&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Ariel Saffer&lt;/a&gt; (one of our study group members)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;exercises&#34;&gt;Exercises&lt;/h2&gt;
+&lt;p&gt;These are answers and solutions to the exercises at the end of Part 3 in 
+&lt;a href=&#34;https://www.bnlearn.com/book-crc/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Bayesian Networks with Examples in R&lt;/a&gt; by M. Scutari and J.-B. Denis. Much of my inspiration for these solutions, where necessary, by consulting the solutions provided by the authors themselves as in the appendix.&lt;/p&gt;
+&lt;h3 id=&#34;r-environment&#34;&gt;&lt;code&gt;R&lt;/code&gt; Environment&lt;/h3&gt;
+&lt;p&gt;For today&amp;rsquo;s exercise, I load the following packages:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;library(bnlearn)
+library(rjags)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;scutari-31&#34;&gt;Scutari 3.1&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Explain why it is logical to get a three-step function for the discretised approach in Figure 3.2.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Figure 3.2 shows this discretisation:&lt;/p&gt;
+&lt;img src=&#34;https://www.erikkusch.com/courses/networksscutari/Screenshot 2021-06-08 153234.png&#34; width=&#34;900&#34;/&gt;
+&lt;p&gt;the reason we obtain a three-step function here is down to the intervals that were chosen to bin the continuous diametre data into discrete categories:&lt;/p&gt;
+&lt;p&gt;$$&amp;lt;6.16$$
+$$[6.16; 6.19]$$
+$$&amp;gt;6.19$$&lt;/p&gt;
+&lt;p&gt;Owing to these intervals, we fit all of our continuous data into three categories which mirror the three-step function portrayed in the above figure.&lt;/p&gt;
+&lt;h3 id=&#34;scutari-32&#34;&gt;Scutari 3.2&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Starting from the BUGS model in Section 3.1.1, write another BUGSmodel for the discretised model proposed in Section 3.1.2. The functions required for this task are described in the JAGS manual.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;The model for the hybrid case (which we are to adapt to the discretised approach) reads as such:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;model{ 
+  csup ~ dcat(sp); 
+  cdiam ~ dnorm(mu[csup], 1/sigma^2);
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;To adapt it for discretised data, I simply change the outcome distribution for &lt;code&gt;cdiam&lt;/code&gt; to also be categorical:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;model{ 
+  csup ~ dcat(sp); 
+  cdiam ~ dcat(Diams[, csup]);
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;where &lt;code&gt;Diams&lt;/code&gt; is a matrix that contains probabilities for the different diameters (rows) for suppliers (columns).&lt;/p&gt;
+&lt;h3 id=&#34;scutari-33&#34;&gt;Scutari 3.3&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Let d = 6.0, 6.1, 6.2, 6.4.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;ol&gt;
+&lt;li&gt;Using the BUGS model proposed in Section 3.1.1, write the &lt;code&gt;R&lt;/code&gt; script to estimate $P(S = s1 | D = d)$ for the continuous approach demonstrated in the same section.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;I start by simply repeating the code in section 3.1.1:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;sp &amp;lt;- c(0.5, 0.5)
+mu &amp;lt;- c(6.1, 6.25)
+sigma &amp;lt;- 0.05
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;From here, I take inspiration from the book in the later section on the crop model and write a sampling loop for which to retain samples. First, I create some objects to store data and outputs as well as do some housekeeping:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;## house-keeping
+set.seed(42) # there are random processes here
+
+## object creation
+diameters_vec &amp;lt;- c(6.0, 6.1, 6.2, 6.4)
+prob_vec &amp;lt;- rep(NA, length(diameters_vec))
+names(prob_vec) &amp;lt;- diameters_vec
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Next, I greatly dislike the reliance on model files that the book insists on and so I register my JAGS model code as an active text connection in &lt;code&gt;R&lt;/code&gt;:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;jags_mod &amp;lt;- textConnection(&amp;quot;model{
+                           csup ~ dcat(sp);
+                           cdiam ~ dnorm(mu[csup], 1/sigma^2);
+                           }&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Finally, I am ready to estimate $P(S = s1 | D = d)$:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;for (samp_iter in seq(length(diameters_vec))) {
+  # create data list
+  jags.data &amp;lt;- list(sp = sp, mu = mu, sigma = sigma, cdiam = diameters_vec[samp_iter])
+  # compile model
+  model &amp;lt;- jags.model(file = jags_mod, data = jags.data, quiet = TRUE)
+  update(model, n.iter = 1e4)
+  # sample model and retrieve vector of supplier identity (containing values 1 and 2)
+  simu &amp;lt;- coda.samples(model = model, variable.names = &amp;quot;csup&amp;quot;, n.iter = 2e4, thin = 20)[[1]]
+  # compute probability of supplier 1
+  prob_vec[samp_iter] &amp;lt;- sum(simu == 1) / length(simu)
+}
+prob_vec
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##     6   6.1   6.2   6.4 
+## 1.000 0.982 0.197 0.000
+&lt;/code&gt;&lt;/pre&gt;
+&lt;blockquote&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;Using the BUGS model obtained in Exercise 3.2, write the &lt;code&gt;R&lt;/code&gt; script to estimate $P(S = s1 | D = d)$ for the discretised approach suggested in Section 3.1.2.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Again, I start by typing out important parameters from the book:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;sp &amp;lt;- c(0.5, 0.5)
+Diams &amp;lt;- matrix(c(0.88493, 0.07914, 0.03593, 0.03593, 0.07914, 0.88493), 3)
+Diams
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##         [,1]    [,2]
+## [1,] 0.88493 0.03593
+## [2,] 0.07914 0.07914
+## [3,] 0.03593 0.88493
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Once more, I perform housekeeping and object creation prior to sampling. This time, however, I create a probability matrix to store the probability of each rod diametre in each diametre class belonging to supplier 1:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;## house-keeping
+set.seed(42) # there are random processes here
+
+## object creation
+diameters_vec &amp;lt;- c(6.0, 6.1, 6.2, 6.4)
+cdiam_vec &amp;lt;- 1:3
+dimnames &amp;lt;- list(
+  paste(&amp;quot;cdiam&amp;quot;, cdiam_vec, sep = &amp;quot;_&amp;quot;),
+  diameters_vec
+)
+prob_mat &amp;lt;- matrix(rep(NA, 12), ncol = 4)
+dimnames(prob_mat) &amp;lt;- dimnames
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;And there&amp;rsquo;s our model:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;jags_mod &amp;lt;- textConnection(&amp;quot;model{
+                            csup ~ dcat(sp);
+                            cdiam ~ dcat(Diams[, csup]);
+                            }&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Finally, I am ready to estimate $P(S = s1 | D = d)$:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;for (samp_iter in seq(length(cdiam_vec))) {
+  # create data list
+  jags.data &amp;lt;- list(sp = sp, Diams = Diams, cdiam = cdiam_vec[samp_iter])
+  # compile model
+  model &amp;lt;- jags.model(file = jags_mod, data = jags.data, quiet = TRUE)
+  update(model, n.iter = 1e4)
+  # sample model and retrieve vector of supplier identity (containing values 1 and 2)
+  simu &amp;lt;- coda.samples(model = model, variable.names = &amp;quot;csup&amp;quot;, n.iter = 2e4, thin = 20)[[1]]
+  # compute probability of supplier 1
+  prob_mat[samp_iter, ] &amp;lt;- sum(simu == 1) / length(simu)
+}
+prob_mat
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##             6   6.1   6.2   6.4
+## cdiam_1 0.966 0.966 0.966 0.966
+## cdiam_2 0.490 0.490 0.490 0.490
+## cdiam_3 0.035 0.035 0.035 0.035
+&lt;/code&gt;&lt;/pre&gt;
+&lt;blockquote&gt;
+&lt;p&gt;And check the results with Figure 3.2.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Looking at figure 3.2, I&amp;rsquo;d argue the above probabilities align with the figure:&lt;/p&gt;
+&lt;img src=&#34;https://www.erikkusch.com/courses/bayes-nets/Scutari3.2.png&#34; width=&#34;900&#34;/&gt;
+&lt;h3 id=&#34;scutari-34&#34;&gt;Scutari 3.4&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;In Section 3.1.1, the probability that the supplier is &lt;code&gt;s1&lt;/code&gt; knowing that the diameter is 6.2 was estimated to be 0.1824 which is not identical to the value obtained with JAGS.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;blockquote&gt;
+&lt;ol&gt;
+&lt;li&gt;Explain why the calculation with the &lt;code&gt;R&lt;/code&gt; function &lt;code&gt;dnorm&lt;/code&gt; is right and why the value 0.1824 is correct. Can you explain why the JAGS result is not exact? Propose a way to improve it.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Since either function relies on random processes, differences in seeds may explain the difference in inference. To improve the accuracy of the JAGS result, I would suggest increasing the sample size that led to its creation.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;ol start=&#34;2&#34;&gt;
+&lt;li&gt;Would this value be different if we modify the marginal distribution for the two suppliers?&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Yes. Marginal distributions are essential to the Bayes&#39; Theorem and a change thereof would necessitate a change in inference.&lt;/p&gt;
+&lt;h3 id=&#34;scutari-35&#34;&gt;Scutari 3.5&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Revisiting the discretisation in Section 3.1.2, compute the conditional probability tables for  $ D | S $ and  $ S | D $  when the interval boundaries are set to  $ (6.10, 6.18) $ instead of  $ (6.16, 6.19)$ . Compared to the results presented in Section 3.1.2, what is your conclusion?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Let&amp;rsquo;s start by repeating book code and updating the intervals to obtain $D | S$:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;mu &amp;lt;- c(6.1, 6.25)
+sigma &amp;lt;- 0.05
+limits &amp;lt;- c(6.10, 6.18)
+dsd &amp;lt;- matrix(
+  c(
+    diff(c(0, pnorm(limits, mu[1], sigma), 1)),
+    diff(c(0, pnorm(limits, mu[2], sigma), 1))
+  ),
+  3, 2
+)
+dimnames(dsd) &amp;lt;- list(D = c(&amp;quot;thin&amp;quot;, &amp;quot;average&amp;quot;, &amp;quot;thick&amp;quot;), S = c(&amp;quot;s1&amp;quot;, &amp;quot;s2&amp;quot;))
+dsd
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##          S
+## D                 s1          s2
+##   thin    0.50000000 0.001349898
+##   average 0.44520071 0.079406761
+##   thick   0.05479929 0.919243341
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;To obtain $ S | D $, we apply Bayes&#39; Theorem:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;jointd &amp;lt;- dsd / 2 # dive by 2 to get joint distribution over suppliers of which we have 2
+mardd &amp;lt;- rowSums(jointd) # marginal distribution of diametre class irrespective of supplier
+dds &amp;lt;- t(jointd / mardd) # find conditional probabilites
+dds
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##     D
+## S           thin   average      thick
+##   s1 0.997307473 0.8486359 0.05625964
+##   s2 0.002692527 0.1513641 0.94374036
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;One of our new limits in in fact the mean diametre supplied by supplier 1. That is clearly not a helpful limit as it simply shifts probability to supplier 1.&lt;/p&gt;
+&lt;h2 id=&#34;session-info&#34;&gt;Session Info&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;sessionInfo()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## R version 4.2.1 (2022-06-23 ucrt)
+## Platform: x86_64-w64-mingw32/x64 (64-bit)
+## Running under: Windows 10 x64 (build 19044)
+## 
+## Matrix products: default
+## 
+## locale:
+## [1] LC_COLLATE=English_Germany.utf8  LC_CTYPE=English_Germany.utf8    LC_MONETARY=English_Germany.utf8 LC_NUMERIC=C                     LC_TIME=English_Germany.utf8    
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+## [1] rjags_4-13    coda_0.19-4   bnlearn_4.8.1
+## 
+## loaded via a namespace (and not attached):
+##  [1] bslib_0.4.0       compiler_4.2.1    pillar_1.8.1      jquerylib_0.1.4   R.methodsS3_1.8.2 R.utils_2.12.0    tools_4.2.1       digest_0.6.29     jsonlite_1.8.0    evaluate_0.16    
+## [11] lifecycle_1.0.2   R.cache_0.16.0    lattice_0.20-45   rlang_1.0.5       cli_3.3.0         rstudioapi_0.14   yaml_2.3.5        parallel_4.2.1    blogdown_1.13     xfun_0.33        
+## [21] fastmap_1.1.0     styler_1.8.0      stringr_1.4.1     knitr_1.40        vctrs_0.4.1       sass_0.4.2        grid_4.2.1        glue_1.6.2        R6_2.5.1          fansi_1.0.3      
+## [31] rmarkdown_2.16    bookdown_0.29     purrr_0.3.4       magrittr_2.0.3    htmltools_0.5.3   utf8_1.2.2        stringi_1.7.8     cachem_1.0.6      R.oo_1.25.0
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Additional Static Exercises</title>
+      <link>https://www.erikkusch.com/courses/bayes-nets/static/</link>
+      <pubDate>Tue, 25 Oct 2022 00:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/courses/bayes-nets/static/</guid>
+      <description>&lt;style&gt;
+
+blockquote{
+color:#633a00;
+}
+
+&lt;/style&gt;
+&lt;h2 id=&#34;material&#34;&gt;Material&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;a href=&#34;https://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/content/courses/bayes-nets/Static-Bayesian-Networks.html&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Static Bayesian Networks&lt;/a&gt; by 
+&lt;a href=&#34;https://www.linkedin.com/in/felipe-sanchez-22b335135/&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Felipe Sanchez&lt;/a&gt; (one of our study group members)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;For detailed summary slides, please consult the separate sections on 
+&lt;a href=&#34;https://www.erikkusch.com/courses/bayes-nets/part-1/&#34;&gt;Multinomial&lt;/a&gt;, 
+&lt;a href=&#34;https://www.erikkusch.com/courses/bayes-nets/part-2/&#34;&gt;Gaussian&lt;/a&gt;, and 
+&lt;a href=&#34;https://www.erikkusch.com/courses/bayes-nets/part-3/&#34;&gt;Hybrid&lt;/a&gt; Bayesian Networks.&lt;/p&gt;
+&lt;h2 id=&#34;exercises&#34;&gt;Exercises&lt;/h2&gt;
+&lt;p&gt;These are answers and solutions to the exercises at the end of chapter 2 in 
+&lt;a href=&#34;https://link.springer.com/book/10.1007/978-1-4614-6446-4&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;Bayesian Networks in R with Applications in Systems Biology&lt;/a&gt; by by Radhakrishnan Nagarajan, Marco Scutari &amp;amp; Sophie Lèbre. Much of my inspiration for these solutions, where necessary, by consulting the solutions provided by the authors themselves as in the appendix.&lt;/p&gt;
+&lt;h3 id=&#34;r-environment&#34;&gt;&lt;code&gt;R&lt;/code&gt; Environment&lt;/h3&gt;
+&lt;p&gt;For today&amp;rsquo;s exercise, I load the following packages:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;library(bnlearn)
+library(igraph)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;nagarajan-21&#34;&gt;Nagarajan 2.1&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Consider the &lt;code&gt;asia&lt;/code&gt; synthetic data set from Lauritzen and Spiegelhalter (1988), which describes the diagnosis of a patient at a chest clinic who has just come back from a trip to Asia and is showing dyspnea.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id=&#34;part-a&#34;&gt;Part A&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Load the data set from the &lt;code&gt;bnlearn&lt;/code&gt; package and investigate its characteristics using the exploratory analysis techniques covered in Chap. 1.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;data(asia)
+str(asia)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## &#39;data.frame&#39;:	5000 obs. of  8 variables:
+##  $ A: Factor w/ 2 levels &amp;quot;no&amp;quot;,&amp;quot;yes&amp;quot;: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ S: Factor w/ 2 levels &amp;quot;no&amp;quot;,&amp;quot;yes&amp;quot;: 2 2 1 1 1 2 1 2 2 2 ...
+##  $ T: Factor w/ 2 levels &amp;quot;no&amp;quot;,&amp;quot;yes&amp;quot;: 1 1 2 1 1 1 1 1 1 1 ...
+##  $ L: Factor w/ 2 levels &amp;quot;no&amp;quot;,&amp;quot;yes&amp;quot;: 1 1 1 1 1 1 1 1 1 1 ...
+##  $ B: Factor w/ 2 levels &amp;quot;no&amp;quot;,&amp;quot;yes&amp;quot;: 2 1 1 2 1 1 1 2 2 2 ...
+##  $ E: Factor w/ 2 levels &amp;quot;no&amp;quot;,&amp;quot;yes&amp;quot;: 1 1 2 1 1 1 1 1 1 1 ...
+##  $ X: Factor w/ 2 levels &amp;quot;no&amp;quot;,&amp;quot;yes&amp;quot;: 1 1 2 1 1 1 1 1 1 1 ...
+##  $ D: Factor w/ 2 levels &amp;quot;no&amp;quot;,&amp;quot;yes&amp;quot;: 2 1 2 2 2 2 1 2 2 2 ...
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;summary(asia)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;##    A          S          T          L          B          E          X          D       
+##  no :4958   no :2485   no :4956   no :4670   no :2451   no :4630   no :4431   no :2650  
+##  yes:  42   yes:2515   yes:  44   yes: 330   yes:2549   yes: 370   yes: 569   yes:2350
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;part-b&#34;&gt;Part B&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Create a &lt;code&gt;bn&lt;/code&gt; object with the network structure described in the manual page of &lt;code&gt;asia&lt;/code&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;dag_2.1 &amp;lt;- model2network(&amp;quot;[A][S][T|A][L|S][B|S][D|B:E][E|T:L][X|E]&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;part-c&#34;&gt;Part C&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Derive the skeleton, the moral graph, and the CPDAG representing the equivalence class of the network. Plot them using &lt;code&gt;graphviz.plot&lt;/code&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# object creation
+skel_2.1 &amp;lt;- skeleton(dag_2.1)
+moral_2.1 &amp;lt;- moral(dag_2.1)
+equclass_2.1 &amp;lt;- cpdag(dag_2.1)
+# plotting
+par(mfrow = c(1, 3))
+graphviz.plot(skel_2.1, main = &amp;quot;Skeleton&amp;quot;)
+graphviz.plot(moral_2.1, main = &amp;quot;Moral&amp;quot;)
+graphviz.plot(equclass_2.1, main = &amp;quot;Equivalence Class&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;2022-10-25-nagara-static_files/figure-html/unnamed-chunk-4-1.png&#34; width=&#34;1440&#34; /&gt;&lt;/p&gt;
+&lt;h4 id=&#34;part-d&#34;&gt;Part D&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Identify the parents, the children, the neighbors, and the Markov blanket of each node.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# parents
+sapply(nodes(dag_2.1), bnlearn::parents, x = dag_2.1)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## $A
+## character(0)
+## 
+## $B
+## [1] &amp;quot;S&amp;quot;
+## 
+## $D
+## [1] &amp;quot;B&amp;quot; &amp;quot;E&amp;quot;
+## 
+## $E
+## [1] &amp;quot;L&amp;quot; &amp;quot;T&amp;quot;
+## 
+## $L
+## [1] &amp;quot;S&amp;quot;
+## 
+## $S
+## character(0)
+## 
+## $T
+## [1] &amp;quot;A&amp;quot;
+## 
+## $X
+## [1] &amp;quot;E&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# children
+sapply(nodes(dag_2.1), bnlearn::children, x = dag_2.1)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## $A
+## [1] &amp;quot;T&amp;quot;
+## 
+## $B
+## [1] &amp;quot;D&amp;quot;
+## 
+## $D
+## character(0)
+## 
+## $E
+## [1] &amp;quot;D&amp;quot; &amp;quot;X&amp;quot;
+## 
+## $L
+## [1] &amp;quot;E&amp;quot;
+## 
+## $S
+## [1] &amp;quot;B&amp;quot; &amp;quot;L&amp;quot;
+## 
+## $T
+## [1] &amp;quot;E&amp;quot;
+## 
+## $X
+## character(0)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# neighbors
+sapply(nodes(dag_2.1), bnlearn::nbr, x = dag_2.1)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## $A
+## [1] &amp;quot;T&amp;quot;
+## 
+## $B
+## [1] &amp;quot;D&amp;quot; &amp;quot;S&amp;quot;
+## 
+## $D
+## [1] &amp;quot;B&amp;quot; &amp;quot;E&amp;quot;
+## 
+## $E
+## [1] &amp;quot;D&amp;quot; &amp;quot;L&amp;quot; &amp;quot;T&amp;quot; &amp;quot;X&amp;quot;
+## 
+## $L
+## [1] &amp;quot;E&amp;quot; &amp;quot;S&amp;quot;
+## 
+## $S
+## [1] &amp;quot;B&amp;quot; &amp;quot;L&amp;quot;
+## 
+## $T
+## [1] &amp;quot;A&amp;quot; &amp;quot;E&amp;quot;
+## 
+## $X
+## [1] &amp;quot;E&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# markov blanket
+sapply(nodes(dag_2.1), bnlearn::mb, x = dag_2.1)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## $A
+## [1] &amp;quot;T&amp;quot;
+## 
+## $B
+## [1] &amp;quot;D&amp;quot; &amp;quot;E&amp;quot; &amp;quot;S&amp;quot;
+## 
+## $D
+## [1] &amp;quot;B&amp;quot; &amp;quot;E&amp;quot;
+## 
+## $E
+## [1] &amp;quot;B&amp;quot; &amp;quot;D&amp;quot; &amp;quot;L&amp;quot; &amp;quot;T&amp;quot; &amp;quot;X&amp;quot;
+## 
+## $L
+## [1] &amp;quot;E&amp;quot; &amp;quot;S&amp;quot; &amp;quot;T&amp;quot;
+## 
+## $S
+## [1] &amp;quot;B&amp;quot; &amp;quot;L&amp;quot;
+## 
+## $T
+## [1] &amp;quot;A&amp;quot; &amp;quot;E&amp;quot; &amp;quot;L&amp;quot;
+## 
+## $X
+## [1] &amp;quot;E&amp;quot;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;nagarajan-22&#34;&gt;Nagarajan 2.2&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Using the network structures created in Exercise 2.1 for the asia data set, produce the following plots with &lt;code&gt;graphviz.plot&lt;/code&gt;:&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id=&#34;part-a-1&#34;&gt;Part A&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;A plot of the CPDAG of the equivalence class in which the arcs belonging to a v-structure are highlighted (either with a different color or using a thicker line width).&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;graphviz.plot(equclass_2.1,
+  highlight = list(arcs = vstructs(equclass_2.1, arcs = TRUE), lwd = 2, col = &amp;quot;red&amp;quot;)
+)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;2022-10-25-nagara-static_files/figure-html/unnamed-chunk-6-1.png&#34; width=&#34;1440&#34; /&gt;&lt;/p&gt;
+&lt;h4 id=&#34;part-b-1&#34;&gt;Part B&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Fill the nodes with different colors according to their role in the diagnostic process: causes (“visit to Asia” and “smoking”), effects (“tuberculosis,” “lung cancer,” and “bronchitis”), and the diagnosis proper (“chest X-ray,” “dyspnea,” and “either tuberculosis or lung cancer/bronchitis”).&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;No clue on how to do this with &lt;code&gt;graphviz.plot&lt;/code&gt; and the solution provided in the book results in an error message. Instead, I use &lt;code&gt;igraph&lt;/code&gt; for plotting:&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# create igraph object
+equclass_igraph &amp;lt;- graph_from_edgelist(arcs(equclass_2.1))
+# assign colours, effects = red; causes = green; diagnosis = blue
+V(equclass_igraph)$color &amp;lt;- c(&amp;quot;blue&amp;quot;, &amp;quot;red&amp;quot;, &amp;quot;green&amp;quot;, &amp;quot;green&amp;quot;, &amp;quot;red&amp;quot;, &amp;quot;blue&amp;quot;, &amp;quot;red&amp;quot;, &amp;quot;green&amp;quot;)
+V(equclass_igraph)$name &amp;lt;- c(&amp;quot;Visit to Asia&amp;quot;, &amp;quot;Tubercolosis&amp;quot;, &amp;quot;Bronchitis&amp;quot;, &amp;quot;Dyspnoea&amp;quot;, &amp;quot;Smoking&amp;quot;, &amp;quot;Tuberculosis vs Cancer&amp;quot;, &amp;quot;X-Ray&amp;quot;, &amp;quot;Lung Cancer&amp;quot;)
+# plotting
+plot(equclass_igraph,
+  layout = layout.circle,
+  vertex.size = 30,
+  vertex.label.color = &amp;quot;black&amp;quot;
+)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;2022-10-25-nagara-static_files/figure-html/unnamed-chunk-7-1.png&#34; width=&#34;1440&#34; /&gt;&lt;/p&gt;
+&lt;h4 id=&#34;part-c-1&#34;&gt;Part C&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Explore different layouts by changing the &lt;code&gt;layout&lt;/code&gt; and &lt;code&gt;shape&lt;/code&gt; arguments.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;par(mfrow = c(2, 5))
+layout &amp;lt;- c(&amp;quot;dot&amp;quot;, &amp;quot;neato&amp;quot;, &amp;quot;twopi&amp;quot;, &amp;quot;circo&amp;quot;, &amp;quot;fdp&amp;quot;)
+shape &amp;lt;- c(&amp;quot;ellipse&amp;quot;, &amp;quot;circle&amp;quot;)
+for (l in layout) {
+  for (s in shape) {
+    graphviz.plot(equclass_2.1, shape = s, layout = l, main = paste(l, s))
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;2022-10-25-nagara-static_files/figure-html/unnamed-chunk-8-1.png&#34; width=&#34;1440&#34; /&gt;&lt;/p&gt;
+&lt;h3 id=&#34;nagarajan-23&#34;&gt;Nagarajan 2.3&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Consider the &lt;code&gt;marks&lt;/code&gt; data set analyzed in Sect. 2.3.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;data(marks)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;part-a-2&#34;&gt;Part A&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Discretize the data using a quantile transform and different numbers of intervals (say, from 2 to 5). How does the network structure learned from the resulting data sets change as the number of intervals increases?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;intervals &amp;lt;- 2:5
+par(mfrow = c(1, length(intervals)))
+for (int in intervals) {
+  disc_data &amp;lt;- discretize(marks, breaks = int, method = &amp;quot;quantile&amp;quot;)
+  graphviz.plot(hc(disc_data), main = int)
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;2022-10-25-nagara-static_files/figure-html/unnamed-chunk-10-1.png&#34; width=&#34;1440&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;The network structure becomes flatter. I reckon this is caused by the loss of information as the number of intervals is increased and variables are discretised with no regard for joint distributions.&lt;/p&gt;
+&lt;h4 id=&#34;part-b-2&#34;&gt;Part B&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Repeat the discretization using interval discretization using up to 5 intervals, and compare the resulting networks with the ones obtained previously with quantile discretization.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;intervals &amp;lt;- 2:5
+par(mfrow = c(1, length(intervals)))
+for (int in intervals) {
+  disc_data &amp;lt;- discretize(marks, breaks = int, method = &amp;quot;interval&amp;quot;)
+  graphviz.plot(hc(disc_data), main = int)
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;2022-10-25-nagara-static_files/figure-html/unnamed-chunk-11-1.png&#34; width=&#34;1440&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Although the specific placement of the nodes changes between the two discretisation approaches, the general pattern of loss of arcs as number of intervals increases stays constant.&lt;/p&gt;
+&lt;h4 id=&#34;part-c-2&#34;&gt;Part C&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Does Hartemink’s discretization algorithm perform better than either quantile or interval discretization? How does its behavior depend on the number of initial breaks?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;intervals &amp;lt;- 2:5
+par(mfrow = c(1, length(intervals)))
+for (int in intervals) {
+  disc_data &amp;lt;- discretize(marks, breaks = int, method = &amp;quot;hartemink&amp;quot;, ibreaks = 50, idisc = &amp;quot;interval&amp;quot;)
+  graphviz.plot(hc(disc_data), main = int)
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;2022-10-25-nagara-static_files/figure-html/unnamed-chunk-12-1.png&#34; width=&#34;1440&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;This form of discretisation seems more robust when assessing how accurately the DAG structure is learned when number of intervals is increased.&lt;/p&gt;
+&lt;h3 id=&#34;nagarajan-24&#34;&gt;Nagarajan 2.4&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The ALARM network (Beinlich et al. 1989) is a Bayesian network designed to provide an alarm message system for patients hospitalized in intensive care units (ICU). Since ALARM is commonly used as a benchmark in literature, a synthetic data set of 5000 observations generated from this network is available from bnlearn as &lt;code&gt;alarm&lt;/code&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;data(alarm)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;part-a-3&#34;&gt;Part A&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Create a &lt;code&gt;bn&lt;/code&gt; object for the “true” structure of the network using the model string provided in its manual page.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;true_bn &amp;lt;- model2network(paste(&amp;quot;[HIST|LVF][CVP|LVV]&amp;quot;, &amp;quot;[PCWP|LVV][HYP][LVV|HYP:LVF][LVF]&amp;quot;,
+  &amp;quot;[STKV|HYP:LVF][ERLO][HRBP|ERLO:HR]&amp;quot;, &amp;quot;[HREK|ERCA:HR][ERCA][HRSA|ERCA:HR][ANES]&amp;quot;,
+  &amp;quot;[APL][TPR|APL][ECO2|ACO2:VLNG][KINK]&amp;quot;, &amp;quot;[MINV|INT:VLNG][FIO2][PVS|FIO2:VALV]&amp;quot;,
+  &amp;quot;[SAO2|PVS:SHNT][PAP|PMB][PMB][SHNT|INT:PMB]&amp;quot;, &amp;quot;[INT][PRSS|INT:KINK:VTUB][DISC][MVS]&amp;quot;,
+  &amp;quot;[VMCH|MVS][VTUB|DISC:VMCH]&amp;quot;, &amp;quot;[VLNG|INT:KINK:VTUB][VALV|INT:VLNG]&amp;quot;,
+  &amp;quot;[ACO2|VALV][CCHL|ACO2:ANES:SAO2:TPR]&amp;quot;, &amp;quot;[HR|CCHL][CO|HR:STKV][BP|CO:TPR]&amp;quot;,
+  sep = &amp;quot;&amp;quot;
+))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;part-b-3&#34;&gt;Part B&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Compare the networks learned with different constraint-based algorithms with the true one, both in terms of structural differences and using either BIC or BDe.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# learning
+bn.gs &amp;lt;- gs(alarm)
+bn.iamb &amp;lt;- iamb(alarm)
+bn.inter &amp;lt;- inter.iamb(alarm)
+# plotting
+par(mfrow = c(2, 2))
+graphviz.plot(true_bn, main = &amp;quot;True Structure&amp;quot;)
+graphviz.plot(bn.gs, main = &amp;quot;Grow-Shrink&amp;quot;)
+graphviz.plot(bn.iamb, main = &amp;quot;IAMB&amp;quot;)
+graphviz.plot(bn.inter, main = &amp;quot;Inter-IAMB&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;2022-10-25-nagara-static_files/figure-html/unnamed-chunk-15-1.png&#34; width=&#34;1440&#34; /&gt;&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# comparisons
+unlist(bnlearn::compare(true_bn, bn.gs))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## tp fp fn 
+##  5 14 41
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;unlist(bnlearn::compare(true_bn, bn.iamb))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## tp fp fn 
+## 16 18 30
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;unlist(bnlearn::compare(true_bn, bn.inter))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## tp fp fn 
+## 27 11 19
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;# Scores
+score(cextend(true_bn), alarm, type = &amp;quot;bde&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] -218063
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;score(cextend(bn.gs), alarm, type = &amp;quot;bde&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] -337116.1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;score(cextend(bn.iamb), alarm, type = &amp;quot;bde&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] -263670.8
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;score(cextend(bn.inter), alarm, type = &amp;quot;bde&amp;quot;)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] -259922.1
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;part-c-3&#34;&gt;Part C&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;The overall performance of constraint-based algorithms suggests that the asymptotic $\chi^2$ conditional independence tests may not be appropriate for analyzing &lt;code&gt;alarm&lt;/code&gt;. Are permutation or shrinkage tests better choices?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;This should improve the performance drastically. However, computational time is so high that I refuse to run this code. Even the first call to &lt;code&gt;gs()&lt;/code&gt; below takes more than 12 hours to run. I don&amp;rsquo;t know what the authors of the exercise material had envisioned the learning outcome of this to be.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;bn.gs2 &amp;lt;- gs(alarm, test = &amp;quot;smc-x2&amp;quot;)
+bn.iamb2 &amp;lt;- iamb(alarm, test = &amp;quot;smc-x2&amp;quot;)
+bn.inter2 &amp;lt;- inter.iamb(alarm, test = &amp;quot;smc-x2&amp;quot;)
+unlist(compare(true_bn, bn.gs2))
+unlist(compare(true_bn, bn.iamb2))
+unlist(compare(true_bn, bn.inter2))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h4 id=&#34;part-d-1&#34;&gt;Part D&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;How are the above learning strategies affected by changes to &lt;code&gt;alpha&lt;/code&gt;?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Shrinkage should also improves structure learning performance, but computational time should be much lower than it is with permutation tests. Much like with the previous exercise, however, the code below just takes too long for my liking to finish running.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;bn.gs3 &amp;lt;- gs(alarm, test = &amp;quot;smc-x2&amp;quot;, alpha = 0.01)
+bn.iamb3 &amp;lt;- iamb(alarm, test = &amp;quot;smc-x2&amp;quot;, alpha = 0.01)
+bn.inter3 &amp;lt;- inter.iamb(alarm, test = &amp;quot;smc-x2&amp;quot;, alpha = 0.01)
+unlist(compare(true, bn.gs3))
+unlist(compare(true, bn.iamb3))
+unlist(compare(true, bn.inter3))
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3 id=&#34;nagarajan-25&#34;&gt;Nagarajan 2.5&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Consider again the &lt;code&gt;alarm&lt;/code&gt; network used in Exercise 2.4.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id=&#34;part-a-4&#34;&gt;Part A&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Learn its structure with hill-climbing and tabu search, using the posterior density BDe as a score function. How does the network structure change with the imaginary sample size &lt;code&gt;iss&lt;/code&gt;?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;par(mfrow = c(2, 5))
+for (iss in c(1, 5, 10, 20, 50)) {
+  bn &amp;lt;- hc(alarm, score = &amp;quot;bde&amp;quot;, iss = iss)
+  main &amp;lt;- paste(&amp;quot;hc(..., iss = &amp;quot;, iss, &amp;quot;)&amp;quot;, sep = &amp;quot;&amp;quot;)
+  sub &amp;lt;- paste(narcs(bn), &amp;quot;arcs&amp;quot;)
+  graphviz.plot(bn, main = main, sub = sub)
+}
+for (iss in c(1, 5, 10, 20, 50)) {
+  bn &amp;lt;- tabu(alarm, score = &amp;quot;bde&amp;quot;, iss = iss)
+  main &amp;lt;- paste(&amp;quot;tabu(..., iss = &amp;quot;, iss, &amp;quot;)&amp;quot;, sep = &amp;quot;&amp;quot;)
+  sub &amp;lt;- paste(narcs(bn), &amp;quot;arcs&amp;quot;)
+  graphviz.plot(bn, main = main, sub = sub)
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;2022-10-25-nagara-static_files/figure-html/unnamed-chunk-18-1.png&#34; width=&#34;1440&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;The number of arcs increases with &lt;code&gt;iss&lt;/code&gt;. Large values of &lt;code&gt;iss&lt;/code&gt; over-smooth the data and thus result in networks with similar scores and therefore allow for many arcs to be included in the final networks.&lt;/p&gt;
+&lt;h4 id=&#34;part-b-4&#34;&gt;Part B&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Does the length of the tabu list have a significant impact on the network structures learned with &lt;code&gt;tabu&lt;/code&gt;?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;par(mfrow = c(1, 5))
+for (n in c(10, 15, 20, 50, 100)) {
+  bn &amp;lt;- tabu(alarm, score = &amp;quot;bde&amp;quot;, tabu = n)
+  bde &amp;lt;- score(bn, alarm, type = &amp;quot;bde&amp;quot;)
+  main &amp;lt;- paste(&amp;quot;tabu(..., tabu = &amp;quot;, n, &amp;quot;)&amp;quot;, sep = &amp;quot;&amp;quot;)
+  sub &amp;lt;- paste(ntests(bn), &amp;quot;steps, score&amp;quot;, bde)
+  graphviz.plot(bn, main = main, sub = sub)
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;2022-10-25-nagara-static_files/figure-html/unnamed-chunk-19-1.png&#34; width=&#34;1440&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Increasing the tabu length severely affects the learned structure of the final network. Firstly, it does so by increasing the raw number of network structures explored by tabu. Secondly, getting stuck in local maxima becomes increasingly unlikely.&lt;/p&gt;
+&lt;h4 id=&#34;part-c-4&#34;&gt;Part C&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;How does the BIC score compare with BDe at different sample sizes in terms of structure and score of the learned network?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;par(mfrow = c(2, 6))
+for (n in c(100, 200, 500, 1000, 2000, 5000)) {
+  bn.bde &amp;lt;- hc(alarm[1:n, ], score = &amp;quot;bde&amp;quot;)
+  bn.bic &amp;lt;- hc(alarm[1:n, ], score = &amp;quot;bic&amp;quot;)
+  bde &amp;lt;- score(bn.bde, alarm, type = &amp;quot;bde&amp;quot;)
+  bic &amp;lt;- score(bn.bic, alarm, type = &amp;quot;bic&amp;quot;)
+  main &amp;lt;- paste(&amp;quot;BDe, sample size&amp;quot;, n)
+  sub &amp;lt;- paste(ntests(bn.bde), &amp;quot;steps, score&amp;quot;, bde)
+  graphviz.plot(bn.bde, main = main, sub = sub)
+  main &amp;lt;- paste(&amp;quot;BIC, sample size&amp;quot;, n)
+  sub &amp;lt;- paste(ntests(bn.bic), &amp;quot;steps, score&amp;quot;, bic)
+  graphviz.plot(bn.bic, main = main, sub = sub)
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;2022-10-25-nagara-static_files/figure-html/unnamed-chunk-20-1.png&#34; width=&#34;1440&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;The networks become more similar as sample size increases. At small sample sizes, BIC results in sparser networks than BDe.&lt;/p&gt;
+&lt;h3 id=&#34;nagarajan-26&#34;&gt;Nagarajan 2.6&lt;/h3&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Consider the observational data set from Sachs et al. (2005) used in Sect. 2.5.1 (the original data set, not the discretized one).&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h4 id=&#34;part-a-5&#34;&gt;Part A&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Evaluate the networks learned by hill-climbing with BIC and BGe using cross-validation and the log-likelihood loss function.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;The sachs data file is available
+&lt;a href=&#34;https://www.bnlearn.com/book-useR/code/sachs.data.txt.gz&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;sachs &amp;lt;- read.table(&amp;quot;sachs.data.txt&amp;quot;, header = TRUE)
+bn.bic &amp;lt;- hc(sachs, score = &amp;quot;bic-g&amp;quot;)
+bn.cv(bn.bic, data = sachs)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## 
+##   k-fold cross-validation for Bayesian networks
+## 
+##   target network structure:
+##    [praf][PIP2][p44.42][PKC][pmek|praf][PIP3|PIP2][pakts473|p44.42][P38|PKC][plcg|PIP3][PKA|p44.42:pakts473][pjnk|PKC:P38] 
+##   number of folds:                       10 
+##   loss function:                         Log-Likelihood Loss (Gauss.) 
+##   expected loss:                         65.48251
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;bn.bge &amp;lt;- hc(sachs, score = &amp;quot;bge&amp;quot;)
+bn.cv(bn.bge, data = sachs)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## 
+##   k-fold cross-validation for Bayesian networks
+## 
+##   target network structure:
+##    [praf][plcg][PIP2][p44.42][PKC][pmek|praf][PIP3|PIP2][pakts473|p44.42][P38|PKC][PKA|p44.42:pakts473][pjnk|PKC:P38] 
+##   number of folds:                       10 
+##   loss function:                         Log-Likelihood Loss (Gauss.) 
+##   expected loss:                         65.3477
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The BGe network fits the data slightly better than the BIC-network.&lt;/p&gt;
+&lt;h4 id=&#34;part-b-5&#34;&gt;Part B&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Use bootstrap resampling to evaluate the distribution of the number of arcs present in each of the networks learned in the previous point. Do they differ significantly?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;set.seed(42)
+narcs.bic &amp;lt;- bn.boot(sachs, algorithm = &amp;quot;hc&amp;quot;, algorithm.args = list(score = &amp;quot;bic-g&amp;quot;), statistic = narcs)
+narcs.bge &amp;lt;- bn.boot(sachs, algorithm = &amp;quot;hc&amp;quot;, algorithm.args = list(score = &amp;quot;bge&amp;quot;), statistic = narcs)
+narcs.bic &amp;lt;- unlist(narcs.bic)
+narcs.bge &amp;lt;- unlist(narcs.bge)
+par(mfrow = c(1, 2))
+hist(narcs.bic, main = &amp;quot;BIC&amp;quot;, freq = FALSE)
+curve(dnorm(x, mean = mean(narcs.bic), sd = sd(narcs.bic)), add = TRUE, col = 2)
+hist(narcs.bge, main = &amp;quot;BGe&amp;quot;, freq = FALSE)
+curve(dnorm(x, mean = mean(narcs.bge), sd = sd(narcs.bge)), add = TRUE, col = 2)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;&lt;img src=&#34;2022-10-25-nagara-static_files/figure-html/unnamed-chunk-22-1.png&#34; width=&#34;1440&#34; /&gt;&lt;/p&gt;
+&lt;p&gt;Number-of-arc-distributions are markedly different between BIC and BGe networks.&lt;/p&gt;
+&lt;h4 id=&#34;part-c-5&#34;&gt;Part C&lt;/h4&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Compute the averaged network structure for &lt;code&gt;sachs&lt;/code&gt; using hill-climbing with BGe and different imaginary sample sizes. How does the value of the significance threshold change as &lt;code&gt;iss&lt;/code&gt; increases?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;set.seed(42)
+t &amp;lt;- c()
+iss &amp;lt;- c(5, 10, 20, 50, 100)
+for (i in iss) {
+  s &amp;lt;- boot.strength(sachs,
+    algorithm = &amp;quot;hc&amp;quot;,
+    algorithm.args = list(score = &amp;quot;bge&amp;quot;, iss = i)
+  )
+  t &amp;lt;- c(t, attr(s, &amp;quot;threshold&amp;quot;))
+}
+t
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## [1] 0.780 0.415 0.430 0.380 0.440
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2 id=&#34;session-info&#34;&gt;Session Info&lt;/h2&gt;
+&lt;pre&gt;&lt;code class=&#34;language-r&#34;&gt;sessionInfo()
+&lt;/code&gt;&lt;/pre&gt;
+&lt;pre&gt;&lt;code&gt;## R version 4.2.1 (2022-06-23 ucrt)
+## Platform: x86_64-w64-mingw32/x64 (64-bit)
+## Running under: Windows 10 x64 (build 19044)
+## 
+## Matrix products: default
+## 
+## locale:
+## [1] LC_COLLATE=English_Germany.utf8  LC_CTYPE=English_Germany.utf8    LC_MONETARY=English_Germany.utf8 LC_NUMERIC=C                     LC_TIME=English_Germany.utf8    
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+## [1] igraph_1.3.4  bnlearn_4.8.1
+## 
+## loaded via a namespace (and not attached):
+##  [1] highr_0.9           bslib_0.4.0         compiler_4.2.1      jquerylib_0.1.4     R.methodsS3_1.8.2   R.utils_2.12.0      tools_4.2.1         digest_0.6.29       jsonlite_1.8.0     
+## [10] evaluate_0.16       R.cache_0.16.0      pkgconfig_2.0.3     rlang_1.0.5         graph_1.74.0        cli_3.3.0           rstudioapi_0.14     Rgraphviz_2.40.0    yaml_2.3.5         
+## [19] parallel_4.2.1      blogdown_1.13       xfun_0.33           fastmap_1.1.0       styler_1.8.0        stringr_1.4.1       knitr_1.40          sass_0.4.2          vctrs_0.4.1        
+## [28] grid_4.2.1          stats4_4.2.1        R6_2.5.1            rmarkdown_2.16      bookdown_0.29       purrr_0.3.4         magrittr_2.0.3      htmltools_0.5.3     BiocGenerics_0.42.0
+## [37] stringi_1.7.8       cachem_1.0.6        R.oo_1.25.0
+&lt;/code&gt;&lt;/pre&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Bayesian Networks</title>
+      <link>https://www.erikkusch.com/courses/bayes-nets/</link>
+      <pubDate>Fri, 01 Jan 2021 00:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/courses/bayes-nets/</guid>
+      <description>&lt;p&gt;If you are seeing this page, something went awry in the build of the website. Please find the first course material for this course 
+&lt;a href=&#34;https://www.erikkusch.com/courses/bayes-nets/introduction/&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Bayesian Networks Study Group</title>
+      <link>https://www.erikkusch.com/project/bayesnets/</link>
+      <pubDate>Mon, 28 Dec 2020 00:00:00 +0000</pubDate>
+      <guid>https://www.erikkusch.com/project/bayesnets/</guid>
+      <description>&lt;div class=&#34;alert alert-success&#34;&gt;
+  &lt;div&gt;
+    This study group has come to an end. All information about it can still be found below. We are now coordinating through Slack to get our fix of all things Bayes. Our Slack Workspace is open to anyone who wants to join us. To do so, simply let me know by &lt;a href=&#34;https://www.erikkusch.com/about#contact&#34;&gt;contacting me&lt;/a&gt; and shortly introduce yourself.
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;h1 id=&#34;motivation&#34;&gt;Motivation&lt;/h1&gt;
+&lt;p&gt;Building on the success of the 
+&lt;a href=&#34;https://www.erikkusch.com/project/aubayes/&#34;&gt;Bayes Study Group&lt;/a&gt; I ran two years ago, I have decided to create another study group this time focusing on explicit inference and analysis of Bayesian Networks which I believe are a neat tool for hypothesis testing.&lt;/p&gt;
+&lt;h1 id=&#34;conduct--logistics&#34;&gt;Conduct &amp;amp; Logistics&lt;/h1&gt;
+&lt;p&gt;Below, you will find a few key facts outlining how this Bayesian Network Study Group sessions are run. You will find that what we do is quite a lot (I would like to think it quite exhaustive, actually).&lt;/p&gt;
+&lt;p&gt;That being said, I realise that what I propose is quite a big-time commitment – both in per-week hours and for how long this study group is supposed to run.&lt;/p&gt;
+&lt;h2 id=&#34;meetings&#34;&gt;Meetings:&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Scheduling:
+&lt;ul&gt;
+&lt;li&gt;Tuesday 1500-1700 CEST (sessions end earlier if we are done earlier, of course)&lt;/li&gt;
+&lt;li&gt;Weekly for 8 sessions&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;contents&#34;&gt;Contents&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;We follow the material noted further down under Group Material&lt;/li&gt;
+&lt;li&gt;We prepare ourselves by working through the material noted for each session the proposed 
+&lt;a href=&#34;https://www.erikkusch.com/project/bayesnets/Schedule.pdf&#34;&gt;schedule&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;At the start of each session, either me or a volunteer quickly presents a summary of the preparation material. This does not mean a presenter should have mastered the material at all – simply be able to provide a red-thread through the contents and get a discussion going. We then go into questions/challenges concerning the material, practical examples, and personal implementations.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id=&#34;material&#34;&gt;Material&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Book “Bayesian Networks With Examples in R” by Marco Scutari &amp;amp; Jean-Baptiste Denis; available 
+&lt;a href=&#34;https://www.routledge.com/Bayesian-Networks-With-Examples-in-R/Scutari-Denis/p/book/9780367366513&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;here&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Book “Bayesian Networks in R with Applications in Systems Biology” by Radhakrishnan Nagarajan, Marco Scutari &amp;amp; Sophie Lèbre; available 
+&lt;a href=&#34;https://link.springer.com/book/10.1007/978-1-4614-6446-4&#34; target=&#34;_blank&#34; rel=&#34;noopener&#34;&gt;here&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
