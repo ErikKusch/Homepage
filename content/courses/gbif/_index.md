@@ -2,7 +2,7 @@
 title: Accessing, handling, and referencing open biodiversity data using the Global Biodiversity Information Facility (GBIF)
 linktitle: Motivation & Workshop
 slug: overview
-date: 2024-11-06
+date: 2024-10-29
 authors:
 - ErikKusch
 external_link: ""

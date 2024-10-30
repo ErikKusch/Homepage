@@ -1,0 +1,3004 @@
+---
+title: "Downloading Data with rgbif"
+author: Erik Kusch
+date: '2023-05-21'
+slug: datadownload
+categories:
+  - GBIF
+  - Biodiversity
+  - Open Science
+tags:
+  - GBIF
+  - Biodiversity
+  - Open Science
+subtitle: "Obtaining GBIF Mediated Data"
+summary: 'A quick overview of data retrieval with `rgbif`.'
+authors: []
+lastmod: '2023-11-06T20:00:00+01:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: 
+output:
+  blogdown::html_page:
+    keep_md: true
+    # toc: true
+    # toc_depth: 1
+    # number_sections: false
+# header-includes:
+#   <script src = "https://polyfill.io/v3/polyfill.min.js?features = es6"></script>
+#   <script id = "MathJax-script" async src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+math: true
+type: docs
+toc: true 
+menu:
+  gbif:
+    parent: Practical Exercises
+    weight: 6   
+weight: 6
+---
+
+
+<div id="TOC">
+
+</div>
+
+{{% alert normal %}}
+<details>
+<summary>
+Preamble, Package-Loading, and GBIF API Credential Registering (click here):
+</summary>
+<pre class="r"><code>## Custom install &amp; load function
+install.load.package &lt;- function(x) {
+  if (!require(x, character.only = TRUE)) {
+    install.packages(x, repos = &quot;http://cran.us.r-project.org&quot;)
+  }
+  require(x, character.only = TRUE)
+}
+## names of packages we want installed (if not installed yet) and loaded
+package_vec &lt;- c(
+  &quot;rgbif&quot;,
+  &quot;knitr&quot;, # for rmarkdown table visualisations
+  &quot;rio&quot; # for dwc import
+)
+## executing install &amp; load for each package
+sapply(package_vec, install.load.package)</code></pre>
+<pre><code>## rgbif knitr   rio 
+##  TRUE  TRUE  TRUE</code></pre>
+<pre class="r"><code>options(gbif_user = &quot;my gbif username&quot;)
+options(gbif_email = &quot;my registred gbif e-mail&quot;)
+options(gbif_pwd = &quot;my gbif password&quot;)</code></pre>
+</details>
+<p>{{% /alert %}}</p>
+<p>First, we need to register the correct <strong>usageKey</strong> for <em>Lagopus muta</em>:</p>
+<pre class="r"><code>sp_name &lt;- &quot;Lagopus muta&quot;
+sp_backbone &lt;- name_backbone(name = sp_name)
+sp_key &lt;- sp_backbone$usageKey</code></pre>
+<p>Second, this is the specific data we are interested in obtaining:</p>
+<pre class="r"><code>occ_final &lt;- occ_search(
+  taxonKey = sp_key,
+  country = &quot;NO&quot;,
+  year = &quot;2000,2020&quot;,
+  basisOfRecord = &quot;HUMAN_OBSERVATION&quot;,
+  occurrenceStatus = &quot;PRESENT&quot;
+)</code></pre>
+<p>Finally, we are ready to obtain GBIF mediated data we may want to use in downstream analyses and applications. This can be done in one of two ways - either via:
+1. Near-Instant Download - via <code>occ_data(...)</code>
+2. Asynchronous Download - via <code>occ_download(...)</code></p>
+<p>Let’s explore both of these in turn.</p>
+<div id="near-instant-download" class="section level1">
+<h1>Near-Instant Download</h1>
+<p>{{% alert warning %}}
+Near-instant downloads should only ever be used for initial data exploration and data stream/model building and <strong>not for final publications</strong>.
+{{% /alert %}}</p>
+<p>Near-instant downloads do not require a GBIF account to be set-up and are the quickest way to obtain GBIF mediated data, but also the more limited functionality since near-instant downloads allow the user to only obtain 100,000 records per query and do not create citable DOIs for easy reference and accreditation of GBIF mediated data.</p>
+<p>Let me demonstrate how these can be executed nevertheless.</p>
+<p>As a matter of fact, we have already executed one of these through our call to <code>occ_search(...)</code> at the top of this page. While this function does download data via the <code>...$data</code> output it provides, let’s showcase instead how we could use the <code>occ_data(...)</code> function to arrive at the same result:</p>
+<pre class="r"><code>NI_occ &lt;- occ_data(
+  taxonKey = sp_key,
+  country = &quot;NO&quot;,
+  year = &quot;2000,2020&quot;,
+  basisOfRecord = &quot;HUMAN_OBSERVATION&quot;,
+  occurrenceStatus = &quot;PRESENT&quot;
+)
+knitr::kable(head(NI_occ$data))</code></pre>
+<table style="width:100%;">
+<colgroup>
+<col width="0%" />
+<col width="1%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="1%" />
+<col width="1%" />
+<col width="1%" />
+<col width="1%" />
+<col width="0%" />
+<col width="0%" />
+<col width="1%" />
+<col width="1%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="1%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="1%" />
+<col width="0%" />
+<col width="1%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="1%" />
+<col width="2%" />
+<col width="0%" />
+<col width="0%" />
+<col width="1%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="1%" />
+<col width="2%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="1%" />
+<col width="0%" />
+<col width="0%" />
+<col width="2%" />
+<col width="1%" />
+<col width="1%" />
+<col width="2%" />
+<col width="0%" />
+<col width="2%" />
+<col width="1%" />
+<col width="0%" />
+<col width="1%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="1%" />
+<col width="1%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="1%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="1%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="1%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="1%" />
+<col width="1%" />
+<col width="0%" />
+<col width="0%" />
+<col width="1%" />
+<col width="0%" />
+<col width="1%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">key</th>
+<th align="left">scientificName</th>
+<th align="right">decimalLatitude</th>
+<th align="right">decimalLongitude</th>
+<th align="left">issues</th>
+<th align="left">datasetKey</th>
+<th align="left">publishingOrgKey</th>
+<th align="left">installationKey</th>
+<th align="left">hostingOrganizationKey</th>
+<th align="left">publishingCountry</th>
+<th align="left">protocol</th>
+<th align="left">lastCrawled</th>
+<th align="left">lastParsed</th>
+<th align="right">crawlId</th>
+<th align="left">basisOfRecord</th>
+<th align="right">individualCount</th>
+<th align="left">occurrenceStatus</th>
+<th align="right">taxonKey</th>
+<th align="right">kingdomKey</th>
+<th align="right">phylumKey</th>
+<th align="right">classKey</th>
+<th align="right">orderKey</th>
+<th align="right">familyKey</th>
+<th align="right">genusKey</th>
+<th align="right">speciesKey</th>
+<th align="right">acceptedTaxonKey</th>
+<th align="left">acceptedScientificName</th>
+<th align="left">kingdom</th>
+<th align="left">phylum</th>
+<th align="left">order</th>
+<th align="left">family</th>
+<th align="left">genus</th>
+<th align="left">species</th>
+<th align="left">genericName</th>
+<th align="left">specificEpithet</th>
+<th align="left">taxonRank</th>
+<th align="left">taxonomicStatus</th>
+<th align="left">iucnRedListCategory</th>
+<th align="left">continent</th>
+<th align="left">stateProvince</th>
+<th align="right">year</th>
+<th align="right">month</th>
+<th align="right">day</th>
+<th align="left">eventDate</th>
+<th align="right">startDayOfYear</th>
+<th align="right">endDayOfYear</th>
+<th align="left">lastInterpreted</th>
+<th align="left">license</th>
+<th align="left">isSequenced</th>
+<th align="left">isInCluster</th>
+<th align="left">recordedBy</th>
+<th align="left">geodeticDatum</th>
+<th align="left">class</th>
+<th align="left">countryCode</th>
+<th align="left">country</th>
+<th align="left">gbifRegion</th>
+<th align="left">publishedByGbifRegion</th>
+<th align="left">identifier</th>
+<th align="left">catalogNumber</th>
+<th align="left">vernacularName</th>
+<th align="left">institutionCode</th>
+<th align="left">taxonConceptID</th>
+<th align="left">locality</th>
+<th align="left">gbifID</th>
+<th align="left">collectionCode</th>
+<th align="left">occurrenceID</th>
+<th align="right">coordinateUncertaintyInMeters</th>
+<th align="left">modified</th>
+<th align="left">dynamicProperties</th>
+<th align="left">municipality</th>
+<th align="left">associatedReferences</th>
+<th align="left">county</th>
+<th align="left">locationID</th>
+<th align="left">fieldNotes</th>
+<th align="left">eventTime</th>
+<th align="left">behavior</th>
+<th align="left">sex</th>
+<th align="left">identificationVerificationStatus</th>
+<th align="left">identificationRemarks</th>
+<th align="left">dateIdentified</th>
+<th align="left">references</th>
+<th align="left">datasetName</th>
+<th align="left">identifiedBy</th>
+<th align="left">rightsHolder</th>
+<th align="left"><a href="http://unknown.org/nick" class="uri">http://unknown.org/nick</a></th>
+<th align="left">verbatimEventDate</th>
+<th align="left">verbatimLocality</th>
+<th align="left">taxonID</th>
+<th align="left"><a href="http://unknown.org/captive" class="uri">http://unknown.org/captive</a></th>
+<th align="left">identificationID</th>
+<th align="left">datasetID</th>
+<th align="left">footprintWKT</th>
+<th align="left">lifeStage</th>
+<th align="left">samplingProtocol</th>
+<th align="left">habitat</th>
+<th align="left">eventType</th>
+<th align="left">networkKeys</th>
+<th align="right">elevation</th>
+<th align="right">elevationAccuracy</th>
+<th align="right">organismQuantity</th>
+<th align="left">organismQuantityType</th>
+<th align="left">sampleSizeUnit</th>
+<th align="right">sampleSizeValue</th>
+<th align="left">eventID</th>
+<th align="left">informationWithheld</th>
+<th align="left">dataGeneralizations</th>
+<th align="left">samplingEffort</th>
+<th align="left">type</th>
+<th align="left">ownerInstitutionCode</th>
+<th align="left">occurrenceRemarks</th>
+<th align="left">name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">3219111975</td>
+<td align="left">Lagopus muta (Montin, 1781)</td>
+<td align="right">58.46553</td>
+<td align="right">8.895254</td>
+<td align="left">cdc</td>
+<td align="left">4fa7b334-ce0d-4e88-aaae-2e0c138d049e</td>
+<td align="left">e2e717bf-551a-4917-bdc9-4fa0f342c530</td>
+<td align="left">7182d304-b0a2-404b-baba-2086a325c221</td>
+<td align="left">e2e717bf-551a-4917-bdc9-4fa0f342c530</td>
+<td align="left">NO</td>
+<td align="left">DWC_ARCHIVE</td>
+<td align="left">2024-04-15T22:36:22.136+00:00</td>
+<td align="left">2024-04-17T08:30:11.331+00:00</td>
+<td align="right">20</td>
+<td align="left">HUMAN_OBSERVATION</td>
+<td align="right">1</td>
+<td align="left">PRESENT</td>
+<td align="right">5227679</td>
+<td align="right">1</td>
+<td align="right">44</td>
+<td align="right">212</td>
+<td align="right">723</td>
+<td align="right">9331</td>
+<td align="right">2473369</td>
+<td align="right">5227679</td>
+<td align="right">5227679</td>
+<td align="left">Lagopus muta (Montin, 1781)</td>
+<td align="left">Animalia</td>
+<td align="left">Chordata</td>
+<td align="left">Galliformes</td>
+<td align="left">Phasianidae</td>
+<td align="left">Lagopus</td>
+<td align="left">Lagopus muta</td>
+<td align="left">Lagopus</td>
+<td align="left">muta</td>
+<td align="left">SPECIES</td>
+<td align="left">ACCEPTED</td>
+<td align="left">LC</td>
+<td align="left">EUROPE</td>
+<td align="left">Aust-Agder</td>
+<td align="right">2020</td>
+<td align="right">1</td>
+<td align="right">5</td>
+<td align="left">2020-01-05</td>
+<td align="right">5</td>
+<td align="right">5</td>
+<td align="left">2024-04-17T08:30:11.331+00:00</td>
+<td align="left"><a href="http://creativecommons.org/licenses/by/4.0/legalcode" class="uri">http://creativecommons.org/licenses/by/4.0/legalcode</a></td>
+<td align="left">FALSE</td>
+<td align="left">FALSE</td>
+<td align="left">obsr1460143</td>
+<td align="left">WGS84</td>
+<td align="left">Aves</td>
+<td align="left">NO</td>
+<td align="left">Norway</td>
+<td align="left">EUROPE</td>
+<td align="left">EUROPE</td>
+<td align="left">OBS854553845</td>
+<td align="left">OBS854553845</td>
+<td align="left">Rock Ptarmigan</td>
+<td align="left">CLO</td>
+<td align="left">avibase-79B161B7</td>
+<td align="left">Botstangen</td>
+<td align="left">3219111975</td>
+<td align="left">EBIRD</td>
+<td align="left"><a href="URN:catalog:CLO:EBIRD:OBS854553845" class="uri">URN:catalog:CLO:EBIRD:OBS854553845</a></td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NULL</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">Lagopus muta (Montin, 1781)</td>
+</tr>
+<tr class="even">
+<td align="left">2560812506</td>
+<td align="left">Lagopus muta (Montin, 1781)</td>
+<td align="right">60.86029</td>
+<td align="right">8.513532</td>
+<td align="left">cdc,cdround,gass84</td>
+<td align="left">b124e1e0-4755-430f-9eab-894f25a9b59c</td>
+<td align="left">d3978a37-635a-4ae3-bb85-7b4d41bc0b88</td>
+<td align="left">7bdf9f6d-317a-45ec-8bb7-7ff61345d6a6</td>
+<td align="left">d3978a37-635a-4ae3-bb85-7b4d41bc0b88</td>
+<td align="left">NO</td>
+<td align="left">EML</td>
+<td align="left">2024-10-29T15:12:40.936+00:00</td>
+<td align="left">2024-10-29T19:14:46.578+00:00</td>
+<td align="right">382</td>
+<td align="left">HUMAN_OBSERVATION</td>
+<td align="right">18</td>
+<td align="left">PRESENT</td>
+<td align="right">5227679</td>
+<td align="right">1</td>
+<td align="right">44</td>
+<td align="right">212</td>
+<td align="right">723</td>
+<td align="right">9331</td>
+<td align="right">2473369</td>
+<td align="right">5227679</td>
+<td align="right">5227679</td>
+<td align="left">Lagopus muta (Montin, 1781)</td>
+<td align="left">Animalia</td>
+<td align="left">Chordata</td>
+<td align="left">Galliformes</td>
+<td align="left">Phasianidae</td>
+<td align="left">Lagopus</td>
+<td align="left">Lagopus muta</td>
+<td align="left">Lagopus</td>
+<td align="left">muta</td>
+<td align="left">SPECIES</td>
+<td align="left">ACCEPTED</td>
+<td align="left">LC</td>
+<td align="left">EUROPE</td>
+<td align="left">Viken</td>
+<td align="right">2020</td>
+<td align="right">1</td>
+<td align="right">26</td>
+<td align="left">2020-01-26</td>
+<td align="right">26</td>
+<td align="right">26</td>
+<td align="left">2024-10-29T19:14:46.578+00:00</td>
+<td align="left"><a href="http://creativecommons.org/licenses/by/4.0/legalcode" class="uri">http://creativecommons.org/licenses/by/4.0/legalcode</a></td>
+<td align="left">FALSE</td>
+<td align="left">FALSE</td>
+<td align="left">Magnus Larsson</td>
+<td align="left">WGS84</td>
+<td align="left">Aves</td>
+<td align="left">NO</td>
+<td align="left">Norway</td>
+<td align="left">EUROPE</td>
+<td align="left">EUROPE</td>
+<td align="left"><a href="urn:uuid:089a889f-e894-433c-a466-9e00708d212c" class="uri">urn:uuid:089a889f-e894-433c-a466-9e00708d212c</a></td>
+<td align="left">23369915</td>
+<td align="left">NA</td>
+<td align="left">nof</td>
+<td align="left">NA</td>
+<td align="left">Hemsedal Skisenter, Hemsedal, Vi</td>
+<td align="left">2560812506</td>
+<td align="left">so2-birds</td>
+<td align="left"><a href="urn:uuid:089a889f-e894-433c-a466-9e00708d212c" class="uri">urn:uuid:089a889f-e894-433c-a466-9e00708d212c</a></td>
+<td align="right">300</td>
+<td align="left">2020-01-28T08:37:41.000+00:00</td>
+<td align="left">{“Activity”:“Stationary”}</td>
+<td align="left">Hemsedal</td>
+<td align="left"><a href="https://www.artsobservasjoner.no/Sighting/23369915" class="uri">https://www.artsobservasjoner.no/Sighting/23369915</a></td>
+<td align="left">Viken</td>
+<td align="left">394857</td>
+<td align="left">Activity: Stationary.</td>
+<td align="left">11.0/11.17</td>
+<td align="left">stationary</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NULL</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">Lagopus muta (Montin, 1781)</td>
+</tr>
+<tr class="odd">
+<td align="left">2544028549</td>
+<td align="left">Lagopus muta (Montin, 1781)</td>
+<td align="right">58.46407</td>
+<td align="right">8.895621</td>
+<td align="left">cdc,cdround,gass84</td>
+<td align="left">b124e1e0-4755-430f-9eab-894f25a9b59c</td>
+<td align="left">d3978a37-635a-4ae3-bb85-7b4d41bc0b88</td>
+<td align="left">7bdf9f6d-317a-45ec-8bb7-7ff61345d6a6</td>
+<td align="left">d3978a37-635a-4ae3-bb85-7b4d41bc0b88</td>
+<td align="left">NO</td>
+<td align="left">EML</td>
+<td align="left">2024-10-29T15:12:40.936+00:00</td>
+<td align="left">2024-10-29T19:08:50.532+00:00</td>
+<td align="right">382</td>
+<td align="left">HUMAN_OBSERVATION</td>
+<td align="right">1</td>
+<td align="left">PRESENT</td>
+<td align="right">5227679</td>
+<td align="right">1</td>
+<td align="right">44</td>
+<td align="right">212</td>
+<td align="right">723</td>
+<td align="right">9331</td>
+<td align="right">2473369</td>
+<td align="right">5227679</td>
+<td align="right">5227679</td>
+<td align="left">Lagopus muta (Montin, 1781)</td>
+<td align="left">Animalia</td>
+<td align="left">Chordata</td>
+<td align="left">Galliformes</td>
+<td align="left">Phasianidae</td>
+<td align="left">Lagopus</td>
+<td align="left">Lagopus muta</td>
+<td align="left">Lagopus</td>
+<td align="left">muta</td>
+<td align="left">SPECIES</td>
+<td align="left">ACCEPTED</td>
+<td align="left">LC</td>
+<td align="left">EUROPE</td>
+<td align="left">Agder</td>
+<td align="right">2020</td>
+<td align="right">1</td>
+<td align="right">5</td>
+<td align="left">2020-01-05</td>
+<td align="right">5</td>
+<td align="right">5</td>
+<td align="left">2024-10-29T19:08:50.532+00:00</td>
+<td align="left"><a href="http://creativecommons.org/licenses/by/4.0/legalcode" class="uri">http://creativecommons.org/licenses/by/4.0/legalcode</a></td>
+<td align="left">FALSE</td>
+<td align="left">FALSE</td>
+<td align="left">Trond Nilsen</td>
+<td align="left">WGS84</td>
+<td align="left">Aves</td>
+<td align="left">NO</td>
+<td align="left">Norway</td>
+<td align="left">EUROPE</td>
+<td align="left">EUROPE</td>
+<td align="left"><a href="urn:uuid:0bd9ed37-74f0-4bef-bd31-f9b6f45c5430" class="uri">urn:uuid:0bd9ed37-74f0-4bef-bd31-f9b6f45c5430</a></td>
+<td align="left">23266188</td>
+<td align="left">NA</td>
+<td align="left">nof</td>
+<td align="left">NA</td>
+<td align="left">Blåmannen, Botne, Arendal, Ag</td>
+<td align="left">2544028549</td>
+<td align="left">so2-birds</td>
+<td align="left"><a href="urn:uuid:0bd9ed37-74f0-4bef-bd31-f9b6f45c5430" class="uri">urn:uuid:0bd9ed37-74f0-4bef-bd31-f9b6f45c5430</a></td>
+<td align="right">79</td>
+<td align="left">2020-01-05T17:57:17.000+00:00</td>
+<td align="left">NA</td>
+<td align="left">Arendal</td>
+<td align="left"><a href="https://www.artsobservasjoner.no/Sighting/23266188" class="uri">https://www.artsobservasjoner.no/Sighting/23266188</a></td>
+<td align="left">Agder</td>
+<td align="left">461661</td>
+<td align="left">NA</td>
+<td align="left">8.67/9.33</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NULL</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">Lagopus muta (Montin, 1781)</td>
+</tr>
+<tr class="even">
+<td align="left">2549610691</td>
+<td align="left">Lagopus muta (Montin, 1781)</td>
+<td align="right">59.49676</td>
+<td align="right">8.990860</td>
+<td align="left">cdc,cdround,gass84</td>
+<td align="left">b124e1e0-4755-430f-9eab-894f25a9b59c</td>
+<td align="left">d3978a37-635a-4ae3-bb85-7b4d41bc0b88</td>
+<td align="left">7bdf9f6d-317a-45ec-8bb7-7ff61345d6a6</td>
+<td align="left">d3978a37-635a-4ae3-bb85-7b4d41bc0b88</td>
+<td align="left">NO</td>
+<td align="left">EML</td>
+<td align="left">2024-10-29T15:12:40.936+00:00</td>
+<td align="left">2024-10-29T19:09:45.170+00:00</td>
+<td align="right">382</td>
+<td align="left">HUMAN_OBSERVATION</td>
+<td align="right">6</td>
+<td align="left">PRESENT</td>
+<td align="right">5227679</td>
+<td align="right">1</td>
+<td align="right">44</td>
+<td align="right">212</td>
+<td align="right">723</td>
+<td align="right">9331</td>
+<td align="right">2473369</td>
+<td align="right">5227679</td>
+<td align="right">5227679</td>
+<td align="left">Lagopus muta (Montin, 1781)</td>
+<td align="left">Animalia</td>
+<td align="left">Chordata</td>
+<td align="left">Galliformes</td>
+<td align="left">Phasianidae</td>
+<td align="left">Lagopus</td>
+<td align="left">Lagopus muta</td>
+<td align="left">Lagopus</td>
+<td align="left">muta</td>
+<td align="left">SPECIES</td>
+<td align="left">ACCEPTED</td>
+<td align="left">LC</td>
+<td align="left">EUROPE</td>
+<td align="left">Vestfold og Telemark</td>
+<td align="right">2020</td>
+<td align="right">1</td>
+<td align="right">10</td>
+<td align="left">2020-01-10</td>
+<td align="right">10</td>
+<td align="right">10</td>
+<td align="left">2024-10-29T19:09:45.170+00:00</td>
+<td align="left"><a href="http://creativecommons.org/licenses/by/4.0/legalcode" class="uri">http://creativecommons.org/licenses/by/4.0/legalcode</a></td>
+<td align="left">FALSE</td>
+<td align="left">FALSE</td>
+<td align="left">Ola Nordsteien|Hanne Løvberg</td>
+<td align="left">WGS84</td>
+<td align="left">Aves</td>
+<td align="left">NO</td>
+<td align="left">Norway</td>
+<td align="left">EUROPE</td>
+<td align="left">EUROPE</td>
+<td align="left"><a href="urn:uuid:25c5ecea-3187-4436-ab51-dc8438e78bb8" class="uri">urn:uuid:25c5ecea-3187-4436-ab51-dc8438e78bb8</a></td>
+<td align="left">23288768</td>
+<td align="left">NA</td>
+<td align="left">nof</td>
+<td align="left">NA</td>
+<td align="left">Skåråfjell, Lifjell, Midt-Telemark, Vt</td>
+<td align="left">2549610691</td>
+<td align="left">so2-birds</td>
+<td align="left"><a href="urn:uuid:25c5ecea-3187-4436-ab51-dc8438e78bb8" class="uri">urn:uuid:25c5ecea-3187-4436-ab51-dc8438e78bb8</a></td>
+<td align="right">300</td>
+<td align="left">2020-01-10T23:48:45.000+00:00</td>
+<td align="left">{“Activity”:“Forage”}</td>
+<td align="left">Midt-Telemark</td>
+<td align="left"><a href="https://www.artsobservasjoner.no/Sighting/23288768" class="uri">https://www.artsobservasjoner.no/Sighting/23288768</a></td>
+<td align="left">Vestfold og Telemark</td>
+<td align="left">359743</td>
+<td align="left">Activity: Forage.</td>
+<td align="left">NA</td>
+<td align="left">feeding</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NULL</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">Lagopus muta (Montin, 1781)</td>
+</tr>
+<tr class="odd">
+<td align="left">2560817283</td>
+<td align="left">Lagopus muta (Montin, 1781)</td>
+<td align="right">69.77555</td>
+<td align="right">18.822903</td>
+<td align="left">cdc,cdround,gass84</td>
+<td align="left">b124e1e0-4755-430f-9eab-894f25a9b59c</td>
+<td align="left">d3978a37-635a-4ae3-bb85-7b4d41bc0b88</td>
+<td align="left">7bdf9f6d-317a-45ec-8bb7-7ff61345d6a6</td>
+<td align="left">d3978a37-635a-4ae3-bb85-7b4d41bc0b88</td>
+<td align="left">NO</td>
+<td align="left">EML</td>
+<td align="left">2024-10-29T15:12:40.936+00:00</td>
+<td align="left">2024-10-29T19:15:36.858+00:00</td>
+<td align="right">382</td>
+<td align="left">HUMAN_OBSERVATION</td>
+<td align="right">1</td>
+<td align="left">PRESENT</td>
+<td align="right">5227679</td>
+<td align="right">1</td>
+<td align="right">44</td>
+<td align="right">212</td>
+<td align="right">723</td>
+<td align="right">9331</td>
+<td align="right">2473369</td>
+<td align="right">5227679</td>
+<td align="right">5227679</td>
+<td align="left">Lagopus muta (Montin, 1781)</td>
+<td align="left">Animalia</td>
+<td align="left">Chordata</td>
+<td align="left">Galliformes</td>
+<td align="left">Phasianidae</td>
+<td align="left">Lagopus</td>
+<td align="left">Lagopus muta</td>
+<td align="left">Lagopus</td>
+<td align="left">muta</td>
+<td align="left">SPECIES</td>
+<td align="left">ACCEPTED</td>
+<td align="left">LC</td>
+<td align="left">EUROPE</td>
+<td align="left">Troms og Finnmark</td>
+<td align="right">2020</td>
+<td align="right">1</td>
+<td align="right">26</td>
+<td align="left">2020-01-26</td>
+<td align="right">26</td>
+<td align="right">26</td>
+<td align="left">2024-10-29T19:15:36.858+00:00</td>
+<td align="left"><a href="http://creativecommons.org/licenses/by/4.0/legalcode" class="uri">http://creativecommons.org/licenses/by/4.0/legalcode</a></td>
+<td align="left">FALSE</td>
+<td align="left">FALSE</td>
+<td align="left">Ole-Morten Toften</td>
+<td align="left">WGS84</td>
+<td align="left">Aves</td>
+<td align="left">NO</td>
+<td align="left">Norway</td>
+<td align="left">EUROPE</td>
+<td align="left">EUROPE</td>
+<td align="left"><a href="urn:uuid:2f576cfd-4387-4473-875c-b6ce9fa7113b" class="uri">urn:uuid:2f576cfd-4387-4473-875c-b6ce9fa7113b</a></td>
+<td align="left">23359018</td>
+<td align="left">NA</td>
+<td align="left">nof</td>
+<td align="left">NA</td>
+<td align="left">Lyfjorddalen, Kvaløya, Tromsø, Tf</td>
+<td align="left">2560817283</td>
+<td align="left">so2-birds</td>
+<td align="left"><a href="urn:uuid:2f576cfd-4387-4473-875c-b6ce9fa7113b" class="uri">urn:uuid:2f576cfd-4387-4473-875c-b6ce9fa7113b</a></td>
+<td align="right">300</td>
+<td align="left">2020-01-26T13:07:00.000+00:00</td>
+<td align="left">{“Activity”:“Display/SongOutsideBreeding”}</td>
+<td align="left">Tromsø</td>
+<td align="left"><a href="https://www.artsobservasjoner.no/Sighting/23359018" class="uri">https://www.artsobservasjoner.no/Sighting/23359018</a></td>
+<td align="left">Troms og Finnmark</td>
+<td align="left">371536</td>
+<td align="left">Activity: Display/SongOutsideBreeding.</td>
+<td align="left">8.77</td>
+<td align="left">stationary</td>
+<td align="left">MALE</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NULL</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">Lagopus muta (Montin, 1781)</td>
+</tr>
+<tr class="even">
+<td align="left">2544037194</td>
+<td align="left">Lagopus muta (Montin, 1781)</td>
+<td align="right">62.57669</td>
+<td align="right">11.387036</td>
+<td align="left">cdc,cdround,gass84</td>
+<td align="left">b124e1e0-4755-430f-9eab-894f25a9b59c</td>
+<td align="left">d3978a37-635a-4ae3-bb85-7b4d41bc0b88</td>
+<td align="left">7bdf9f6d-317a-45ec-8bb7-7ff61345d6a6</td>
+<td align="left">d3978a37-635a-4ae3-bb85-7b4d41bc0b88</td>
+<td align="left">NO</td>
+<td align="left">EML</td>
+<td align="left">2024-10-29T15:12:40.936+00:00</td>
+<td align="left">2024-10-29T19:10:26.365+00:00</td>
+<td align="right">382</td>
+<td align="left">HUMAN_OBSERVATION</td>
+<td align="right">5</td>
+<td align="left">PRESENT</td>
+<td align="right">5227679</td>
+<td align="right">1</td>
+<td align="right">44</td>
+<td align="right">212</td>
+<td align="right">723</td>
+<td align="right">9331</td>
+<td align="right">2473369</td>
+<td align="right">5227679</td>
+<td align="right">5227679</td>
+<td align="left">Lagopus muta (Montin, 1781)</td>
+<td align="left">Animalia</td>
+<td align="left">Chordata</td>
+<td align="left">Galliformes</td>
+<td align="left">Phasianidae</td>
+<td align="left">Lagopus</td>
+<td align="left">Lagopus muta</td>
+<td align="left">Lagopus</td>
+<td align="left">muta</td>
+<td align="left">SPECIES</td>
+<td align="left">ACCEPTED</td>
+<td align="left">LC</td>
+<td align="left">EUROPE</td>
+<td align="left">Trøndelag</td>
+<td align="right">2020</td>
+<td align="right">1</td>
+<td align="right">4</td>
+<td align="left">2020-01-04</td>
+<td align="right">4</td>
+<td align="right">4</td>
+<td align="left">2024-10-29T19:10:26.365+00:00</td>
+<td align="left"><a href="http://creativecommons.org/licenses/by/4.0/legalcode" class="uri">http://creativecommons.org/licenses/by/4.0/legalcode</a></td>
+<td align="left">FALSE</td>
+<td align="left">FALSE</td>
+<td align="left">Norvald Grønning</td>
+<td align="left">WGS84</td>
+<td align="left">Aves</td>
+<td align="left">NO</td>
+<td align="left">Norway</td>
+<td align="left">EUROPE</td>
+<td align="left">EUROPE</td>
+<td align="left"><a href="urn:uuid:3a154636-f513-46de-a3d6-6c2dfdeb3283" class="uri">urn:uuid:3a154636-f513-46de-a3d6-6c2dfdeb3283</a></td>
+<td align="left">23267493</td>
+<td align="left">NA</td>
+<td align="left">nof</td>
+<td align="left">NA</td>
+<td align="left">Røros by, Røros, Tø</td>
+<td align="left">2544037194</td>
+<td align="left">so2-birds</td>
+<td align="left"><a href="urn:uuid:3a154636-f513-46de-a3d6-6c2dfdeb3283" class="uri">urn:uuid:3a154636-f513-46de-a3d6-6c2dfdeb3283</a></td>
+<td align="right">300</td>
+<td align="left">2021-09-22T11:26:11.000+00:00</td>
+<td align="left">{“ValidationStatus”:“Approved Documented”}</td>
+<td align="left">Røros</td>
+<td align="left"><a href="https://www.artsobservasjoner.no/Sighting/23267493" class="uri">https://www.artsobservasjoner.no/Sighting/23267493</a></td>
+<td align="left">Trøndelag</td>
+<td align="left">355523</td>
+<td align="left">Validationstatus: Approved Documented</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">validated</td>
+<td align="left">Validator: Andreas Winnem</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NULL</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">Lagopus muta (Montin, 1781)</td>
+</tr>
+</tbody>
+</table>
+<p>The near-instantaneous nature of this type of download is largely due to the hard limit on how much data you may obtain. For our example, the 100,000 record limit is not an issue as we are dealing with only 10606 records being available to us, but queries to GBIF mediated records can easily and quickly exceed this limit.</p>
+</div>
+<div id="asynchronous-download" class="section level1">
+<h1>Asynchronous Download</h1>
+<p>{{% alert success %}}
+This is how you should obtain data <strong>for publication-level research and reports</strong>.
+{{% /alert %}}</p>
+<p>To avoid the reproducibility and data richness limitations of near-instant downloads, we must make a more formal download query to the GBIF API and await processing of our data request - an asynchronous download. To do so, we need to do three things in order:</p>
+<ol style="list-style-type: decimal">
+<li>Specify the data we want and request processing and download from GBIF</li>
+<li>Download the data once it is processed</li>
+<li>Load the downloaded data into <code>R</code></li>
+</ol>
+<p>{{% alert info %}}
+Time between registering a download request and retrieval of data may vary according to how busy the GBIF API and servers are as well as the size and complexity of the data requested. GBIF will only handle a maximum of 3 download request per user simultaneously.
+{{% /alert %}}</p>
+<p>Let’s tackle these step-by-step.</p>
+<div id="data-request-at-gbif" class="section level2">
+<h2>Data Request at GBIF</h2>
+<p>To start this process of obtaining GBIF-mediated occurrence records, we first need to make a request to GBIF to start processing of the data we require. This is done with the <code>occ_download(...)</code> function. Making a data request at GBIF via the <code>occ_download(...)</code> function comes with two important considerations:</p>
+<ol style="list-style-type: decimal">
+<li><code>occ_download(...)</code> specific syntax</li>
+<li>data query metadata</li>
+</ol>
+<div id="syntax-and-query-through-occ_download" class="section level3">
+<h3>Syntax and Query through <code>occ_download()</code></h3>
+<p>The <code>occ_download(...)</code> function - while powerful - requires us to confront a new set of syntax which translates the download request as we have seen it so far into a form which the GBIF API can understand. To do so, we use a host of <code>rgbif</code> functions built around the GBIF predicate DSL (domain specific language). These functions (with a few exceptions which you can see by calling the documentation - <code>?download_predicate_dsl</code>) all take two arguments:</p>
+<ul>
+<li><code>key</code> - this is a core term which we want to target for our request</li>
+<li><code>value</code> - this is the value for the core term which we are interested in</li>
+</ul>
+<p>Finally, the relevant functions and how the relate <code>key</code> to <code>value</code> are:
+- <code>pred(...)</code>: equals
+- <code>pred_lt(...)</code>: lessThan
+- <code>pred_lte(...)</code>: lessThanOrEquals
+- <code>pred_gt(...)</code>: greaterThan
+- <code>pred_gte(...)</code>: greaterThanOrEquals
+- <code>pred_like(...)</code>: like
+- <code>pred_within(...)</code>: within (only for geospatial queries, and only accepts a WKT string)
+- <code>pred_notnull(...)</code>: isNotNull (only for geospatial queries, and only accepts a WKT string)
+- <code>pred_isnull(...)</code>: isNull (only for stating that you want a key to be null)
+- <code>pred_and(...)</code>: and (accepts multiple individual predicates, separating them by either “and” or “or”)
+- <code>pred_or(...)</code>: or (accepts multiple individual predicates, separating them by either “and” or “or”)
+- <code>pred_not(...)</code>: not (negates whatever predicate is passed in)
+- <code>pred_in(...)</code>: in (accepts a single key but many values; stating that you want to search for all the values)</p>
+<p>Let us use these to query the data we are interested in:</p>
+<pre class="r"><code>res &lt;- occ_download(
+  pred(&quot;taxonKey&quot;, sp_key),
+  pred(&quot;basisOfRecord&quot;, &quot;HUMAN_OBSERVATION&quot;),
+  pred(&quot;country&quot;, &quot;NO&quot;),
+  pred(&quot;hasCoordinate&quot;, TRUE),
+  pred_gte(&quot;year&quot;, 2000),
+  pred_lte(&quot;year&quot;, 2020)
+)</code></pre>
+<p>Now that the download request has been made with GBIF, you need to wait for GBIF to process your query and return the desired data to you. You will find an overview of all your requested and processed downloads in your personal <a href="https://www.gbif.org/user/download">download tab</a> on the GBIF webportal.</p>
+</div>
+<div id="data-query-metadata" class="section level3">
+<h3>Data Query Metadata</h3>
+<p>To keep track of all your data queries, each call to <code>occ_download(...)</code> returns a set of metadata for your download request as part of its object structure. This can be assessed as follows:</p>
+<pre class="r"><code>occ_download_meta(res)</code></pre>
+<pre><code>## &lt;&lt;gbif download metadata&gt;&gt;
+##   Status: SUCCEEDED
+##   DOI: 10.15468/dl.vjazpv
+##   Format: DWCA
+##   Download key: 0010612-241024112534372
+##   Created: 2024-10-29T13:25:46.576+00:00
+##   Modified: 2024-10-29T13:27:15.574+00:00
+##   Download link: https://api.gbif.org/v1/occurrence/download/request/0010612-241024112534372.zip
+##   Total records: 10609</code></pre>
+<p>It can even be subset for relevant parts of it like so:</p>
+<pre class="r"><code>occ_download_meta(res)$downloadLink</code></pre>
+<pre><code>## [1] &quot;https://api.gbif.org/v1/occurrence/download/request/0010612-241024112534372.zip&quot;</code></pre>
+<p>This is done according to the underlying structure of the metadata:</p>
+<pre class="r"><code>str(occ_download_meta(res), max.level = 1)</code></pre>
+<pre><code>## List of 12
+##  $ key           : chr &quot;0010612-241024112534372&quot;
+##  $ doi           : chr &quot;10.15468/dl.vjazpv&quot;
+##  $ license       : chr &quot;http://creativecommons.org/licenses/by-nc/4.0/legalcode&quot;
+##  $ request       :List of 5
+##  $ created       : chr &quot;2024-10-29T13:25:46.576+00:00&quot;
+##  $ modified      : chr &quot;2024-10-29T13:27:15.574+00:00&quot;
+##  $ eraseAfter    : chr &quot;2025-04-29T13:25:46.526+00:00&quot;
+##  $ status        : chr &quot;SUCCEEDED&quot;
+##  $ downloadLink  : chr &quot;https://api.gbif.org/v1/occurrence/download/request/0010612-241024112534372.zip&quot;
+##  $ size          : int 2842371
+##  $ totalRecords  : int 10609
+##  $ numberDatasets: int 18
+##  - attr(*, &quot;class&quot;)= chr &quot;occ_download_meta&quot;
+##  - attr(*, &quot;format&quot;)= chr &quot;DWCA&quot;</code></pre>
+<p><strong>Note:</strong> You will find that the number of records in our query made via <code>occ_download(...)</code> here and <code>occ_search(...)</code> above are different. This is due to different ways data ranges are handled.</p>
+<pre class="r"><code>occ_download_meta(res)$totalRecords</code></pre>
+<pre><code>## [1] 10609</code></pre>
+</div>
+</div>
+<div id="data-download" class="section level2">
+<h2>Data Download</h2>
+<p>Now that the download request is registered with GBIF, it is time to actually obtain the data you have queried. To facilitate this, there are two distinct ways to obtain the data itself:</p>
+<ol style="list-style-type: decimal">
+<li>Webportal</li>
+<li><code>rgbif</code></li>
+</ol>
+<p>Personally, I can not recommend any of these methods over the <code>rgbif</code>-internal download method. However, in case you might prefer other options, I will quickly show how these work, too.</p>
+<div id="gbif-portal-download-method" class="section level3">
+<h3>GBIF Portal Download Method</h3>
+<p>At the most basic level, you may obtain data through the <a href="https://www.gbif.org/user/download">GBIF portal</a> where you will find an overview of your download requests. Any individual download request can be investigated more deeply by clicking the “SHOW” button:</p>
+<p><img src="/courses/gbif/gbif-download1.jpeg" width="100%"/></a></p>
+<p>There, you will see a breakdown of your download request and also whether it is still being processed or already finished:
+<img src="/courses/gbif/gbif-download2.jpeg" width="100%"/></a></p>
+<p>Note that the DOI differs here from the other images and the data product we are working with ultimately. This is because I had to requeue the download to get this screenshot.</p>
+<p>Upon completion of your request on the GBIF end, a “DOWNLOAD” button will appear on the specific download request overview page:
+<img src="/courses/gbif/gbif-download3.jpeg" width="100%"/></a></p>
+<p>For requests of few data points you will usually have to be quite quick to see this in action as GBIF is often pretty fast and getting data ready for you.</p>
+</div>
+<div id="rgbif-download-method" class="section level3">
+<h3><code>rgbif</code> Download Method</h3>
+<p>{{% alert success %}}
+This is the <strong>preferred method</strong> for downloading data you have requested from GBIF.
+{{% /alert %}}</p>
+<p>To download our data programmatically, we need to execute roughly the same steps as we did above:</p>
+<ol style="list-style-type: decimal">
+<li>Wait for data to be ready for download</li>
+<li>Download the data</li>
+<li>Load the data into <code>R</code> (we didn’t do this in the above)</li>
+</ol>
+<p>This is done with the following three corresponding functions:</p>
+<pre class="r"><code>## 1. Check GBIF whether data is ready, this function will finish running when done and return metadata
+res_meta &lt;- occ_download_wait(res, status_ping = 5, curlopts = list(), quiet = FALSE)
+## 2. Download the data as .zip (can specify a path)
+res_get &lt;- occ_download_get(res)
+## 3. Load the data into R
+res_data &lt;- occ_download_import(res_get)</code></pre>
+<p>Let’s have a look at the data we just loaded:</p>
+<pre class="r"><code>dim(res_data)</code></pre>
+<pre><code>## [1] 10609   223</code></pre>
+<pre class="r"><code>knitr::kable(head(res_data))</code></pre>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="1%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="2%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">gbifID</th>
+<th align="left">accessRights</th>
+<th align="left">bibliographicCitation</th>
+<th align="left">language</th>
+<th align="left">license</th>
+<th align="left">modified</th>
+<th align="left">publisher</th>
+<th align="left">references</th>
+<th align="left">rightsHolder</th>
+<th align="left">type</th>
+<th align="left">institutionID</th>
+<th align="left">collectionID</th>
+<th align="right">datasetID</th>
+<th align="left">institutionCode</th>
+<th align="left">collectionCode</th>
+<th align="left">datasetName</th>
+<th align="left">ownerInstitutionCode</th>
+<th align="left">basisOfRecord</th>
+<th align="left">informationWithheld</th>
+<th align="left">dataGeneralizations</th>
+<th align="left">dynamicProperties</th>
+<th align="left">occurrenceID</th>
+<th align="left">catalogNumber</th>
+<th align="right">recordNumber</th>
+<th align="left">recordedBy</th>
+<th align="left">recordedByID</th>
+<th align="right">individualCount</th>
+<th align="right">organismQuantity</th>
+<th align="left">organismQuantityType</th>
+<th align="left">sex</th>
+<th align="left">lifeStage</th>
+<th align="left">reproductiveCondition</th>
+<th align="left">caste</th>
+<th align="left">behavior</th>
+<th align="left">vitality</th>
+<th align="left">establishmentMeans</th>
+<th align="left">degreeOfEstablishment</th>
+<th align="left">pathway</th>
+<th align="left">georeferenceVerificationStatus</th>
+<th align="left">occurrenceStatus</th>
+<th align="left">preparations</th>
+<th align="left">disposition</th>
+<th align="left">associatedOccurrences</th>
+<th align="left">associatedReferences</th>
+<th align="left">associatedSequences</th>
+<th align="left">associatedTaxa</th>
+<th align="left">otherCatalogNumbers</th>
+<th align="left">occurrenceRemarks</th>
+<th align="left">organismID</th>
+<th align="right">organismName</th>
+<th align="left">organismScope</th>
+<th align="left">associatedOrganisms</th>
+<th align="left">previousIdentifications</th>
+<th align="left">organismRemarks</th>
+<th align="left">materialEntityID</th>
+<th align="left">materialEntityRemarks</th>
+<th align="left">verbatimLabel</th>
+<th align="left">materialSampleID</th>
+<th align="left">eventID</th>
+<th align="left">parentEventID</th>
+<th align="left">eventType</th>
+<th align="right">fieldNumber</th>
+<th align="left">eventDate</th>
+<th align="left">eventTime</th>
+<th align="right">startDayOfYear</th>
+<th align="right">endDayOfYear</th>
+<th align="right">year</th>
+<th align="right">month</th>
+<th align="right">day</th>
+<th align="left">verbatimEventDate</th>
+<th align="left">habitat</th>
+<th align="left">samplingProtocol</th>
+<th align="right">sampleSizeValue</th>
+<th align="left">sampleSizeUnit</th>
+<th align="left">samplingEffort</th>
+<th align="left">fieldNotes</th>
+<th align="left">eventRemarks</th>
+<th align="left">locationID</th>
+<th align="left">higherGeographyID</th>
+<th align="left">higherGeography</th>
+<th align="left">continent</th>
+<th align="left">waterBody</th>
+<th align="left">islandGroup</th>
+<th align="left">island</th>
+<th align="left">countryCode</th>
+<th align="left">stateProvince</th>
+<th align="left">county</th>
+<th align="left">municipality</th>
+<th align="left">locality</th>
+<th align="left">verbatimLocality</th>
+<th align="left">verbatimElevation</th>
+<th align="left">verticalDatum</th>
+<th align="left">verbatimDepth</th>
+<th align="left">minimumDistanceAboveSurfaceInMeters</th>
+<th align="left">maximumDistanceAboveSurfaceInMeters</th>
+<th align="left">locationAccordingTo</th>
+<th align="left">locationRemarks</th>
+<th align="right">decimalLatitude</th>
+<th align="right">decimalLongitude</th>
+<th align="right">coordinateUncertaintyInMeters</th>
+<th align="left">coordinatePrecision</th>
+<th align="left">pointRadiusSpatialFit</th>
+<th align="left">verbatimCoordinateSystem</th>
+<th align="left">verbatimSRS</th>
+<th align="left">footprintWKT</th>
+<th align="left">footprintSRS</th>
+<th align="left">footprintSpatialFit</th>
+<th align="left">georeferencedBy</th>
+<th align="left">georeferencedDate</th>
+<th align="left">georeferenceProtocol</th>
+<th align="left">georeferenceSources</th>
+<th align="left">georeferenceRemarks</th>
+<th align="left">geologicalContextID</th>
+<th align="left">earliestEonOrLowestEonothem</th>
+<th align="left">latestEonOrHighestEonothem</th>
+<th align="left">earliestEraOrLowestErathem</th>
+<th align="left">latestEraOrHighestErathem</th>
+<th align="left">earliestPeriodOrLowestSystem</th>
+<th align="left">latestPeriodOrHighestSystem</th>
+<th align="left">earliestEpochOrLowestSeries</th>
+<th align="left">latestEpochOrHighestSeries</th>
+<th align="left">earliestAgeOrLowestStage</th>
+<th align="left">latestAgeOrHighestStage</th>
+<th align="left">lowestBiostratigraphicZone</th>
+<th align="left">highestBiostratigraphicZone</th>
+<th align="left">lithostratigraphicTerms</th>
+<th align="left">group</th>
+<th align="left">formation</th>
+<th align="left">member</th>
+<th align="left">bed</th>
+<th align="right">identificationID</th>
+<th align="left">verbatimIdentification</th>
+<th align="left">identificationQualifier</th>
+<th align="left">typeStatus</th>
+<th align="left">identifiedBy</th>
+<th align="left">identifiedByID</th>
+<th align="left">dateIdentified</th>
+<th align="left">identificationReferences</th>
+<th align="left">identificationVerificationStatus</th>
+<th align="left">identificationRemarks</th>
+<th align="left">taxonID</th>
+<th align="left">scientificNameID</th>
+<th align="left">acceptedNameUsageID</th>
+<th align="left">parentNameUsageID</th>
+<th align="left">originalNameUsageID</th>
+<th align="left">nameAccordingToID</th>
+<th align="left">namePublishedInID</th>
+<th align="left">taxonConceptID</th>
+<th align="left">scientificName</th>
+<th align="left">acceptedNameUsage</th>
+<th align="left">parentNameUsage</th>
+<th align="left">originalNameUsage</th>
+<th align="left">nameAccordingTo</th>
+<th align="left">namePublishedIn</th>
+<th align="left">namePublishedInYear</th>
+<th align="left">higherClassification</th>
+<th align="left">kingdom</th>
+<th align="left">phylum</th>
+<th align="left">class</th>
+<th align="left">order</th>
+<th align="left">superfamily</th>
+<th align="left">family</th>
+<th align="left">subfamily</th>
+<th align="left">tribe</th>
+<th align="left">subtribe</th>
+<th align="left">genus</th>
+<th align="left">genericName</th>
+<th align="left">subgenus</th>
+<th align="left">infragenericEpithet</th>
+<th align="left">specificEpithet</th>
+<th align="left">infraspecificEpithet</th>
+<th align="left">cultivarEpithet</th>
+<th align="left">taxonRank</th>
+<th align="left">verbatimTaxonRank</th>
+<th align="left">vernacularName</th>
+<th align="left">nomenclaturalCode</th>
+<th align="left">taxonomicStatus</th>
+<th align="left">nomenclaturalStatus</th>
+<th align="left">taxonRemarks</th>
+<th align="left">datasetKey</th>
+<th align="left">publishingCountry</th>
+<th align="left">lastInterpreted</th>
+<th align="right">elevation</th>
+<th align="right">elevationAccuracy</th>
+<th align="left">depth</th>
+<th align="left">depthAccuracy</th>
+<th align="left">distanceFromCentroidInMeters</th>
+<th align="left">issue</th>
+<th align="left">mediaType</th>
+<th align="left">hasCoordinate</th>
+<th align="left">hasGeospatialIssues</th>
+<th align="right">taxonKey</th>
+<th align="right">acceptedTaxonKey</th>
+<th align="right">kingdomKey</th>
+<th align="right">phylumKey</th>
+<th align="right">classKey</th>
+<th align="right">orderKey</th>
+<th align="right">familyKey</th>
+<th align="right">genusKey</th>
+<th align="left">subgenusKey</th>
+<th align="right">speciesKey</th>
+<th align="left">species</th>
+<th align="left">acceptedScientificName</th>
+<th align="left">verbatimScientificName</th>
+<th align="left">typifiedName</th>
+<th align="left">protocol</th>
+<th align="left">lastParsed</th>
+<th align="left">lastCrawled</th>
+<th align="left">repatriated</th>
+<th align="left">relativeOrganismQuantity</th>
+<th align="left">projectId</th>
+<th align="left">isSequenced</th>
+<th align="left">gbifRegion</th>
+<th align="left">publishedByGbifRegion</th>
+<th align="left">level0Gid</th>
+<th align="left">level0Name</th>
+<th align="left">level1Gid</th>
+<th align="left">level1Name</th>
+<th align="left">level2Gid</th>
+<th align="left">level2Name</th>
+<th align="left">level3Gid</th>
+<th align="left">level3Name</th>
+<th align="left">iucnRedListCategory</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">979205774</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">CC_BY_4_0</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left">CLO</td>
+<td align="left">EBIRD</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">HUMAN_OBSERVATION</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"><a href="URN:catalog:CLO:EBIRD:OBS238252603" class="uri">URN:catalog:CLO:EBIRD:OBS238252603</a></td>
+<td align="left">OBS238252603</td>
+<td align="right">NA</td>
+<td align="left">obsr498576</td>
+<td align="left">NA</td>
+<td align="right">1</td>
+<td align="right">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">PRESENT</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="right">NA</td>
+<td align="left">2011-05-12</td>
+<td align="left"></td>
+<td align="right">132</td>
+<td align="right">132</td>
+<td align="right">2011</td>
+<td align="right">5</td>
+<td align="right">12</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="right">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">EUROPE</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NO</td>
+<td align="left">Oppland</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">Fisketjerni</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="right">61.37563</td>
+<td align="right">8.840089</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">avibase-79B161B7</td>
+<td align="left">Lagopus muta (Montin, 1781)</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">Animalia</td>
+<td align="left">Chordata</td>
+<td align="left">Aves</td>
+<td align="left">Galliformes</td>
+<td align="left">NA</td>
+<td align="left">Phasianidae</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">Lagopus</td>
+<td align="left">Lagopus</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">muta</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">SPECIES</td>
+<td align="left">NA</td>
+<td align="left">Rock Ptarmigan</td>
+<td align="left"></td>
+<td align="left">ACCEPTED</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">4fa7b334-ce0d-4e88-aaae-2e0c138d049e</td>
+<td align="left">NO</td>
+<td align="left">2024-04-17T08:24:53.730Z</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">CONTINENT_DERIVED_FROM_COORDINATES;TAXON_MATCH_TAXON_CONCEPT_ID_IGNORED</td>
+<td align="left"></td>
+<td align="left">TRUE</td>
+<td align="left">FALSE</td>
+<td align="right">5227679</td>
+<td align="right">5227679</td>
+<td align="right">1</td>
+<td align="right">44</td>
+<td align="right">212</td>
+<td align="right">723</td>
+<td align="right">9331</td>
+<td align="right">2473369</td>
+<td align="left">NA</td>
+<td align="right">5227679</td>
+<td align="left">Lagopus muta</td>
+<td align="left">Lagopus muta (Montin, 1781)</td>
+<td align="left">Lagopus muta</td>
+<td align="left">NA</td>
+<td align="left">DWC_ARCHIVE</td>
+<td align="left">2024-04-17T08:24:53.730Z</td>
+<td align="left">2024-04-15T22:36:22.136Z</td>
+<td align="left">FALSE</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">FALSE</td>
+<td align="left">EUROPE</td>
+<td align="left">EUROPE</td>
+<td align="left">NOR</td>
+<td align="left">Norway</td>
+<td align="left">NOR.11_1</td>
+<td align="left">Oppland</td>
+<td align="left">NOR.11.16_1</td>
+<td align="left">Øystre Slidre</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">LC</td>
+</tr>
+<tr class="even">
+<td align="right">977864468</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">CC_BY_4_0</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left">CLO</td>
+<td align="left">EBIRD</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">HUMAN_OBSERVATION</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"><a href="URN:catalog:CLO:EBIRD:OBS227313790" class="uri">URN:catalog:CLO:EBIRD:OBS227313790</a></td>
+<td align="left">OBS227313790</td>
+<td align="right">NA</td>
+<td align="left">obsr419757</td>
+<td align="left">NA</td>
+<td align="right">2</td>
+<td align="right">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">PRESENT</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="right">NA</td>
+<td align="left">2007-06-09</td>
+<td align="left"></td>
+<td align="right">160</td>
+<td align="right">160</td>
+<td align="right">2007</td>
+<td align="right">6</td>
+<td align="right">9</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="right">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">EUROPE</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NO</td>
+<td align="left">Finnmark</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">Syltefjord</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="right">70.54530</td>
+<td align="right">30.054518</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">avibase-79B161B7</td>
+<td align="left">Lagopus muta (Montin, 1781)</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">Animalia</td>
+<td align="left">Chordata</td>
+<td align="left">Aves</td>
+<td align="left">Galliformes</td>
+<td align="left">NA</td>
+<td align="left">Phasianidae</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">Lagopus</td>
+<td align="left">Lagopus</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">muta</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">SPECIES</td>
+<td align="left">NA</td>
+<td align="left">Rock Ptarmigan</td>
+<td align="left"></td>
+<td align="left">ACCEPTED</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">4fa7b334-ce0d-4e88-aaae-2e0c138d049e</td>
+<td align="left">NO</td>
+<td align="left">2024-04-17T08:23:18.063Z</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">CONTINENT_DERIVED_FROM_COORDINATES;TAXON_MATCH_TAXON_CONCEPT_ID_IGNORED</td>
+<td align="left"></td>
+<td align="left">TRUE</td>
+<td align="left">FALSE</td>
+<td align="right">5227679</td>
+<td align="right">5227679</td>
+<td align="right">1</td>
+<td align="right">44</td>
+<td align="right">212</td>
+<td align="right">723</td>
+<td align="right">9331</td>
+<td align="right">2473369</td>
+<td align="left">NA</td>
+<td align="right">5227679</td>
+<td align="left">Lagopus muta</td>
+<td align="left">Lagopus muta (Montin, 1781)</td>
+<td align="left">Lagopus muta</td>
+<td align="left">NA</td>
+<td align="left">DWC_ARCHIVE</td>
+<td align="left">2024-04-17T08:23:18.063Z</td>
+<td align="left">2024-04-15T22:36:22.136Z</td>
+<td align="left">FALSE</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">FALSE</td>
+<td align="left">EUROPE</td>
+<td align="left">EUROPE</td>
+<td align="left">NOR</td>
+<td align="left">Norway</td>
+<td align="left">NOR.5_1</td>
+<td align="left">Finnmark</td>
+<td align="left">NOR.5.2_1</td>
+<td align="left">Båtsfjord</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">LC</td>
+</tr>
+<tr class="odd">
+<td align="right">977848277</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">CC_BY_4_0</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left">CLO</td>
+<td align="left">EBIRD</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">HUMAN_OBSERVATION</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"><a href="URN:catalog:CLO:EBIRD:OBS227314225" class="uri">URN:catalog:CLO:EBIRD:OBS227314225</a></td>
+<td align="left">OBS227314225</td>
+<td align="right">NA</td>
+<td align="left">obsr419757</td>
+<td align="left">NA</td>
+<td align="right">1</td>
+<td align="right">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">PRESENT</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="right">NA</td>
+<td align="left">2007-06-09</td>
+<td align="left"></td>
+<td align="right">160</td>
+<td align="right">160</td>
+<td align="right">2007</td>
+<td align="right">6</td>
+<td align="right">9</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="right">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">EUROPE</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NO</td>
+<td align="left">Finnmark</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">Julahaugen</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="right">70.52452</td>
+<td align="right">29.125786</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">avibase-79B161B7</td>
+<td align="left">Lagopus muta (Montin, 1781)</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">Animalia</td>
+<td align="left">Chordata</td>
+<td align="left">Aves</td>
+<td align="left">Galliformes</td>
+<td align="left">NA</td>
+<td align="left">Phasianidae</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">Lagopus</td>
+<td align="left">Lagopus</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">muta</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">SPECIES</td>
+<td align="left">NA</td>
+<td align="left">Rock Ptarmigan</td>
+<td align="left"></td>
+<td align="left">ACCEPTED</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">4fa7b334-ce0d-4e88-aaae-2e0c138d049e</td>
+<td align="left">NO</td>
+<td align="left">2024-04-17T08:23:56.208Z</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">CONTINENT_DERIVED_FROM_COORDINATES;TAXON_MATCH_TAXON_CONCEPT_ID_IGNORED</td>
+<td align="left"></td>
+<td align="left">TRUE</td>
+<td align="left">FALSE</td>
+<td align="right">5227679</td>
+<td align="right">5227679</td>
+<td align="right">1</td>
+<td align="right">44</td>
+<td align="right">212</td>
+<td align="right">723</td>
+<td align="right">9331</td>
+<td align="right">2473369</td>
+<td align="left">NA</td>
+<td align="right">5227679</td>
+<td align="left">Lagopus muta</td>
+<td align="left">Lagopus muta (Montin, 1781)</td>
+<td align="left">Lagopus muta</td>
+<td align="left">NA</td>
+<td align="left">DWC_ARCHIVE</td>
+<td align="left">2024-04-17T08:23:56.208Z</td>
+<td align="left">2024-04-15T22:36:22.136Z</td>
+<td align="left">FALSE</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">FALSE</td>
+<td align="left">EUROPE</td>
+<td align="left">EUROPE</td>
+<td align="left">NOR</td>
+<td align="left">Norway</td>
+<td align="left">NOR.5_1</td>
+<td align="left">Finnmark</td>
+<td align="left">NOR.5.3_1</td>
+<td align="left">Berlevåg</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">LC</td>
+</tr>
+<tr class="even">
+<td align="right">976560970</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">CC_BY_4_0</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left">CLO</td>
+<td align="left">EBIRD</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">HUMAN_OBSERVATION</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"><a href="URN:catalog:CLO:EBIRD:OBS223362772" class="uri">URN:catalog:CLO:EBIRD:OBS223362772</a></td>
+<td align="left">OBS223362772</td>
+<td align="right">NA</td>
+<td align="left">obsr226921</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">PRESENT</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="right">NA</td>
+<td align="left">2010-05-29</td>
+<td align="left"></td>
+<td align="right">149</td>
+<td align="right">149</td>
+<td align="right">2010</td>
+<td align="right">5</td>
+<td align="right">29</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="right">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">EUROPE</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NO</td>
+<td align="left">Sør-Trøndelag</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">Norway, Kongsvold</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="right">62.30637</td>
+<td align="right">9.609218</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">avibase-79B161B7</td>
+<td align="left">Lagopus muta (Montin, 1781)</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">Animalia</td>
+<td align="left">Chordata</td>
+<td align="left">Aves</td>
+<td align="left">Galliformes</td>
+<td align="left">NA</td>
+<td align="left">Phasianidae</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">Lagopus</td>
+<td align="left">Lagopus</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">muta</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">SPECIES</td>
+<td align="left">NA</td>
+<td align="left">Rock Ptarmigan</td>
+<td align="left"></td>
+<td align="left">ACCEPTED</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">4fa7b334-ce0d-4e88-aaae-2e0c138d049e</td>
+<td align="left">NO</td>
+<td align="left">2024-04-17T09:50:27.030Z</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">CONTINENT_DERIVED_FROM_COORDINATES;TAXON_MATCH_TAXON_CONCEPT_ID_IGNORED</td>
+<td align="left"></td>
+<td align="left">TRUE</td>
+<td align="left">FALSE</td>
+<td align="right">5227679</td>
+<td align="right">5227679</td>
+<td align="right">1</td>
+<td align="right">44</td>
+<td align="right">212</td>
+<td align="right">723</td>
+<td align="right">9331</td>
+<td align="right">2473369</td>
+<td align="left">NA</td>
+<td align="right">5227679</td>
+<td align="left">Lagopus muta</td>
+<td align="left">Lagopus muta (Montin, 1781)</td>
+<td align="left">Lagopus muta</td>
+<td align="left">NA</td>
+<td align="left">DWC_ARCHIVE</td>
+<td align="left">2024-04-17T09:50:27.030Z</td>
+<td align="left">2024-04-15T22:36:22.136Z</td>
+<td align="left">FALSE</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">FALSE</td>
+<td align="left">EUROPE</td>
+<td align="left">EUROPE</td>
+<td align="left">NOR</td>
+<td align="left">Norway</td>
+<td align="left">NOR.15_1</td>
+<td align="left">Sør-Trøndelag</td>
+<td align="left">NOR.15.13_1</td>
+<td align="left">Oppdal</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">LC</td>
+</tr>
+<tr class="odd">
+<td align="right">956725853</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">CC_BY_4_0</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left">CLO</td>
+<td align="left">EBIRD</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">HUMAN_OBSERVATION</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"><a href="URN:catalog:CLO:EBIRD:OBS201175760" class="uri">URN:catalog:CLO:EBIRD:OBS201175760</a></td>
+<td align="left">OBS201175760</td>
+<td align="right">NA</td>
+<td align="left">obsr98173</td>
+<td align="left">NA</td>
+<td align="right">2</td>
+<td align="right">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">PRESENT</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="right">NA</td>
+<td align="left">2013-06-12</td>
+<td align="left"></td>
+<td align="right">163</td>
+<td align="right">163</td>
+<td align="right">2013</td>
+<td align="right">6</td>
+<td align="right">12</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="right">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">EUROPE</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NO</td>
+<td align="left">Nordland</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">Arctic Circle - E6</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="right">66.55537</td>
+<td align="right">15.315628</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">avibase-79B161B7</td>
+<td align="left">Lagopus muta (Montin, 1781)</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">Animalia</td>
+<td align="left">Chordata</td>
+<td align="left">Aves</td>
+<td align="left">Galliformes</td>
+<td align="left">NA</td>
+<td align="left">Phasianidae</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">Lagopus</td>
+<td align="left">Lagopus</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">muta</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">SPECIES</td>
+<td align="left">NA</td>
+<td align="left">Rock Ptarmigan</td>
+<td align="left"></td>
+<td align="left">ACCEPTED</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">4fa7b334-ce0d-4e88-aaae-2e0c138d049e</td>
+<td align="left">NO</td>
+<td align="left">2024-04-17T08:23:05.601Z</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">CONTINENT_DERIVED_FROM_COORDINATES;TAXON_MATCH_TAXON_CONCEPT_ID_IGNORED</td>
+<td align="left"></td>
+<td align="left">TRUE</td>
+<td align="left">FALSE</td>
+<td align="right">5227679</td>
+<td align="right">5227679</td>
+<td align="right">1</td>
+<td align="right">44</td>
+<td align="right">212</td>
+<td align="right">723</td>
+<td align="right">9331</td>
+<td align="right">2473369</td>
+<td align="left">NA</td>
+<td align="right">5227679</td>
+<td align="left">Lagopus muta</td>
+<td align="left">Lagopus muta (Montin, 1781)</td>
+<td align="left">Lagopus muta</td>
+<td align="left">NA</td>
+<td align="left">DWC_ARCHIVE</td>
+<td align="left">2024-04-17T08:23:05.601Z</td>
+<td align="left">2024-04-15T22:36:22.136Z</td>
+<td align="left">FALSE</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">FALSE</td>
+<td align="left">EUROPE</td>
+<td align="left">EUROPE</td>
+<td align="left">NOR</td>
+<td align="left">Norway</td>
+<td align="left">NOR.10_1</td>
+<td align="left">Nordland</td>
+<td align="left">NOR.10.28_1</td>
+<td align="left">Rana</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">LC</td>
+</tr>
+<tr class="even">
+<td align="right">922124083</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">CC_BY_4_0</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left">naturgucker</td>
+<td align="left">naturgucker</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">HUMAN_OBSERVATION</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">1450641070</td>
+<td align="right">NA</td>
+<td align="left">-1963296749</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">PRESENT</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="right">NA</td>
+<td align="left">2011-08-04T00:00</td>
+<td align="left"></td>
+<td align="right">216</td>
+<td align="right">216</td>
+<td align="right">2011</td>
+<td align="right">8</td>
+<td align="right">4</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="right">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">EUROPE</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NO</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">Ferienhaus Brekkeseter</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="right">61.89373</td>
+<td align="right">9.020678</td>
+<td align="right">250</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">Lagopus muta (Montin, 1781)</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">Animalia</td>
+<td align="left">Chordata</td>
+<td align="left">Aves</td>
+<td align="left">Galliformes</td>
+<td align="left">NA</td>
+<td align="left">Phasianidae</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">Lagopus</td>
+<td align="left">Lagopus</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">muta</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">SPECIES</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">ACCEPTED</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">6ac3f774-d9fb-4796-b3e9-92bf6c81c084</td>
+<td align="left">DE</td>
+<td align="left">2024-03-15T23:26:53.443Z</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">COORDINATE_ROUNDED;GEODETIC_DATUM_ASSUMED_WGS84;CONTINENT_DERIVED_FROM_COORDINATES;MULTIMEDIA_URI_INVALID</td>
+<td align="left"></td>
+<td align="left">TRUE</td>
+<td align="left">FALSE</td>
+<td align="right">5227679</td>
+<td align="right">5227679</td>
+<td align="right">1</td>
+<td align="right">44</td>
+<td align="right">212</td>
+<td align="right">723</td>
+<td align="right">9331</td>
+<td align="right">2473369</td>
+<td align="left">NA</td>
+<td align="right">5227679</td>
+<td align="left">Lagopus muta</td>
+<td align="left">Lagopus muta (Montin, 1781)</td>
+<td align="left">Lagopus muta</td>
+<td align="left">NA</td>
+<td align="left">BIOCASE</td>
+<td align="left">2024-03-15T23:26:53.443Z</td>
+<td align="left">2024-03-15T21:43:29.197Z</td>
+<td align="left">TRUE</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">FALSE</td>
+<td align="left">EUROPE</td>
+<td align="left">EUROPE</td>
+<td align="left">NOR</td>
+<td align="left">Norway</td>
+<td align="left">NOR.11_1</td>
+<td align="left">Oppland</td>
+<td align="left">NOR.11.23_1</td>
+<td align="left">Vågå</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">LC</td>
+</tr>
+</tbody>
+</table>
+<p>Note that the structure of this data set is different to that obtained with <code>occ_search(...)</code> hence enforcing that you <strong>should always stage downloads whose data are used in publications with <code>occ_download(...)</code>!</strong></p>
+<p>{{% alert success %}}
+You now have the means of <strong>obtaining GBIF mediated data</strong>. Next, you will need to work with that data locally.
+{{% /alert %}}</p>
+</div>
+</div>
+</div>
+<div id="session-info" class="section level1">
+<h1>Session Info</h1>
+<pre><code>## R version 4.4.0 (2024-04-24 ucrt)
+## Platform: x86_64-w64-mingw32/x64
+## Running under: Windows 11 x64 (build 22631)
+## 
+## Matrix products: default
+## 
+## 
+## locale:
+## [1] LC_COLLATE=Norwegian Bokmål_Norway.utf8  LC_CTYPE=Norwegian Bokmål_Norway.utf8   
+## [3] LC_MONETARY=Norwegian Bokmål_Norway.utf8 LC_NUMERIC=C                            
+## [5] LC_TIME=Norwegian Bokmål_Norway.utf8    
+## 
+## time zone: Europe/Oslo
+## tzcode source: internal
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+## [1] rio_1.2.3   knitr_1.48  rgbif_3.8.1
+## 
+## loaded via a namespace (and not attached):
+##  [1] styler_1.10.3     sass_0.4.9        utf8_1.2.4        generics_0.1.3   
+##  [5] xml2_1.3.6        blogdown_1.19     stringi_1.8.4     httpcode_0.3.0   
+##  [9] digest_0.6.37     magrittr_2.0.3    evaluate_0.24.0   grid_4.4.0       
+## [13] bookdown_0.40     fastmap_1.2.0     R.oo_1.26.0       R.cache_0.16.0   
+## [17] plyr_1.8.9        jsonlite_1.8.8    R.utils_2.12.3    whisker_0.4.1    
+## [21] crul_1.5.0        urltools_1.7.3    httr_1.4.7        purrr_1.0.2      
+## [25] fansi_1.0.6       scales_1.3.0      oai_0.4.0         lazyeval_0.2.2   
+## [29] jquerylib_0.1.4   cli_3.6.3         rlang_1.1.4       triebeard_0.4.1  
+## [33] R.methodsS3_1.8.2 bit64_4.0.5       munsell_0.5.1     cachem_1.1.0     
+## [37] yaml_2.3.10       tools_4.4.0       dplyr_1.1.4       colorspace_2.1-1 
+## [41] ggplot2_3.5.1     curl_5.2.2        vctrs_0.6.5       R6_2.5.1         
+## [45] lifecycle_1.0.4   stringr_1.5.1     bit_4.0.5         pkgconfig_2.0.3  
+## [49] pillar_1.9.0      bslib_0.8.0       gtable_0.3.6      data.table_1.16.0
+## [53] glue_1.7.0        Rcpp_1.0.13       xfun_0.47         tibble_3.2.1     
+## [57] tidyselect_1.2.1  htmltools_0.5.8.1 rmarkdown_2.28    compiler_4.4.0</code></pre>
+</div>

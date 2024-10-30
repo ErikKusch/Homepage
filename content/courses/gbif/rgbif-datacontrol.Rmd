@@ -1,0 +1,293 @@
+---
+title: "Handling Data with rgbif"
+author: Erik Kusch
+date: '2023-05-21'
+slug: datacontrol
+categories:
+  - GBIF
+  - Biodiversity
+  - Open Science
+tags:
+  - GBIF
+  - Biodiversity
+  - Open Science
+subtitle: "Quality Assurance of GBIF Mediated Data and Referencing it"
+summary: 'A quick overview of data retrieval with `rgbif`.'
+authors: []
+lastmod: '2023-11-06T20:00:00+01:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: 
+output:
+  blogdown::html_page:
+    keep_md: true
+    # toc: true
+    # toc_depth: 1
+    # number_sections: false
+# header-includes:
+#   <script src = "https://polyfill.io/v3/polyfill.min.js?features = es6"></script>
+#   <script id = "MathJax-script" async src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+math: true
+type: docs
+toc: true 
+menu:
+  gbif:
+    parent: Practical Exercises
+    weight: 7
+weight: 7
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, tidy = "styler", tidy.opts = list(strict = TRUE), fig.width = 15, fig.height = 8)
+options(width = 90)
+source("PersonalSettings.R")
+```
+
+{{% alert normal %}}
+<details>
+  <summary>Preamble, Package-Loading, and GBIF API Credential Registering (click here):</summary>
+```{r InstallAdvanced}
+## Custom install & load function
+install.load.package <- function(x) {
+  if (!require(x, character.only = TRUE)) {
+    install.packages(x, repos = "http://cran.us.r-project.org")
+  }
+  require(x, character.only = TRUE)
+}
+## names of packages we want installed (if not installed yet) and loaded
+package_vec <- c(
+  "rgbif",
+  "knitr", # for rmarkdown table visualisations
+  "sp", # for spatialobject creation
+  "sf", # an alternative spatial object library
+  "ggplot2", # for visualistion
+  "raster", # for setting and reading CRS
+  "rnaturalearth" # for shapefiles of naturalearth
+)
+## executing install & load for each package
+sapply(package_vec, install.load.package)
+```
+```{r registeruser, eval=FALSE}
+options(gbif_user = "my gbif username")
+options(gbif_email = "my registred gbif e-mail")
+options(gbif_pwd = "my gbif password")
+```
+</details> 
+{{% /alert %}}
+
+First, we obtain and load the data we are interested in like such:
+```{r, echo = FALSE}
+sp_name <- "Lagopus muta"
+sp_backbone <- name_backbone(name = sp_name)
+sp_key <- sp_backbone$usageKey
+if (file.exists(file.path(getwd(), "registereddownload.RData"))) {
+  load(file.path(getwd(), "registereddownload.RData"))
+} else {
+  res <- occ_download(
+    pred("taxonKey", sp_key),
+    pred_in("basisOfRecord", c("HUMAN_OBSERVATION")),
+    pred("country", "NO"),
+    pred_gte("year", 2000),
+    pred_lte("year", 2020)
+  )
+  save(res, file = "registereddownload.RData")
+}
+res_meta <- occ_download_wait(res, status_ping = 5, curlopts = list(), quiet = FALSE)
+res_get <- occ_download_get(res)
+res_data <- occ_download_import(res_get)
+```
+
+```{r searchandgetkey, eval=FALSE}
+# Download query
+res <- occ_download(
+  pred("taxonKey", sp_key),
+  pred_in("basisOfRecord", c("HUMAN_OBSERVATION")),
+  pred("country", "NO"),
+  pred("hasCoordinate", TRUE),
+  pred_gte("year", 2000),
+  pred_lte("year", 2020)
+)
+# Downloading and Loading
+res_meta <- occ_download_wait(res, status_ping = 5, curlopts = list(), quiet = FALSE)
+res_get <- occ_download_get(res)
+res_data <- occ_download_import(res_get)
+```
+
+With this data in our `R` environment, we are ready to explore the data itself.
+
+{{% alert info %}}
+There are **a myriad** of things you can do to and with GBIF mediated data - here, we focus only on a few data handling steps.
+{{% /alert %}}
+
+## Initial Data Handling
+
+Before working with the data you obtained via GBIF, it is usually good practice to first check that all data is as expected/in order and then either reduce the dataset further to fit quality standards and extract the relevant variables for your application.
+
+### Common Data Considerations & Issues
+
+Common data considerations and quality flags are largely related to geolocations (but other quality markers do exist). These can be used as limiting factors in data discovery, when querying downloads as well as after a download is done and the data is loaded. Within the GBIF Portal, these options are presented in a side-bar like this:
+
+<img src="/courses/gbif/qualityflags.png" width="100%"/></a>
+
+As a matter of fact, we have already used the functionality by which to control for data quality markers when carrying out data discovery (`occ_search(...)`) and data download queries (`occ_download(...)`) by matching Darwin Core Terms like `r "basisOfRecord"` or `r "hasCoordinate"`.
+
+For this exercise, let's focus on some data markers that are contained in our already downloaded data set which we may want to use for further limiting of our data set for subsequent analyses. To do so, let's consider the `coordinateUncertaintyInMeters` field by visualising the values we have obtained for each record in our occurrence data:
+
+```{r uncertaintyinmetre}
+ggplot(res_data, aes(x = coordinateUncertaintyInMeters)) +
+  geom_histogram(bins = 1e2) +
+  theme_bw() +
+  scale_y_continuous(trans = "log10")
+```
+
+**Note:** The y-axis on the above plot is log-transformed and `r sum(is.na(res_data$coordinateUncertaintyInMeters))` of the underlying records do not report a value for `coordinateUncertaintyInMeters` thus being removed from the above visualisation.
+
+What we find is that there exists considerable variation in confidence of individual occurrence locations and we probably want to remove those records which are assigned a certain level of `coordinateUncertaintyInMeters`. Let's say 200 metres (after all, we are dealing with a mobile organism):
+
+```{r}
+preci_data <- res_data[which(res_data$coordinateUncertaintyInMeters < 200), ]
+```
+
+This quality control leaves us with `r nrow(preci_data)` *Lagopus muta* records. A significant drop in data points which may well change our analyses and their outcomes drastically.
+
+### Extract a Subset of Cata-Columns
+
+GBIF mediated data comes with a lot of attributes. These can be assessed readily via the Darwin Core or, within `R` via: `colnames(...)` (here with `...`  = `res_data`). Rarely will we need all of them for our analyses. For now, we will simply subset the data for a smaller set of columns which are often relevant for end-users:
+
+```{r}
+data_subset <- preci_data[
+  ,
+  c("scientificName", "decimalLongitude", "decimalLatitude", "basisOfRecord", "year", "month", "day", "eventDate", "countryCode", "municipality", "stateProvince", "taxonKey", "species", "catalogNumber", "hasGeospatialIssues", "hasCoordinate", "mediaType", "datasetKey")
+]
+knitr::kable(head(data_subset))
+```
+
+## Explore the Occurrence Data
+Now that we have the data we might use for analyses ready, we can explore what the data itself contains.
+
+### Data Contents
+
+Here are a few overviews of *Lagopus muta* abundances across different data attributes:
+```{r}
+table(data_subset$year)
+table(data_subset$stateProvince)
+table(data_subset$mediaType)
+```
+
+### Spatial Data Handling
+Most use-cases of GBIF make use of the geolocation references for data records either implicitly or explicitly. It is thus vital to be able to handle GBIF mediated data for spatial analyses. There exist plenty workshop (like [this one](https://pjbartlein.github.io/REarthSysSci/geospatial.html)) already for this topic so I will be brief.
+
+#### Make `SpatialPointsDataFrame`
+
+First, we can use the `sf` package to create `SpatialPoints` from our geo-referenced occurrence data:
+```{r}
+options(digits = 8) ## set 8 digits (ie. all digits, not decimals) for the type cast as.double to keep decimals
+data_subset <- as.data.frame(data_subset)
+data_subset$lon <- as.double(data_subset$decimalLongitude) ## cast lon from char to double
+data_subset$lat <- as.double(data_subset$decimalLatitude) ## cast lat from char to double
+data_sf <- st_as_sf(data_subset, coords = c("lon", "lat"), remove = FALSE)
+st_crs(data_sf) <- CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0")
+```
+
+This data format lends itself well for analysing where occurrence have been recorded in relation to study parameters of choice (e.g., climatic conditions, land-use, political boundaries, etc.).
+
+#### `SpatialPoints` and Polygons
+
+In first instance, `SpatialPoints` can easily be used to create initial visualisations of spatial patterns:
+```{r, fig.width = 15, fig.height = 15}
+## get background map
+NO_shp <- rnaturalearth::ne_countries(country = "Norway", scale = "medium", returnclass = "sf")[, 1]
+## make plot
+ggplot() +
+  geom_sf(data = NO_shp) +
+  geom_sf(data = data_sf[, 1]) +
+  theme_bw() +
+  labs(title = "Occurrences of Lagopus muta recorded by human observations between 2000 and 2022")
+```
+
+#### The Coordinate Reference System (CRS)
+
+Each spatial object in `R` is assigned a  [Coordinate Reference System (CRS)](https://www.earthdatascience.org/courses/earth-analytics/spatial-data-r/intro-to-coordinate-reference-systems/) which details how geolocational values are to be understood. For an overview of different CRSs, see [here](https://epsg.io/).
+
+In `R`, we can assess the CRS of most spatial objects as follows:
+
+```{r}
+st_crs(data_sf)
+st_crs(NO_shp)
+```
+
+When dealing with data in specific areas of the world or wanting to match occurrence data to other products with specific CRSs, it may be prudent to reproject the `SpatialPoints` occurrence data object.  We can use `sf::st_transform)` to do so (this is reprojecting to the same CRS the data is already in):
+
+```{r}
+sf::st_transform(data_sf, CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0"))
+```
+
+#### Classifying Spatial Data
+
+Let's say, for example, we want to quantify abundances of *Lagopus muta* across political regions in Norway:
+
+```{r}
+## Obtain sf object
+NO_municip <- rnaturalearth::ne_states(country = "Norway", returnclass = "sf") # get shapefiles for Norwegian states
+NO_municip <- sf::st_crop(NO_municip, extent(4.5, 31.5, 50, 71.5)) # crop shapefile to continental Norway
+## Identify overlap of points and polygons
+cover_sf <- st_intersects(NO_municip, data_sf)
+names(cover_sf) <- NO_municip$name
+## report abundances
+abundances_municip <- unlist(lapply(cover_sf, length))
+knitr::kable(t(sort(abundances_municip, decreasing = TRUE)))
+```
+
+Looks like there are hotspots for *Lagopus muta* in SørTrøndelag and Hordaland - could this be sampling bias or effects of bioclimatic niche preferences and local environmental conditions? Questions like these you will be able to answer with additional analyses which are beyond the scope of this workshop.
+
+Let's visualise these abundances:
+```{r, fig.width = 15, fig.height = 15}
+NO_municip$abundances <- abundances_municip
+ggplot(data = NO_municip) +
+  geom_sf(aes(fill = abundances)) +
+  scale_fill_viridis_c() +
+  labs(x = "Longitude", y = "Latitude", col = "Abundance")
+```
+
+Finally, let's consider wanting to identify for each data record and attach to the data itself which state it falls into. We can do so as follows (not necessarily the most elegant way:
+```{r, fig.width = 15, fig.height = 15}
+## create a dataframe of occurrence records by rownumber in original data (data_subset) and state-membership
+cover_ls <- lapply(names(cover_sf), FUN = function(x) {
+  if (length(cover_sf[[x]]) == 0) {
+    points <- NA
+  } else {
+    points <- cover_sf[[x]]
+  }
+  data.frame(
+    municip = x,
+    points = points
+  )
+})
+cover_df <- na.omit(do.call(rbind, cover_ls))
+## attach state-membership to original data, NAs for points without state-membership
+data_subset$municip <- NA
+data_subset$municip[cover_df$points] <- cover_df$municip
+## visualise the result
+ggplot(data = NO_municip) +
+  geom_sf(fill = "white") +
+  geom_point(
+    data = data_subset, size = 1,
+    aes(x = decimalLongitude, y = decimalLatitude, col = municip)
+  ) +
+  scale_colour_viridis_d() +
+  labs(x = "Longitude", y = "Latitude", col = "Municipality")
+```
+
+Let's say we feed these data into an analysis which runs to completion and we want to report on our findings. What's next? Citing the data we used.
+
+{{% alert success %}}
+Now that you can **handle GBIF data locally**, you are ready to pipe these data into your specific analysis tools. Lastly, you only need to cite the data you used.
+{{% /alert %}}
+
+## Session Info
+```{r, echo = FALSE}
+sessionInfo()
+```

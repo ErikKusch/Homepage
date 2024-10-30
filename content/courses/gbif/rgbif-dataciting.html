@@ -1,0 +1,279 @@
+---
+title: "Citing GBIF Data"
+author: Erik Kusch
+date: '2023-05-21'
+slug: dataciting
+categories:
+  - GBIF
+  - Biodiversity
+  - Open Science
+tags:
+  - GBIF
+  - Biodiversity
+  - Open Science
+subtitle: "Referencing GBIF Mediated Data"
+summary: 'A quick overview of data retrieval with `rgbif`.'
+authors: []
+lastmod: '2023-11-06T20:00:00+01:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: 
+output:
+  blogdown::html_page:
+    keep_md: true
+    # toc: true
+    # toc_depth: 1
+    # number_sections: false
+# header-includes:
+#   <script src = "https://polyfill.io/v3/polyfill.min.js?features = es6"></script>
+#   <script id = "MathJax-script" async src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+math: true
+type: docs
+toc: true 
+menu:
+  gbif:
+    parent: Practical Exercises
+    weight: 8
+weight: 8
+---
+
+
+<div id="TOC">
+
+</div>
+
+{{% alert normal %}}
+<details>
+<summary>
+Preamble, Package-Loading, and GBIF API Credential Registering (click here):
+</summary>
+<pre class="r"><code>## Custom install &amp; load function
+install.load.package &lt;- function(x) {
+  if (!require(x, character.only = TRUE)) {
+    install.packages(x, repos = &quot;http://cran.us.r-project.org&quot;)
+  }
+  require(x, character.only = TRUE)
+}
+## names of packages we want installed (if not installed yet) and loaded
+package_vec &lt;- c(
+  &quot;rgbif&quot;,
+  &quot;ggplot2&quot; # for visualisation
+)
+## executing install &amp; load for each package
+sapply(package_vec, install.load.package)</code></pre>
+<pre><code>##   rgbif ggplot2 
+##    TRUE    TRUE</code></pre>
+<pre class="r"><code>options(gbif_user = &quot;my gbif username&quot;)
+options(gbif_email = &quot;my registred gbif e-mail&quot;)
+options(gbif_pwd = &quot;my gbif password&quot;)</code></pre>
+</details>
+<p>{{% /alert %}}</p>
+<p>First, we obtain and load the data use for our publication like such:</p>
+<pre class="r"><code># Download query
+res &lt;- occ_download(
+  pred(&quot;taxonKey&quot;, sp_key),
+  pred_in(&quot;basisOfRecord&quot;, c(&quot;HUMAN_OBSERVATION&quot;)),
+  pred(&quot;country&quot;, &quot;NO&quot;),
+  pred(&quot;hasCoordinate&quot;, TRUE),
+  pred_gte(&quot;year&quot;, 2000),
+  pred_lte(&quot;year&quot;, 2020)
+)
+# Downloading and Loading
+res_meta &lt;- occ_download_wait(res, status_ping = 5, curlopts = list(), quiet = FALSE)
+res_get &lt;- occ_download_get(res)
+res_data &lt;- occ_download_import(res_get)
+# Limiting data according to quality control
+preci_data &lt;- res_data[which(res_data$coordinateUncertaintyInMeters &lt; 200), ]
+# Subsetting data for desired variables and data markers
+data_subset &lt;- preci_data[
+  ,
+  c(&quot;scientificName&quot;, &quot;decimalLongitude&quot;, &quot;decimalLatitude&quot;, &quot;basisOfRecord&quot;, &quot;year&quot;, &quot;month&quot;, &quot;day&quot;, &quot;eventDate&quot;, &quot;countryCode&quot;, &quot;municipality&quot;, &quot;taxonKey&quot;, &quot;species&quot;, &quot;catalogNumber&quot;, &quot;hasGeospatialIssues&quot;, &quot;hasCoordinate&quot;, &quot;datasetKey&quot;)
+]</code></pre>
+<p>Now all we need to worry about is properly accrediting data sources to make our data usage fair and reproducible.</p>
+<div id="finding-download-citation" class="section level2">
+<h2>Finding Download Citation</h2>
+<p>Much like previous steps of this workshop, identifying the correct citation for a given download from GBIF can be done via:
+1. GBIF Portal
+2. <code>rgbif</code> functionality</p>
+<div id="gbif-portal" class="section level3">
+<h3>GBIF Portal</h3>
+<p>To figure out how to reference a GBIF mediated set of data records you may head to the <a href="https://www.gbif.org/user/download">download tab</a> of the GBIF portal where, once in the detailed overview of an individual download job, you will find proper accrediation instructions right at the top:</p>
+<p><img src="/courses/gbif/gbif-download4.jpeg" width="100%"/></a></p>
+<p>I would like to caution against this practise as the download tab can become a bit cluttered when having a long history of asking GBIF for similar downloads.</p>
+</div>
+<div id="rgbif" class="section level3">
+<h3><code>rgbif</code></h3>
+<p>{{% alert success %}}
+This is the <strong>preferred way of figuring out correct GBIF mediated data citation</strong>.
+{{% /alert %}}</p>
+<p>To avoid the pitfalls of manual data citation discovery, <code>rgbif</code> download metadata make available to us directly a DOI which can be used for refrencing our data:</p>
+<pre class="r"><code>paste(&quot;GBIF Occurrence Download&quot;, occ_download_meta(res)$doi, &quot;accessed via GBIF.org on&quot;, Sys.Date())</code></pre>
+<pre><code>## [1] &quot;GBIF Occurrence Download 10.15468/dl.vjazpv accessed via GBIF.org on 2024-10-30&quot;</code></pre>
+<p>With this, you are ready to reference the data you use.</p>
+</div>
+</div>
+<div id="derived-datasets" class="section level2">
+<h2>Derived Datasets</h2>
+<p>{{% alert warning %}}
+When <strong>additionally</strong> (heavily) <strong>filtering or subsetting</strong> a GBIF download locally, it is <strong>best to</strong> not <strong>cite</strong> the download itself, but rather a <strong>derived data set</strong>.
+{{% /alert %}}</p>
+<p>Derived datasets are citable records of GBIF-mediated occurrence data derived either from:
+- a GBIF.org download that has been filtered/reduced significantly, or
+- data accessed through a cloud service, e.g. Microsoft AI for Earth (Azure), or
+- data obtained by any means for which no DOI was assigned, but one is required (e.g. third-party tools accessing the GBIF search API)</p>
+<p>For our purposes, we have used a heavily subsetted data download - just look at the number of records in the original and the subsetted data:</p>
+<pre class="r"><code>ggplot(data.frame(
+  Records = c(nrow(data_subset), nrow(res_data)),
+  Data = c(&quot;Subset&quot;, &quot;Original&quot;)
+), aes(y = Data, x = Records)) +
+  geom_bar(stat = &quot;identity&quot;, fill = &quot;#4f004e&quot;) +
+  theme_bw(base_size = 12)</code></pre>
+<p><img src="/courses/gbif/rgbif-dataciting_files/figure-html/barsdatasubset-1.png" width="1440" /></p>
+<p>To correctly reference the underlying data sets mediated by GBIF and contributing to our final dataset, we should register a derived data set. When created, a derived dataset is assigned a unique DOI that can be used to cite the data. To create a derived dataset you will need to authenticate using a GBIF.org account and provide:<br />
+- a title of the dataset,
+- a list of the GBIF datasets (by DOI or datasetKey) from which the data originated, ideally with counts of how many records each dataset contributed,
+- a persistent URL of where the extracted dataset can be accessed,
+- a description of how the dataset was prepared,
+- (optional) the GBIF download DOI, if the dataset is derived from an existing download , and
+- (optional) a date for when the derived dataset should be registered if not immediately .</p>
+<p>Arguably, the most important aspect here is the list of GBIF datasets and the counts of data used per dataset. First, let’s isolate how many datasets contributed to our original data and the subsetted, final data:</p>
+<pre class="r"><code>## Original
+length(unique(res_data$datasetKey))</code></pre>
+<pre><code>## [1] 18</code></pre>
+<pre class="r"><code>## Subsetted
+length(unique(data_subset$datasetKey))</code></pre>
+<pre><code>## [1] 10</code></pre>
+<p>There is a signifcant decrease in number of datasets which make up our final data product post-subsetting. Let us visualise how the data records are spread across the individual datasets per data product we have handled:</p>
+<pre class="r"><code>## Originally downloaded abundances per dataset
+plot_data &lt;- data.frame(table(res_data$datasetKey))
+ggplot(
+  plot_data,
+  aes(
+    x = factor(Var1, levels = plot_data$Var1[order(plot_data$Freq, decreasing = TRUE)]),
+    y = Freq
+  )
+) +
+  geom_col(color = &quot;black&quot;, fill = &quot;forestgreen&quot;) +
+  labs(
+    y = &quot;Abundance&quot;, x = &quot;Dataset&quot;,
+    title = paste0(&quot;Originally downloaded abundances per dataset (&quot;, occ_download_meta(res)$doi, &quot;)&quot;)
+  ) +
+  theme_bw(base_size = 21) +
+  theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())</code></pre>
+<p><img src="/courses/gbif/rgbif-dataciting_files/figure-html/unnamed-chunk-3-1.png" width="1440" /></p>
+<pre class="r"><code>## Subsetted abundances per dataset
+plot_subset &lt;- data.frame(table(data_subset$datasetKey))
+ggplot(
+  plot_subset,
+  aes(
+    x = factor(Var1, levels = plot_subset$Var1[order(plot_subset$Freq, decreasing = TRUE)]),
+    y = Freq
+  )
+) +
+  geom_col(color = &quot;black&quot;, fill = &quot;darkred&quot;) +
+  labs(y = &quot;Abundance&quot;, x = &quot;Dataset&quot;, title = &quot;Subsetted abundances per dataset&quot;) +
+  theme_bw(base_size = 21) +
+  theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())</code></pre>
+<p><img src="/courses/gbif/rgbif-dataciting_files/figure-html/unnamed-chunk-3-2.png" width="1440" /></p>
+<p>Subsequently, to prepare a potential query to GBIF to establish a derived data set for us, we can tabulate the counts of records per dataset key as follows:</p>
+<pre class="r"><code>knitr::kable(table(data_subset$datasetKey))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Var1</th>
+<th align="right">Freq</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">09c38deb-8674-446e-8be8-3347f6c094ef</td>
+<td align="right">2</td>
+</tr>
+<tr class="even">
+<td align="left">492d63a8-4978-4bc7-acd8-7d0e3ac0e744</td>
+<td align="right">3</td>
+</tr>
+<tr class="odd">
+<td align="left">50c9509d-22c7-4a22-a47d-8c48425ef4a7</td>
+<td align="right">7</td>
+</tr>
+<tr class="even">
+<td align="left">6a948a1c-7e23-4d99-b1c1-ec578d0d3159</td>
+<td align="right">316</td>
+</tr>
+<tr class="odd">
+<td align="left">6ac3f774-d9fb-4796-b3e9-92bf6c81c084</td>
+<td align="right">3</td>
+</tr>
+<tr class="even">
+<td align="left">8a863029-f435-446a-821e-275f4f641165</td>
+<td align="right">114</td>
+</tr>
+<tr class="odd">
+<td align="left">b124e1e0-4755-430f-9eab-894f25a9b59c</td>
+<td align="right">1176</td>
+</tr>
+<tr class="even">
+<td align="left">b49a2978-0e30-4748-a99f-9301d17ae119</td>
+<td align="right">906</td>
+</tr>
+<tr class="odd">
+<td align="left">b848f1f3-3955-4725-8ad8-e711e4a9e0ac</td>
+<td align="right">146</td>
+</tr>
+<tr class="even">
+<td align="left">c47f13c1-7427-45a0-9f12-237aad351040</td>
+<td align="right">48</td>
+</tr>
+</tbody>
+</table>
+<p>Finally, we can head to the <a href="https://www.gbif.org/derived-dataset/register">registration for derived data sets</a> at GBIF and supply our information:</p>
+<p><img src="/courses/gbif/gbif-derived.png" width="100%"/></a></p>
+<p>{{% alert success %}}
+You are finished - you should now be able to find relevant data for your requirements on GBIF, download said data, handle and subset it according to your needs, and now how to reference back to the data obtained and used in your final report.
+{{% /alert %}}</p>
+</div>
+<div id="session-info" class="section level2">
+<h2>Session Info</h2>
+<pre><code>## R version 4.4.0 (2024-04-24 ucrt)
+## Platform: x86_64-w64-mingw32/x64
+## Running under: Windows 11 x64 (build 22631)
+## 
+## Matrix products: default
+## 
+## 
+## locale:
+## [1] LC_COLLATE=Norwegian Bokmål_Norway.utf8  LC_CTYPE=Norwegian Bokmål_Norway.utf8   
+## [3] LC_MONETARY=Norwegian Bokmål_Norway.utf8 LC_NUMERIC=C                            
+## [5] LC_TIME=Norwegian Bokmål_Norway.utf8    
+## 
+## time zone: Europe/Oslo
+## tzcode source: internal
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+## [1] ggplot2_3.5.1 rgbif_3.8.1  
+## 
+## loaded via a namespace (and not attached):
+##  [1] styler_1.10.3     sass_0.4.9        utf8_1.2.4        generics_0.1.3   
+##  [5] xml2_1.3.6        blogdown_1.19     stringi_1.8.4     httpcode_0.3.0   
+##  [9] digest_0.6.37     magrittr_2.0.3    evaluate_0.24.0   grid_4.4.0       
+## [13] bookdown_0.40     fastmap_1.2.0     R.oo_1.26.0       R.cache_0.16.0   
+## [17] plyr_1.8.9        jsonlite_1.8.8    R.utils_2.12.3    whisker_0.4.1    
+## [21] crul_1.5.0        urltools_1.7.3    httr_1.4.7        purrr_1.0.2      
+## [25] fansi_1.0.6       scales_1.3.0      oai_0.4.0         lazyeval_0.2.2   
+## [29] jquerylib_0.1.4   cli_3.6.3         rlang_1.1.4       triebeard_0.4.1  
+## [33] R.methodsS3_1.8.2 bit64_4.0.5       munsell_0.5.1     withr_3.0.1      
+## [37] cachem_1.1.0      yaml_2.3.10       tools_4.4.0       dplyr_1.1.4      
+## [41] colorspace_2.1-1  curl_5.2.2        vctrs_0.6.5       R6_2.5.1         
+## [45] lifecycle_1.0.4   stringr_1.5.1     bit_4.0.5         pkgconfig_2.0.3  
+## [49] pillar_1.9.0      bslib_0.8.0       gtable_0.3.6      data.table_1.16.0
+## [53] glue_1.7.0        Rcpp_1.0.13       highr_0.11        xfun_0.47        
+## [57] tibble_3.2.1      tidyselect_1.2.1  knitr_1.48        farver_2.1.2     
+## [61] htmltools_0.5.8.1 labeling_0.4.3    rmarkdown_2.28    compiler_4.4.0</code></pre>
+</div>
