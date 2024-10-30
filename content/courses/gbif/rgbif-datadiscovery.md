@@ -109,7 +109,7 @@ occ_count(taxonKey = sp_key)
 ```
 
 ```
-## [1] 107525
+## [1] 107535
 ```
 
 ``` r
@@ -117,10 +117,10 @@ occ_search(taxonKey = sp_key, limit = 0)$meta$count
 ```
 
 ```
-## [1] 107525
+## [1] 107535
 ```
 
-Using both of these, we obtain the same output of $1.07525\times 10^{5}$ *Lagopus muta* records mediated by GBIF. Note that this number will likely be higher for you as data is continually added to the GBIF indexing and this document here is frozen in time (it was last updated on 2024-10-29).
+Using both of these, we obtain the same output of $1.07535\times 10^{5}$ *Lagopus muta* records mediated by GBIF. Note that this number will likely be higher for you as data is continually added to the GBIF indexing and this document here is frozen in time (it was last updated on 2024-10-30).
 
 {{% alert warning %}}
 When wanting to discover data matching Darwin Core Terms with multiple characteristics, these can be fed to the `occ_search(...)` function as strings with semicolons separating desired characteristics (e.g., `year = "2000;2001"`).
@@ -141,10 +141,10 @@ occ_NO$meta$count
 ```
 
 ```
-## [1] 17015
+## [1] 17024
 ```
 
-Here is how *Lagopus muta* records are distributed across countries according to GBIF on 2024-10-29:
+Here is how *Lagopus muta* records are distributed across countries according to GBIF on 2024-10-30:
 <details>
   <summary>Click here for code necessary to create the figure below.</summary>
 
@@ -202,7 +202,7 @@ networkD3::saveNetwork(network = SN, file = "SankeyCountry.html", selfcontained 
 </details> 
 <iframe seamless width="100%" height = "600px" src="/courses/gbif/SankeyCountry.html" title="Sankey diagram of Lagopus muta records by country"></iframe> 
 
-As it turns out, roughly 15.82% of *Lagopus muta* records mediated by GBIF fall within Norway.
+As it turns out, roughly 15.83% of *Lagopus muta* records mediated by GBIF fall within Norway.
 
 ### By Shapefile / Polygon
 
@@ -225,7 +225,7 @@ shape_leaflet <- leaflet(NO_shp) %>%
 saveWidget(shape_leaflet, "leaflet_shape.html", selfcontained = TRUE)
 ```
 </details>
-<iframe width="100%" height = "600px" src="/courses/gbif/leaflet_shape.html"></iframe> 
+<iframe seamless width="100%" height = "600px" src="/courses/gbif/leaflet_shape.html" title="Map of initial shapefile"></iframe> 
 
 Let's focus on just continental Norway:
 
@@ -244,7 +244,7 @@ shape_leaflet <- leaflet(NO_shp) %>%
 saveWidget(shape_leaflet, "leaflet_shapeCrop.html", selfcontained = TRUE)
 ```
 </details>
-<iframe width="100%" height = "600px" src="/courses/gbif/leaflet_shapeCrop.html"></iframe> 
+<iframe seamless width="100%" height = "600px" src="/courses/gbif/leaflet_shapeCrop.html" title="Map of cropped shapefile"></iframe> 
 
 Unfortunately, `rgbif` prefers to be told about shapefiles in Well Known Text (WKT) format so we need to reformat our polygon data frame obtained above. We do so like such:
 
@@ -260,7 +260,7 @@ occ_wkt$meta$count
 ```
 
 ```
-## [1] 14739
+## [1] 14748
 ```
 
 Finally, we find that there are fewer records available when using the shapefile for data discovery. Why would that be? In this case, you will find that we are using a pretty coarse shapefile for Norway which probably cuts off some obersvations of *Lagopus muta* that do belong rightfully into Norway.
@@ -354,7 +354,7 @@ ggplot(data = plot_df, aes(x = as.factor(Year), y = Cumulative)) +
 ```
 </details>
 
-<img src="rgbif-datadiscovery_files/figure-html/Time-1.png" width="100%" />
+<img src="rgbif-datadiscovery_files/figure-html/TimePlot-1.png" width="100%" />
 
 ## By Basis of Record
 
@@ -492,7 +492,6 @@ SN <- sankeyNetwork(
 networkD3::saveNetwork(network = SN, file = "SankeyBasis.html", selfcontained = TRUE)
 ```
 </details>
-
 <iframe seamless width="100%" height = "600px" src="/courses/gbif/SankeyBasis.html" title="Sankey diagram of Lagopus muta records by country and basis of record"></iframe> 
 
 As should be plain to see from the list above, there exists some ambiguity in regards to which basis of record may apply to any single occurrence record. It is thus always best to carefully examine on which basis of record research projects should be based.
@@ -621,7 +620,6 @@ networkD3::saveNetwork(network = SN, file = "SankeyFinal.html", selfcontained = 
 
 </details>
 
-
 <iframe seamless width="100%" height = "600px" src="/courses/gbif/SankeyFinal.html" title="Sankey diagram of Lagopus muta records by country and basis of record and whether presence or absence is recorded"></iframe> 
 
 **Note for Firefox users:** Sankey diagrams are contained in a viewbox which scales poorly on Firefox. You can open this webpage in a different browser to avoid this issue. Alternatively, I have included a .png of this particular diagram in the code-fold above it.
@@ -712,7 +710,7 @@ occ_count(
 ```
 We could have also just summed up the facet counts, but it is good to remember this more direct function exists.
 
-Note that we have to change the qay we sum the number of records as data discovery for any argument being matched by multiple characteristics generates an output of type list:
+Note that we have to change the way we sum the number of records as data discovery for any argument being matched by multiple characteristics generates an output of type list:
 
 
 ``` r

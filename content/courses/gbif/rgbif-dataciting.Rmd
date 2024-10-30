@@ -168,7 +168,7 @@ Derived datasets are citable records of GBIF-mediated occurrence data derived ei
 - data obtained by any means for which no DOI was assigned, but one is required (e.g. third-party tools accessing the GBIF search API)
 
 For our purposes, we have used a heavily subsetted data download - just look at the number of records in the original and the subsetted data:
-```{r}
+```{r barsdatasubset}
 ggplot(data.frame(
   Records = c(nrow(data_subset), nrow(res_data)),
   Data = c("Subset", "Original")

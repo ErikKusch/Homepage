@@ -281,7 +281,7 @@ occ_count(
 Through time, the number of records develops like this:
 <details>
   <summary>Click here for code necessary to create the figure below.</summary>
-```{r Time, out.width = "100%", eval = FALSE}
+```{r TimePlot, out.width = "100%", eval = FALSE}
 plot_df <- data.frame(
   Year = 2000:2020,
   Records = unlist(lapply(occ_window, FUN = function(x) {
@@ -304,7 +304,7 @@ ggplot(data = plot_df, aes(x = as.factor(Year), y = Cumulative)) +
 ```
 </details>
 
-```{r Time, echo = FALSE, out.width = "100%"}
+```{r TimePlot, echo = FALSE, out.width = "100%"}
 ```
 
 ## By Basis of Record
@@ -609,7 +609,7 @@ occ_count(
 ```
 We could have also just summed up the facet counts, but it is good to remember this more direct function exists.
 
-Note that we have to change the qay we sum the number of records as data discovery for any argument being matched by multiple characteristics generates an output of type list:
+Note that we have to change the way we sum the number of records as data discovery for any argument being matched by multiple characteristics generates an output of type list:
 
 ```{r}
 str(occ_final, max.level = 1)

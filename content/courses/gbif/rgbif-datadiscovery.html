@@ -91,10 +91,10 @@ GBIF hosts tons of data. Finding the right subset thereof can be difficult.
 <p>Data on GBIF is indexed according to the <a href="https://dwc.tdwg.org/list/">Darwin Core Standard</a>. Any discovery of data can be augmented by matching terms of the Darwin Core with desired subset characteristics. Here, I will show how we can build an increasingly complex query for <em>Lagopus muta</em> records.</p>
 <p>At base, we will start with the functions <code>occc_count(...)</code> and <code>occ_search(...)</code>:</p>
 <pre class="r"><code>occ_count(taxonKey = sp_key)</code></pre>
-<pre><code>## [1] 107525</code></pre>
+<pre><code>## [1] 107535</code></pre>
 <pre class="r"><code>occ_search(taxonKey = sp_key, limit = 0)$meta$count</code></pre>
-<pre><code>## [1] 107525</code></pre>
-<p>Using both of these, we obtain the same output of <span class="math inline">\(1.07525\times 10^{5}\)</span> <em>Lagopus muta</em> records mediated by GBIF. Note that this number will likely be higher for you as data is continually added to the GBIF indexing and this document here is frozen in time (it was last updated on 2024-10-29).</p>
+<pre><code>## [1] 107535</code></pre>
+<p>Using both of these, we obtain the same output of <span class="math inline">\(1.07535\times 10^{5}\)</span> <em>Lagopus muta</em> records mediated by GBIF. Note that this number will likely be higher for you as data is continually added to the GBIF indexing and this document here is frozen in time (it was last updated on 2024-10-30).</p>
 <p>{{% alert warning %}}
 When wanting to discover data matching Darwin Core Terms with multiple characteristics, these can be fed to the <code>occ_search(...)</code> function as strings with semicolons separating desired characteristics (e.g., <code>year = "2000;2001"</code>).
 {{% /alert %}}</p>
@@ -108,8 +108,8 @@ By default, discovery of data through GBIF considers the entire Earth. However, 
 <p>First, let’s limit our search by a specific region. In this case, we are interested in occurrences of <em>Lagopus muta</em> across Norway. Countries are indexed according to ISO2 names (two-letter codes, see <code>enumeration_country()</code>):</p>
 <pre class="r"><code>occ_NO &lt;- occ_search(taxonKey = sp_key, country = &quot;NO&quot;)
 occ_NO$meta$count</code></pre>
-<pre><code>## [1] 17015</code></pre>
-Here is how <em>Lagopus muta</em> records are distributed across countries according to GBIF on 2024-10-29:
+<pre><code>## [1] 17024</code></pre>
+Here is how <em>Lagopus muta</em> records are distributed across countries according to GBIF on 2024-10-30:
 <details>
 <summary>
 Click here for code necessary to create the figure below.
@@ -166,7 +166,7 @@ networkD3::saveNetwork(network = SN, file = &quot;SankeyCountry.html&quot;, self
 </details>
 <iframe seamless width="100%" height="600px" src="/courses/gbif/SankeyCountry.html" title="Sankey diagram of Lagopus muta records by country">
 </iframe>
-<p>As it turns out, roughly 15.82% of <em>Lagopus muta</em> records mediated by GBIF fall within Norway.</p>
+<p>As it turns out, roughly 15.83% of <em>Lagopus muta</em> records mediated by GBIF fall within Norway.</p>
 </div>
 <div id="by-shapefile-polygon" class="section level3">
 <h3>By Shapefile / Polygon</h3>
@@ -182,7 +182,7 @@ Click here for code necessary to create the figure below.
   addPolygons(col = &quot;red&quot;)
 saveWidget(shape_leaflet, &quot;leaflet_shape.html&quot;, selfcontained = TRUE)</code></pre>
 </details>
-<iframe width="100%" height="600px" src="/courses/gbif/leaflet_shape.html">
+<iframe seamless width="100%" height="600px" src="/courses/gbif/leaflet_shape.html" title="Map of initial shapefile">
 </iframe>
 <p>Let’s focus on just continental Norway:</p>
 <pre class="r"><code>NO_shp &lt;- st_crop(NO_shp, xmin = 4.98, xmax = 31.3, ymin = 58, ymax = 71.14)</code></pre>
@@ -195,14 +195,14 @@ Click here for code necessary to create the figure below.
   addPolygons(col = &quot;red&quot;)
 saveWidget(shape_leaflet, &quot;leaflet_shapeCrop.html&quot;, selfcontained = TRUE)</code></pre>
 </details>
-<iframe width="100%" height="600px" src="/courses/gbif/leaflet_shapeCrop.html">
+<iframe seamless width="100%" height="600px" src="/courses/gbif/leaflet_shapeCrop.html" title="Map of cropped shapefile">
 </iframe>
 <p>Unfortunately, <code>rgbif</code> prefers to be told about shapefiles in Well Known Text (WKT) format so we need to reformat our polygon data frame obtained above. We do so like such:</p>
 <pre class="r"><code>NO_wkt &lt;- st_as_text(st_geometry(NO_shp))</code></pre>
 <p>We can now pass this information into the <code>occ_search(...)</code> function using the <code>geometry</code> argument:</p>
 <pre class="r"><code>occ_wkt &lt;- occ_search(taxonKey = sp_key, geometry = NO_wkt)
 occ_wkt$meta$count</code></pre>
-<pre><code>## [1] 14739</code></pre>
+<pre><code>## [1] 14748</code></pre>
 <p>Finally, we find that there are fewer records available when using the shapefile for data discovery. Why would that be? In this case, you will find that we are using a pretty coarse shapefile for Norway which probably cuts off some obersvations of <em>Lagopus muta</em> that do belong rightfully into Norway.</p>
 <p>When searching for data by country code (or continent code for that matter), the returned data need not necessarily contain coordinates so long as a record is assigned to the relevant country code. While all records whose coordinates fall within a certain country are assigned the corresponding country code, not all records with a country code have coordinates attached. Additionally, the polygon defintion used by GBIF may be different to the one used by naturalearth.</p>
 </div>
@@ -268,7 +268,7 @@ ggplot(data = plot_df, aes(x = as.factor(Year), y = Cumulative)) +
   theme(legend.position = c(0.15, 0.8), legend.key.size = unit(2, &quot;cm&quot;), legend.text = element_text(size = 20), legend.title = element_text(size = 25)) +
   labs(x = &quot;Year&quot;, y = &quot;Records of Lagopus muta throughout Norway starting 2000&quot;)</code></pre>
 </details>
-<p><img src="/courses/gbif/rgbif-datadiscovery_files/figure-html/Time-1.png" width="100%" /></p>
+<p><img src="rgbif-datadiscovery_files/figure-html/TimePlot-1.png" width="100%" /></p>
 </div>
 </div>
 <div id="by-basis-of-record" class="section level2">
@@ -631,7 +631,7 @@ knitr::kable(t(occ_final$facet$year))</code></pre>
 )</code></pre>
 <pre><code>## [1] 10606</code></pre>
 <p>We could have also just summed up the facet counts, but it is good to remember this more direct function exists.</p>
-<p>Note that we have to change the qay we sum the number of records as data discovery for any argument being matched by multiple characteristics generates an output of type list:</p>
+<p>Note that we have to change the way we sum the number of records as data discovery for any argument being matched by multiple characteristics generates an output of type list:</p>
 <pre class="r"><code>str(occ_final, max.level = 1)</code></pre>
 <pre><code>## List of 5
 ##  $ meta     :List of 4

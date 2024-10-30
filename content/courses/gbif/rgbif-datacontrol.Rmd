@@ -136,7 +136,7 @@ As a matter of fact, we have already used the functionality by which to control 
 
 For this exercise, let's focus on some data markers that are contained in our already downloaded data set which we may want to use for further limiting of our data set for subsequent analyses. To do so, let's consider the `coordinateUncertaintyInMeters` field by visualising the values we have obtained for each record in our occurrence data:
 
-```{r}
+```{r uncertaintyinmetre}
 ggplot(res_data, aes(x = coordinateUncertaintyInMeters)) +
   geom_histogram(bins = 1e2) +
   theme_bw() +

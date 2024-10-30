@@ -111,7 +111,7 @@ This is the <strong>preferred way of figuring out correct GBIF mediated data cit
 {{% /alert %}}</p>
 <p>To avoid the pitfalls of manual data citation discovery, <code>rgbif</code> download metadata make available to us directly a DOI which can be used for refrencing our data:</p>
 <pre class="r"><code>paste(&quot;GBIF Occurrence Download&quot;, occ_download_meta(res)$doi, &quot;accessed via GBIF.org on&quot;, Sys.Date())</code></pre>
-<pre><code>## [1] &quot;GBIF Occurrence Download 10.15468/dl.vjazpv accessed via GBIF.org on 2024-10-29&quot;</code></pre>
+<pre><code>## [1] &quot;GBIF Occurrence Download 10.15468/dl.vjazpv accessed via GBIF.org on 2024-10-30&quot;</code></pre>
 <p>With this, you are ready to reference the data you use.</p>
 </div>
 </div>
@@ -131,7 +131,7 @@ When <strong>additionally</strong> (heavily) <strong>filtering or subsetting</st
 ), aes(y = Data, x = Records)) +
   geom_bar(stat = &quot;identity&quot;, fill = &quot;#4f004e&quot;) +
   theme_bw(base_size = 12)</code></pre>
-<p><img src="/courses/gbif/rgbif-dataciting_files/figure-html/unnamed-chunk-2-1.png" width="1440" /></p>
+<p><img src="/courses/gbif/rgbif-dataciting_files/figure-html/barsdatasubset-1.png" width="1440" /></p>
 <p>To correctly reference the underlying data sets mediated by GBIF and contributing to our final dataset, we should register a derived data set. When created, a derived dataset is assigned a unique DOI that can be used to cite the data. To create a derived dataset you will need to authenticate using a GBIF.org account and provide:<br />
 - a title of the dataset,
 - a list of the GBIF datasets (by DOI or datasetKey) from which the data originated, ideally with counts of how many records each dataset contributed,
@@ -163,7 +163,7 @@ ggplot(
   ) +
   theme_bw(base_size = 21) +
   theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())</code></pre>
-<p><img src="/courses/gbif/rgbif-dataciting_files/figure-html/unnamed-chunk-4-1.png" width="1440" /></p>
+<p><img src="/courses/gbif/rgbif-dataciting_files/figure-html/unnamed-chunk-3-1.png" width="1440" /></p>
 <pre class="r"><code>## Subsetted abundances per dataset
 plot_subset &lt;- data.frame(table(data_subset$datasetKey))
 ggplot(
@@ -177,7 +177,7 @@ ggplot(
   labs(y = &quot;Abundance&quot;, x = &quot;Dataset&quot;, title = &quot;Subsetted abundances per dataset&quot;) +
   theme_bw(base_size = 21) +
   theme(axis.text.x = element_blank(), axis.ticks.x = element_blank())</code></pre>
-<p><img src="/courses/gbif/rgbif-dataciting_files/figure-html/unnamed-chunk-4-2.png" width="1440" /></p>
+<p><img src="/courses/gbif/rgbif-dataciting_files/figure-html/unnamed-chunk-3-2.png" width="1440" /></p>
 <p>Subsequently, to prepare a potential query to GBIF to establish a derived data set for us, we can tabulate the counts of records per dataset key as follows:</p>
 <pre class="r"><code>knitr::kable(table(data_subset$datasetKey))</code></pre>
 <table>

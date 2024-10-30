@@ -110,7 +110,7 @@ Let me demonstrate how these can be executed nevertheless.
 
 As a matter of fact, we have already executed one of these through our call to `occ_search(...)` at the top of this page. While this function does download data via the `...$data` output it provides, let's showcase instead how we could use the `occ_data(...)` function to arrive at the same result:
 
-```{r}
+```{r datadown}
 NI_occ <- occ_data(
   taxonKey = sp_key,
   country = "NO",

@@ -131,7 +131,7 @@ ggplot(res_data, aes(x = coordinateUncertaintyInMeters)) +
   scale_y_continuous(trans = "log10")
 ```
 
-<img src="rgbif-datacontrol_files/figure-html/unnamed-chunk-2-1.png" width="1440" />
+<img src="rgbif-datacontrol_files/figure-html/uncertaintyinmetre-1.png" width="1440" />
 
 **Note:** The y-axis on the above plot is log-transformed and 439 of the underlying records do not report a value for `coordinateUncertaintyInMeters` thus being removed from the above visualisation.
 
@@ -252,7 +252,7 @@ ggplot() +
   labs(title = "Occurrences of Lagopus muta recorded by human observations between 2000 and 2022")
 ```
 
-<img src="rgbif-datacontrol_files/figure-html/unnamed-chunk-7-1.png" width="1440" />
+<img src="rgbif-datacontrol_files/figure-html/unnamed-chunk-6-1.png" width="1440" />
 
 #### The Coordinate Reference System (CRS)
 
@@ -517,7 +517,7 @@ ggplot(data = NO_municip) +
   labs(x = "Longitude", y = "Latitude", col = "Abundance")
 ```
 
-<img src="rgbif-datacontrol_files/figure-html/unnamed-chunk-11-1.png" width="1440" />
+<img src="rgbif-datacontrol_files/figure-html/unnamed-chunk-10-1.png" width="1440" />
 
 Finally, let's consider wanting to identify for each data record and attach to the data itself which state it falls into. We can do so as follows (not necessarily the most elegant way:
 
@@ -549,7 +549,7 @@ ggplot(data = NO_municip) +
   labs(x = "Longitude", y = "Latitude", col = "Municipality")
 ```
 
-<img src="rgbif-datacontrol_files/figure-html/unnamed-chunk-12-1.png" width="1440" />
+<img src="rgbif-datacontrol_files/figure-html/unnamed-chunk-11-1.png" width="1440" />
 
 Let's say we feed these data into an analysis which runs to completion and we want to report on our findings. What's next? Citing the data we used.
 

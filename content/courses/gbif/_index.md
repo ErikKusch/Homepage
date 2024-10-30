@@ -27,7 +27,7 @@ weight: 1
 
 In the age of changes and threat to the Ecosphere at macroecological scales, big data has crystallized as a go-to tool for ecological research. To facilitate the creation of, access to, and referencing of contributors to such big data repositories, the Global Biodiversity Information Facility (GBIF) has established data streams that make readily available a wealth of biodiversity data. Navigating and accessing such large data sets and ensuring fair use and accreditation of observations can seem daunting. In this workshop, we will introduce GBIF, show how to navigate its data portal, demonstrate data streams to obtain and handle data programmatically, and communicate accreditation procedures. 
 
-Throughout this workshop material, I present practical examples for obtaining GBIF data using `rgbif`. Much of this work has been directly inspired or adapted from the official [`rgbif` website](https://docs.ropensci.org/rgbif/index.html) and a [previous GBIF workshop](https://gbif-europe.github.io/nordic_oikos_2018_r/).
+Throughout this workshop material, I present practical examples for obtaining GBIF data using `rgbif`. Much of this work has been directly inspired or adapted from the official [`rgbif` website](https://docs.ropensci.org/rgbif/index.html) and a [previous GBIF workshop](https://gbif-europe.github.io/nordic_oikos_2018_r/). 
 
 ## Learning Goals 
 

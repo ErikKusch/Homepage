@@ -109,7 +109,7 @@ There are <strong>a myriad</strong> of things you can do to and with GBIF mediat
   geom_histogram(bins = 1e2) +
   theme_bw() +
   scale_y_continuous(trans = &quot;log10&quot;)</code></pre>
-<p><img src="/courses/gbif/rgbif-datacontrol_files/figure-html/unnamed-chunk-2-1.png" width="1440" /></p>
+<p><img src="/courses/gbif/rgbif-datacontrol_files/figure-html/uncertaintyinmetre-1.png" width="1440" /></p>
 <p><strong>Note:</strong> The y-axis on the above plot is log-transformed and 439 of the underlying records do not report a value for <code>coordinateUncertaintyInMeters</code> thus being removed from the above visualisation.</p>
 <p>What we find is that there exists considerable variation in confidence of individual occurrence locations and we probably want to remove those records which are assigned a certain level of <code>coordinateUncertaintyInMeters</code>. Let’s say 200 metres (after all, we are dealing with a mobile organism):</p>
 <pre class="r"><code>preci_data &lt;- res_data[which(res_data$coordinateUncertaintyInMeters &lt; 200), ]</code></pre>
@@ -349,7 +349,7 @@ ggplot() +
   geom_sf(data = data_sf[, 1]) +
   theme_bw() +
   labs(title = &quot;Occurrences of Lagopus muta recorded by human observations between 2000 and 2022&quot;)</code></pre>
-<p><img src="/courses/gbif/rgbif-datacontrol_files/figure-html/unnamed-chunk-7-1.png" width="1440" /></p>
+<p><img src="/courses/gbif/rgbif-datacontrol_files/figure-html/unnamed-chunk-6-1.png" width="1440" /></p>
 </div>
 <div id="the-coordinate-reference-system-crs" class="section level4">
 <h4>The Coordinate Reference System (CRS)</h4>
@@ -645,7 +645,7 @@ ggplot(data = NO_municip) +
   geom_sf(aes(fill = abundances)) +
   scale_fill_viridis_c() +
   labs(x = &quot;Longitude&quot;, y = &quot;Latitude&quot;, col = &quot;Abundance&quot;)</code></pre>
-<p><img src="/courses/gbif/rgbif-datacontrol_files/figure-html/unnamed-chunk-11-1.png" width="1440" /></p>
+<p><img src="/courses/gbif/rgbif-datacontrol_files/figure-html/unnamed-chunk-10-1.png" width="1440" /></p>
 <p>Finally, let’s consider wanting to identify for each data record and attach to the data itself which state it falls into. We can do so as follows (not necessarily the most elegant way:</p>
 <pre class="r"><code>## create a dataframe of occurrence records by rownumber in original data (data_subset) and state-membership
 cover_ls &lt;- lapply(names(cover_sf), FUN = function(x) {
@@ -672,7 +672,7 @@ ggplot(data = NO_municip) +
   ) +
   scale_colour_viridis_d() +
   labs(x = &quot;Longitude&quot;, y = &quot;Latitude&quot;, col = &quot;Municipality&quot;)</code></pre>
-<p><img src="/courses/gbif/rgbif-datacontrol_files/figure-html/unnamed-chunk-12-1.png" width="1440" /></p>
+<p><img src="/courses/gbif/rgbif-datacontrol_files/figure-html/unnamed-chunk-11-1.png" width="1440" /></p>
 <p>Let’s say we feed these data into an analysis which runs to completion and we want to report on our findings. What’s next? Citing the data we used.</p>
 <p>{{% alert success %}}
 Now that you can <strong>handle GBIF data locally</strong>, you are ready to pipe these data into your specific analysis tools. Lastly, you only need to cite the data you used.
