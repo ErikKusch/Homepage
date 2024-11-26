@@ -1,0 +1,421 @@
+---
+title: "Handling & Visualising Data"
+author: Erik Kusch
+date: '2023-11-14'
+slug: NFDI-handling
+categories:
+  - GBIF
+  - Biodiversity
+  - Open Science
+tags:
+  - GBIF
+  - Biodiversity
+  - Open Science
+subtitle: "Investigating, cleaning, and plotting GBIF mediated data"
+summary: 'A quick overview of common data handling steps for GBIF data.'
+authors: []
+lastmod: '2023-11-14T20:00:00+01:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: 
+output:
+  blogdown::html_page:
+    keep_md: true
+    # toc: true
+    # toc_depth: 1
+    # number_sections: false
+# header-includes:
+#   <script src = "https://polyfill.io/v3/polyfill.min.js?features = es6"></script>
+#   <script id = "MathJax-script" async src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+math: true
+type: docs
+toc: true 
+menu:
+  gbif:
+    parent: NFDI4Biodiversity Seasonal School
+    weight: 2
+weight: 10
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, tidy = "styler", tidy.opts = list(strict = TRUE), fig.width = 15, fig.height = 8)
+options(width = 90)
+source("PersonalSettings.R")
+```
+
+{{% alert warning %}}
+This section of material is dependant on you having walked through the section on [finding & downloading data](/courses/gbif/nfdi-download/) first.
+{{% /alert %}}
+
+## Required `R` Packages & Preparations
+
+Like before, we require some `R` packages for this step of the material. However, this time around, we are focusing on visualisations of data and spatial operations thereof.
+
+```{r InstallAdvanced}
+## Custom install & load function
+install.load.package <- function(x) {
+  if (!require(x, character.only = TRUE)) {
+    install.packages(x, repos = "http://cran.us.r-project.org")
+  }
+  require(x, character.only = TRUE)
+}
+## names of packages we want installed (if not installed yet) and loaded
+package_vec <- c(
+  "rgbif", # for access to gbif
+  "knitr", # for rmarkdown table visualisations
+  "ggplot2", # for plotting
+  "cowplot", # for grids of ggplots
+  "sf", # for spatial operations
+  "sp", # for CRS support
+  "rnaturalearth", # for shapefiles
+  "rnaturalearthdata" # for high resolution shapefiles
+)
+## executing install & load for each package
+sapply(package_vec, install.load.package)
+```
+
+{{% alert success %}}
+With the packages loaded and the `NFDI4Bio_GBIF.csv` and `NFDI4Bio_GBIF.RData` produced from the [previous section](/courses/gbif/nfdi-download/), you are now ready to handle and visualise data obtained through GBIF.
+{{% /alert %}}
+
+## Inspecting GBIF Data
+
+Data mediated by GBIF comes from many sources. Very likely, the data you obtain for any project will be made up of contents from several different datasets which GBIF has extracted and bundled for you. As you can imagine, different data sources mean different precision and potential issues across datasets making up our GBIF data query result. We need to carefully investigate the data we have obtained and make sure no issues exist that would affect our subsequent analyses.
+
+First, let's load the .csv file we created previously. Obviously, we could also use the `NFDI4Bio_GBIF.RData` we created previously. In this case, we would have to call `occ_download_get()` again. Since I assume most of you will want to save the GBIF data in a new format like .csv for downstream analyses, we are working with the .csv:
+```{r}
+GBIF_df <- read.csv("NFDI4Bio_GBIF.csv")
+```
+
+Let's have a quick look at this data (note that you do not need the `knitr::kable()` command when executing this code directly in `R`):
+
+```{r}
+knitr::kable(head(GBIF_df))
+```
+
+{{% alert success %}}
+With data loaded, it is now time to investigate it!
+{{% /alert %}}
+
+## Data Manipulation
+
+As you can see in our quick glance at the data above, there are a lot of columns for our `r nrow(GBIF_df)` observations obtained via GBIF. We can probably leverage some of that information contained therein to refine our dataset for our purpose (e.g., SDMs). Additionally, We probably do not need all of that data and so want to cut back on some columns or obersvation to reduce the weight of our data on our disk or in RAM.
+
+### Data Quality and Issues
+
+In order to reduce our data to the useful information therein, we want to first and foremost investigate the quality and potential issues already indicated via [Issues & Flags](https://data-blog.gbif.org/post/issues-and-flags/) registered to the observations by GBIF.
+
+Since we are interested in using the data for species distribution modelling, we are interested in four particular issues:
+1. Whether the data comes with coordinates attached (we cannot use observations that are not geo-referenced):
+```{r}
+## how many observations are recorded without coordinates?
+sum(!GBIF_df$hasCoordinate)
+## subsetting the data for observations with recorded coordinates
+GBIF_df <- GBIF_df[GBIF_df$hasCoordinate, ]
+```
+2. Whether data coordinates suffer from geospatial issues (we might be able to resolve these, but for now we just discard them):
+```{r}
+## how many observations' coordinates have geospatial issues?
+sum(GBIF_df$hasGeospatialIssues)
+## subsetting the data for observations with coordinates without geospatial issues
+GBIF_df <- GBIF_df[!GBIF_df$hasGeospatialIssues, ]
+```
+3. Coordinate uncertainty (if we are highly uncertain of where an observation was made, we probably don't want to learn bioclimatic niches from it):
+```{r}
+## Some coordinate uncertainties are recorded as NA, I remove those - others don't. THis is up to you.
+GBIF_df <- GBIF_df[!is.na(GBIF_df$coordinateUncertaintyInMeters), ]
+## Visualising the distribution of coordinate uncertainty in the data
+ggplot(GBIF_df, aes(x = coordinateUncertaintyInMeters)) +
+  geom_histogram(bins = 1e3) +
+  theme_bw() +
+  scale_y_continuous(trans = "log10")
+## how many observations are made with sub-kilometre accuracy?
+sum(GBIF_df$coordinateUncertaintyInMeters < 1000)
+## subsetting the data for observations with acceptable coordinate uncertainty,
+GBIF_df <- GBIF_df[which(GBIF_df$coordinateUncertaintyInMeters < 1000), ]
+```
+4. Whether the observations encode presence or absence. While both types of information are valuable, absence recording in GBIF is uncommon. As to not bias our SDMs, I remove the absences here:
+```{r}
+## how many observations even record absence?
+sum(GBIF_df$occurrenceStatus == "ABSENT")
+## subsetting the data for observations only recording presence
+GBIF_df <- GBIF_df[GBIF_df$occurrenceStatus == "PRESENT", ]
+```
+
+**Lastly**, let's reduce the number of columns in our data to the ones relevant to us:
+
+```{r}
+GBIF_df <- GBIF_df[
+  ,
+  c(
+    "scientificName", "taxonKey", "family", "familyKey", "species", # taxonomic identifiers
+    "decimalLongitude", "decimalLatitude", # geospatial identifiers
+    "year", "month", "day", "eventDate", # temporal identifiers
+    "countryCode", "municipality", "stateProvince", # administrative identifiers
+    "catalogNumber", "mediaType", "datasetKey" # GBIF data identifiers
+  )
+]
+```
+
+Again, let's have a glimpse at the data:
+```{r}
+knitr::kable(head(GBIF_df))
+```
+
+Finally, we save the data as its own .csv file:
+
+```{r}
+write.csv(GBIF_df, file = "NFDI4Bio_GBIF_subset.csv")
+```
+
+Notice that this new file is `r round(file.size("C:/Users/erikkus/Documents/Homepage/content/courses/gbif/NFDI4Bio_GBIF.csv")/file.size("C:/Users/erikkus/Documents/Homepage/content/courses/gbif/NFDI4Bio_GBIF_subset.csv"), 2)` times smaller than the original data we obtained.
+
+{{% alert success %}}
+We now have succesfully investigated and subsetted our data to the relevant and reliable components for our purposes.
+{{% /alert %}}
+
+
+### Creating a Spatially Explicit Object
+
+Much of downstream analyses of GBIF data require use of the coordinate components of the data so let's make the data into a spatial feature object to facilitate such work in `R`:
+
+```{r}
+## make coordinates easy to read for the machine
+options(digits = 8) # set 8 digits (ie. all digits, not decimals) for the type cast as.double to keep decimals
+GBIF_df$lon <- as.double(GBIF_df$decimalLongitude) # cast lon from char to double
+GBIF_df$lat <- as.double(GBIF_df$decimalLatitude) # cast lat from char to double
+## make spatial features object
+GBIF_sf <- st_as_sf(GBIF_df, coords = c("lon", "lat"), remove = FALSE)
+## assign a CRS
+st_crs(GBIF_sf) <- sp::CRS("+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0")
+## look at the object created
+GBIF_sf
+```
+
+We will need this spatial features object later so let's save it to our disk:
+
+```{r}
+save(GBIF_sf, file = "GBIF_sf.RData")
+```
+
+### Matching Observations with Polygons
+
+Let's say, for example, we want to quantify abundances of our taxonomic families across administrative states within Germany:
+
+```{r}
+## Obtain sf object
+DE_municip <- rnaturalearth::ne_states(country = "Germany", returnclass = "sf") # get shapefiles for German states
+## loop over family identities
+abundances_ls <- lapply(unique(GBIF_sf$family), FUN = function(family) {
+  ## Identify overlap of points and polygons
+  cover_sf <- st_intersects(DE_municip, GBIF_sf[GBIF_sf$family == family, ])
+  names(cover_sf) <- DE_municip$name
+  ## report abundances
+  abundances_municip <- unlist(lapply(cover_sf, length))
+  abundances_municip
+})
+names(abundances_ls) <- unique(GBIF_sf$family)
+## make a data frame of it
+abundances_df <- as.data.frame(do.call(cbind, abundances_ls))
+## look at the data frame in html page
+knitr::kable(abundances_df)
+```
+
+And therew we go, abundances of *Pinaceae* and *Fagaceae* tallied across states in Germany.
+
+{{% alert success %}}
+You can now create and do basic spatial operations from GBIF mediated data!
+{{% /alert %}}
+
+
+## Data visualisation
+
+Now that we have created some fancy `R` objects and summary statistics of our data, we should visualise it.
+
+### Plotting Occurrences on a Map
+
+First, we plot our observations by taxonomic family across Germany:
+
+```{r, fig.width = 15, fig.height = 15}
+## get background map
+DE_shp <- rnaturalearth::ne_countries(country = "Germany", scale = 10, returnclass = "sf")[, 1]
+## make plot
+ggplot() +
+  geom_sf(data = DE_shp) +
+  geom_sf(data = GBIF_sf[, 1], aes(col = GBIF_sf$family)) +
+  theme_bw() +
+  theme(legend.position = "bottom") +
+  guides(col = guide_legend(title = "Taxonomic families")) +
+  scale_color_manual(values = c("darkorange", "forestgreen")) +
+  labs(title = "Occurrences of Pinaceae and Fagaceae recorded by human observations between 1970 and 2020")
+```
+
+### Plotting Abundances by State
+
+Next, we visualise the state-wise abundances:
+```{r, fig.width = 15, fig.height = 8}
+# Fagaceae
+## adding data to shapefiles
+DE_municip$Fagaceae <- abundances_df$Fagaceae
+## making plot
+Fa_gg <- ggplot(data = DE_municip) +
+  geom_sf(aes(fill = Fagaceae)) +
+  scale_fill_viridis_c() +
+  labs(x = "Longitude", y = "Latitude", col = "Abundance", title = "Fagaceae Abundance") +
+  theme_bw() +
+  theme(legend.position = "bottom") +
+  scale_fill_gradient(low = "white", high = "darkorange") +
+  guides(fill = guide_colourbar(theme = theme(
+    legend.key.width  = unit(21, "lines"),
+    legend.key.height = unit(3, "lines")
+  )))
+
+# Pinaceae
+## adding data to shapefiles
+DE_municip$Pinaceae <- abundances_df$Pinaceae
+## making plot
+Pi_gg <- ggplot(data = DE_municip) +
+  geom_sf(aes(fill = Pinaceae)) +
+  scale_fill_viridis_c() +
+  labs(x = "Longitude", y = "Latitude", col = "Abundance", title = "Pinaceae Abundance") +
+  theme_bw() +
+  theme(legend.position = "bottom") +
+  scale_fill_gradient(low = "white", high = "forestgreen") +
+  guides(fill = guide_colourbar(theme = theme(
+    legend.key.width  = unit(21, "lines"),
+    legend.key.height = unit(3, "lines")
+  )))
+
+## combined plot
+plot_grid(Fa_gg, Pi_gg, ncol = 2)
+```
+
+### Plotting A Time-Series of Observations
+
+Lastly, let's visualise how our knowledge of our target taxonomic families has evolved over time:
+
+```{r}
+## plotting data frame skeleton
+plot_df <- expand.grid(1970:2020, c("Fagaceae", "Pinaceae"))
+# plot_df$abundances <- 0
+colnames(plot_df) <- c("year", "family")
+
+## cumulative number of records per year per taxonomic family
+obsyears <- aggregate(day ~ year + family, GBIF_sf, FUN = length)
+colnames(obsyears)[3] <- "abundance"
+
+## merging plotting skeleton and obsyears
+plot_df <- merge.data.frame(plot_df, obsyears, by = c("family", "year"), all = TRUE)
+plot_df$abundance[is.na(plot_df$abundance)] <- 0
+
+## calculate cumulative records
+plot_df$cumulative <- c(
+  cumsum(plot_df$abundance[plot_df$family == unique(plot_df$family)[1]]),
+  cumsum(plot_df$abundance[plot_df$family == unique(plot_df$family)[2]])
+)
+
+## make plot
+ggplot(data = plot_df, aes(x = as.factor(year), y = cumulative)) +
+  geom_bar(stat = "identity", aes(fill = "black")) +
+  geom_bar(stat = "identity", aes(y = abundance, fill = family)) +
+  theme_bw() +
+  scale_fill_manual(
+    name = "Records",
+    values = c("black" = "black", "Pinaceae" = "forestgreen", "Fagaceae" = "darkorange"), labels = c("Cumulative Total", "New per Year (Fagaceae)", "New per Year (Pinaceae)")
+  ) +
+  facet_wrap(~family) +
+  theme(
+    legend.position = "bottom",
+    axis.text.x = element_text(angle = -60, vjust = 0.2, hjust = 0)
+  ) +
+  labs(x = "Year", y = "Records for Fagaceae and Pinaceae across Germany starting 1970")
+```
+
+{{% alert success %}}
+Some basic visualisations when dealing with GBIF mediated data are now open to you.
+{{% /alert %}}
+
+## Citing Data Downloaded via GBIF
+
+When using data mediated by GBIF, you are benefitting from the hard work of many who have come before you. THese peoples' efforts ought to be credited in the role they played facilitating your work. Likewise, when or if you contribute data to our shared knowledge pool available via GBIF, you would surely want the same treatment. To properly give credit, GBIF creates a **DOI** (digital object identifier) for each query submitted to it. You can (and should) cite this.
+
+Additionally, citing the DOI will also make it so the work you do based off of GBIF mediated data will be reproducible - the hallmark of proper science.
+
+{{% alert warning %}}
+**Citing the DOI** of your GBIF query is **not optional**!
+{{% /alert %}}
+
+### Citing the data download
+
+Remember when we saved the details of the GBIF data request in the previous section? This is where we bring it back in. Let's load the file:
+
+```{r}
+load("NFDI4Bio_GBIF.RData") # this loads the object called "res"
+```
+
+To cite the data query we have made and thus ensure reproducibility of our work and give proper credit to data curators, we just need to include the following reference in our writing:
+
+```{r}
+paste("GBIF Occurrence Download", occ_download_meta(res)$doi, "accessed via GBIF.org on", substr(occ_download_meta(res)$created, 1, 10))
+```
+
+### Citing a derived data set
+
+Often times, you will heavily modify the data you have obtained through GBIF. As a matter of fact, we have done so here. In these cases, you might want to consider registering the data you actually work with as a derived dataset on GBIF to refine credit forwarding from your work.
+
+Derived datasets are citable records of GBIF-mediated occurrence data derived either from:
+- a GBIF.org download that has been filtered/reduced significantly, or
+- data accessed through a cloud service, e.g. Microsoft AI for Earth (Azure), or
+- data obtained by any means for which no DOI was assigned, but one is required (e.g. third-party tools accessing the GBIF search API)
+
+For our purposes, we have used a heavily subsetted data download - just look at the number of records in the original and the subsetted data:
+```{r barsdatasubset}
+## Loading the data
+Original_df <- read.csv("NFDI4Bio_GBIF.csv")
+Final_df <- read.csv("NFDI4Bio_GBIF_subset.csv")
+
+## making a plot
+ggplot(data.frame(
+  Records = c(nrow(Original_df), nrow(Final_df)),
+  Data = c("Original", "Subset")
+), aes(y = Data, x = Records)) +
+  geom_bar(stat = "identity", fill = "#4f004e") +
+  theme_bw(base_size = 12)
+```
+
+To correctly reference the underlying data sets mediated by GBIF and contributing to our final dataset, we should register a derived data set. When created, a derived dataset is assigned a unique DOI that can be used to cite the data. To create a derived dataset you will need to authenticate using a GBIF.org account and provide:  
+- a title of the dataset,
+- a list of the GBIF datasets (by DOI or datasetKey) from which the data originated, ideally with counts of how many records each dataset contributed,
+- a persistent URL of where the extracted dataset can be accessed,
+- a description of how the dataset was prepared,
+- (optional) the GBIF download DOI, if the dataset is derived from an existing download , and
+- (optional) a date for when the derived dataset should be registered if not immediately .
+
+Arguably, the most important aspect here is the list of GBIF datasets and the counts of data used per dataset. First, let's isolate how many datasets contributed to our original data and the subsetted, final data:
+```{r}
+## Original
+length(unique(Original_df$datasetKey))
+## Subsetted
+length(unique(Final_df$datasetKey))
+```
+
+There is a signifcant decrease in number of datasets which make up our final data product post-subsetting. Subsequently, to prepare a potential query to GBIF to establish a derived data set for us, we can tabulate the counts of records per dataset key as follows:
+```{r}
+knitr::kable(table(Final_df$datasetKey))
+```
+
+Finally, we can head to the [registration for derived data sets](https://www.gbif.org/derived-dataset/register) at GBIF and supply our information:
+
+<img src="/courses/gbif/gbif-derived.png" width="100%"/></a>
+
+{{% alert success %}}
+Now you know how to properly cite the data you obtain from GBIF to ensure reproducibility and proper accreditation of your work.
+{{% /alert %}}
+
+# Session Info
+```{r, echo = FALSE}
+sessionInfo()
+```

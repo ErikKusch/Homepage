@@ -35,8 +35,8 @@ type: docs
 toc: true 
 menu:
   gbif:
-    parent: Practical Exercises
-    weight: 5
+    parent: LivingNorway Open Science
+    weight: 2
 weight: 5
 ---
 
@@ -91,10 +91,10 @@ GBIF hosts tons of data. Finding the right subset thereof can be difficult.
 <p>Data on GBIF is indexed according to the <a href="https://dwc.tdwg.org/list/">Darwin Core Standard</a>. Any discovery of data can be augmented by matching terms of the Darwin Core with desired subset characteristics. Here, I will show how we can build an increasingly complex query for <em>Lagopus muta</em> records.</p>
 <p>At base, we will start with the functions <code>occc_count(...)</code> and <code>occ_search(...)</code>:</p>
 <pre class="r"><code>occ_count(taxonKey = sp_key)</code></pre>
-<pre><code>## [1] 107535</code></pre>
+<pre><code>## [1] 107599</code></pre>
 <pre class="r"><code>occ_search(taxonKey = sp_key, limit = 0)$meta$count</code></pre>
-<pre><code>## [1] 107535</code></pre>
-<p>Using both of these, we obtain the same output of <span class="math inline">\(1.07535\times 10^{5}\)</span> <em>Lagopus muta</em> records mediated by GBIF. Note that this number will likely be higher for you as data is continually added to the GBIF indexing and this document here is frozen in time (it was last updated on 2024-10-30).</p>
+<pre><code>## [1] 107599</code></pre>
+<p>Using both of these, we obtain the same output of <span class="math inline">\(1.07599\times 10^{5}\)</span> <em>Lagopus muta</em> records mediated by GBIF. Note that this number will likely be higher for you as data is continually added to the GBIF indexing and this document here is frozen in time (it was last updated on 2024-11-15).</p>
 <p>{{% alert warning %}}
 When wanting to discover data matching Darwin Core Terms with multiple characteristics, these can be fed to the <code>occ_search(...)</code> function as strings with semicolons separating desired characteristics (e.g., <code>year = "2000;2001"</code>).
 {{% /alert %}}</p>
@@ -108,8 +108,8 @@ By default, discovery of data through GBIF considers the entire Earth. However, 
 <p>First, let’s limit our search by a specific region. In this case, we are interested in occurrences of <em>Lagopus muta</em> across Norway. Countries are indexed according to ISO2 names (two-letter codes, see <code>enumeration_country()</code>):</p>
 <pre class="r"><code>occ_NO &lt;- occ_search(taxonKey = sp_key, country = &quot;NO&quot;)
 occ_NO$meta$count</code></pre>
-<pre><code>## [1] 17024</code></pre>
-Here is how <em>Lagopus muta</em> records are distributed across countries according to GBIF on 2024-10-30:
+<pre><code>## [1] 17028</code></pre>
+Here is how <em>Lagopus muta</em> records are distributed across countries according to GBIF on 2024-11-15:
 <details>
 <summary>
 Click here for code necessary to create the figure below.
@@ -202,7 +202,7 @@ saveWidget(shape_leaflet, &quot;leaflet_shapeCrop.html&quot;, selfcontained = TR
 <p>We can now pass this information into the <code>occ_search(...)</code> function using the <code>geometry</code> argument:</p>
 <pre class="r"><code>occ_wkt &lt;- occ_search(taxonKey = sp_key, geometry = NO_wkt)
 occ_wkt$meta$count</code></pre>
-<pre><code>## [1] 14748</code></pre>
+<pre><code>## [1] 14752</code></pre>
 <p>Finally, we find that there are fewer records available when using the shapefile for data discovery. Why would that be? In this case, you will find that we are using a pretty coarse shapefile for Norway which probably cuts off some obersvations of <em>Lagopus muta</em> that do belong rightfully into Norway.</p>
 <p>When searching for data by country code (or continent code for that matter), the returned data need not necessarily contain coordinates so long as a record is assigned to the relevant country code. While all records whose coordinates fall within a certain country are assigned the corresponding country code, not all records with a country code have coordinates attached. Additionally, the polygon defintion used by GBIF may be different to the one used by naturalearth.</p>
 </div>
@@ -435,7 +435,7 @@ occ_absent$meta$count</code></pre>
   occurrenceStatus = &quot;ABSENT&quot;
 )
 occ_absent$meta$count</code></pre>
-<pre><code>## [1] 2316</code></pre>
+<pre><code>## [1] 2421</code></pre>
 <p>Yes, there are, but there are far fewer reported absences than presences.</p>
 <p>Let me visualise this one final time on a country-by-country basis:</p>
 <details>
@@ -507,7 +507,7 @@ networkD3::saveNetwork(network = SN, file = &quot;SankeyFinal.html&quot;, selfco
 <pre><code>## List of 5
 ##  $ meta     :List of 4
 ##  $ hierarchy:List of 1
-##  $ data     : tibble [500 × 111] (S3: tbl_df/tbl/data.frame)
+##  $ data     : tibble [500 × 112] (S3: tbl_df/tbl/data.frame)
 ##  $ media    :List of 500
 ##  $ facets   : Named list()
 ##  - attr(*, &quot;class&quot;)= chr &quot;gbif&quot;
@@ -680,7 +680,7 @@ knitr::kable(t(occ_final$facet$year))</code></pre>
 ## [41] stringi_1.8.4      dplyr_1.1.4        purrr_1.0.2        bookdown_0.40     
 ## [45] labeling_0.4.3     fastmap_1.2.0      grid_4.4.0         colorspace_2.1-1  
 ## [49] cli_3.6.3          magrittr_2.0.3     triebeard_0.4.1    crul_1.5.0        
-## [53] utf8_1.2.4         e1071_1.7-16       withr_3.0.1        scales_1.3.0      
+## [53] utf8_1.2.4         e1071_1.7-16       withr_3.0.2        scales_1.3.0      
 ## [57] oai_0.4.0          rmarkdown_2.28     httr_1.4.7         igraph_2.1.1      
 ## [61] blogdown_1.19      R.methodsS3_1.8.2  evaluate_0.24.0    s2_1.1.7          
 ## [65] urltools_1.7.3     rlang_1.1.4        Rcpp_1.0.13        httpcode_0.3.0    

@@ -1,0 +1,775 @@
+---
+title: "Climate Data"
+author: Erik Kusch
+date: '2023-11-14'
+slug: NFDI-climate
+categories:
+  - GBIF
+  - Biodiversity
+  - Open Science
+tags:
+  - GBIF
+  - Biodiversity
+  - Open Science
+subtitle: "Matching GBIF mediated data to relevant climate data obtained with `KrigR`"
+summary: 'A quick overview of using `KrigR` with GBIF data.'
+authors: []
+lastmod: '2023-11-14T20:00:00+01:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: 
+output:
+  blogdown::html_page:
+    keep_md: true
+    # toc: true
+    # toc_depth: 1
+    # number_sections: false
+# header-includes:
+#   <script src = "https://polyfill.io/v3/polyfill.min.js?features = es6"></script>
+#   <script id = "MathJax-script" async src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+math: true
+type: docs
+toc: true 
+menu:
+  gbif:
+    parent: NFDI4Biodiversity Seasonal School
+    weight: 3
+weight: 11
+---
+
+
+<div id="TOC">
+
+</div>
+
+<div id="required-r-packages-preparations" class="section level2">
+<h2>Required <code>R</code> Packages &amp; Preparations</h2>
+<pre class="r"><code>## Custom install &amp; load function
+install.load.package &lt;- function(x) {
+  if (!require(x, character.only = TRUE)) {
+    install.packages(x, repos = &quot;http://cran.us.r-project.org&quot;)
+  }
+  require(x, character.only = TRUE)
+}
+## names of packages we want installed (if not installed yet) and loaded
+package_vec &lt;- c(
+  &quot;knitr&quot;, # for rmarkdown table visualisations
+  &quot;sf&quot;, # for spatial operations
+  &quot;terra&quot;, # for matching spatialobjects with raster data
+  &quot;devtools&quot;, # for installation of additional package from github
+  &quot;rnaturalearth&quot;, # for shapefiles
+  &quot;rnaturalearthdata&quot;, # for high resolution shapefiles
+  &quot;ggplot2&quot; # some additional plotting capabilities
+)
+## executing install &amp; load for each package
+sapply(package_vec, install.load.package)</code></pre>
+<pre><code>##             knitr                sf             terra          devtools     rnaturalearth 
+##              TRUE              TRUE              TRUE              TRUE              TRUE 
+## rnaturalearthdata           ggplot2 
+##              TRUE              TRUE</code></pre>
+<pre class="r"><code>if (packageVersion(&quot;KrigR&quot;) &lt; &quot;0.9.4&quot;) { # KrigR check
+  devtools::install_github(&quot;https://github.com/ErikKusch/KrigR&quot;)
+}
+library(KrigR)</code></pre>
+</div>
+<div id="climate-data-in-ecological-research" class="section level2">
+<h2>Climate Data in Ecological Research</h2>
+<div id="data-sources-considerations" class="section level3">
+<h3>Data Sources &amp; Considerations</h3>
+<p>/courses/krigr/background/</p>
+</div>
+<div id="bioclimatic-variables" class="section level3">
+<h3>Bioclimatic Variables</h3>
+</div>
+</div>
+<div id="retrieving-climatic-data-with-krigr" class="section level2">
+<h2>Retrieving Climatic Data with <code>KrigR</code></h2>
+<div id="cds-api-credentials" class="section level3">
+<h3>CDS API Credentials</h3>
+<p>/courses/krigr/setup/</p>
+</div>
+<div id="bioclimatic-data" class="section level3">
+<h3>Bioclimatic Data</h3>
+<pre class="r"><code>DE_shp &lt;- rnaturalearth::ne_countries(country = &quot;Germany&quot;, scale = 10, returnclass = &quot;sf&quot;)[, 1]</code></pre>
+<pre class="r"><code>BV_DE &lt;- BioClim(
+  Temperature_Var = &quot;2m_temperature&quot;,
+  Temperature_DataSet = &quot;reanalysis-era5-land&quot;,
+  Temperature_Type = NA,
+  Water_Var = &quot;total_precipitation&quot;,
+  Water_DataSet = &quot;reanalysis-era5-land-monthly-means&quot;,
+  Water_Type = &quot;monthly_averaged_reanalysis&quot;,
+  Y_start = 1970,
+  Y_end = 2020,
+  TZone = &quot;CET&quot;,
+  Extent = DE_shp,
+  Buffer = 0.5,
+  Dir = getwd(),
+  FileName = &quot;Germany&quot;,
+  FileExtension = &quot;.nc&quot;,
+  Compression = 9,
+  API_User = API_User,
+  API_Key = API_Key,
+  TChunkSize = 6000,
+  TryDown = 10,
+  TimeOut = 36000,
+  Cores = 1,
+  verbose = TRUE,
+  Keep_Raw = FALSE,
+  Keep_Monthly = TRUE,
+  closeConnections = FALSE
+)</code></pre>
+<pre><code>## [1] &quot;A file with the name Germany.nc already exists in C:/Users/erikkus/Documents/Homepage/content/courses/gbif.&quot;
+## [1] &quot;Loading this file for you from the disk.&quot;</code></pre>
+<pre class="r"><code>Plot.BioClim(
+  BioClims = BV_DE, SF = DE_shp,
+  Which = 1:11,
+  Water_Var = &quot;Total Precipitation [mm]&quot;
+)</code></pre>
+<p><img src="/courses/gbif/SeasonalSchool-climatedata_files/figure-html/unnamed-chunk-3-1.png" width="1440" /></p>
+<pre class="r"><code>Plot.BioClim(
+  BioClims = BV_DE, SF = DE_shp,
+  Which = 12:19,
+  ncol = 2,
+  Water_Var = &quot;Total Precipitation [mm]&quot;
+)</code></pre>
+<p><img src="/courses/gbif/SeasonalSchool-climatedata_files/figure-html/unnamed-chunk-4-1.png" width="1440" /></p>
+</div>
+<div id="matching-observations-with-climate-data" class="section level3">
+<h3>Matching Observations with Climate Data</h3>
+<pre class="r"><code>load(&quot;GBIF_sf.RData&quot;)</code></pre>
+<pre class="r"><code>Plot.BioClim(
+  BioClims = BV_DE,
+  SF = GBIF_sf,
+  Which = 1,
+  ncol = 1,
+  Size = 1
+)</code></pre>
+<p><img src="/courses/gbif/SeasonalSchool-climatedata_files/figure-html/unnamed-chunk-6-1.png" width="1440" /></p>
+<pre class="r"><code>extracted_df &lt;- terra::extract(x = BV_DE, y = GBIF_sf)
+dim(extracted_df)</code></pre>
+<pre><code>## [1] 58304    20</code></pre>
+<pre class="r"><code>knitr::kable(head(extracted_df))</code></pre>
+<table style="width:100%;">
+<colgroup>
+<col width="1%" />
+<col width="4%" />
+<col width="4%" />
+<col width="4%" />
+<col width="4%" />
+<col width="4%" />
+<col width="4%" />
+<col width="4%" />
+<col width="4%" />
+<col width="4%" />
+<col width="4%" />
+<col width="4%" />
+<col width="5%" />
+<col width="5%" />
+<col width="5%" />
+<col width="4%" />
+<col width="5%" />
+<col width="5%" />
+<col width="5%" />
+<col width="5%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">ID</th>
+<th align="right">BIO1</th>
+<th align="right">BIO2</th>
+<th align="right">BIO3</th>
+<th align="right">BIO4</th>
+<th align="right">BIO5</th>
+<th align="right">BIO6</th>
+<th align="right">BIO7</th>
+<th align="right">BIO8</th>
+<th align="right">BIO9</th>
+<th align="right">BIO10</th>
+<th align="right">BIO11</th>
+<th align="right">BIO12</th>
+<th align="right">BIO13</th>
+<th align="right">BIO14</th>
+<th align="right">BIO15</th>
+<th align="right">BIO16</th>
+<th align="right">BIO17</th>
+<th align="right">BIO18</th>
+<th align="right">BIO19</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">282.8060</td>
+<td align="right">11.56009</td>
+<td align="right">23.40577</td>
+<td align="right">697.0049</td>
+<td align="right">301.5184</td>
+<td align="right">252.1285</td>
+<td align="right">49.38994</td>
+<td align="right">290.7341</td>
+<td align="right">286.3700</td>
+<td align="right">290.7341</td>
+<td align="right">275.1877</td>
+<td align="right">0.6891775</td>
+<td align="right">0.2492599</td>
+<td align="right">0.0022743</td>
+<td align="right">4.280466</td>
+<td align="right">9.223780</td>
+<td align="right">7.968918</td>
+<td align="right">9.223780</td>
+<td align="right">8.198037</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="right">282.2700</td>
+<td align="right">11.56496</td>
+<td align="right">24.08731</td>
+<td align="right">652.6573</td>
+<td align="right">300.2569</td>
+<td align="right">252.2442</td>
+<td align="right">48.01268</td>
+<td align="right">289.7771</td>
+<td align="right">285.3839</td>
+<td align="right">289.7771</td>
+<td align="right">275.1406</td>
+<td align="right">0.7945873</td>
+<td align="right">0.2119986</td>
+<td align="right">0.0041780</td>
+<td align="right">3.993065</td>
+<td align="right">10.366795</td>
+<td align="right">9.318233</td>
+<td align="right">10.366795</td>
+<td align="right">9.613353</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td align="right">282.7631</td>
+<td align="right">11.80689</td>
+<td align="right">23.66432</td>
+<td align="right">689.1375</td>
+<td align="right">300.6205</td>
+<td align="right">250.7273</td>
+<td align="right">49.89320</td>
+<td align="right">290.6756</td>
+<td align="right">286.1358</td>
+<td align="right">290.6756</td>
+<td align="right">275.2898</td>
+<td align="right">0.7198712</td>
+<td align="right">0.1815318</td>
+<td align="right">0.0009143</td>
+<td align="right">3.985592</td>
+<td align="right">9.298201</td>
+<td align="right">8.278377</td>
+<td align="right">9.298201</td>
+<td align="right">8.949971</td>
+</tr>
+<tr class="even">
+<td align="right">4</td>
+<td align="right">281.6990</td>
+<td align="right">12.49376</td>
+<td align="right">31.00520</td>
+<td align="right">682.9493</td>
+<td align="right">299.1687</td>
+<td align="right">258.8730</td>
+<td align="right">40.29568</td>
+<td align="right">289.4790</td>
+<td align="right">285.1010</td>
+<td align="right">289.4790</td>
+<td align="right">274.2594</td>
+<td align="right">0.9505705</td>
+<td align="right">0.2147094</td>
+<td align="right">0.0017350</td>
+<td align="right">3.853150</td>
+<td align="right">12.087655</td>
+<td align="right">11.246518</td>
+<td align="right">12.087655</td>
+<td align="right">11.700603</td>
+</tr>
+<tr class="odd">
+<td align="right">5</td>
+<td align="right">281.8596</td>
+<td align="right">11.29835</td>
+<td align="right">28.98178</td>
+<td align="right">635.9584</td>
+<td align="right">299.1519</td>
+<td align="right">260.1676</td>
+<td align="right">38.98431</td>
+<td align="right">289.1873</td>
+<td align="right">284.8993</td>
+<td align="right">289.1873</td>
+<td align="right">274.9467</td>
+<td align="right">0.8459014</td>
+<td align="right">0.2779124</td>
+<td align="right">0.0020682</td>
+<td align="right">3.920097</td>
+<td align="right">10.731587</td>
+<td align="right">10.196636</td>
+<td align="right">10.731587</td>
+<td align="right">10.449787</td>
+</tr>
+<tr class="even">
+<td align="right">6</td>
+<td align="right">282.0240</td>
+<td align="right">10.56826</td>
+<td align="right">22.84456</td>
+<td align="right">674.8423</td>
+<td align="right">299.6821</td>
+<td align="right">253.4205</td>
+<td align="right">46.26158</td>
+<td align="right">289.7753</td>
+<td align="right">285.3079</td>
+<td align="right">289.7753</td>
+<td align="right">274.4990</td>
+<td align="right">0.7309243</td>
+<td align="right">0.2611389</td>
+<td align="right">0.0026328</td>
+<td align="right">4.086557</td>
+<td align="right">9.681484</td>
+<td align="right">8.469324</td>
+<td align="right">9.681484</td>
+<td align="right">8.544147</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>SDMData_df &lt;- as.data.frame(cbind(GBIF_sf, extracted_df))
+SDMData_df &lt;- na.omit(SDMData_df)
+knitr::kable(head(SDMData_df))</code></pre>
+<table>
+<colgroup>
+<col width="0%" />
+<col width="5%" />
+<col width="1%" />
+<col width="1%" />
+<col width="1%" />
+<col width="3%" />
+<col width="3%" />
+<col width="3%" />
+<col width="0%" />
+<col width="1%" />
+<col width="0%" />
+<col width="4%" />
+<col width="2%" />
+<col width="2%" />
+<col width="4%" />
+<col width="2%" />
+<col width="6%" />
+<col width="7%" />
+<col width="1%" />
+<col width="1%" />
+<col width="0%" />
+<col width="1%" />
+<col width="1%" />
+<col width="1%" />
+<col width="1%" />
+<col width="1%" />
+<col width="1%" />
+<col width="1%" />
+<col width="1%" />
+<col width="1%" />
+<col width="1%" />
+<col width="1%" />
+<col width="1%" />
+<col width="1%" />
+<col width="1%" />
+<col width="1%" />
+<col width="1%" />
+<col width="1%" />
+<col width="1%" />
+<col width="1%" />
+<col width="5%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="left">scientificName</th>
+<th align="right">taxonKey</th>
+<th align="left">family</th>
+<th align="right">familyKey</th>
+<th align="left">species</th>
+<th align="right">decimalLongitude</th>
+<th align="right">decimalLatitude</th>
+<th align="right">year</th>
+<th align="right">month</th>
+<th align="right">day</th>
+<th align="left">eventDate</th>
+<th align="left">countryCode</th>
+<th align="left">municipality</th>
+<th align="left">stateProvince</th>
+<th align="left">catalogNumber</th>
+<th align="left">mediaType</th>
+<th align="left">datasetKey</th>
+<th align="right">lon</th>
+<th align="right">lat</th>
+<th align="right">ID</th>
+<th align="right">BIO1</th>
+<th align="right">BIO2</th>
+<th align="right">BIO3</th>
+<th align="right">BIO4</th>
+<th align="right">BIO5</th>
+<th align="right">BIO6</th>
+<th align="right">BIO7</th>
+<th align="right">BIO8</th>
+<th align="right">BIO9</th>
+<th align="right">BIO10</th>
+<th align="right">BIO11</th>
+<th align="right">BIO12</th>
+<th align="right">BIO13</th>
+<th align="right">BIO14</th>
+<th align="right">BIO15</th>
+<th align="right">BIO16</th>
+<th align="right">BIO17</th>
+<th align="right">BIO18</th>
+<th align="right">BIO19</th>
+<th align="left">geometry</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">1</td>
+<td align="left">Quercus robur L.</td>
+<td align="right">2878688</td>
+<td align="left">Fagaceae</td>
+<td align="right">4689</td>
+<td align="left">Quercus robur</td>
+<td align="right">13.197520</td>
+<td align="right">52.48053</td>
+<td align="right">2019</td>
+<td align="right">6</td>
+<td align="right">14</td>
+<td align="left">2019-06-14T12:28</td>
+<td align="left">DE</td>
+<td align="left"></td>
+<td align="left">Berlin</td>
+<td align="left">27039839</td>
+<td align="left">StillImage</td>
+<td align="left">50c9509d-22c7-4a22-a47d-8c48425ef4a7</td>
+<td align="right">13.197520</td>
+<td align="right">52.48053</td>
+<td align="right">1</td>
+<td align="right">282.8060</td>
+<td align="right">11.56009</td>
+<td align="right">23.40577</td>
+<td align="right">697.0049</td>
+<td align="right">301.5184</td>
+<td align="right">252.1285</td>
+<td align="right">49.38994</td>
+<td align="right">290.7341</td>
+<td align="right">286.3700</td>
+<td align="right">290.7341</td>
+<td align="right">275.1877</td>
+<td align="right">0.6891775</td>
+<td align="right">0.2492599</td>
+<td align="right">0.0022743</td>
+<td align="right">4.280466</td>
+<td align="right">9.223780</td>
+<td align="right">7.968918</td>
+<td align="right">9.223780</td>
+<td align="right">8.198037</td>
+<td align="left">POINT (13.19752 52.48053)</td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
+<td align="left">Fagus sylvatica L.</td>
+<td align="right">2882316</td>
+<td align="left">Fagaceae</td>
+<td align="right">4689</td>
+<td align="left">Fagus sylvatica</td>
+<td align="right">10.635290</td>
+<td align="right">52.13933</td>
+<td align="right">2020</td>
+<td align="right">4</td>
+<td align="right">18</td>
+<td align="left">2020-04-18T17:52:36</td>
+<td align="left">DE</td>
+<td align="left"></td>
+<td align="left">Niedersachsen</td>
+<td align="left">42521643</td>
+<td align="left">StillImage</td>
+<td align="left">50c9509d-22c7-4a22-a47d-8c48425ef4a7</td>
+<td align="right">10.635290</td>
+<td align="right">52.13933</td>
+<td align="right">2</td>
+<td align="right">282.2700</td>
+<td align="right">11.56496</td>
+<td align="right">24.08731</td>
+<td align="right">652.6573</td>
+<td align="right">300.2569</td>
+<td align="right">252.2442</td>
+<td align="right">48.01268</td>
+<td align="right">289.7771</td>
+<td align="right">285.3839</td>
+<td align="right">289.7771</td>
+<td align="right">275.1406</td>
+<td align="right">0.7945873</td>
+<td align="right">0.2119986</td>
+<td align="right">0.0041780</td>
+<td align="right">3.993065</td>
+<td align="right">10.366795</td>
+<td align="right">9.318233</td>
+<td align="right">10.366795</td>
+<td align="right">9.613353</td>
+<td align="left">POINT (10.63529 52.13933)</td>
+</tr>
+<tr class="odd">
+<td align="left">4</td>
+<td align="left">Quercus palustris Münchh.</td>
+<td align="right">8313153</td>
+<td align="left">Fagaceae</td>
+<td align="right">4689</td>
+<td align="left">Quercus palustris</td>
+<td align="right">12.388285</td>
+<td align="right">51.36412</td>
+<td align="right">2019</td>
+<td align="right">10</td>
+<td align="right">26</td>
+<td align="left">2019-10-26T15:30:07</td>
+<td align="left">DE</td>
+<td align="left"></td>
+<td align="left">Sachsen</td>
+<td align="left">34915487</td>
+<td align="left">StillImage</td>
+<td align="left">50c9509d-22c7-4a22-a47d-8c48425ef4a7</td>
+<td align="right">12.388285</td>
+<td align="right">51.36412</td>
+<td align="right">3</td>
+<td align="right">282.7631</td>
+<td align="right">11.80689</td>
+<td align="right">23.66432</td>
+<td align="right">689.1375</td>
+<td align="right">300.6205</td>
+<td align="right">250.7273</td>
+<td align="right">49.89320</td>
+<td align="right">290.6756</td>
+<td align="right">286.1358</td>
+<td align="right">290.6756</td>
+<td align="right">275.2898</td>
+<td align="right">0.7198712</td>
+<td align="right">0.1815318</td>
+<td align="right">0.0009143</td>
+<td align="right">3.985592</td>
+<td align="right">9.298201</td>
+<td align="right">8.278377</td>
+<td align="right">9.298201</td>
+<td align="right">8.949971</td>
+<td align="left">POINT (12.38828 51.36412)</td>
+</tr>
+<tr class="even">
+<td align="left">6</td>
+<td align="left">Quercus robur L.</td>
+<td align="right">2878688</td>
+<td align="left">Fagaceae</td>
+<td align="right">4689</td>
+<td align="left">Quercus robur</td>
+<td align="right">12.510908</td>
+<td align="right">50.72724</td>
+<td align="right">2020</td>
+<td align="right">5</td>
+<td align="right">7</td>
+<td align="left">2020-05-07T19:06:10</td>
+<td align="left">DE</td>
+<td align="left"></td>
+<td align="left">Sachsen</td>
+<td align="left">45185825</td>
+<td align="left">StillImage</td>
+<td align="left">50c9509d-22c7-4a22-a47d-8c48425ef4a7</td>
+<td align="right">12.510908</td>
+<td align="right">50.72724</td>
+<td align="right">4</td>
+<td align="right">281.6990</td>
+<td align="right">12.49376</td>
+<td align="right">31.00520</td>
+<td align="right">682.9493</td>
+<td align="right">299.1687</td>
+<td align="right">258.8730</td>
+<td align="right">40.29568</td>
+<td align="right">289.4790</td>
+<td align="right">285.1010</td>
+<td align="right">289.4790</td>
+<td align="right">274.2594</td>
+<td align="right">0.9505705</td>
+<td align="right">0.2147094</td>
+<td align="right">0.0017350</td>
+<td align="right">3.853150</td>
+<td align="right">12.087655</td>
+<td align="right">11.246518</td>
+<td align="right">12.087655</td>
+<td align="right">11.700603</td>
+<td align="left">POINT (12.51091 50.72724)</td>
+</tr>
+<tr class="odd">
+<td align="left">7</td>
+<td align="left">Fagus sylvatica L.</td>
+<td align="right">2882316</td>
+<td align="left">Fagaceae</td>
+<td align="right">4689</td>
+<td align="left">Fagus sylvatica</td>
+<td align="right">9.592076</td>
+<td align="right">51.47528</td>
+<td align="right">2020</td>
+<td align="right">5</td>
+<td align="right">21</td>
+<td align="left">2020-05-21T11:07:39</td>
+<td align="left">DE</td>
+<td align="left"></td>
+<td align="left">Hessen</td>
+<td align="left">46711391</td>
+<td align="left">StillImage;StillImage;StillImage</td>
+<td align="left">50c9509d-22c7-4a22-a47d-8c48425ef4a7</td>
+<td align="right">9.592076</td>
+<td align="right">51.47528</td>
+<td align="right">5</td>
+<td align="right">281.8596</td>
+<td align="right">11.29835</td>
+<td align="right">28.98178</td>
+<td align="right">635.9584</td>
+<td align="right">299.1519</td>
+<td align="right">260.1676</td>
+<td align="right">38.98431</td>
+<td align="right">289.1873</td>
+<td align="right">284.8993</td>
+<td align="right">289.1873</td>
+<td align="right">274.9467</td>
+<td align="right">0.8459014</td>
+<td align="right">0.2779124</td>
+<td align="right">0.0020682</td>
+<td align="right">3.920097</td>
+<td align="right">10.731587</td>
+<td align="right">10.196636</td>
+<td align="right">10.731587</td>
+<td align="right">10.449787</td>
+<td align="left">POINT (9.592076 51.47528)</td>
+</tr>
+<tr class="even">
+<td align="left">8</td>
+<td align="left">Quercus robur L.</td>
+<td align="right">2878688</td>
+<td align="left">Fagaceae</td>
+<td align="right">4689</td>
+<td align="left">Quercus robur</td>
+<td align="right">12.791288</td>
+<td align="right">53.45432</td>
+<td align="right">2019</td>
+<td align="right">5</td>
+<td align="right">29</td>
+<td align="left">2019-05-29T14:44:56Z</td>
+<td align="left">DE</td>
+<td align="left"></td>
+<td align="left">Mecklenburg-Vorpommern</td>
+<td align="left">26128754</td>
+<td align="left">StillImage</td>
+<td align="left">50c9509d-22c7-4a22-a47d-8c48425ef4a7</td>
+<td align="right">12.791288</td>
+<td align="right">53.45432</td>
+<td align="right">6</td>
+<td align="right">282.0240</td>
+<td align="right">10.56826</td>
+<td align="right">22.84456</td>
+<td align="right">674.8423</td>
+<td align="right">299.6821</td>
+<td align="right">253.4205</td>
+<td align="right">46.26158</td>
+<td align="right">289.7753</td>
+<td align="right">285.3079</td>
+<td align="right">289.7753</td>
+<td align="right">274.4990</td>
+<td align="right">0.7309243</td>
+<td align="right">0.2611389</td>
+<td align="right">0.0026328</td>
+<td align="right">4.086557</td>
+<td align="right">9.681484</td>
+<td align="right">8.469324</td>
+<td align="right">9.681484</td>
+<td align="right">8.544147</td>
+<td align="left">POINT (12.79129 53.45432)</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>write.csv(SDMData_df, file = &quot;NFDI4Bio_SDMData.csv&quot;)</code></pre>
+<pre class="r"><code>ggplot(SDMData_df, aes(x = family, y = BIO1)) +
+  geom_boxplot() +
+  theme_bw()</code></pre>
+<p><img src="/courses/gbif/SeasonalSchool-climatedata_files/figure-html/unnamed-chunk-11-1.png" width="1440" /></p>
+</div>
+</div>
+<div id="session-info" class="section level1">
+<h1>Session Info</h1>
+<pre><code>## R version 4.4.0 (2024-04-24 ucrt)
+## Platform: x86_64-w64-mingw32/x64
+## Running under: Windows 11 x64 (build 22631)
+## 
+## Matrix products: default
+## 
+## 
+## locale:
+## [1] C
+## 
+## time zone: Europe/Oslo
+## tzcode source: internal
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+## [1] KrigR_0.9.4             ggplot2_3.5.1           rnaturalearthdata_1.0.0
+## [4] rnaturalearth_1.0.1     devtools_2.4.5          usethis_3.0.0          
+## [7] terra_1.7-78            sf_1.0-17               knitr_1.48             
+## 
+## loaded via a namespace (and not attached):
+##   [1] DBI_1.2.3                     pbapply_1.7-2                
+##   [3] gridExtra_2.3                 remotes_2.5.0                
+##   [5] rlang_1.1.4                   magrittr_2.0.3               
+##   [7] e1071_1.7-16                  compiler_4.4.0               
+##   [9] vctrs_0.6.5                   ecmwfr_2.0.2                 
+##  [11] stringr_1.5.1                 profvis_0.4.0                
+##  [13] pkgconfig_2.0.3               crayon_1.5.3                 
+##  [15] fastmap_1.2.0                 ellipsis_0.3.2               
+##  [17] labeling_0.4.3                utf8_1.2.4                   
+##  [19] promises_1.3.0                rmarkdown_2.28               
+##  [21] sessioninfo_1.2.2             automap_1.1-12               
+##  [23] purrr_1.0.2                   rnaturalearthhires_1.0.0.9000
+##  [25] xfun_0.47                     cachem_1.1.0                 
+##  [27] jsonlite_1.8.8                progress_1.2.3               
+##  [29] highr_0.11                    later_1.3.2                  
+##  [31] styler_1.10.3                 reshape_0.8.9                
+##  [33] prettyunits_1.2.0             parallel_4.4.0               
+##  [35] R6_2.5.1                      stringi_1.8.4                
+##  [37] bslib_0.8.0                   pkgload_1.4.0                
+##  [39] lubridate_1.9.3               jquerylib_0.1.4              
+##  [41] stars_0.6-7                   Rcpp_1.0.13                  
+##  [43] bookdown_0.40                 iterators_1.0.14             
+##  [45] zoo_1.8-12                    snow_0.4-4                   
+##  [47] R.utils_2.12.3                FNN_1.1.4.1                  
+##  [49] httpuv_1.6.15                 R.cache_0.16.0               
+##  [51] timechange_0.3.0              tidyselect_1.2.1             
+##  [53] viridis_0.6.5                 abind_1.4-8                  
+##  [55] yaml_2.3.10                   codetools_0.2-20             
+##  [57] miniUI_0.1.1.1                blogdown_1.19                
+##  [59] pkgbuild_1.4.4                lattice_0.22-6               
+##  [61] tibble_3.2.1                  intervals_0.15.5             
+##  [63] plyr_1.8.9                    shiny_1.9.1                  
+##  [65] withr_3.0.2                   evaluate_0.24.0              
+##  [67] units_0.8-5                   proxy_0.4-27                 
+##  [69] urlchecker_1.0.1              xts_0.14.0                   
+##  [71] pillar_1.9.0                  KernSmooth_2.23-22           
+##  [73] foreach_1.5.2                 ncdf4_1.23                   
+##  [75] generics_0.1.3                sp_2.1-4                     
+##  [77] spacetime_1.3-2               hms_1.1.3                    
+##  [79] munsell_0.5.1                 scales_1.3.0                 
+##  [81] xtable_1.8-4                  class_7.3-22                 
+##  [83] glue_1.7.0                    tools_4.4.0                  
+##  [85] fs_1.6.4                      cowplot_1.1.3                
+##  [87] grid_4.4.0                    tidyr_1.3.1                  
+##  [89] colorspace_2.1-1              cli_3.6.3                    
+##  [91] gstat_2.1-2                   fansi_1.0.6                  
+##  [93] viridisLite_0.4.2             dplyr_1.1.4                  
+##  [95] doSNOW_1.0.20                 gtable_0.3.6                 
+##  [97] R.methodsS3_1.8.2             sass_0.4.9                   
+##  [99] digest_0.6.37                 classInt_0.4-10              
+## [101] farver_2.1.2                  htmlwidgets_1.6.4            
+## [103] memoise_2.0.1                 htmltools_0.5.8.1            
+## [105] R.oo_1.26.0                   lifecycle_1.0.4              
+## [107] httr_1.4.7                    mime_0.12</code></pre>
+</div>

@@ -35,13 +35,13 @@ type: docs
 toc: true 
 menu:
   gbif:
-    parent: Practical Exercises
+    parent: Introduction
     weight: 3
 weight: 3
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, tidy='styler', tidy.opts=list(strict=TRUE), fig.width = 15, fig.height = 8)
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, tidy = "styler", tidy.opts = list(strict = TRUE), fig.width = 15, fig.height = 8)
 options(width = 90)
 source("PersonalSettings.R")
 ```
@@ -77,7 +77,7 @@ I **strongly** suggest **never** installing and loading packages this way in a s
     Below, I create a user defined function called `install.load.package(...)`. This function takes as an input the name of an `R` package just like the `install.packages(...)` function does. Instead of simply forcing package installation, however, `install.load.package(...)` checks whether the package in question is already installed and only carries out installation if it isn't. Before concluding, `install.load.package(...)` loads the package.
 ```{r InstallAdvanced}
 ## Custom install & load function
-install.load.package <- function(x){
+install.load.package <- function(x) {
   if (!require(x, character.only = TRUE)) {
     install.packages(x, repos = "http://cran.us.r-project.org")
   }

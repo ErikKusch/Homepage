@@ -1,0 +1,2645 @@
+---
+title: "Handling & Visualising Data"
+author: Erik Kusch
+date: '2023-11-14'
+slug: NFDI-handling
+categories:
+  - GBIF
+  - Biodiversity
+  - Open Science
+tags:
+  - GBIF
+  - Biodiversity
+  - Open Science
+subtitle: "Investigating, cleaning, and plotting GBIF mediated data"
+summary: 'A quick overview of common data handling steps for GBIF data.'
+authors: []
+lastmod: '2023-11-14T20:00:00+01:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: 
+output:
+  blogdown::html_page:
+    keep_md: true
+    # toc: true
+    # toc_depth: 1
+    # number_sections: false
+# header-includes:
+#   <script src = "https://polyfill.io/v3/polyfill.min.js?features = es6"></script>
+#   <script id = "MathJax-script" async src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+math: true
+type: docs
+toc: true 
+menu:
+  gbif:
+    parent: NFDI4Biodiversity Seasonal School
+    weight: 2
+weight: 10
+---
+
+
+<div id="TOC">
+
+</div>
+
+<p>{{% alert warning %}}
+This section of material is dependant on you having walked through the section on <a href="/courses/gbif/nfdi-download/">finding &amp; downloading data</a> first.
+{{% /alert %}}</p>
+<div id="required-r-packages-preparations" class="section level2">
+<h2>Required <code>R</code> Packages &amp; Preparations</h2>
+<p>Like before, we require some <code>R</code> packages for this step of the material. However, this time around, we are focusing on visualisations of data and spatial operations thereof.</p>
+<pre class="r"><code>## Custom install &amp; load function
+install.load.package &lt;- function(x) {
+  if (!require(x, character.only = TRUE)) {
+    install.packages(x, repos = &quot;http://cran.us.r-project.org&quot;)
+  }
+  require(x, character.only = TRUE)
+}
+## names of packages we want installed (if not installed yet) and loaded
+package_vec &lt;- c(
+  &quot;rgbif&quot;, # for access to gbif
+  &quot;knitr&quot;, # for rmarkdown table visualisations
+  &quot;ggplot2&quot;, # for plotting
+  &quot;cowplot&quot;, # for grids of ggplots
+  &quot;sf&quot;, # for spatial operations
+  &quot;sp&quot;, # for CRS support
+  &quot;rnaturalearth&quot;, # for shapefiles
+  &quot;rnaturalearthdata&quot; # for high resolution shapefiles
+)
+## executing install &amp; load for each package
+sapply(package_vec, install.load.package)</code></pre>
+<pre><code>##             rgbif             knitr           ggplot2           cowplot                sf 
+##              TRUE              TRUE              TRUE              TRUE              TRUE 
+##                sp     rnaturalearth rnaturalearthdata 
+##              TRUE              TRUE              TRUE</code></pre>
+<p>{{% alert success %}}
+With the packages loaded and the <code>NFDI4Bio_GBIF.csv</code> and <code>NFDI4Bio_GBIF.RData</code> produced from the <a href="/courses/gbif/nfdi-download/">previous section</a>, you are now ready to handle and visualise data obtained through GBIF.
+{{% /alert %}}</p>
+</div>
+<div id="inspecting-gbif-data" class="section level2">
+<h2>Inspecting GBIF Data</h2>
+<p>Data mediated by GBIF comes from many sources. Very likely, the data you obtain for any project will be made up of contents from several different datasets which GBIF has extracted and bundled for you. As you can imagine, different data sources mean different precision and potential issues across datasets making up our GBIF data query result. We need to carefully investigate the data we have obtained and make sure no issues exist that would affect our subsequent analyses.</p>
+<p>First, let’s load the .csv file we created previously. Obviously, we could also use the <code>NFDI4Bio_GBIF.RData</code> we created previously. In this case, we would have to call <code>occ_download_get()</code> again. Since I assume most of you will want to save the GBIF data in a new format like .csv for downstream analyses, we are working with the .csv:</p>
+<pre class="r"><code>GBIF_df &lt;- read.csv(&quot;NFDI4Bio_GBIF.csv&quot;)</code></pre>
+<p>Let’s have a quick look at this data (note that you do not need the <code>knitr::kable()</code> command when executing this code directly in <code>R</code>):</p>
+<pre class="r"><code>knitr::kable(head(GBIF_df))</code></pre>
+<table style="width:100%;">
+<colgroup>
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="1%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="1%" />
+<col width="0%" />
+<col width="0%" />
+<col width="1%" />
+<col width="0%" />
+<col width="0%" />
+<col width="1%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="1%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="1%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="2%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+<col width="0%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">X</th>
+<th align="right">gbifID</th>
+<th align="left">accessRights</th>
+<th align="left">bibliographicCitation</th>
+<th align="left">language</th>
+<th align="left">license</th>
+<th align="left">modified</th>
+<th align="left">publisher</th>
+<th align="left">references</th>
+<th align="left">rightsHolder</th>
+<th align="left">type</th>
+<th align="left">institutionID</th>
+<th align="left">collectionID</th>
+<th align="left">datasetID</th>
+<th align="left">institutionCode</th>
+<th align="left">collectionCode</th>
+<th align="left">datasetName</th>
+<th align="left">ownerInstitutionCode</th>
+<th align="left">basisOfRecord</th>
+<th align="left">informationWithheld</th>
+<th align="left">dataGeneralizations</th>
+<th align="left">dynamicProperties</th>
+<th align="left">occurrenceID</th>
+<th align="left">catalogNumber</th>
+<th align="left">recordNumber</th>
+<th align="left">recordedBy</th>
+<th align="left">recordedByID</th>
+<th align="right">individualCount</th>
+<th align="right">organismQuantity</th>
+<th align="left">organismQuantityType</th>
+<th align="left">sex</th>
+<th align="left">lifeStage</th>
+<th align="left">reproductiveCondition</th>
+<th align="left">caste</th>
+<th align="left">behavior</th>
+<th align="left">vitality</th>
+<th align="left">establishmentMeans</th>
+<th align="left">degreeOfEstablishment</th>
+<th align="left">pathway</th>
+<th align="left">georeferenceVerificationStatus</th>
+<th align="left">occurrenceStatus</th>
+<th align="left">preparations</th>
+<th align="left">disposition</th>
+<th align="left">associatedOccurrences</th>
+<th align="left">associatedReferences</th>
+<th align="left">associatedSequences</th>
+<th align="left">associatedTaxa</th>
+<th align="left">otherCatalogNumbers</th>
+<th align="left">occurrenceRemarks</th>
+<th align="left">organismID</th>
+<th align="left">organismName</th>
+<th align="left">organismScope</th>
+<th align="left">associatedOrganisms</th>
+<th align="left">previousIdentifications</th>
+<th align="left">organismRemarks</th>
+<th align="left">materialEntityID</th>
+<th align="left">materialEntityRemarks</th>
+<th align="left">verbatimLabel</th>
+<th align="left">materialSampleID</th>
+<th align="left">eventID</th>
+<th align="left">parentEventID</th>
+<th align="left">eventType</th>
+<th align="left">fieldNumber</th>
+<th align="left">eventDate</th>
+<th align="left">eventTime</th>
+<th align="right">startDayOfYear</th>
+<th align="right">endDayOfYear</th>
+<th align="right">year</th>
+<th align="right">month</th>
+<th align="right">day</th>
+<th align="left">verbatimEventDate</th>
+<th align="left">habitat</th>
+<th align="left">samplingProtocol</th>
+<th align="right">sampleSizeValue</th>
+<th align="left">sampleSizeUnit</th>
+<th align="left">samplingEffort</th>
+<th align="left">fieldNotes</th>
+<th align="left">eventRemarks</th>
+<th align="left">locationID</th>
+<th align="left">higherGeographyID</th>
+<th align="left">higherGeography</th>
+<th align="left">continent</th>
+<th align="left">waterBody</th>
+<th align="left">islandGroup</th>
+<th align="left">island</th>
+<th align="left">countryCode</th>
+<th align="left">stateProvince</th>
+<th align="left">county</th>
+<th align="left">municipality</th>
+<th align="left">locality</th>
+<th align="left">verbatimLocality</th>
+<th align="right">verbatimElevation</th>
+<th align="left">verticalDatum</th>
+<th align="left">verbatimDepth</th>
+<th align="left">minimumDistanceAboveSurfaceInMeters</th>
+<th align="left">maximumDistanceAboveSurfaceInMeters</th>
+<th align="left">locationAccordingTo</th>
+<th align="left">locationRemarks</th>
+<th align="right">decimalLatitude</th>
+<th align="right">decimalLongitude</th>
+<th align="right">coordinateUncertaintyInMeters</th>
+<th align="left">coordinatePrecision</th>
+<th align="right">pointRadiusSpatialFit</th>
+<th align="left">verbatimCoordinateSystem</th>
+<th align="left">verbatimSRS</th>
+<th align="left">footprintWKT</th>
+<th align="left">footprintSRS</th>
+<th align="left">footprintSpatialFit</th>
+<th align="left">georeferencedBy</th>
+<th align="left">georeferencedDate</th>
+<th align="left">georeferenceProtocol</th>
+<th align="left">georeferenceSources</th>
+<th align="left">georeferenceRemarks</th>
+<th align="left">geologicalContextID</th>
+<th align="left">earliestEonOrLowestEonothem</th>
+<th align="left">latestEonOrHighestEonothem</th>
+<th align="left">earliestEraOrLowestErathem</th>
+<th align="left">latestEraOrHighestErathem</th>
+<th align="left">earliestPeriodOrLowestSystem</th>
+<th align="left">latestPeriodOrHighestSystem</th>
+<th align="left">earliestEpochOrLowestSeries</th>
+<th align="left">latestEpochOrHighestSeries</th>
+<th align="left">earliestAgeOrLowestStage</th>
+<th align="left">latestAgeOrHighestStage</th>
+<th align="left">lowestBiostratigraphicZone</th>
+<th align="left">highestBiostratigraphicZone</th>
+<th align="left">lithostratigraphicTerms</th>
+<th align="left">group</th>
+<th align="left">formation</th>
+<th align="left">member</th>
+<th align="left">bed</th>
+<th align="right">identificationID</th>
+<th align="left">verbatimIdentification</th>
+<th align="left">identificationQualifier</th>
+<th align="left">typeStatus</th>
+<th align="left">identifiedBy</th>
+<th align="left">identifiedByID</th>
+<th align="left">dateIdentified</th>
+<th align="left">identificationReferences</th>
+<th align="left">identificationVerificationStatus</th>
+<th align="left">identificationRemarks</th>
+<th align="left">taxonID</th>
+<th align="right">scientificNameID</th>
+<th align="right">acceptedNameUsageID</th>
+<th align="left">parentNameUsageID</th>
+<th align="left">originalNameUsageID</th>
+<th align="left">nameAccordingToID</th>
+<th align="left">namePublishedInID</th>
+<th align="left">taxonConceptID</th>
+<th align="left">scientificName</th>
+<th align="left">acceptedNameUsage</th>
+<th align="left">parentNameUsage</th>
+<th align="left">originalNameUsage</th>
+<th align="left">nameAccordingTo</th>
+<th align="left">namePublishedIn</th>
+<th align="left">namePublishedInYear</th>
+<th align="left">higherClassification</th>
+<th align="left">kingdom</th>
+<th align="left">phylum</th>
+<th align="left">class</th>
+<th align="left">order</th>
+<th align="left">superfamily</th>
+<th align="left">family</th>
+<th align="left">subfamily</th>
+<th align="left">tribe</th>
+<th align="left">subtribe</th>
+<th align="left">genus</th>
+<th align="left">genericName</th>
+<th align="left">subgenus</th>
+<th align="left">infragenericEpithet</th>
+<th align="left">specificEpithet</th>
+<th align="left">infraspecificEpithet</th>
+<th align="left">cultivarEpithet</th>
+<th align="left">taxonRank</th>
+<th align="left">verbatimTaxonRank</th>
+<th align="left">vernacularName</th>
+<th align="left">nomenclaturalCode</th>
+<th align="left">taxonomicStatus</th>
+<th align="left">nomenclaturalStatus</th>
+<th align="left">taxonRemarks</th>
+<th align="left">datasetKey</th>
+<th align="left">publishingCountry</th>
+<th align="left">lastInterpreted</th>
+<th align="right">elevation</th>
+<th align="right">elevationAccuracy</th>
+<th align="left">depth</th>
+<th align="left">depthAccuracy</th>
+<th align="right">distanceFromCentroidInMeters</th>
+<th align="left">issue</th>
+<th align="left">mediaType</th>
+<th align="left">hasCoordinate</th>
+<th align="left">hasGeospatialIssues</th>
+<th align="right">taxonKey</th>
+<th align="right">acceptedTaxonKey</th>
+<th align="right">kingdomKey</th>
+<th align="right">phylumKey</th>
+<th align="right">classKey</th>
+<th align="right">orderKey</th>
+<th align="right">familyKey</th>
+<th align="right">genusKey</th>
+<th align="left">subgenusKey</th>
+<th align="right">speciesKey</th>
+<th align="left">species</th>
+<th align="left">acceptedScientificName</th>
+<th align="left">verbatimScientificName</th>
+<th align="left">typifiedName</th>
+<th align="left">protocol</th>
+<th align="left">lastParsed</th>
+<th align="left">lastCrawled</th>
+<th align="left">repatriated</th>
+<th align="left">relativeOrganismQuantity</th>
+<th align="left">projectId</th>
+<th align="left">isSequenced</th>
+<th align="left">gbifRegion</th>
+<th align="left">publishedByGbifRegion</th>
+<th align="left">level0Gid</th>
+<th align="left">level0Name</th>
+<th align="left">level1Gid</th>
+<th align="left">level1Name</th>
+<th align="left">level2Gid</th>
+<th align="left">level2Name</th>
+<th align="left">level3Gid</th>
+<th align="left">level3Name</th>
+<th align="left">iucnRedListCategory</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">1</td>
+<td align="right">2269252307</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">CC_BY_4_0</td>
+<td align="left">2019-06-16 07:35:33</td>
+<td align="left">iNaturalist.org</td>
+<td align="left"><a href="https://www.inaturalist.org/observations/27039839" class="uri">https://www.inaturalist.org/observations/27039839</a></td>
+<td align="left">Alexis</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">iNaturalist</td>
+<td align="left">Observations</td>
+<td align="left">iNaturalist research-grade observations</td>
+<td align="left"></td>
+<td align="left">HUMAN_OBSERVATION</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"><a href="https://www.inaturalist.org/observations/27039839" class="uri">https://www.inaturalist.org/observations/27039839</a></td>
+<td align="left">27039839</td>
+<td align="left"></td>
+<td align="left">Alexis</td>
+<td align="left"></td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">PRESENT</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">2019-06-14T12:28</td>
+<td align="left">12:28:00+02:00</td>
+<td align="right">165</td>
+<td align="right">165</td>
+<td align="right">2019</td>
+<td align="right">6</td>
+<td align="right">14</td>
+<td align="left">2019/06/14 12:28 PM CEST</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="right">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">EUROPE</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">DE</td>
+<td align="left">Berlin</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">Charlottenburg-Wilmersdorf, Berlin, Germany</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">52.48053</td>
+<td align="right">13.19752</td>
+<td align="right">41</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">58998490</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">Alexis</td>
+<td align="left"></td>
+<td align="left">2019-06-15 19:09:14</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">56133</td>
+<td align="right">NA</td>
+<td align="right">2878688</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">Quercus robur L.</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">Plantae</td>
+<td align="left">Tracheophyta</td>
+<td align="left">Magnoliopsida</td>
+<td align="left">Fagales</td>
+<td align="left">NA</td>
+<td align="left">Fagaceae</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">Quercus</td>
+<td align="left">Quercus</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">robur</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">SPECIES</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">ACCEPTED</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">50c9509d-22c7-4a22-a47d-8c48425ef4a7</td>
+<td align="left">US</td>
+<td align="left">2024-11-19T02:01:45.486Z</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left">COORDINATE_ROUNDED;CONTINENT_DERIVED_FROM_COORDINATES;TAXON_MATCH_TAXON_ID_IGNORED</td>
+<td align="left">StillImage</td>
+<td align="left">TRUE</td>
+<td align="left">FALSE</td>
+<td align="right">2878688</td>
+<td align="right">2878688</td>
+<td align="right">6</td>
+<td align="right">7707728</td>
+<td align="right">220</td>
+<td align="right">1354</td>
+<td align="right">4689</td>
+<td align="right">2877951</td>
+<td align="left">NA</td>
+<td align="right">2878688</td>
+<td align="left">Quercus robur</td>
+<td align="left">Quercus robur L.</td>
+<td align="left">Quercus robur</td>
+<td align="left">NA</td>
+<td align="left">DWC_ARCHIVE</td>
+<td align="left">2024-11-19T02:01:45.486Z</td>
+<td align="left">2024-11-17T09:49:24.302Z</td>
+<td align="left">TRUE</td>
+<td align="left">NA</td>
+<td align="left">null</td>
+<td align="left">FALSE</td>
+<td align="left">EUROPE</td>
+<td align="left">NORTH_AMERICA</td>
+<td align="left">DEU</td>
+<td align="left">Germany</td>
+<td align="left">DEU.3_1</td>
+<td align="left">Berlin</td>
+<td align="left">DEU.3.1_1</td>
+<td align="left">Berlin</td>
+<td align="left">DEU.3.1.1_1</td>
+<td align="left">Berlin</td>
+<td align="left">LC</td>
+</tr>
+<tr class="even">
+<td align="right">2</td>
+<td align="right">2609113599</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">CC_BY_4_0</td>
+<td align="left">2023-03-10 16:04:25</td>
+<td align="left">iNaturalist.org</td>
+<td align="left"><a href="https://www.inaturalist.org/observations/42521643" class="uri">https://www.inaturalist.org/observations/42521643</a></td>
+<td align="left">Jakob Fahr</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">iNaturalist</td>
+<td align="left">Observations</td>
+<td align="left">iNaturalist research-grade observations</td>
+<td align="left"></td>
+<td align="left">HUMAN_OBSERVATION</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"><a href="https://www.inaturalist.org/observations/42521643" class="uri">https://www.inaturalist.org/observations/42521643</a></td>
+<td align="left">42521643</td>
+<td align="left"></td>
+<td align="left">Jakob Fahr</td>
+<td align="left"><a href="https://orcid.org/0000-0002-9174-1204" class="uri">https://orcid.org/0000-0002-9174-1204</a></td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">PRESENT</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">2020-04-18T17:52:36</td>
+<td align="left">17:52:36+02:00</td>
+<td align="right">109</td>
+<td align="right">109</td>
+<td align="right">2020</td>
+<td align="right">4</td>
+<td align="right">18</td>
+<td align="left">2020-04-18 5:52:36 PM GMT+02:00</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="right">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">EUROPE</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">DE</td>
+<td align="left">Niedersachsen</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">38329 Wittmar, Germany</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">52.13933</td>
+<td align="right">10.63529</td>
+<td align="right">21</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">96232020</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">Jakob Fahr</td>
+<td align="left"><a href="https://orcid.org/0000-0002-9174-1204" class="uri">https://orcid.org/0000-0002-9174-1204</a></td>
+<td align="left">2020-04-18 23:12:35</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">54227</td>
+<td align="right">NA</td>
+<td align="right">2882316</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">Fagus sylvatica L.</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">Plantae</td>
+<td align="left">Tracheophyta</td>
+<td align="left">Magnoliopsida</td>
+<td align="left">Fagales</td>
+<td align="left">NA</td>
+<td align="left">Fagaceae</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">Fagus</td>
+<td align="left">Fagus</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">sylvatica</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">SPECIES</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">ACCEPTED</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">50c9509d-22c7-4a22-a47d-8c48425ef4a7</td>
+<td align="left">US</td>
+<td align="left">2024-11-19T02:03:38.653Z</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left">COORDINATE_ROUNDED;CONTINENT_DERIVED_FROM_COORDINATES;TAXON_MATCH_TAXON_ID_IGNORED</td>
+<td align="left">StillImage</td>
+<td align="left">TRUE</td>
+<td align="left">FALSE</td>
+<td align="right">2882316</td>
+<td align="right">2882316</td>
+<td align="right">6</td>
+<td align="right">7707728</td>
+<td align="right">220</td>
+<td align="right">1354</td>
+<td align="right">4689</td>
+<td align="right">2874875</td>
+<td align="left">NA</td>
+<td align="right">2882316</td>
+<td align="left">Fagus sylvatica</td>
+<td align="left">Fagus sylvatica L.</td>
+<td align="left">Fagus sylvatica</td>
+<td align="left">NA</td>
+<td align="left">DWC_ARCHIVE</td>
+<td align="left">2024-11-19T02:03:38.653Z</td>
+<td align="left">2024-11-17T09:49:24.302Z</td>
+<td align="left">TRUE</td>
+<td align="left">NA</td>
+<td align="left">null</td>
+<td align="left">FALSE</td>
+<td align="left">EUROPE</td>
+<td align="left">NORTH_AMERICA</td>
+<td align="left">DEU</td>
+<td align="left">Germany</td>
+<td align="left">DEU.9_1</td>
+<td align="left">Niedersachsen</td>
+<td align="left">DEU.9.45_1</td>
+<td align="left">Wolfenbüttel</td>
+<td align="left">DEU.9.45.5_1</td>
+<td align="left">Elm-Asse</td>
+<td align="left">LC</td>
+</tr>
+<tr class="odd">
+<td align="right">3</td>
+<td align="right">2634302330</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">CC_BY_NC_4_0</td>
+<td align="left">2020-05-25 08:09:04</td>
+<td align="left">iNaturalist.org</td>
+<td align="left"><a href="https://www.inaturalist.org/observations/47162872" class="uri">https://www.inaturalist.org/observations/47162872</a></td>
+<td align="left">murky</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">iNaturalist</td>
+<td align="left">Observations</td>
+<td align="left">iNaturalist research-grade observations</td>
+<td align="left"></td>
+<td align="left">HUMAN_OBSERVATION</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"><a href="https://www.inaturalist.org/observations/47162872" class="uri">https://www.inaturalist.org/observations/47162872</a></td>
+<td align="left">47162872</td>
+<td align="left"></td>
+<td align="left">murky</td>
+<td align="left"></td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">PRESENT</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">2020-05-24T17:37:14</td>
+<td align="left">17:37:14+02:00</td>
+<td align="right">145</td>
+<td align="right">145</td>
+<td align="right">2020</td>
+<td align="right">5</td>
+<td align="right">24</td>
+<td align="left">2020-05-24 5:37:14 PM GMT+02:00</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="right">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">EUROPE</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">DE</td>
+<td align="left">Bayern</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">Eichstätt, DE-BY, DE</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">48.94080</td>
+<td align="right">11.40697</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">105379124</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">murky</td>
+<td align="left"></td>
+<td align="left">2020-05-24 19:19:47</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">54227</td>
+<td align="right">NA</td>
+<td align="right">2882316</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">Fagus sylvatica L.</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">Plantae</td>
+<td align="left">Tracheophyta</td>
+<td align="left">Magnoliopsida</td>
+<td align="left">Fagales</td>
+<td align="left">NA</td>
+<td align="left">Fagaceae</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">Fagus</td>
+<td align="left">Fagus</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">sylvatica</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">SPECIES</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">ACCEPTED</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">50c9509d-22c7-4a22-a47d-8c48425ef4a7</td>
+<td align="left">US</td>
+<td align="left">2024-11-19T02:48:37.805Z</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left">COORDINATE_ROUNDED;CONTINENT_DERIVED_FROM_COORDINATES;TAXON_MATCH_TAXON_ID_IGNORED</td>
+<td align="left">StillImage;StillImage;StillImage</td>
+<td align="left">TRUE</td>
+<td align="left">FALSE</td>
+<td align="right">2882316</td>
+<td align="right">2882316</td>
+<td align="right">6</td>
+<td align="right">7707728</td>
+<td align="right">220</td>
+<td align="right">1354</td>
+<td align="right">4689</td>
+<td align="right">2874875</td>
+<td align="left">NA</td>
+<td align="right">2882316</td>
+<td align="left">Fagus sylvatica</td>
+<td align="left">Fagus sylvatica L.</td>
+<td align="left">Fagus sylvatica</td>
+<td align="left">NA</td>
+<td align="left">DWC_ARCHIVE</td>
+<td align="left">2024-11-19T02:48:37.805Z</td>
+<td align="left">2024-11-17T09:49:24.302Z</td>
+<td align="left">TRUE</td>
+<td align="left">NA</td>
+<td align="left">null</td>
+<td align="left">FALSE</td>
+<td align="left">EUROPE</td>
+<td align="left">NORTH_AMERICA</td>
+<td align="left">DEU</td>
+<td align="left">Germany</td>
+<td align="left">DEU.2_1</td>
+<td align="left">Bayern</td>
+<td align="left">DEU.2.27_1</td>
+<td align="left">Eichstätt</td>
+<td align="left">DEU.2.27.15_1</td>
+<td align="left">Kipfenberg</td>
+<td align="left">LC</td>
+</tr>
+<tr class="even">
+<td align="right">4</td>
+<td align="right">3455277552</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">CC_BY_NC_4_0</td>
+<td align="left">2021-12-17 15:41:13</td>
+<td align="left">iNaturalist.org</td>
+<td align="left"><a href="https://www.inaturalist.org/observations/34915487" class="uri">https://www.inaturalist.org/observations/34915487</a></td>
+<td align="left">rbk-jones</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">iNaturalist</td>
+<td align="left">Observations</td>
+<td align="left">iNaturalist research-grade observations</td>
+<td align="left"></td>
+<td align="left">HUMAN_OBSERVATION</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"><a href="https://www.inaturalist.org/observations/34915487" class="uri">https://www.inaturalist.org/observations/34915487</a></td>
+<td align="left">34915487</td>
+<td align="left"></td>
+<td align="left">rbk-jones</td>
+<td align="left"></td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">PRESENT</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">2019-10-26T15:30:07</td>
+<td align="left">15:30:07+02:00</td>
+<td align="right">299</td>
+<td align="right">299</td>
+<td align="right">2019</td>
+<td align="right">10</td>
+<td align="right">26</td>
+<td align="left">Sat Oct 26 2019 17:30:07 GMT+0200 (GMT+2)</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="right">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">EUROPE</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">DE</td>
+<td align="left">Sachsen</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">Bonhoefferstraße, Leipzig, Sachsen, DE</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">51.36412</td>
+<td align="right">12.38828</td>
+<td align="right">65</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">75865880</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">Rolf Theodor Borlinghaus</td>
+<td align="left"></td>
+<td align="left">2019-10-27 05:25:50</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">54785</td>
+<td align="right">NA</td>
+<td align="right">8313153</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">Quercus palustris Münchh.</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">Plantae</td>
+<td align="left">Tracheophyta</td>
+<td align="left">Magnoliopsida</td>
+<td align="left">Fagales</td>
+<td align="left">NA</td>
+<td align="left">Fagaceae</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">Quercus</td>
+<td align="left">Quercus</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">palustris</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">SPECIES</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">ACCEPTED</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">50c9509d-22c7-4a22-a47d-8c48425ef4a7</td>
+<td align="left">US</td>
+<td align="left">2024-11-19T02:42:19.456Z</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left">COORDINATE_ROUNDED;CONTINENT_DERIVED_FROM_COORDINATES;TAXON_MATCH_TAXON_ID_IGNORED</td>
+<td align="left">StillImage</td>
+<td align="left">TRUE</td>
+<td align="left">FALSE</td>
+<td align="right">8313153</td>
+<td align="right">8313153</td>
+<td align="right">6</td>
+<td align="right">7707728</td>
+<td align="right">220</td>
+<td align="right">1354</td>
+<td align="right">4689</td>
+<td align="right">2877951</td>
+<td align="left">NA</td>
+<td align="right">8313153</td>
+<td align="left">Quercus palustris</td>
+<td align="left">Quercus palustris Münchh.</td>
+<td align="left">Quercus palustris</td>
+<td align="left">NA</td>
+<td align="left">DWC_ARCHIVE</td>
+<td align="left">2024-11-19T02:42:19.456Z</td>
+<td align="left">2024-11-17T09:49:24.302Z</td>
+<td align="left">TRUE</td>
+<td align="left">NA</td>
+<td align="left">null</td>
+<td align="left">FALSE</td>
+<td align="left">EUROPE</td>
+<td align="left">NORTH_AMERICA</td>
+<td align="left">DEU</td>
+<td align="left">Germany</td>
+<td align="left">DEU.14_1</td>
+<td align="left">Sachsen</td>
+<td align="left">DEU.14.6_1</td>
+<td align="left">Leipzig (Kreisfreie Stadt)</td>
+<td align="left">DEU.14.6.1_1</td>
+<td align="left">Leipzig</td>
+<td align="left">LC</td>
+</tr>
+<tr class="odd">
+<td align="right">5</td>
+<td align="right">4952933770</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">CC_BY_NC_4_0</td>
+<td align="left">2024-09-29 15:29:02</td>
+<td align="left">iNaturalist.org</td>
+<td align="left"><a href="https://www.inaturalist.org/observations/219629641" class="uri">https://www.inaturalist.org/observations/219629641</a></td>
+<td align="left">dailyexpedition</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">iNaturalist</td>
+<td align="left">Observations</td>
+<td align="left">iNaturalist research-grade observations</td>
+<td align="left"></td>
+<td align="left">HUMAN_OBSERVATION</td>
+<td align="left">Coordinate uncertainty increased to 25717m at the request of the observer</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"><a href="https://www.inaturalist.org/observations/219629641" class="uri">https://www.inaturalist.org/observations/219629641</a></td>
+<td align="left">219629641</td>
+<td align="left"></td>
+<td align="left">dailyexpedition</td>
+<td align="left"></td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">PRESENT</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">2019-07-21T14:14</td>
+<td align="left">14:14:00+02:00</td>
+<td align="right">202</td>
+<td align="right">202</td>
+<td align="right">2019</td>
+<td align="right">7</td>
+<td align="right">21</td>
+<td align="left">2019/07/21 2:14 PM</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="right">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">EUROPE</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">DE</td>
+<td align="left">Mecklenburg-Vorpommern</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">Mecklenburg-Vorpommern, DE</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">54.51062</td>
+<td align="right">13.69519</td>
+<td align="right">25717</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">494883722</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">dailyexpedition</td>
+<td align="left"></td>
+<td align="left">2024-05-31 23:05:28</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">54227</td>
+<td align="right">NA</td>
+<td align="right">2882316</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">Fagus sylvatica L.</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">Plantae</td>
+<td align="left">Tracheophyta</td>
+<td align="left">Magnoliopsida</td>
+<td align="left">Fagales</td>
+<td align="left">NA</td>
+<td align="left">Fagaceae</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">Fagus</td>
+<td align="left">Fagus</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">sylvatica</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">SPECIES</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">ACCEPTED</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">50c9509d-22c7-4a22-a47d-8c48425ef4a7</td>
+<td align="left">US</td>
+<td align="left">2024-11-19T02:35:41.808Z</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left">COORDINATE_ROUNDED;CONTINENT_DERIVED_FROM_COORDINATES;TAXON_MATCH_TAXON_ID_IGNORED</td>
+<td align="left">StillImage</td>
+<td align="left">TRUE</td>
+<td align="left">FALSE</td>
+<td align="right">2882316</td>
+<td align="right">2882316</td>
+<td align="right">6</td>
+<td align="right">7707728</td>
+<td align="right">220</td>
+<td align="right">1354</td>
+<td align="right">4689</td>
+<td align="right">2874875</td>
+<td align="left">NA</td>
+<td align="right">2882316</td>
+<td align="left">Fagus sylvatica</td>
+<td align="left">Fagus sylvatica L.</td>
+<td align="left">Fagus sylvatica</td>
+<td align="left">NA</td>
+<td align="left">DWC_ARCHIVE</td>
+<td align="left">2024-11-19T02:35:41.808Z</td>
+<td align="left">2024-11-17T09:49:24.302Z</td>
+<td align="left">TRUE</td>
+<td align="left">NA</td>
+<td align="left">null</td>
+<td align="left">FALSE</td>
+<td align="left">EUROPE</td>
+<td align="left">NORTH_AMERICA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">LC</td>
+</tr>
+<tr class="even">
+<td align="right">6</td>
+<td align="right">4018588336</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">CC0_1_0</td>
+<td align="left">2023-01-11 13:59:51</td>
+<td align="left">iNaturalist.org</td>
+<td align="left"><a href="https://www.inaturalist.org/observations/45185825" class="uri">https://www.inaturalist.org/observations/45185825</a></td>
+<td align="left">Peter Gabler</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">iNaturalist</td>
+<td align="left">Observations</td>
+<td align="left">iNaturalist research-grade observations</td>
+<td align="left"></td>
+<td align="left">HUMAN_OBSERVATION</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"><a href="https://www.inaturalist.org/observations/45185825" class="uri">https://www.inaturalist.org/observations/45185825</a></td>
+<td align="left">45185825</td>
+<td align="left"></td>
+<td align="left">Peter Gabler</td>
+<td align="left"></td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">PRESENT</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">2020-05-07T19:06:10</td>
+<td align="left">19:06:10+02:00</td>
+<td align="right">128</td>
+<td align="right">128</td>
+<td align="right">2020</td>
+<td align="right">5</td>
+<td align="right">7</td>
+<td align="left">Thu May 07 2020 19:06:10 GMT+0200 (GMT+2)</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="right">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">EUROPE</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">DE</td>
+<td align="left">Sachsen</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">Michael-Wolgemut-Straße, Zwickau, Sachsen, DE</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">50.72724</td>
+<td align="right">12.51091</td>
+<td align="right">101</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">101434333</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">Peter Gabler</td>
+<td align="left"></td>
+<td align="left">2020-05-07 17:55:12</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">56133</td>
+<td align="right">NA</td>
+<td align="right">2878688</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">Quercus robur L.</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">Plantae</td>
+<td align="left">Tracheophyta</td>
+<td align="left">Magnoliopsida</td>
+<td align="left">Fagales</td>
+<td align="left">NA</td>
+<td align="left">Fagaceae</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">Quercus</td>
+<td align="left">Quercus</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="left">robur</td>
+<td align="left"></td>
+<td align="left">NA</td>
+<td align="left">SPECIES</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left"></td>
+<td align="left">ACCEPTED</td>
+<td align="left">NA</td>
+<td align="left"></td>
+<td align="left">50c9509d-22c7-4a22-a47d-8c48425ef4a7</td>
+<td align="left">US</td>
+<td align="left">2024-11-19T02:49:39.745Z</td>
+<td align="right">NA</td>
+<td align="right">NA</td>
+<td align="left">NA</td>
+<td align="left">NA</td>
+<td align="right">NA</td>
+<td align="left">COORDINATE_ROUNDED;CONTINENT_DERIVED_FROM_COORDINATES;TAXON_MATCH_TAXON_ID_IGNORED</td>
+<td align="left">StillImage</td>
+<td align="left">TRUE</td>
+<td align="left">FALSE</td>
+<td align="right">2878688</td>
+<td align="right">2878688</td>
+<td align="right">6</td>
+<td align="right">7707728</td>
+<td align="right">220</td>
+<td align="right">1354</td>
+<td align="right">4689</td>
+<td align="right">2877951</td>
+<td align="left">NA</td>
+<td align="right">2878688</td>
+<td align="left">Quercus robur</td>
+<td align="left">Quercus robur L.</td>
+<td align="left">Quercus robur</td>
+<td align="left">NA</td>
+<td align="left">DWC_ARCHIVE</td>
+<td align="left">2024-11-19T02:49:39.745Z</td>
+<td align="left">2024-11-17T09:49:24.302Z</td>
+<td align="left">TRUE</td>
+<td align="left">NA</td>
+<td align="left">null</td>
+<td align="left">FALSE</td>
+<td align="left">EUROPE</td>
+<td align="left">NORTH_AMERICA</td>
+<td align="left">DEU</td>
+<td align="left">Germany</td>
+<td align="left">DEU.14_1</td>
+<td align="left">Sachsen</td>
+<td align="left">DEU.14.13_1</td>
+<td align="left">Zwickau</td>
+<td align="left">DEU.14.13.23_1</td>
+<td align="left">Zwickau</td>
+<td align="left">LC</td>
+</tr>
+</tbody>
+</table>
+<p>{{% alert success %}}
+With data loaded, it is now time to investigate it!
+{{% /alert %}}</p>
+</div>
+<div id="data-manipulation" class="section level2">
+<h2>Data Manipulation</h2>
+<p>As you can see in our quick glance at the data above, there are a lot of columns for our 437136 observations obtained via GBIF. We can probably leverage some of that information contained therein to refine our dataset for our purpose (e.g., SDMs). Additionally, We probably do not need all of that data and so want to cut back on some columns or obersvation to reduce the weight of our data on our disk or in RAM.</p>
+<div id="data-quality-and-issues" class="section level3">
+<h3>Data Quality and Issues</h3>
+<p>In order to reduce our data to the useful information therein, we want to first and foremost investigate the quality and potential issues already indicated via <a href="https://data-blog.gbif.org/post/issues-and-flags/">Issues &amp; Flags</a> registered to the observations by GBIF.</p>
+<p>Since we are interested in using the data for species distribution modelling, we are interested in four particular issues:
+1. Whether the data comes with coordinates attached (we cannot use observations that are not geo-referenced):</p>
+<pre class="r"><code>## how many observations are recorded without coordinates?
+sum(!GBIF_df$hasCoordinate)</code></pre>
+<pre><code>## [1] 480</code></pre>
+<pre class="r"><code>## subsetting the data for observations with recorded coordinates
+GBIF_df &lt;- GBIF_df[GBIF_df$hasCoordinate, ]</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Whether data coordinates suffer from geospatial issues (we might be able to resolve these, but for now we just discard them):</li>
+</ol>
+<pre class="r"><code>## how many observations&#39; coordinates have geospatial issues?
+sum(GBIF_df$hasGeospatialIssues)</code></pre>
+<pre><code>## [1] 6</code></pre>
+<pre class="r"><code>## subsetting the data for observations with coordinates without geospatial issues
+GBIF_df &lt;- GBIF_df[!GBIF_df$hasGeospatialIssues, ]</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>Coordinate uncertainty (if we are highly uncertain of where an observation was made, we probably don’t want to learn bioclimatic niches from it):</li>
+</ol>
+<pre class="r"><code>## Some coordinate uncertainties are recorded as NA, I remove those - others don&#39;t. THis is up to you.
+GBIF_df &lt;- GBIF_df[!is.na(GBIF_df$coordinateUncertaintyInMeters), ]
+## Visualising the distribution of coordinate uncertainty in the data
+ggplot(GBIF_df, aes(x = coordinateUncertaintyInMeters)) +
+  geom_histogram(bins = 1e3) +
+  theme_bw() +
+  scale_y_continuous(trans = &quot;log10&quot;)</code></pre>
+<p><img src="/courses/gbif/SeasonalSchool-datahandling_files/figure-html/unnamed-chunk-5-1.png" width="1440" /></p>
+<pre class="r"><code>## how many observations are made with sub-kilometre accuracy?
+sum(GBIF_df$coordinateUncertaintyInMeters &lt; 1000)</code></pre>
+<pre><code>## [1] 58304</code></pre>
+<pre class="r"><code>## subsetting the data for observations with acceptable coordinate uncertainty,
+GBIF_df &lt;- GBIF_df[which(GBIF_df$coordinateUncertaintyInMeters &lt; 1000), ]</code></pre>
+<ol start="4" style="list-style-type: decimal">
+<li>Whether the observations encode presence or absence. While both types of information are valuable, absence recording in GBIF is uncommon. As to not bias our SDMs, I remove the absences here:</li>
+</ol>
+<pre class="r"><code>## how many observations even record absence?
+sum(GBIF_df$occurrenceStatus == &quot;ABSENT&quot;)</code></pre>
+<pre><code>## [1] 0</code></pre>
+<pre class="r"><code>## subsetting the data for observations only recording presence
+GBIF_df &lt;- GBIF_df[GBIF_df$occurrenceStatus == &quot;PRESENT&quot;, ]</code></pre>
+<p><strong>Lastly</strong>, let’s reduce the number of columns in our data to the ones relevant to us:</p>
+<pre class="r"><code>GBIF_df &lt;- GBIF_df[
+  ,
+  c(
+    &quot;scientificName&quot;, &quot;taxonKey&quot;, &quot;family&quot;, &quot;familyKey&quot;, &quot;species&quot;, # taxonomic identifiers
+    &quot;decimalLongitude&quot;, &quot;decimalLatitude&quot;, # geospatial identifiers
+    &quot;year&quot;, &quot;month&quot;, &quot;day&quot;, &quot;eventDate&quot;, # temporal identifiers
+    &quot;countryCode&quot;, &quot;municipality&quot;, &quot;stateProvince&quot;, # administrative identifiers
+    &quot;catalogNumber&quot;, &quot;mediaType&quot;, &quot;datasetKey&quot; # GBIF data identifiers
+  )
+]</code></pre>
+<p>Again, let’s have a glimpse at the data:</p>
+<pre class="r"><code>knitr::kable(head(GBIF_df))</code></pre>
+<table>
+<colgroup>
+<col width="1%" />
+<col width="9%" />
+<col width="3%" />
+<col width="3%" />
+<col width="3%" />
+<col width="6%" />
+<col width="6%" />
+<col width="5%" />
+<col width="1%" />
+<col width="2%" />
+<col width="1%" />
+<col width="7%" />
+<col width="4%" />
+<col width="4%" />
+<col width="8%" />
+<col width="5%" />
+<col width="11%" />
+<col width="13%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="left">scientificName</th>
+<th align="right">taxonKey</th>
+<th align="left">family</th>
+<th align="right">familyKey</th>
+<th align="left">species</th>
+<th align="right">decimalLongitude</th>
+<th align="right">decimalLatitude</th>
+<th align="right">year</th>
+<th align="right">month</th>
+<th align="right">day</th>
+<th align="left">eventDate</th>
+<th align="left">countryCode</th>
+<th align="left">municipality</th>
+<th align="left">stateProvince</th>
+<th align="left">catalogNumber</th>
+<th align="left">mediaType</th>
+<th align="left">datasetKey</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">1</td>
+<td align="left">Quercus robur L.</td>
+<td align="right">2878688</td>
+<td align="left">Fagaceae</td>
+<td align="right">4689</td>
+<td align="left">Quercus robur</td>
+<td align="right">13.197520</td>
+<td align="right">52.48053</td>
+<td align="right">2019</td>
+<td align="right">6</td>
+<td align="right">14</td>
+<td align="left">2019-06-14T12:28</td>
+<td align="left">DE</td>
+<td align="left"></td>
+<td align="left">Berlin</td>
+<td align="left">27039839</td>
+<td align="left">StillImage</td>
+<td align="left">50c9509d-22c7-4a22-a47d-8c48425ef4a7</td>
+</tr>
+<tr class="even">
+<td align="left">2</td>
+<td align="left">Fagus sylvatica L.</td>
+<td align="right">2882316</td>
+<td align="left">Fagaceae</td>
+<td align="right">4689</td>
+<td align="left">Fagus sylvatica</td>
+<td align="right">10.635290</td>
+<td align="right">52.13933</td>
+<td align="right">2020</td>
+<td align="right">4</td>
+<td align="right">18</td>
+<td align="left">2020-04-18T17:52:36</td>
+<td align="left">DE</td>
+<td align="left"></td>
+<td align="left">Niedersachsen</td>
+<td align="left">42521643</td>
+<td align="left">StillImage</td>
+<td align="left">50c9509d-22c7-4a22-a47d-8c48425ef4a7</td>
+</tr>
+<tr class="odd">
+<td align="left">4</td>
+<td align="left">Quercus palustris Münchh.</td>
+<td align="right">8313153</td>
+<td align="left">Fagaceae</td>
+<td align="right">4689</td>
+<td align="left">Quercus palustris</td>
+<td align="right">12.388285</td>
+<td align="right">51.36412</td>
+<td align="right">2019</td>
+<td align="right">10</td>
+<td align="right">26</td>
+<td align="left">2019-10-26T15:30:07</td>
+<td align="left">DE</td>
+<td align="left"></td>
+<td align="left">Sachsen</td>
+<td align="left">34915487</td>
+<td align="left">StillImage</td>
+<td align="left">50c9509d-22c7-4a22-a47d-8c48425ef4a7</td>
+</tr>
+<tr class="even">
+<td align="left">6</td>
+<td align="left">Quercus robur L.</td>
+<td align="right">2878688</td>
+<td align="left">Fagaceae</td>
+<td align="right">4689</td>
+<td align="left">Quercus robur</td>
+<td align="right">12.510908</td>
+<td align="right">50.72724</td>
+<td align="right">2020</td>
+<td align="right">5</td>
+<td align="right">7</td>
+<td align="left">2020-05-07T19:06:10</td>
+<td align="left">DE</td>
+<td align="left"></td>
+<td align="left">Sachsen</td>
+<td align="left">45185825</td>
+<td align="left">StillImage</td>
+<td align="left">50c9509d-22c7-4a22-a47d-8c48425ef4a7</td>
+</tr>
+<tr class="odd">
+<td align="left">7</td>
+<td align="left">Fagus sylvatica L.</td>
+<td align="right">2882316</td>
+<td align="left">Fagaceae</td>
+<td align="right">4689</td>
+<td align="left">Fagus sylvatica</td>
+<td align="right">9.592076</td>
+<td align="right">51.47528</td>
+<td align="right">2020</td>
+<td align="right">5</td>
+<td align="right">21</td>
+<td align="left">2020-05-21T11:07:39</td>
+<td align="left">DE</td>
+<td align="left"></td>
+<td align="left">Hessen</td>
+<td align="left">46711391</td>
+<td align="left">StillImage;StillImage;StillImage</td>
+<td align="left">50c9509d-22c7-4a22-a47d-8c48425ef4a7</td>
+</tr>
+<tr class="even">
+<td align="left">8</td>
+<td align="left">Quercus robur L.</td>
+<td align="right">2878688</td>
+<td align="left">Fagaceae</td>
+<td align="right">4689</td>
+<td align="left">Quercus robur</td>
+<td align="right">12.791288</td>
+<td align="right">53.45432</td>
+<td align="right">2019</td>
+<td align="right">5</td>
+<td align="right">29</td>
+<td align="left">2019-05-29T14:44:56Z</td>
+<td align="left">DE</td>
+<td align="left"></td>
+<td align="left">Mecklenburg-Vorpommern</td>
+<td align="left">26128754</td>
+<td align="left">StillImage</td>
+<td align="left">50c9509d-22c7-4a22-a47d-8c48425ef4a7</td>
+</tr>
+</tbody>
+</table>
+<p>Finally, we save the data as its own .csv file:</p>
+<pre class="r"><code>write.csv(GBIF_df, file = &quot;NFDI4Bio_GBIF_subset.csv&quot;)</code></pre>
+<p>Notice that this new file is 56.63 times smaller than the original data we obtained.</p>
+<p>{{% alert success %}}
+We now have succesfully investigated and subsetted our data to the relevant and reliable components for our purposes.
+{{% /alert %}}</p>
+</div>
+<div id="creating-a-spatially-explicit-object" class="section level3">
+<h3>Creating a Spatially Explicit Object</h3>
+<p>Much of downstream analyses of GBIF data require use of the coordinate components of the data so let’s make the data into a spatial feature object to facilitate such work in <code>R</code>:</p>
+<pre class="r"><code>## make coordinates easy to read for the machine
+options(digits = 8) # set 8 digits (ie. all digits, not decimals) for the type cast as.double to keep decimals
+GBIF_df$lon &lt;- as.double(GBIF_df$decimalLongitude) # cast lon from char to double
+GBIF_df$lat &lt;- as.double(GBIF_df$decimalLatitude) # cast lat from char to double
+## make spatial features object
+GBIF_sf &lt;- st_as_sf(GBIF_df, coords = c(&quot;lon&quot;, &quot;lat&quot;), remove = FALSE)
+## assign a CRS
+st_crs(GBIF_sf) &lt;- sp::CRS(&quot;+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs +towgs84=0,0,0&quot;)
+## look at the object created
+GBIF_sf</code></pre>
+<pre><code>## Simple feature collection with 58304 features and 19 fields
+## Geometry type: POINT
+## Dimension:     XY
+## Bounding box:  xmin: 5.871829 ymin: 47.272701 xmax: 14.995758 ymax: 54.991665
+## Geodetic CRS:  BOUNDCRS[
+##     SOURCECRS[
+##         GEOGCRS[&quot;unknown&quot;,
+##             DATUM[&quot;World Geodetic System 1984&quot;,
+##                 ELLIPSOID[&quot;WGS 84&quot;,6378137,298.257223563,
+##                     LENGTHUNIT[&quot;metre&quot;,1]],
+##                 ID[&quot;EPSG&quot;,6326]],
+##             PRIMEM[&quot;Greenwich&quot;,0,
+##                 ANGLEUNIT[&quot;degree&quot;,0.0174532925199433],
+##                 ID[&quot;EPSG&quot;,8901]],
+##             CS[ellipsoidal,2],
+##                 AXIS[&quot;longitude&quot;,east,
+##                     ORDER[1],
+##                     ANGLEUNIT[&quot;degree&quot;,0.0174532925199433,
+##                         ID[&quot;EPSG&quot;,9122]]],
+##                 AXIS[&quot;latitude&quot;,north,
+##                     ORDER[2],
+##                     ANGLEUNIT[&quot;degree&quot;,0.0174532925199433,
+##                         ID[&quot;EPSG&quot;,9122]]]]],
+##     TARGETCRS[
+##         GEOGCRS[&quot;WGS 84&quot;,
+##             DATUM[&quot;World Geodetic System 1984&quot;,
+##                 ELLIPSOID[&quot;WGS 84&quot;,6378137,298.257223563,
+##                     LENGTHUNIT[&quot;metre&quot;,1]]],
+##             PRIMEM[&quot;Greenwich&quot;,0,
+##                 ANGLEUNIT[&quot;degree&quot;,0.0174532925199433]],
+##             CS[ellipsoidal,2],
+##                 AXIS[&quot;latitude&quot;,north,
+##                     ORDER[1],
+##                     ANGLEUNIT[&quot;degree&quot;,0.0174532925199433]],
+##                 AXIS[&quot;longitude&quot;,east,
+##                     ORDER[2],
+##                     ANGLEUNIT[&quot;degree&quot;,0.0174532925199433]],
+##             ID[&quot;EPSG&quot;,4326]]],
+##     ABRIDGEDTRANSFORMATION[&quot;Transformation from unknown to WGS84&quot;,
+##         METHOD[&quot;Geocentric translations (geog2D domain)&quot;,
+##             ID[&quot;EPSG&quot;,9603]],
+##         PARAMETER[&quot;X-axis translation&quot;,0,
+##             ID[&quot;EPSG&quot;,8605]],
+##         PARAMETER[&quot;Y-axis translation&quot;,0,
+##             ID[&quot;EPSG&quot;,8606]],
+##         PARAMETER[&quot;Z-axis translation&quot;,0,
+##             ID[&quot;EPSG&quot;,8607]]]]
+## First 10 features:
+##                scientificName taxonKey   family familyKey           species
+## 1            Quercus robur L.  2878688 Fagaceae      4689     Quercus robur
+## 2          Fagus sylvatica L.  2882316 Fagaceae      4689   Fagus sylvatica
+## 4  Quercus palustris Münchh.  8313153 Fagaceae      4689 Quercus palustris
+## 6            Quercus robur L.  2878688 Fagaceae      4689     Quercus robur
+## 7          Fagus sylvatica L.  2882316 Fagaceae      4689   Fagus sylvatica
+## 8            Quercus robur L.  2878688 Fagaceae      4689     Quercus robur
+## 9         Pinus sylvestris L.  5285637 Pinaceae      3925  Pinus sylvestris
+## 10           Quercus robur L.  2878688 Fagaceae      4689     Quercus robur
+## 11         Fagus sylvatica L.  2882316 Fagaceae      4689   Fagus sylvatica
+## 12           Quercus robur L.  2878688 Fagaceae      4689     Quercus robur
+##    decimalLongitude decimalLatitude year month day            eventDate countryCode
+## 1         13.197520       52.480531 2019     6  14     2019-06-14T12:28          DE
+## 2         10.635290       52.139326 2020     4  18  2020-04-18T17:52:36          DE
+## 4         12.388285       51.364118 2019    10  26  2019-10-26T15:30:07          DE
+## 6         12.510908       50.727237 2020     5   7  2020-05-07T19:06:10          DE
+## 7          9.592076       51.475282 2020     5  21  2020-05-21T11:07:39          DE
+## 8         12.791288       53.454316 2019     5  29 2019-05-29T14:44:56Z          DE
+## 9         12.429091       50.773137 2020     6  19  2020-06-19T17:06:40          DE
+## 10        13.243034       52.502898 2020     1  16     2020-01-16T13:21          DE
+## 11         9.352532       51.333704 2020     5  12 2020-05-12T13:11:54Z          DE
+## 12         9.697503       49.030169 2020     8  23     2020-08-23T12:13          DE
+##    municipality          stateProvince catalogNumber                        mediaType
+## 1                               Berlin      27039839                       StillImage
+## 2                        Niedersachsen      42521643                       StillImage
+## 4                              Sachsen      34915487                       StillImage
+## 6                              Sachsen      45185825                       StillImage
+## 7                               Hessen      46711391 StillImage;StillImage;StillImage
+## 8               Mecklenburg-Vorpommern      26128754                       StillImage
+## 9                              Sachsen      50177410            StillImage;StillImage
+## 10                              Berlin      37713663                       StillImage
+## 11                              Hessen      45676495                       StillImage
+## 12                  Baden-Württemberg      57726302                       StillImage
+##                              datasetKey       lon       lat                    geometry
+## 1  50c9509d-22c7-4a22-a47d-8c48425ef4a7 13.197520 52.480531  POINT (13.19752 52.480531)
+## 2  50c9509d-22c7-4a22-a47d-8c48425ef4a7 10.635290 52.139326  POINT (10.63529 52.139326)
+## 4  50c9509d-22c7-4a22-a47d-8c48425ef4a7 12.388285 51.364118 POINT (12.388285 51.364118)
+## 6  50c9509d-22c7-4a22-a47d-8c48425ef4a7 12.510908 50.727237 POINT (12.510908 50.727237)
+## 7  50c9509d-22c7-4a22-a47d-8c48425ef4a7  9.592076 51.475282  POINT (9.592076 51.475282)
+## 8  50c9509d-22c7-4a22-a47d-8c48425ef4a7 12.791288 53.454316 POINT (12.791288 53.454316)
+## 9  50c9509d-22c7-4a22-a47d-8c48425ef4a7 12.429091 50.773137 POINT (12.429091 50.773137)
+## 10 50c9509d-22c7-4a22-a47d-8c48425ef4a7 13.243034 52.502898 POINT (13.243034 52.502898)
+## 11 50c9509d-22c7-4a22-a47d-8c48425ef4a7  9.352532 51.333704  POINT (9.352532 51.333704)
+## 12 50c9509d-22c7-4a22-a47d-8c48425ef4a7  9.697503 49.030169  POINT (9.697503 49.030169)</code></pre>
+<p>We will need this spatial features object later so let’s save it to our disk:</p>
+<pre class="r"><code>save(GBIF_sf, file = &quot;GBIF_sf.RData&quot;)</code></pre>
+</div>
+<div id="matching-observations-with-polygons" class="section level3">
+<h3>Matching Observations with Polygons</h3>
+<p>Let’s say, for example, we want to quantify abundances of our taxonomic families across administrative states within Germany:</p>
+<pre class="r"><code>## Obtain sf object
+DE_municip &lt;- rnaturalearth::ne_states(country = &quot;Germany&quot;, returnclass = &quot;sf&quot;) # get shapefiles for German states
+## loop over family identities
+abundances_ls &lt;- lapply(unique(GBIF_sf$family), FUN = function(family) {
+  ## Identify overlap of points and polygons
+  cover_sf &lt;- st_intersects(DE_municip, GBIF_sf[GBIF_sf$family == family, ])
+  names(cover_sf) &lt;- DE_municip$name
+  ## report abundances
+  abundances_municip &lt;- unlist(lapply(cover_sf, length))
+  abundances_municip
+})
+names(abundances_ls) &lt;- unique(GBIF_sf$family)
+## make a data frame of it
+abundances_df &lt;- as.data.frame(do.call(cbind, abundances_ls))
+## look at the data frame in html page
+knitr::kable(abundances_df)</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="right">Fagaceae</th>
+<th align="right">Pinaceae</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Sachsen</td>
+<td align="right">1189</td>
+<td align="right">704</td>
+</tr>
+<tr class="even">
+<td align="left">Bayern</td>
+<td align="right">4756</td>
+<td align="right">3769</td>
+</tr>
+<tr class="odd">
+<td align="left">Rheinland-Pfalz</td>
+<td align="right">2563</td>
+<td align="right">444</td>
+</tr>
+<tr class="even">
+<td align="left">Saarland</td>
+<td align="right">632</td>
+<td align="right">46</td>
+</tr>
+<tr class="odd">
+<td align="left">Schleswig-Holstein</td>
+<td align="right">1752</td>
+<td align="right">545</td>
+</tr>
+<tr class="even">
+<td align="left">Niedersachsen</td>
+<td align="right">4461</td>
+<td align="right">1235</td>
+</tr>
+<tr class="odd">
+<td align="left">Nordrhein-Westfalen</td>
+<td align="right">6814</td>
+<td align="right">2135</td>
+</tr>
+<tr class="even">
+<td align="left">Baden-Württemberg</td>
+<td align="right">5650</td>
+<td align="right">3796</td>
+</tr>
+<tr class="odd">
+<td align="left">Brandenburg</td>
+<td align="right">2515</td>
+<td align="right">974</td>
+</tr>
+<tr class="even">
+<td align="left">Mecklenburg-Vorpommern</td>
+<td align="right">919</td>
+<td align="right">461</td>
+</tr>
+<tr class="odd">
+<td align="left">Bremen</td>
+<td align="right">96</td>
+<td align="right">66</td>
+</tr>
+<tr class="even">
+<td align="left">Hamburg</td>
+<td align="right">354</td>
+<td align="right">40</td>
+</tr>
+<tr class="odd">
+<td align="left">Hessen</td>
+<td align="right">5529</td>
+<td align="right">2545</td>
+</tr>
+<tr class="even">
+<td align="left">Thüringen</td>
+<td align="right">510</td>
+<td align="right">1037</td>
+</tr>
+<tr class="odd">
+<td align="left">Sachsen-Anhalt</td>
+<td align="right">410</td>
+<td align="right">163</td>
+</tr>
+<tr class="even">
+<td align="left">Berlin</td>
+<td align="right">1263</td>
+<td align="right">449</td>
+</tr>
+</tbody>
+</table>
+<p>And therew we go, abundances of <em>Pinaceae</em> and <em>Fagaceae</em> tallied across states in Germany.</p>
+<p>{{% alert success %}}
+You can now create and do basic spatial operations from GBIF mediated data!
+{{% /alert %}}</p>
+</div>
+</div>
+<div id="data-visualisation" class="section level2">
+<h2>Data visualisation</h2>
+<p>Now that we have created some fancy <code>R</code> objects and summary statistics of our data, we should visualise it.</p>
+<div id="plotting-occurrences-on-a-map" class="section level3">
+<h3>Plotting Occurrences on a Map</h3>
+<p>First, we plot our observations by taxonomic family across Germany:</p>
+<pre class="r"><code>## get background map
+DE_shp &lt;- rnaturalearth::ne_countries(country = &quot;Germany&quot;, scale = 10, returnclass = &quot;sf&quot;)[, 1]
+## make plot
+ggplot() +
+  geom_sf(data = DE_shp) +
+  geom_sf(data = GBIF_sf[, 1], aes(col = GBIF_sf$family)) +
+  theme_bw() +
+  theme(legend.position = &quot;bottom&quot;) +
+  guides(col = guide_legend(title = &quot;Taxonomic families&quot;)) +
+  scale_color_manual(values = c(&quot;darkorange&quot;, &quot;forestgreen&quot;)) +
+  labs(title = &quot;Occurrences of Pinaceae and Fagaceae recorded by human observations between 1970 and 2020&quot;)</code></pre>
+<p><img src="/courses/gbif/SeasonalSchool-datahandling_files/figure-html/unnamed-chunk-13-1.png" width="1440" /></p>
+</div>
+<div id="plotting-abundances-by-state" class="section level3">
+<h3>Plotting Abundances by State</h3>
+<p>Next, we visualise the state-wise abundances:</p>
+<pre class="r"><code># Fagaceae
+## adding data to shapefiles
+DE_municip$Fagaceae &lt;- abundances_df$Fagaceae
+## making plot
+Fa_gg &lt;- ggplot(data = DE_municip) +
+  geom_sf(aes(fill = Fagaceae)) +
+  scale_fill_viridis_c() +
+  labs(x = &quot;Longitude&quot;, y = &quot;Latitude&quot;, col = &quot;Abundance&quot;, title = &quot;Fagaceae Abundance&quot;) +
+  theme_bw() +
+  theme(legend.position = &quot;bottom&quot;) +
+  scale_fill_gradient(low = &quot;white&quot;, high = &quot;darkorange&quot;) +
+  guides(fill = guide_colourbar(theme = theme(
+    legend.key.width  = unit(21, &quot;lines&quot;),
+    legend.key.height = unit(3, &quot;lines&quot;)
+  )))
+
+# Pinaceae
+## adding data to shapefiles
+DE_municip$Pinaceae &lt;- abundances_df$Pinaceae
+## making plot
+Pi_gg &lt;- ggplot(data = DE_municip) +
+  geom_sf(aes(fill = Pinaceae)) +
+  scale_fill_viridis_c() +
+  labs(x = &quot;Longitude&quot;, y = &quot;Latitude&quot;, col = &quot;Abundance&quot;, title = &quot;Pinaceae Abundance&quot;) +
+  theme_bw() +
+  theme(legend.position = &quot;bottom&quot;) +
+  scale_fill_gradient(low = &quot;white&quot;, high = &quot;forestgreen&quot;) +
+  guides(fill = guide_colourbar(theme = theme(
+    legend.key.width  = unit(21, &quot;lines&quot;),
+    legend.key.height = unit(3, &quot;lines&quot;)
+  )))
+
+## combined plot
+plot_grid(Fa_gg, Pi_gg, ncol = 2)</code></pre>
+<p><img src="/courses/gbif/SeasonalSchool-datahandling_files/figure-html/unnamed-chunk-14-1.png" width="1440" /></p>
+</div>
+<div id="plotting-a-time-series-of-observations" class="section level3">
+<h3>Plotting A Time-Series of Observations</h3>
+<p>Lastly, let’s visualise how our knowledge of our target taxonomic families has evolved over time:</p>
+<pre class="r"><code>## plotting data frame skeleton
+plot_df &lt;- expand.grid(1970:2020, c(&quot;Fagaceae&quot;, &quot;Pinaceae&quot;))
+# plot_df$abundances &lt;- 0
+colnames(plot_df) &lt;- c(&quot;year&quot;, &quot;family&quot;)
+
+## cumulative number of records per year per taxonomic family
+obsyears &lt;- aggregate(day ~ year + family, GBIF_sf, FUN = length)
+colnames(obsyears)[3] &lt;- &quot;abundance&quot;
+
+## merging plotting skeleton and obsyears
+plot_df &lt;- merge.data.frame(plot_df, obsyears, by = c(&quot;family&quot;, &quot;year&quot;), all = TRUE)
+plot_df$abundance[is.na(plot_df$abundance)] &lt;- 0
+
+## calculate cumulative records
+plot_df$cumulative &lt;- c(
+  cumsum(plot_df$abundance[plot_df$family == unique(plot_df$family)[1]]),
+  cumsum(plot_df$abundance[plot_df$family == unique(plot_df$family)[2]])
+)
+
+## make plot
+ggplot(data = plot_df, aes(x = as.factor(year), y = cumulative)) +
+  geom_bar(stat = &quot;identity&quot;, aes(fill = &quot;black&quot;)) +
+  geom_bar(stat = &quot;identity&quot;, aes(y = abundance, fill = family)) +
+  theme_bw() +
+  scale_fill_manual(
+    name = &quot;Records&quot;,
+    values = c(&quot;black&quot; = &quot;black&quot;, &quot;Pinaceae&quot; = &quot;forestgreen&quot;, &quot;Fagaceae&quot; = &quot;darkorange&quot;), labels = c(&quot;Cumulative Total&quot;, &quot;New per Year (Fagaceae)&quot;, &quot;New per Year (Pinaceae)&quot;)
+  ) +
+  facet_wrap(~family) +
+  theme(
+    legend.position = &quot;bottom&quot;,
+    axis.text.x = element_text(angle = -60, vjust = 0.2, hjust = 0)
+  ) +
+  labs(x = &quot;Year&quot;, y = &quot;Records for Fagaceae and Pinaceae across Germany starting 1970&quot;)</code></pre>
+<p><img src="/courses/gbif/SeasonalSchool-datahandling_files/figure-html/unnamed-chunk-15-1.png" width="1440" /></p>
+<p>{{% alert success %}}
+Some basic visualisations when dealing with GBIF mediated data are now open to you.
+{{% /alert %}}</p>
+</div>
+</div>
+<div id="citing-data-downloaded-via-gbif" class="section level2">
+<h2>Citing Data Downloaded via GBIF</h2>
+<p>When using data mediated by GBIF, you are benefitting from the hard work of many who have come before you. THese peoples’ efforts ought to be credited in the role they played facilitating your work. Likewise, when or if you contribute data to our shared knowledge pool available via GBIF, you would surely want the same treatment. To properly give credit, GBIF creates a <strong>DOI</strong> (digital object identifier) for each query submitted to it. You can (and should) cite this.</p>
+<p>Additionally, citing the DOI will also make it so the work you do based off of GBIF mediated data will be reproducible - the hallmark of proper science.</p>
+<p>{{% alert warning %}}
+<strong>Citing the DOI</strong> of your GBIF query is <strong>not optional</strong>!
+{{% /alert %}}</p>
+<div id="citing-the-data-download" class="section level3">
+<h3>Citing the data download</h3>
+<p>Remember when we saved the details of the GBIF data request in the previous section? This is where we bring it back in. Let’s load the file:</p>
+<pre class="r"><code>load(&quot;NFDI4Bio_GBIF.RData&quot;) # this loads the object called &quot;res&quot;</code></pre>
+<p>To cite the data query we have made and thus ensure reproducibility of our work and give proper credit to data curators, we just need to include the following reference in our writing:</p>
+<pre class="r"><code>paste(&quot;GBIF Occurrence Download&quot;, occ_download_meta(res)$doi, &quot;accessed via GBIF.org on&quot;, substr(occ_download_meta(res)$created, 1, 10))</code></pre>
+<pre><code>## [1] &quot;GBIF Occurrence Download 10.15468/dl.gejvsf accessed via GBIF.org on 2024-11-25&quot;</code></pre>
+</div>
+<div id="citing-a-derived-data-set" class="section level3">
+<h3>Citing a derived data set</h3>
+<p>Often times, you will heavily modify the data you have obtained through GBIF. As a matter of fact, we have done so here. In these cases, you might want to consider registering the data you actually work with as a derived dataset on GBIF to refine credit forwarding from your work.</p>
+<p>Derived datasets are citable records of GBIF-mediated occurrence data derived either from:
+- a GBIF.org download that has been filtered/reduced significantly, or
+- data accessed through a cloud service, e.g. Microsoft AI for Earth (Azure), or
+- data obtained by any means for which no DOI was assigned, but one is required (e.g. third-party tools accessing the GBIF search API)</p>
+<p>For our purposes, we have used a heavily subsetted data download - just look at the number of records in the original and the subsetted data:</p>
+<pre class="r"><code>## Loading the data
+Original_df &lt;- read.csv(&quot;NFDI4Bio_GBIF.csv&quot;)
+Final_df &lt;- read.csv(&quot;NFDI4Bio_GBIF_subset.csv&quot;)
+
+## making a plot
+ggplot(data.frame(
+  Records = c(nrow(Original_df), nrow(Final_df)),
+  Data = c(&quot;Original&quot;, &quot;Subset&quot;)
+), aes(y = Data, x = Records)) +
+  geom_bar(stat = &quot;identity&quot;, fill = &quot;#4f004e&quot;) +
+  theme_bw(base_size = 12)</code></pre>
+<p><img src="/courses/gbif/SeasonalSchool-datahandling_files/figure-html/barsdatasubset-1.png" width="1440" /></p>
+<p>To correctly reference the underlying data sets mediated by GBIF and contributing to our final dataset, we should register a derived data set. When created, a derived dataset is assigned a unique DOI that can be used to cite the data. To create a derived dataset you will need to authenticate using a GBIF.org account and provide:<br />
+- a title of the dataset,
+- a list of the GBIF datasets (by DOI or datasetKey) from which the data originated, ideally with counts of how many records each dataset contributed,
+- a persistent URL of where the extracted dataset can be accessed,
+- a description of how the dataset was prepared,
+- (optional) the GBIF download DOI, if the dataset is derived from an existing download , and
+- (optional) a date for when the derived dataset should be registered if not immediately .</p>
+<p>Arguably, the most important aspect here is the list of GBIF datasets and the counts of data used per dataset. First, let’s isolate how many datasets contributed to our original data and the subsetted, final data:</p>
+<pre class="r"><code>## Original
+length(unique(Original_df$datasetKey))</code></pre>
+<pre><code>## [1] 580</code></pre>
+<pre class="r"><code>## Subsetted
+length(unique(Final_df$datasetKey))</code></pre>
+<pre><code>## [1] 13</code></pre>
+<p>There is a signifcant decrease in number of datasets which make up our final data product post-subsetting. Subsequently, to prepare a potential query to GBIF to establish a derived data set for us, we can tabulate the counts of records per dataset key as follows:</p>
+<pre class="r"><code>knitr::kable(table(Final_df$datasetKey))</code></pre>
+<table>
+<thead>
+<tr class="header">
+<th align="left">Var1</th>
+<th align="right">Freq</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">04871911-1b00-41f3-8dc6-fc0cea421f96</td>
+<td align="right">9</td>
+</tr>
+<tr class="even">
+<td align="left">14d5676a-2c54-4f94-9023-1e8dcd822aa0</td>
+<td align="right">10821</td>
+</tr>
+<tr class="odd">
+<td align="left">2e102194-f384-4712-89a4-5db7a3fc409a</td>
+<td align="right">13527</td>
+</tr>
+<tr class="even">
+<td align="left">3580c8a0-33eb-40ac-b172-995854622428</td>
+<td align="right">111</td>
+</tr>
+<tr class="odd">
+<td align="left">50c9509d-22c7-4a22-a47d-8c48425ef4a7</td>
+<td align="right">2872</td>
+</tr>
+<tr class="even">
+<td align="left">6ac3f774-d9fb-4796-b3e9-92bf6c81c084</td>
+<td align="right">28748</td>
+</tr>
+<tr class="odd">
+<td align="left">7a3679ef-5582-4aaa-81f0-8c2545cafc81</td>
+<td align="right">825</td>
+</tr>
+<tr class="even">
+<td align="left">857bce66-f762-11e1-a439-00145eb45e9a</td>
+<td align="right">63</td>
+</tr>
+<tr class="odd">
+<td align="left">8a863029-f435-446a-821e-275f4f641165</td>
+<td align="right">1135</td>
+</tr>
+<tr class="even">
+<td align="left">cf910a71-5c97-40b9-b10c-7d9a1eca2c85</td>
+<td align="right">21</td>
+</tr>
+<tr class="odd">
+<td align="left">e1beb83c-9b83-4d17-ac5e-d24e09507ec5</td>
+<td align="right">20</td>
+</tr>
+<tr class="even">
+<td align="left">e6c97f6e-e952-11e2-961f-00145eb45e9a</td>
+<td align="right">50</td>
+</tr>
+<tr class="odd">
+<td align="left">e6fb3d46-977a-4deb-99be-e8493024feb2</td>
+<td align="right">102</td>
+</tr>
+</tbody>
+</table>
+<p>Finally, we can head to the <a href="https://www.gbif.org/derived-dataset/register">registration for derived data sets</a> at GBIF and supply our information:</p>
+<p><img src="/courses/gbif/gbif-derived.png" width="100%"/></a></p>
+<p>{{% alert success %}}
+Now you know how to properly cite the data you obtain from GBIF to ensure reproducibility and proper accreditation of your work.
+{{% /alert %}}</p>
+</div>
+</div>
+<div id="session-info" class="section level1">
+<h1>Session Info</h1>
+<pre><code>## R version 4.4.0 (2024-04-24 ucrt)
+## Platform: x86_64-w64-mingw32/x64
+## Running under: Windows 11 x64 (build 22631)
+## 
+## Matrix products: default
+## 
+## 
+## locale:
+## [1] C
+## 
+## time zone: Europe/Oslo
+## tzcode source: internal
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+## [1] rnaturalearthdata_1.0.0 rnaturalearth_1.0.1     sp_2.1-4               
+## [4] sf_1.0-17               cowplot_1.1.3           ggplot2_3.5.1          
+## [7] knitr_1.48              rgbif_3.8.1            
+## 
+## loaded via a namespace (and not attached):
+##  [1] gtable_0.3.6                  xfun_0.47                    
+##  [3] bslib_0.8.0                   lattice_0.22-6               
+##  [5] vctrs_0.6.5                   tools_4.4.0                  
+##  [7] generics_0.1.3                curl_5.2.2                   
+##  [9] tibble_3.2.1                  proxy_0.4-27                 
+## [11] fansi_1.0.6                   highr_0.11                   
+## [13] pkgconfig_2.0.3               R.oo_1.26.0                  
+## [15] KernSmooth_2.23-22            data.table_1.16.0            
+## [17] lifecycle_1.0.4               R.cache_0.16.0               
+## [19] compiler_4.4.0                farver_2.1.2                 
+## [21] stringr_1.5.1                 munsell_0.5.1                
+## [23] terra_1.7-78                  codetools_0.2-20             
+## [25] htmltools_0.5.8.1             class_7.3-22                 
+## [27] sass_0.4.9                    yaml_2.3.10                  
+## [29] lazyeval_0.2.2                pillar_1.9.0                 
+## [31] jquerylib_0.1.4               whisker_0.4.1                
+## [33] R.utils_2.12.3                classInt_0.4-10              
+## [35] cachem_1.1.0                  wk_0.9.4                     
+## [37] styler_1.10.3                 tidyselect_1.2.1             
+## [39] digest_0.6.37                 stringi_1.8.4                
+## [41] dplyr_1.1.4                   purrr_1.0.2                  
+## [43] bookdown_0.40                 labeling_0.4.3               
+## [45] fastmap_1.2.0                 grid_4.4.0                   
+## [47] colorspace_2.1-1              cli_3.6.3                    
+## [49] magrittr_2.0.3                triebeard_0.4.1              
+## [51] crul_1.5.0                    utf8_1.2.4                   
+## [53] e1071_1.7-16                  withr_3.0.2                  
+## [55] scales_1.3.0                  oai_0.4.0                    
+## [57] rmarkdown_2.28                httr_1.4.7                   
+## [59] blogdown_1.19                 rnaturalearthhires_1.0.0.9000
+## [61] R.methodsS3_1.8.2             evaluate_0.24.0              
+## [63] viridisLite_0.4.2             s2_1.1.7                     
+## [65] urltools_1.7.3                rlang_1.1.4                  
+## [67] Rcpp_1.0.13                   httpcode_0.3.0               
+## [69] glue_1.7.0                    DBI_1.2.3                    
+## [71] xml2_1.3.6                    jsonlite_1.8.8               
+## [73] R6_2.5.1                      plyr_1.8.9                   
+## [75] units_0.8-5</code></pre>
+</div>

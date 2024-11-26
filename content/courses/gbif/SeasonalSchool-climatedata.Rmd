@@ -1,0 +1,196 @@
+---
+title: "Climate Data"
+author: Erik Kusch
+date: '2023-11-14'
+slug: NFDI-climate
+categories:
+  - GBIF
+  - Biodiversity
+  - Open Science
+tags:
+  - GBIF
+  - Biodiversity
+  - Open Science
+subtitle: "Matching GBIF mediated data to relevant climate data obtained with `KrigR`"
+summary: 'A quick overview of using `KrigR` with GBIF data.'
+authors: []
+lastmod: '2023-11-14T20:00:00+01:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: 
+output:
+  blogdown::html_page:
+    keep_md: true
+    # toc: true
+    # toc_depth: 1
+    # number_sections: false
+# header-includes:
+#   <script src = "https://polyfill.io/v3/polyfill.min.js?features = es6"></script>
+#   <script id = "MathJax-script" async src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+math: true
+type: docs
+toc: true 
+menu:
+  gbif:
+    parent: NFDI4Biodiversity Seasonal School
+    weight: 3
+weight: 11
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, tidy = "styler", tidy.opts = list(strict = TRUE), fig.width = 15, fig.height = 8)
+options(width = 90)
+source("PersonalSettings.R")
+```
+
+## Required `R` Packages & Preparations
+
+```{r InstallAdvanced}
+## Custom install & load function
+install.load.package <- function(x) {
+  if (!require(x, character.only = TRUE)) {
+    install.packages(x, repos = "http://cran.us.r-project.org")
+  }
+  require(x, character.only = TRUE)
+}
+## names of packages we want installed (if not installed yet) and loaded
+package_vec <- c(
+  "knitr", # for rmarkdown table visualisations
+  "sf", # for spatial operations
+  "terra", # for matching spatialobjects with raster data
+  "devtools", # for installation of additional package from github
+  "rnaturalearth", # for shapefiles
+  "rnaturalearthdata", # for high resolution shapefiles
+  "ggplot2" # some additional plotting capabilities
+)
+## executing install & load for each package
+sapply(package_vec, install.load.package)
+```
+
+```{r KrigR}
+if (packageVersion("KrigR") < "0.9.4") { # KrigR check
+  devtools::install_github("https://github.com/ErikKusch/KrigR")
+}
+library(KrigR)
+```
+
+## Climate Data in Ecological Research
+
+
+
+### Data Sources & Considerations
+
+/courses/krigr/background/
+
+### Bioclimatic Variables
+
+
+## Retrieving Climatic Data with `KrigR`
+
+### CDS API Credentials
+
+/courses/krigr/setup/
+
+### Bioclimatic Data
+
+```{r}
+DE_shp <- rnaturalearth::ne_countries(country = "Germany", scale = 10, returnclass = "sf")[, 1]
+```
+
+```{r}
+BV_DE <- BioClim(
+  Temperature_Var = "2m_temperature",
+  Temperature_DataSet = "reanalysis-era5-land",
+  Temperature_Type = NA,
+  Water_Var = "total_precipitation",
+  Water_DataSet = "reanalysis-era5-land-monthly-means",
+  Water_Type = "monthly_averaged_reanalysis",
+  Y_start = 1970,
+  Y_end = 2020,
+  TZone = "CET",
+  Extent = DE_shp,
+  Buffer = 0.5,
+  Dir = getwd(),
+  FileName = "Germany",
+  FileExtension = ".nc",
+  Compression = 9,
+  API_User = API_User,
+  API_Key = API_Key,
+  TChunkSize = 6000,
+  TryDown = 10,
+  TimeOut = 36000,
+  Cores = 1,
+  verbose = TRUE,
+  Keep_Raw = FALSE,
+  Keep_Monthly = TRUE,
+  closeConnections = FALSE
+)
+```
+
+```{r, fig.width = 15, fig.height = 20}
+Plot.BioClim(
+  BioClims = BV_DE, SF = DE_shp,
+  Which = 1:11,
+  Water_Var = "Total Precipitation [mm]"
+)
+```
+
+```{r, fig.width = 15, fig.height = 20}
+Plot.BioClim(
+  BioClims = BV_DE, SF = DE_shp,
+  Which = 12:19,
+  ncol = 2,
+  Water_Var = "Total Precipitation [mm]"
+)
+```
+
+
+### Matching Observations with Climate Data
+
+```{r}
+load("GBIF_sf.RData")
+```
+
+```{r, fig.width = 15, fig.height = 15}
+Plot.BioClim(
+  BioClims = BV_DE,
+  SF = GBIF_sf,
+  Which = 1,
+  ncol = 1,
+  Size = 1
+)
+```
+
+```{r}
+extracted_df <- terra::extract(x = BV_DE, y = GBIF_sf)
+dim(extracted_df)
+```
+
+```{r}
+knitr::kable(head(extracted_df))
+```
+
+
+```{r}
+SDMData_df <- as.data.frame(cbind(GBIF_sf, extracted_df))
+SDMData_df <- na.omit(SDMData_df)
+knitr::kable(head(SDMData_df))
+```
+
+```{r}
+write.csv(SDMData_df, file = "NFDI4Bio_SDMData.csv")
+```
+
+```{r}
+ggplot(SDMData_df, aes(x = family, y = BIO1)) +
+  geom_boxplot() +
+  theme_bw()
+```
+
+# Session Info
+```{r, echo = FALSE}
+sessionInfo()
+```

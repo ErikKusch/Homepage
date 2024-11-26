@@ -1,0 +1,427 @@
+---
+title: "Finding & Downloading Data"
+author: Erik Kusch
+date: '2023-11-14'
+slug: NFDI-download
+categories:
+  - GBIF
+  - Biodiversity
+  - Open Science
+tags:
+  - GBIF
+  - Biodiversity
+  - Open Science
+subtitle: "Finding & Obtaining GBIF Mediated Data with the `R` package `rgbif`"
+summary: 'A quick overview of data retrieval with `rgbif`.'
+authors: []
+lastmod: '2023-11-14T20:00:00+01:00'
+featured: no
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
+projects: 
+output:
+  blogdown::html_page:
+    keep_md: true
+    # toc: true
+    # toc_depth: 1
+    # number_sections: false
+# header-includes:
+#   <script src = "https://polyfill.io/v3/polyfill.min.js?features = es6"></script>
+#   <script id = "MathJax-script" async src = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+math: true
+type: docs
+toc: true 
+menu:
+  gbif:
+    parent: NFDI4Biodiversity Seasonal School
+    weight: 1
+weight: 9
+---
+
+
+<div id="TOC">
+
+</div>
+
+<div id="required-r-packages-preparations" class="section level2">
+<h2>Required <code>R</code> Packages &amp; Preparations</h2>
+<p>First, we install and load relevant packages to our <code>R</code> session. You will see that I do this in a bit of a peculiar fashion. Why do I do this with a custom function as seen below instead of using the <code>lirbary()</code> function in <code>R</code>? I want my scripts to be transferrable across systems (e.g., different computers I work on) and installations of <code>R</code>. SOme of those have the packages I need installed while others don’t. The function I coded below called <code>install.load.package()</code> takes the name of an R package, checks if it is installed and installs it if it isn’t. Subsequently, the function loads the package in question. By applying this function to a vector of package names, we can easily load all packages we need without needing to also run installation functions or accidently overriding an existing installation.</p>
+<p>For this part of the tutorial, we need these packages:</p>
+<pre class="r"><code>## Custom install &amp; load function
+install.load.package &lt;- function(x) {
+  if (!require(x, character.only = TRUE)) {
+    install.packages(x, repos = &quot;http://cran.us.r-project.org&quot;)
+  }
+  require(x, character.only = TRUE)
+}
+## names of packages we want installed (if not installed yet) and loaded
+package_vec &lt;- c(
+  &quot;rgbif&quot;, # for access to gbif
+  &quot;knitr&quot; # for rmarkdown table visualisations
+)
+## executing install &amp; load for each package
+sapply(package_vec, install.load.package)</code></pre>
+<pre><code>## rgbif knitr 
+##  TRUE  TRUE</code></pre>
+<p>{{% alert warning %}}
+Do not forget that you need to have set your GBIF credentials within <code>R</code> as demonstrated in the <a href="/courses/gbif/setup/#registering-your-gbif-account-in-r">setup section</a>.
+{{% /alert %}}</p>
+</div>
+<div id="study-characteristics" class="section level2">
+<h2>Study Characteristics</h2>
+<p>To make these exercises more tangible to you, I will walk you through a mock-study within which we will find relevant GBIF-mediated data, download this data, load it into <code>R</code> and clean it, and finally join it with relevant abiotic data ready for a subseqeuent analysis or species distribution modelling exercise (a common use-case of GBIF-mediated data).</p>
+<div id="organisms" class="section level3">
+<h3>Organisms</h3>
+<p>Let’s first focus on our organisms of interest: <strong>conifers</strong> and <strong>beeches</strong>. Why these two? For a few reasons, mainly:
+1. These are sessile organisms which lend themselves well to species distribution modelling
+2. These are long-lived species which lend themselves well to species distribution modelling and it use of climate data across long time-scales
+3. We are all familiar with at least some of these species.
+4. I think they are neat. They form the backdrop for a lot of wonderful hikes for me - just look at them:</p>
+<p><img src="/courses/gbif/Trees.png" width="900"/></p>
+</div>
+<div id="area" class="section level3">
+<h3>Area</h3>
+<p>Looking at the world at once, while often something that macroecologists strive for, is unfeasible for our little seasonal school. Consequently, we need to limit our area-of-study to a relevant and familiar region to us. Since the seasonal school is organised within Germany, I assume that <strong>Germany</strong> would be a good study region for us. Plus, we know we have conifers and beeches there.</p>
+</div>
+<div id="timeframe" class="section level3">
+<h3>Timeframe</h3>
+<p>Lastly, we need to settle on a timeframe at which to investigate our study organisms in their environments - let’s choose a large time-window to align with the fact that our species of interest live long and to demonstrate some neat functionality of retrieving non-standard environment data later: <strong>1970 to 2020</strong> should be fine!</p>
+</div>
+</div>
+<div id="finding-data-with-rgbif" class="section level2">
+<h2>Finding Data with <code>rgbif</code></h2>
+<p>We’ve got our study organisms, we know when and where to look for them - now how can GBIF help us find relevant data?</p>
+<div id="resolving-taxonomic-names" class="section level3">
+<h3>Resolving Taxonomic Names</h3>
+<p>First, we need to identify the backbone key by which GBIF indexes data for conifers and beeches. To do so, we make use of the binomial nomenclature frequently used in taxanomy and search for <em>Pinaceae</em> and <em>Fagaceae</em> (conifers and beeches, respectively) within the GBIF backbone taxonomy. We do so with the <code>name_backbone()</code> function:</p>
+<pre class="r"><code>Pinaceae_backbone &lt;- name_backbone(name = &quot;Pinaceae&quot;)
+knitr::kable(Pinaceae_backbone) # I do this here for a nice table output in the html page you are looking at</code></pre>
+<table style="width:100%;">
+<colgroup>
+<col width="4%" />
+<col width="7%" />
+<col width="7%" />
+<col width="3%" />
+<col width="4%" />
+<col width="5%" />
+<col width="5%" />
+<col width="4%" />
+<col width="6%" />
+<col width="4%" />
+<col width="4%" />
+<col width="5%" />
+<col width="5%" />
+<col width="4%" />
+<col width="4%" />
+<col width="5%" />
+<col width="4%" />
+<col width="5%" />
+<col width="7%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">usageKey</th>
+<th align="left">scientificName</th>
+<th align="left">canonicalName</th>
+<th align="left">rank</th>
+<th align="left">status</th>
+<th align="right">confidence</th>
+<th align="left">matchType</th>
+<th align="left">kingdom</th>
+<th align="left">phylum</th>
+<th align="left">order</th>
+<th align="left">family</th>
+<th align="right">kingdomKey</th>
+<th align="right">phylumKey</th>
+<th align="right">classKey</th>
+<th align="right">orderKey</th>
+<th align="right">familyKey</th>
+<th align="left">synonym</th>
+<th align="left">class</th>
+<th align="left">verbatim_name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">3925</td>
+<td align="left">Pinaceae</td>
+<td align="left">Pinaceae</td>
+<td align="left">FAMILY</td>
+<td align="left">ACCEPTED</td>
+<td align="right">96</td>
+<td align="left">EXACT</td>
+<td align="left">Plantae</td>
+<td align="left">Tracheophyta</td>
+<td align="left">Pinales</td>
+<td align="left">Pinaceae</td>
+<td align="right">6</td>
+<td align="right">7707728</td>
+<td align="right">194</td>
+<td align="right">640</td>
+<td align="right">3925</td>
+<td align="left">FALSE</td>
+<td align="left">Pinopsida</td>
+<td align="left">Pinaceae</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>Pinaceae_key &lt;- Pinaceae_backbone$familyKey
+
+Fagaceae_backbone &lt;- name_backbone(name = &quot;Fagaceae&quot;)
+knitr::kable(Fagaceae_backbone) # I do this here for a nice table output in the html page you are looking at</code></pre>
+<table>
+<colgroup>
+<col width="4%" />
+<col width="7%" />
+<col width="7%" />
+<col width="3%" />
+<col width="4%" />
+<col width="5%" />
+<col width="5%" />
+<col width="4%" />
+<col width="6%" />
+<col width="4%" />
+<col width="4%" />
+<col width="5%" />
+<col width="5%" />
+<col width="4%" />
+<col width="4%" />
+<col width="5%" />
+<col width="4%" />
+<col width="7%" />
+<col width="7%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="right">usageKey</th>
+<th align="left">scientificName</th>
+<th align="left">canonicalName</th>
+<th align="left">rank</th>
+<th align="left">status</th>
+<th align="right">confidence</th>
+<th align="left">matchType</th>
+<th align="left">kingdom</th>
+<th align="left">phylum</th>
+<th align="left">order</th>
+<th align="left">family</th>
+<th align="right">kingdomKey</th>
+<th align="right">phylumKey</th>
+<th align="right">classKey</th>
+<th align="right">orderKey</th>
+<th align="right">familyKey</th>
+<th align="left">synonym</th>
+<th align="left">class</th>
+<th align="left">verbatim_name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="right">4689</td>
+<td align="left">Fagaceae</td>
+<td align="left">Fagaceae</td>
+<td align="left">FAMILY</td>
+<td align="left">ACCEPTED</td>
+<td align="right">96</td>
+<td align="left">EXACT</td>
+<td align="left">Plantae</td>
+<td align="left">Tracheophyta</td>
+<td align="left">Fagales</td>
+<td align="left">Fagaceae</td>
+<td align="right">6</td>
+<td align="right">7707728</td>
+<td align="right">220</td>
+<td align="right">1354</td>
+<td align="right">4689</td>
+<td align="left">FALSE</td>
+<td align="left">Magnoliopsida</td>
+<td align="left">Fagaceae</td>
+</tr>
+</tbody>
+</table>
+<pre class="r"><code>Fagaceae_key &lt;- Fagaceae_backbone$familyKey</code></pre>
+<p>{{% alert success %}}
+We now have the keys by which GBIF indexes the relevant taxonomic families for our use-case!
+{{% /alert %}}</p>
+</div>
+<div id="data-discovery" class="section level3">
+<h3>Data Discovery</h3>
+<p>How do we know if GBIF even mediates any data for the taxonomic families we are interested in within our study area across our time frame of interest? Well, we could query a download from GBIF, however, doing so takes time. Alternatively, we can use the <code>occ_search()</code> or <code>occ_count()</code> functions to get a much, much faster overview of data availability. Since <code>occ_search()</code> is very inviting to adopt it for sub-optimal data download practices, let’s focus on <code>occ_count()</code> for now and forget the other functione even exists (personally, I have never found a reason to use <code>occ_search()</code> over <code>occ_count()</code> for the purpose of data discovery).</p>
+<p>Let’s build the data discovery call stepp by step for <em>Pinaceae</em> and then apply the same to the <em>Fagaceae</em>:</p>
+<p>{{% alert info %}}
+Notice that the document you are looking at is frozen in time and the exact numbers you will obtain running the code below will most definitely differ from the ones shown here as new data is added to GBIF.
+{{% /alert %}}</p>
+<ol style="list-style-type: decimal">
+<li>How many observations does GBIF mediate for <em>Pinaceae</em>?</li>
+</ol>
+<pre class="r"><code>occ_count(familyKey = Pinaceae_key)</code></pre>
+<pre><code>## [1] 4958280</code></pre>
+<ol style="list-style-type: decimal">
+<li>How many observations does GBIF mediate for <em>Pinaceae</em> in Germany?</li>
+</ol>
+<pre class="r"><code>occ_count(
+  familyKey = Pinaceae_key,
+  country = &quot;DE&quot; # ISO 3166-1 alpha-2 country code
+)</code></pre>
+<pre><code>## [1] 313109</code></pre>
+<ol start="3" style="list-style-type: decimal">
+<li>How many observations does GBIF mediate for <em>Pinaceae</em> in Germany between 1970 and 2020?</li>
+</ol>
+<pre class="r"><code>occ_count(
+  familyKey = Pinaceae_key,
+  country = &quot;DE&quot;,
+  year = &quot;1970,2020&quot; # year-span identified by comma between start- and end-year
+)</code></pre>
+<pre><code>## [1] 238098</code></pre>
+<p>{{% alert success %}}
+You can now discover data mediated by GBIF according to common characteristics by which ecologists will query data through GBIF! Nevertheless, there are additional arguments you might be interested in by which to refine your search more. The documentation of <code>occ_count()</code> is a good place to start looking for those.
+{{% /alert %}}</p>
+<p>Finally, let’s look at how much data we can obtain for <em>Fagaceae</em> and also for <em>Pinaceae</em> and <em>Fagaceae</em> at the same time:</p>
+<pre class="r"><code>occ_count(
+  familyKey = Fagaceae_key,
+  country = &quot;DE&quot;,
+  year = &quot;1970,2020&quot;
+)</code></pre>
+<pre><code>## [1] 230461</code></pre>
+<pre class="r"><code>occ_count(
+  familyKey = paste(Fagaceae_key, Pinaceae_key, sep = &quot;;&quot;), # multiple entries that don&#39;t indicate a span or series are separated with a semicolon
+  country = &quot;DE&quot;,
+  year = &quot;1970,2020&quot;
+)</code></pre>
+<pre><code>## [1] 468559</code></pre>
+<p>Who would have thought? If we add the number of observations available for <em>Pinaceae</em> and those available for <em>Fagaceae</em>, we get the number of observation available for <em>Pinaceae</em> and <em>Fagaceae</em>.</p>
+</div>
+</div>
+<div id="downloading-data-with-rgbif" class="section level2">
+<h2>Downloading Data with <code>rgbif</code></h2>
+<p>{{% alert success %}}
+This is how you should obtain data <strong>for publication-level research and reports</strong>.
+{{% /alert %}}</p>
+<p>Toensure reproducibility and data richness of our downloads, we must make a formal download query to the GBIF API and await processing of our data request - an asynchronous download. To do so, we need to do three things in order:</p>
+<ol style="list-style-type: decimal">
+<li>Specify the data we want and request processing and download from GBIF</li>
+<li>Download the data once it is processed</li>
+<li>Load the downloaded data into <code>R</code></li>
+</ol>
+<p>{{% alert info %}}
+Time between registering a download request and retrieval of data may vary according to how busy the GBIF API and servers are as well as the size and complexity of the data requested. GBIF will only handle a maximum of 3 download request per user simultaneously.
+{{% /alert %}}</p>
+<p>Let’s tackle these step-by-step.</p>
+</div>
+<div id="data-request-at-gbif" class="section level2">
+<h2>Data Request at GBIF</h2>
+<p>To start this process of obtaining GBIF-mediated occurrence records, we first need to make a request to GBIF to start processing of the data we require. This is done with the <code>occ_download(...)</code> function. Making a data request at GBIF via the <code>occ_download(...)</code> function comes with two important considerations:</p>
+<ol style="list-style-type: decimal">
+<li><code>occ_download(...)</code> specific syntax</li>
+<li>data query metadata</li>
+</ol>
+<div id="syntax-and-query-through-occ_download" class="section level3">
+<h3>Syntax and Query through <code>occ_download()</code></h3>
+<p>The <code>occ_download(...)</code> function - while powerful - requires us to confront a new set of syntax which translates the download request as we have seen it so far into a form which the GBIF API can understand. To do so, we use a host of <code>rgbif</code> functions built around the GBIF predicate DSL (domain specific language). These functions (with a few exceptions which you can see by calling the documentation - <code>?download_predicate_dsl</code>) all take two arguments:</p>
+<ul>
+<li><code>key</code> - this is a core term which we want to target for our request</li>
+<li><code>value</code> - this is the value for the core term which we are interested in</li>
+</ul>
+<p>Finally, the relevant functions and how the relate <code>key</code> to <code>value</code> are:
+- <code>pred(...)</code>: equals
+- <code>pred_lt(...)</code>: lessThan
+- <code>pred_lte(...)</code>: lessThanOrEquals
+- <code>pred_gt(...)</code>: greaterThan
+- <code>pred_gte(...)</code>: greaterThanOrEquals
+- <code>pred_like(...)</code>: like
+- <code>pred_within(...)</code>: within (only for geospatial queries, and only accepts a WKT string)
+- <code>pred_notnull(...)</code>: isNotNull (only for geospatial queries, and only accepts a WKT string)
+- <code>pred_isnull(...)</code>: isNull (only for stating that you want a key to be null)
+- <code>pred_and(...)</code>: and (accepts multiple individual predicates, separating them by either “and” or “or”)
+- <code>pred_or(...)</code>: or (accepts multiple individual predicates, separating them by either “and” or “or”)
+- <code>pred_not(...)</code>: not (negates whatever predicate is passed in)
+- <code>pred_in(...)</code>: in (accepts a single key but many values; stating that you want to search for all the values)</p>
+<p>Let us use these to query the data we are interested in and add a new parameter into our considerations - we only want human observations of our trees:</p>
+<pre class="r"><code>res &lt;- occ_download(
+  pred_or(
+    pred(&quot;taxonKey&quot;, Pinaceae_key),
+    pred(&quot;taxonKey&quot;, Fagaceae_key)
+  ),
+  pred(&quot;basisOfRecord&quot;, &quot;HUMAN_OBSERVATION&quot;),
+  pred(&quot;country&quot;, &quot;DE&quot;),
+  pred_gte(&quot;year&quot;, 1970),
+  pred_lte(&quot;year&quot;, 2020)
+)</code></pre>
+<p>{{% alert success %}}
+You just made a data query with GBIF - congratulations!
+{{% /alert %}}</p>
+<p>If you navigate to your <a href="https://www.gbif.org/user/download">downloads tab</a> on the GBIF website, you should now see the data request being processed:</p>
+<p><img src="/courses/gbif/Seasonal1.png" width="900"/></p>
+<p>You can expand this view request to get more information:</p>
+<p><img src="/courses/gbif/Seasonal2.png" width="900"/></p>
+<p>Finally, when the data request is processed and ready for download, you will receive an E-mail telling you so and the view of the request on the webpage will change:</p>
+<p><img src="/courses/gbif/Seasonal3.png" width="900"/></p>
+<p>{{% alert warning %}}
+You don’t need to sit idly looking at the GBIF webpage or wait for the E-mail that your requested data is ready, you can let <code>R</code> do the waiting for you.
+{{% /alert %}}</p>
+</div>
+<div id="downloading-requested-data" class="section level3">
+<h3>Downloading Requested Data</h3>
+<p>Instead of waiting for the confirmation that our query has been processed, let’s just use an <code>rgbif</code> function to do the waiting for us and then continue on to download the processed data once it is ready:</p>
+<pre class="r"><code>## Check GBIF whether data is ready, this function will finish running when done and return metadata
+res_meta &lt;- occ_download_wait(res, status_ping = 10, quiet = FALSE)
+## Download the data as .zip (can specify a path)
+res_get &lt;- occ_download_get(res)</code></pre>
+<p>{{% alert success %}}
+You now have the GBIF mediated and processed data on your hard drive as a .zip file named after the GBIF request ID.
+{{% /alert %}}</p>
+</div>
+<div id="loading-downloaded-data-into-r-saving-data" class="section level3">
+<h3>Loading Downloaded Data into <code>R</code> &amp; Saving Data</h3>
+<p>All that is left to do is to load the data we just downloaded into <code>R</code>, reformat it, and save it to our hard drive in a format that is easier to load and use with <code>R</code> and other software further down the line:</p>
+<pre class="r"><code>## Load the data into R
+res_data &lt;- occ_download_import(res_get)
+write.csv(res_data, file = &quot;NFDI4Bio_GBIF.csv&quot;)</code></pre>
+<p>For the sake of reproducibility, I would always recommend you also save the GBIF query object. We will use this when discussing <a href="/courses/gbif/nfdi-handling/#citing-data-downloaded-via-gbif-1">citing data download via GBIF</a>.</p>
+<pre class="r"><code>save(res, file = &quot;NFDI4Bio_GBIF.RData&quot;)</code></pre>
+<p>{{% alert success %}}
+There we go! You now know how to find and download data mediated by GBIF.
+{{% /alert %}}</p>
+</div>
+</div>
+<div id="session-info" class="section level1">
+<h1>Session Info</h1>
+<pre><code>## R version 4.4.0 (2024-04-24 ucrt)
+## Platform: x86_64-w64-mingw32/x64
+## Running under: Windows 11 x64 (build 22631)
+## 
+## Matrix products: default
+## 
+## 
+## locale:
+## [1] LC_COLLATE=Norwegian Bokmål_Norway.utf8  LC_CTYPE=Norwegian Bokmål_Norway.utf8   
+## [3] LC_MONETARY=Norwegian Bokmål_Norway.utf8 LC_NUMERIC=C                            
+## [5] LC_TIME=Norwegian Bokmål_Norway.utf8    
+## 
+## time zone: Europe/Oslo
+## tzcode source: internal
+## 
+## attached base packages:
+## [1] stats     graphics  grDevices utils     datasets  methods   base     
+## 
+## other attached packages:
+## [1] knitr_1.48  rgbif_3.8.1
+## 
+## loaded via a namespace (and not attached):
+##  [1] styler_1.10.3     sass_0.4.9        utf8_1.2.4        generics_0.1.3   
+##  [5] xml2_1.3.6        blogdown_1.19     stringi_1.8.4     httpcode_0.3.0   
+##  [9] digest_0.6.37     magrittr_2.0.3    evaluate_0.24.0   grid_4.4.0       
+## [13] bookdown_0.40     fastmap_1.2.0     R.oo_1.26.0       R.cache_0.16.0   
+## [17] plyr_1.8.9        jsonlite_1.8.8    R.utils_2.12.3    whisker_0.4.1    
+## [21] crul_1.5.0        urltools_1.7.3    httr_1.4.7        purrr_1.0.2      
+## [25] fansi_1.0.6       scales_1.3.0      oai_0.4.0         lazyeval_0.2.2   
+## [29] jquerylib_0.1.4   cli_3.6.3         rlang_1.1.4       triebeard_0.4.1  
+## [33] R.methodsS3_1.8.2 bit64_4.0.5       munsell_0.5.1     cachem_1.1.0     
+## [37] yaml_2.3.10       tools_4.4.0       dplyr_1.1.4       colorspace_2.1-1 
+## [41] ggplot2_3.5.1     curl_5.2.2        vctrs_0.6.5       R6_2.5.1         
+## [45] lifecycle_1.0.4   stringr_1.5.1     bit_4.0.5         pkgconfig_2.0.3  
+## [49] pillar_1.9.0      bslib_0.8.0       gtable_0.3.6      data.table_1.16.0
+## [53] glue_1.7.0        Rcpp_1.0.13       xfun_0.47         tibble_3.2.1     
+## [57] tidyselect_1.2.1  htmltools_0.5.8.1 rmarkdown_2.28    compiler_4.4.0</code></pre>
+</div>

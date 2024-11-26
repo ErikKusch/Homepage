@@ -35,8 +35,8 @@ type: docs
 toc: true 
 menu:
   gbif:
-    parent: Practical Exercises
-    weight: 7
+    parent: LivingNorway Open Science
+    weight: 4
 weight: 7
 ---
 
@@ -608,7 +608,7 @@ Now that you can **handle GBIF data locally**, you are ready to pipe these data 
 ## [49] cli_3.6.3                     magrittr_2.0.3               
 ## [51] triebeard_0.4.1               crul_1.5.0                   
 ## [53] utf8_1.2.4                    e1071_1.7-16                 
-## [55] withr_3.0.1                   scales_1.3.0                 
+## [55] withr_3.0.2                   scales_1.3.0                 
 ## [57] bit64_4.0.5                   oai_0.4.0                    
 ## [59] rmarkdown_2.28                httr_1.4.7                   
 ## [61] bit_4.0.5                     blogdown_1.19                

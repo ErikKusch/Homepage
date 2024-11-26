@@ -35,8 +35,8 @@ type: docs
 toc: true 
 menu:
   gbif:
-    parent: Practical Exercises
-    weight: 5
+    parent: LivingNorway Open Science
+    weight: 2
 weight: 5
 ---
 
@@ -109,7 +109,7 @@ occ_count(taxonKey = sp_key)
 ```
 
 ```
-## [1] 107535
+## [1] 107599
 ```
 
 ``` r
@@ -117,10 +117,10 @@ occ_search(taxonKey = sp_key, limit = 0)$meta$count
 ```
 
 ```
-## [1] 107535
+## [1] 107599
 ```
 
-Using both of these, we obtain the same output of $1.07535\times 10^{5}$ *Lagopus muta* records mediated by GBIF. Note that this number will likely be higher for you as data is continually added to the GBIF indexing and this document here is frozen in time (it was last updated on 2024-10-30).
+Using both of these, we obtain the same output of $1.07599\times 10^{5}$ *Lagopus muta* records mediated by GBIF. Note that this number will likely be higher for you as data is continually added to the GBIF indexing and this document here is frozen in time (it was last updated on 2024-11-15).
 
 {{% alert warning %}}
 When wanting to discover data matching Darwin Core Terms with multiple characteristics, these can be fed to the `occ_search(...)` function as strings with semicolons separating desired characteristics (e.g., `year = "2000;2001"`).
@@ -141,10 +141,10 @@ occ_NO$meta$count
 ```
 
 ```
-## [1] 17024
+## [1] 17028
 ```
 
-Here is how *Lagopus muta* records are distributed across countries according to GBIF on 2024-10-30:
+Here is how *Lagopus muta* records are distributed across countries according to GBIF on 2024-11-15:
 <details>
   <summary>Click here for code necessary to create the figure below.</summary>
 
@@ -260,7 +260,7 @@ occ_wkt$meta$count
 ```
 
 ```
-## [1] 14748
+## [1] 14752
 ```
 
 Finally, we find that there are fewer records available when using the shapefile for data discovery. Why would that be? In this case, you will find that we are using a pretty coarse shapefile for Norway which probably cuts off some obersvations of *Lagopus muta* that do belong rightfully into Norway.
@@ -555,7 +555,7 @@ occ_absent$meta$count
 ```
 
 ```
-## [1] 2316
+## [1] 2421
 ```
 
 Yes, there are, but there are far fewer reported absences than presences.
@@ -643,7 +643,7 @@ str(occ_meta, max.level = 1)
 ## List of 5
 ##  $ meta     :List of 4
 ##  $ hierarchy:List of 1
-##  $ data     : tibble [500 × 111] (S3: tbl_df/tbl/data.frame)
+##  $ data     : tibble [500 × 112] (S3: tbl_df/tbl/data.frame)
 ##  $ media    :List of 500
 ##  $ facets   : Named list()
 ##  - attr(*, "class")= chr "gbif"
@@ -767,7 +767,7 @@ str(occ_final, max.level = 1)
 ## [41] stringi_1.8.4      dplyr_1.1.4        purrr_1.0.2        bookdown_0.40     
 ## [45] labeling_0.4.3     fastmap_1.2.0      grid_4.4.0         colorspace_2.1-1  
 ## [49] cli_3.6.3          magrittr_2.0.3     triebeard_0.4.1    crul_1.5.0        
-## [53] utf8_1.2.4         e1071_1.7-16       withr_3.0.1        scales_1.3.0      
+## [53] utf8_1.2.4         e1071_1.7-16       withr_3.0.2        scales_1.3.0      
 ## [57] oai_0.4.0          rmarkdown_2.28     httr_1.4.7         igraph_2.1.1      
 ## [61] blogdown_1.19      R.methodsS3_1.8.2  evaluate_0.24.0    s2_1.1.7          
 ## [65] urltools_1.7.3     rlang_1.1.4        Rcpp_1.0.13        httpcode_0.3.0    

@@ -45,11 +45,6 @@ Throughout this workshop, you will be introduced to:
 - Functionality for querying, accessing, and handling GBIF data programmatically
 - Data handling practices in `R`
 
-## Study Organism
-Most of the time, GBIF users query data for individual species so we will establish a comparable use-case here. For most of this material, I will be focussing on *Lagopus muta* - the rock ptarmigan (see below). I have particularly fond memories of these birds flying alongside an uncle of mine and I on a topptur-ski trip in Lofoten earlier this year. It also lends itself well to a demonstration of `rgbif` functionality.
-
-<img src="/courses/gbif/Lagopus.png" width="900"/>
-
 ## Disclaimer
 If you find any typos in my material, are unhappy with some of what or how I am presenting or simply unclear about thing, do not hesitate to [contact me](/about/#contact).
 

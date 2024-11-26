@@ -4,7 +4,12 @@
   
   <url>
     <loc>https://www.erikkusch.com/courses/gbif/</loc>
-    <lastmod>2024-11-06T00:00:00+00:00</lastmod>
+    <lastmod>2024-10-29T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/gbif/backbone/</loc>
+    <lastmod>2024-11-06T20:00:00+01:00</lastmod>
   </url>
   
   <url>
@@ -81,6 +86,11 @@
   </url>
   
   <url>
+    <loc>https://www.erikkusch.com/courses/gbif/nfdi-download/</loc>
+    <lastmod>2023-11-14T20:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://www.erikkusch.com/courses/bayes-nets/networksr/</loc>
     <lastmod>2022-09-27T20:00:00+01:00</lastmod>
   </url>
@@ -118,6 +128,15 @@
   <url>
     <loc>https://www.erikkusch.com/courses/bftp-biome-detection/cluster-analysis/</loc>
     <lastmod>2020-06-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/gbif/theory/</loc>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/gbif/setup/</loc>
+    <lastmod>2023-05-21T20:00:00+01:00</lastmod>
   </url>
   
   <url>
@@ -186,6 +205,11 @@
   </url>
   
   <url>
+    <loc>https://www.erikkusch.com/courses/gbif/datadiscovery/</loc>
+    <lastmod>2024-11-06T20:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://www.erikkusch.com/courses/krigr/prep/</loc>
     <lastmod>2021-05-26T20:00:00+01:00</lastmod>
   </url>
@@ -211,6 +235,11 @@
   </url>
   
   <url>
+    <loc>https://www.erikkusch.com/courses/gbif/datadownload/</loc>
+    <lastmod>2023-11-06T20:00:00+01:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://www.erikkusch.com/courses/excursions-into-biostatistics/classifications-order-from-chaos/</loc>
     <lastmod>2020-02-27T00:00:00+00:00</lastmod>
   </url>
@@ -226,6 +255,11 @@
   
   <url>
     <loc>https://www.erikkusch.com/courses/biostat101/06-inferential-statistics-hypotheses-and-our-research-project/</loc>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/gbif/datacontrol/</loc>
+    <lastmod>2023-11-06T20:00:00+01:00</lastmod>
   </url>
   
   <url>
@@ -246,6 +280,11 @@
   <url>
     <loc>https://www.erikkusch.com/courses/biostat101/data-handling-and-data-mining/</loc>
     <lastmod>2020-06-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://www.erikkusch.com/courses/gbif/dataciting/</loc>
+    <lastmod>2023-11-06T20:00:00+01:00</lastmod>
   </url>
   
   <url>
@@ -398,62 +437,62 @@
   
   <url>
     <loc>https://www.erikkusch.com/authors/</loc>
-    <lastmod>2024-11-06T00:00:00+00:00</lastmod>
+    <lastmod>2024-10-29T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://www.erikkusch.com/tag/biodiversity/</loc>
-    <lastmod>2024-11-06T00:00:00+00:00</lastmod>
+    <lastmod>2024-11-06T20:00:00+01:00</lastmod>
   </url>
   
   <url>
     <loc>https://www.erikkusch.com/category/biodiversity/</loc>
-    <lastmod>2024-11-06T00:00:00+00:00</lastmod>
+    <lastmod>2024-11-06T20:00:00+01:00</lastmod>
   </url>
   
   <url>
     <loc>https://www.erikkusch.com/categories/</loc>
-    <lastmod>2024-11-06T00:00:00+00:00</lastmod>
+    <lastmod>2024-11-06T20:00:00+01:00</lastmod>
   </url>
   
   <url>
     <loc>https://www.erikkusch.com/courses/</loc>
-    <lastmod>2024-11-06T00:00:00+00:00</lastmod>
+    <lastmod>2024-11-06T20:00:00+01:00</lastmod>
   </url>
   
   <url>
     <loc>https://www.erikkusch.com/</loc>
-    <lastmod>2024-11-06T00:00:00+00:00</lastmod>
+    <lastmod>2024-11-06T20:00:00+01:00</lastmod>
   </url>
   
   <url>
     <loc>https://www.erikkusch.com/author/erik-kusch/</loc>
-    <lastmod>2024-11-06T00:00:00+00:00</lastmod>
+    <lastmod>2024-10-29T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://www.erikkusch.com/tag/gbif/</loc>
-    <lastmod>2024-11-06T00:00:00+00:00</lastmod>
+    <lastmod>2024-11-06T20:00:00+01:00</lastmod>
   </url>
   
   <url>
     <loc>https://www.erikkusch.com/category/gbif/</loc>
-    <lastmod>2024-11-06T00:00:00+00:00</lastmod>
+    <lastmod>2024-11-06T20:00:00+01:00</lastmod>
   </url>
   
   <url>
     <loc>https://www.erikkusch.com/tag/open-science/</loc>
-    <lastmod>2024-11-06T00:00:00+00:00</lastmod>
+    <lastmod>2024-11-06T20:00:00+01:00</lastmod>
   </url>
   
   <url>
     <loc>https://www.erikkusch.com/category/open-science/</loc>
-    <lastmod>2024-11-06T00:00:00+00:00</lastmod>
+    <lastmod>2024-11-06T20:00:00+01:00</lastmod>
   </url>
   
   <url>
     <loc>https://www.erikkusch.com/tags/</loc>
-    <lastmod>2024-11-06T00:00:00+00:00</lastmod>
+    <lastmod>2024-11-06T20:00:00+01:00</lastmod>
   </url>
   
   <url>
@@ -882,6 +921,11 @@
   </url>
   
   <url>
+    <loc>https://www.erikkusch.com/courses/gbif/</loc>
+    <lastmod>2023-10-29T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://www.erikkusch.com/tag/active/</loc>
     <lastmod>2023-08-17T14:00:00+00:00</lastmod>
   </url>
@@ -1139,11 +1183,6 @@
   <url>
     <loc>https://www.erikkusch.com/author/samuel-j-l-gascoigne/</loc>
     <lastmod>2023-06-01T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://www.erikkusch.com/courses/gbif/</loc>
-    <lastmod>2023-05-21T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -1584,16 +1623,6 @@
   <url>
     <loc>https://www.erikkusch.com/publication/m.sc._inferring-vegetation-memory-from-remote-copy/</loc>
     <lastmod>2019-05-19T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://www.erikkusch.com/privacy/</loc>
-    <lastmod>2018-06-28T00:00:00+01:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://www.erikkusch.com/terms/</loc>
-    <lastmod>2018-06-28T00:00:00+01:00</lastmod>
   </url>
   
   <url>

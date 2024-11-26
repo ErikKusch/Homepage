@@ -35,7 +35,7 @@ type: docs
 toc: true 
 menu:
   gbif:
-    parent: Practical Exercises
+    parent: Introduction
     weight: 3
 weight: 3
 ---

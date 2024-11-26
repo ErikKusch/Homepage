@@ -35,8 +35,8 @@ type: docs
 toc: true 
 menu:
   gbif:
-    parent: Practical Exercises
-    weight: 4
+    parent: LivingNorway Open Science
+    weight: 1
 weight: 4
 ---
 
@@ -72,6 +72,11 @@ options(gbif_pwd = "my gbif password")
 ```
 </details> 
 {{% /alert %}}
+
+ 
+Most of the time, GBIF users query data for individual species so we will establish a comparable use-case here. For most of this material, I will be focussing on *Lagopus muta* - the rock ptarmigan (see below). I have particularly fond memories of these birds flying alongside an uncle of mine and I on a topptur-ski trip in Lofoten earlier this year. It also lends itself well to a demonstration of `rgbif` functionality.
+
+<img src="/courses/gbif/Lagopus.png" width="900"/>
 
 The ways in which we record and report species identities is arguably more varied than recorded species identities themselves. For example, while the binomial nomenclature is widely adopted across scientific research, the same species may be still be referred to via different binomial names with descriptor or subspecies suffixes. In addition, particularly when dealing with citizen science data, species names may not always be recorded according to the binomial nomenclature but rather via vernacular names.
 

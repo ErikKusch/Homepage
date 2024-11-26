@@ -35,8 +35,8 @@ type: docs
 toc: true 
 menu:
   gbif:
-    parent: Practical Exercises
-    weight: 4
+    parent: LivingNorway Open Science
+    weight: 1
 weight: 4
 ---
 
@@ -75,6 +75,11 @@ options(gbif_pwd = "my gbif password")
 ```
 </details> 
 {{% /alert %}}
+
+ 
+Most of the time, GBIF users query data for individual species so we will establish a comparable use-case here. For most of this material, I will be focussing on *Lagopus muta* - the rock ptarmigan (see below). I have particularly fond memories of these birds flying alongside an uncle of mine and I on a topptur-ski trip in Lofoten earlier this year. It also lends itself well to a demonstration of `rgbif` functionality.
+
+<img src="/courses/gbif/Lagopus.png" width="900"/>
 
 The ways in which we record and report species identities is arguably more varied than recorded species identities themselves. For example, while the binomial nomenclature is widely adopted across scientific research, the same species may be still be referred to via different binomial names with descriptor or subspecies suffixes. In addition, particularly when dealing with citizen science data, species names may not always be recorded according to the binomial nomenclature but rather via vernacular names.
 
@@ -258,11 +263,11 @@ knitr::kable(t(head(sp_suggest)))
 
 
 
-|              |             |                       |                      |                       |                       |                      |
-|:-------------|:------------|:----------------------|:---------------------|:----------------------|:----------------------|:---------------------|
-|key           |5227679      |5227710                |7397817               |5227690                |5227698                |5227695               |
-|canonicalName |Lagopus muta |Lagopus muta pyrenaica |Lagopus muta macruros |Lagopus muta evermanni |Lagopus muta atkhensis |Lagopus muta ridgwayi |
-|rank          |SPECIES      |SUBSPECIES             |SUBSPECIES            |SUBSPECIES             |SUBSPECIES             |SUBSPECIES            |
+|              |             |                       |                    |                       |                        |                       |
+|:-------------|:------------|:----------------------|:-------------------|:----------------------|:-----------------------|:----------------------|
+|key           |5227679      |5227684                |5227713             |5227686                |5227681                 |5227692                |
+|canonicalName |Lagopus muta |Lagopus muta rupestris |Lagopus muta welchi |Lagopus muta townsendi |Lagopus muta kurilensis |Lagopus muta helvetica |
+|rank          |SPECIES      |SUBSPECIES             |SUBSPECIES          |SUBSPECIES             |SUBSPECIES              |SUBSPECIES             |
 
 To trawl GBIF mediated data sets for records of a specific species, one may use the `name_lookup(...)` function:
 
@@ -274,14 +279,14 @@ knitr::kable(head(sp_lookup))
 
 
 
-|       key|scientificName | nameKey|datasetKey                           |  nubKey| parentKey|parent      |kingdom  |order       |family      |species      | kingdomKey|  classKey|  orderKey| familyKey| speciesKey|canonicalName |authorship |nameType   |taxonomicStatus |rank    |origin | numDescendants| numOccurrences|taxonID |extinct |habitats |nomenclaturalStatus |threatStatuses  |synonym |class |phylum   |genus   | phylumKey|  genusKey|constituentKey |publishedIn |accordingTo | acceptedKey|accepted | basionymKey|basionym |
-|---------:|:--------------|-------:|:------------------------------------|-------:|---------:|:-----------|:--------|:-----------|:-----------|:------------|----------:|---------:|---------:|---------:|----------:|:-------------|:----------|:----------|:---------------|:-------|:------|--------------:|--------------:|:-------|:-------|:--------|:-------------------|:---------------|:-------|:-----|:--------|:-------|---------:|---------:|:--------------|:-----------|:-----------|-----------:|:--------|-----------:|:--------|
-| 133167086|Lagopus muta   | 5972798|47f16512-bf31-410f-b272-d151c996b2f6 | 5227679| 135274878|Phasianidae |Animalia |Galliformes |Phasianidae |Lagopus muta |  135274602| 135274603| 135274874| 135274878|  133167086|Lagopus muta  |           |SCIENTIFIC |ACCEPTED        |SPECIES |SOURCE |              0|              0|1613    |FALSE   |NA       |NA                  |NA              |FALSE   |Aves  |NA       |NA      |        NA|        NA|NA             |NA          |NA          |          NA|NA       |          NA|NA       |
-| 114449074|Lagopus muta   | 5972798|3772da2f-daa1-4f07-a438-15a881a2142c | 5227679| 183207232|Lagopus     |Animalia |Galliformes |Tetraonidae |NA           |  183203277| 183206633| 183207227| 183207228|         NA|Lagopus muta  |           |SCIENTIFIC |ACCEPTED        |NA      |SOURCE |              0|              0|NA      |NA      |NA       |NA                  |NA              |FALSE   |Aves  |Chordata |Lagopus | 183205906| 183207232|NA             |NA          |NA          |          NA|NA       |          NA|NA       |
-| 104151733|Lagopus muta   |      NA|fab88965-e69d-4491-a04d-e3198b626e52 | 5227679| 104151714|Lagopus     |Metazoa  |Galliformes |Phasianidae |Lagopus muta |  103832354| 104106614| 104149839| 104150497|  104151733|Lagopus muta  |NA         |SCIENTIFIC |ACCEPTED        |SPECIES |SOURCE |              0|              0|64668   |NA      |NA       |NA                  |NA              |FALSE   |Aves  |Chordata |Lagopus | 103882489| 104151714|NA             |NA          |NA          |          NA|NA       |          NA|NA       |
-| 100160233|Lagopus muta   | 5972798|d7435f14-dfc9-4aaa-bef3-5d1ed22d65bf | 5227679| 128727594|Lagopus     |Animalia |NA          |Phasianidae |Lagopus muta |  128725468| 128725469|        NA| 128727593|  100160233|Lagopus muta  |           |SCIENTIFIC |ACCEPTED        |SPECIES |SOURCE |              0|              0|NA      |NA      |NA       |NA                  |NA              |FALSE   |Aves  |NA       |Lagopus |        NA| 128727594|NA             |NA          |NA          |          NA|NA       |          NA|NA       |
-| 123212008|Lagopus muta   | 5972798|a5dd063e-f45b-4a54-8b94-8fa3adf7f1e1 | 5227679| 167183824|Phasianidae |Animalia |Galliformes |Phasianidae |Lagopus muta |  167183684|        NA| 167183822| 167183824|  123212008|Lagopus muta  |           |SCIENTIFIC |ACCEPTED        |SPECIES |SOURCE |              0|              0|NA      |NA      |NA       |NA                  |NA              |FALSE   |NA    |NA       |NA      |        NA|        NA|NA             |NA          |NA          |          NA|NA       |          NA|NA       |
-| 119341248|Lagopus muta   | 5972798|4f1047ac-a19d-41a8-98eb-d968b2548b53 | 5227679|        NA|NA          |NA       |NA          |NA          |NA           |         NA|        NA|        NA|        NA|         NA|Lagopus muta  |           |SCIENTIFIC |ACCEPTED        |NA      |SOURCE |              0|              0|NA      |NA      |NA       |NA                  |NEAR_THREATENED |FALSE   |NA    |NA       |NA      |        NA|        NA|NA             |NA          |NA          |          NA|NA       |          NA|NA       |
+|       key|scientificName | nameKey|datasetKey                           |  nubKey| parentKey|parent      |kingdom  |order       |family      |species      | kingdomKey|  orderKey| familyKey| speciesKey|canonicalName |authorship |nameType   |taxonomicStatus |rank    |origin | numDescendants| numOccurrences|habitats |nomenclaturalStatus |threatStatuses  |synonym |phylum   |genus   | phylumKey|  classKey|  genusKey|class |taxonID |extinct |constituentKey |publishedIn | basionymKey|basionym |accordingTo | acceptedKey|accepted |
+|---------:|:--------------|-------:|:------------------------------------|-------:|---------:|:-----------|:--------|:-----------|:-----------|:------------|----------:|---------:|---------:|----------:|:-------------|:----------|:----------|:---------------|:-------|:------|--------------:|--------------:|:--------|:-------------------|:---------------|:-------|:--------|:-------|---------:|---------:|---------:|:-----|:-------|:-------|:--------------|:-----------|-----------:|:--------|:-----------|-----------:|:--------|
+| 123212008|Lagopus muta   | 5972798|a5dd063e-f45b-4a54-8b94-8fa3adf7f1e1 | 5227679| 167183824|Phasianidae |Animalia |Galliformes |Phasianidae |Lagopus muta |  167183684| 167183822| 167183824|  123212008|Lagopus muta  |           |SCIENTIFIC |ACCEPTED        |SPECIES |SOURCE |              0|              0|NA       |NA                  |NA              |FALSE   |NA       |NA      |        NA|        NA|        NA|NA    |NA      |NA      |NA             |NA          |          NA|NA       |NA          |          NA|NA       |
+| 114449074|Lagopus muta   | 5972798|3772da2f-daa1-4f07-a438-15a881a2142c | 5227679| 183207232|Lagopus     |Animalia |Galliformes |Tetraonidae |NA           |  183203277| 183207227| 183207228|         NA|Lagopus muta  |           |SCIENTIFIC |ACCEPTED        |NA      |SOURCE |              0|              0|NA       |NA                  |NA              |FALSE   |Chordata |Lagopus | 183205906| 183206633| 183207232|Aves  |NA      |NA      |NA             |NA          |          NA|NA       |NA          |          NA|NA       |
+| 133167086|Lagopus muta   | 5972798|47f16512-bf31-410f-b272-d151c996b2f6 | 5227679| 135274878|Phasianidae |Animalia |Galliformes |Phasianidae |Lagopus muta |  135274602| 135274874| 135274878|  133167086|Lagopus muta  |           |SCIENTIFIC |ACCEPTED        |SPECIES |SOURCE |              0|              0|NA       |NA                  |NA              |FALSE   |NA       |NA      |        NA| 135274603|        NA|Aves  |1613    |FALSE   |NA             |NA          |          NA|NA       |NA          |          NA|NA       |
+| 119341248|Lagopus muta   | 5972798|4f1047ac-a19d-41a8-98eb-d968b2548b53 | 5227679|        NA|NA          |NA       |NA          |NA          |NA           |         NA|        NA|        NA|         NA|Lagopus muta  |           |SCIENTIFIC |ACCEPTED        |NA      |SOURCE |              0|              0|NA       |NA                  |NEAR_THREATENED |FALSE   |NA       |NA      |        NA|        NA|        NA|NA    |NA      |NA      |NA             |NA          |          NA|NA       |NA          |          NA|NA       |
+| 104151733|Lagopus muta   |      NA|fab88965-e69d-4491-a04d-e3198b626e52 | 5227679| 104151714|Lagopus     |Metazoa  |Galliformes |Phasianidae |Lagopus muta |  103832354| 104149839| 104150497|  104151733|Lagopus muta  |NA         |SCIENTIFIC |ACCEPTED        |SPECIES |SOURCE |              0|              0|NA       |NA                  |NA              |FALSE   |Chordata |Lagopus | 103882489| 104106614| 104151714|Aves  |64668   |NA      |NA             |NA          |          NA|NA       |NA          |          NA|NA       |
+| 177659687|Lagopus muta   |      NA|6b6b2923-0a10-4708-b170-5b7c611aceef | 5227679| 177659682|Lagopus     |Metazoa  |Galliformes |Phasianidae |Lagopus muta |  177651702| 177659367| 177659587|  177659687|Lagopus muta  |NA         |SCIENTIFIC |ACCEPTED        |SPECIES |SOURCE |              0|              0|NA       |NA                  |NA              |FALSE   |Chordata |Lagopus | 177654008| 177656782| 177659682|Aves  |64668   |NA      |NA             |NA          |          NA|NA       |NA          |          NA|NA       |
 
 Here, we see clearly that *Lagopus muta* is recorded slightly differently in the datasets mediated by GBIF, but are indexed just fine for GBIF to find them for us.
 

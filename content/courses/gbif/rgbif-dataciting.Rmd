@@ -35,8 +35,8 @@ type: docs
 toc: true 
 menu:
   gbif:
-    parent: Practical Exercises
-    weight: 8
+    parent: LivingNorway Open Science
+    weight: 5
 weight: 8
 ---
 
