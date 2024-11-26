@@ -42,7 +42,13 @@ weight: 11
 
 
 
+{{% alert warning %}}
+This section of material is dependant on you having walked through the section on [finding & downloading data](/courses/gbif/nfdi-download/) first.
+{{% /alert %}}
+
 ## Required `R` Packages & Preparations
+
+Once more, we need some `R` packages:
 
 
 ``` r
@@ -74,6 +80,7 @@ sapply(package_vec, install.load.package)
 ##              TRUE              TRUE
 ```
 
+In addition to these packages, we also need another `R` package, not hosted on CRAN, but instead hosted on GitHub and developed and maintained by me. We need at least version 0.9.4 of it:
 
 ``` r
 if (packageVersion("KrigR") < "0.9.4") { # KrigR check
@@ -82,58 +89,87 @@ if (packageVersion("KrigR") < "0.9.4") { # KrigR check
 library(KrigR)
 ```
 
+{{% alert success %}}
+With the packages loaded and the `NFDI4Bio_GBIF.csv` and `NFDI4Bio_GBIF.RData` produced from the [previous section](/courses/gbif/nfdi-handling/), you are now ready to combine your GBIF mediated data with other relevant data products.
+{{% /alert %}}
+
 ## Climate Data in Ecological Research
 
-
+Understanding ecological processes often necessitates knowing about the environmental conditions life on Earth experiences. To gain this information, we consult climate data sets.
 
 ### Data Sources & Considerations
 
-/courses/krigr/background/
+There are many climate data products out there. Many of them will fit your needs. Some of them will fit your needs much better than others. Judging the applicability of a given climate data product for your biological research is beyond your formal training and I do not blame you for not knowing where to get started on this.
+
+In short, climate data science has made substantial advances that ecological research has not yet readily adopted into our workflows. I have a whole [talk and workshop](/courses/krigr/background/) ready trying to overcome these issues.
+
+For now, just know that we will not be using ready-made datasets like WorldClim here for reasons pertaining mostly to accuracy and reliability and I do not recommend you use WorldClim for anything but exploratory data analyses. Using a dataset like this usually restricts you more than the ease-of-its-use is worth, to my mind.
+
+{{% alert warning %}}
+Where possible, I recommend you investigate thoroughly which climate data product to obtain your data from. Do not shy away from heavy data lifting.
+{{% /alert %}}
 
 ### Bioclimatic Variables
 
+Much like there are many climate data products, there are also many climate parameters that may be of relevance to your study needs. For species distribution modelling, the [19 bioclimatic variables](https://www.worldclim.org/data/bioclim.html) have become standard.
+
+Personally, I do not think that this is good practice, but I am here to teach you data handling and not to overthrow agreed-upon modelling conventions. Nevertheless, I will quickly tell you qhy I believe bioclimatic variables to fall short of what we would like to use:
+1. They are simply just aggregates of temperature and water availability information. We know that ecosystems and their components are affected by many more parameters for which we do have climate data products.
+2. They do not account for trends in their underlying parameters over time and thus do not capture climate change trajectories well.
+3. They don't capture extreme events or compound events particularly well due to coarse temporal resolutions.
+
+{{% alert warning %}}
+Please consider carefully whether bioclimatic variables alone are enough for your analysis needs.
+{{% /alert %}}
 
 ## Retrieving Climatic Data with `KrigR`
 
+Retrieving climate data is outside of your formal skillset and not a trivial undertaking. To streamline this process and ease the burden of entry into this field, I have created the `R` Package `KrigR` which gives you functionality to access state-of-the-art climate data from the ECMWF Climate Data Store.
+
+For a full exploration of this package, please consult the separate [workshop material](/courses/krigr/) I have prepared for it.
+
 ### CDS API Credentials
 
-/courses/krigr/setup/
+Make sure you have registered your CDS API credentials as described [here](/courses/krigr/setup/).
 
 ### Bioclimatic Data
 
+We can now use the `BioClim()` function from the `KrigR` package to obtain bioclimatic variables relevant to our study area and time-frame. This function makes all of the download calls and does all of the calculations for us, thus allowing us to easily use state-of-the-art climate data to derive bioclimatic variables.
+
+Before we can get started with this, however, we need a shapefile describing the outline of Germany. `KrigR` doesn't work with country ISO codes like `rgbif` does, but with shapefiles. Let's load the germany shapefile we used previously:
 
 ``` r
 DE_shp <- rnaturalearth::ne_countries(country = "Germany", scale = 10, returnclass = "sf")[, 1]
 ```
 
+Now, we will execute our `BioClim()` download:
+
+{{% alert danger %}}
+Note that retrieval of large datasets via `KrigR` may take considerable time. This is the price you have to pay for state-of-the-art climate data for your study needs, I am afraid.
+{{% /alert %}}
+
+
+{{% alert info %}}
+If the below takes too long to finish for you, feel free to download the resulting file from [here](https://github.com/ErikKusch/Homepage/raw/master/content/courses/gbif/Germany.nc).
+{{% /alert %}}
+
 
 ``` r
 BV_DE <- BioClim(
-  Temperature_Var = "2m_temperature",
-  Temperature_DataSet = "reanalysis-era5-land",
-  Temperature_Type = NA,
-  Water_Var = "total_precipitation",
-  Water_DataSet = "reanalysis-era5-land-monthly-means",
-  Water_Type = "monthly_averaged_reanalysis",
-  Y_start = 1970,
-  Y_end = 2020,
-  TZone = "CET",
-  Extent = DE_shp,
-  Buffer = 0.5,
-  Dir = getwd(),
-  FileName = "Germany",
-  FileExtension = ".nc",
-  Compression = 9,
-  API_User = API_User,
-  API_Key = API_Key,
-  TChunkSize = 6000,
-  TryDown = 10,
-  TimeOut = 36000,
-  Cores = 1,
-  verbose = TRUE,
-  Keep_Raw = FALSE,
-  Keep_Monthly = TRUE,
-  closeConnections = FALSE
+  Temperature_Var = "2m_temperature", # temperature variable
+  Temperature_DataSet = "reanalysis-era5-land", # data product to source temperature variable data from
+  Temperature_Type = NA, # type of data product to source temperature variable data from
+  Water_Var = "total_precipitation", # water availability variable
+  Water_DataSet = "reanalysis-era5-land-monthly-means", # data product to source water availability variable data from
+  Water_Type = "monthly_averaged_reanalysis", # type of data product to source water availability variable data from
+  Y_start = 1970, # first year in the time window
+  Y_end = 2020, # last year in the time window
+  TZone = "CET", # time zone in which we want to calculate our variables
+  Extent = DE_shp, # shapefile or extent of study area
+  FileName = "Germany", # name of netcdf file written to our disk by this function
+  API_User = API_User, # api credentials
+  API_Key = API_Key, # api credentials
+  closeConnections = FALSE # needing to set this so it runs in markdown, you do not need to worry about this
 )
 ```
 
@@ -142,6 +178,27 @@ BV_DE <- BioClim(
 ## [1] "Loading this file for you from the disk."
 ```
 
+As you can see, I already have the resulting file present on my disk. `KrigR` notices this and simply loads the file for me so I can use it right away instead of recalculating everything.
+
+{{% alert warning %}}
+Just like GBIF mediated data, you also need to properly accredit the environmental data you use in your research. 
+{{% /alert %}}
+
+With `KrigR` you can easily obtain the citation string for each dataset derived via `KrigR` like so:
+
+
+``` r
+terra::metags(BV_DE)["Citation"]
+```
+
+```
+##                                                                                                 Citation 
+## "Bioclimatic variables obtained with KrigR (DOI:10.1088/1748-9326/ac48b3) on 2024-11-14 16:58:36.946977"
+```
+
+Now, we can use the `KrigR`-inbuilt visualisation functionality to plot the bioclimatic variables across Germany. 
+
+First, we plot all temperature variables:
 
 ``` r
 Plot.BioClim(
@@ -151,8 +208,9 @@ Plot.BioClim(
 )
 ```
 
-<img src="SeasonalSchool-climatedata_files/figure-html/unnamed-chunk-3-1.png" width="1440" />
+<img src="SeasonalSchool-climatedata_files/figure-html/unnamed-chunk-4-1.png" width="1440" />
 
+Next, we plot all water availability variables:
 
 ``` r
 Plot.BioClim(
@@ -163,15 +221,22 @@ Plot.BioClim(
 )
 ```
 
-<img src="SeasonalSchool-climatedata_files/figure-html/unnamed-chunk-4-1.png" width="1440" />
+<img src="SeasonalSchool-climatedata_files/figure-html/unnamed-chunk-5-1.png" width="1440" />
 
+{{% alert success %}}
+You now have cutting-edge bioclimatic information ready for your downstream analyses!
+{{% /alert %}}
 
 ### Matching Observations with Climate Data
+
+Lastly, all that is left to do is matching the observations we obtained from GBIF with the climate data we just prepared. To get this started, we first load the spatial features object of obvservation points we created previously:
 
 
 ``` r
 load("GBIF_sf.RData")
 ```
+
+Now let's use the `KrigR` visualisation toolbox once more to plot these points onto a map of the first bioclimatic variable (annual mean temperature):
 
 
 ``` r
@@ -184,7 +249,11 @@ Plot.BioClim(
 )
 ```
 
-<img src="SeasonalSchool-climatedata_files/figure-html/unnamed-chunk-6-1.png" width="1440" />
+<img src="SeasonalSchool-climatedata_files/figure-html/unnamed-chunk-7-1.png" width="1440" />
+
+The underlying climate data is a bit coarse, so we find some data points on islands which we will not be able to match with climate data. Nevertheless, let's push on.
+
+To extract climate data from all bioclimatic variables for each observation we have retained after cleaning our GBIF mediated data, we simply use the `extract()` function from the `terra` package:
 
 
 ``` r
@@ -195,6 +264,8 @@ dim(extracted_df)
 ```
 ## [1] 58304    20
 ```
+
+You see that we have extracted information for each observation and 20 columns. Why 20 columns, aren't there just 19 bioclimatic variables? Well, yes, but we also record an ID for each observation:
 
 
 ``` r
@@ -212,6 +283,7 @@ knitr::kable(head(extracted_df))
 |  5| 281.8596| 11.29835| 28.98178| 635.9584| 299.1519| 260.1676| 38.98431| 289.1873| 284.8993| 289.1873| 274.9467| 0.8459014| 0.2779124| 0.0020682| 3.920097| 10.731587| 10.196636| 10.731587| 10.449787|
 |  6| 282.0240| 10.56826| 22.84456| 674.8423| 299.6821| 253.4205| 46.26158| 289.7753| 285.3079| 289.7753| 274.4990| 0.7309243| 0.2611389| 0.0026328| 4.086557|  9.681484|  8.469324|  9.681484|  8.544147|
 
+Let's save this data by merging the original observations with their bioclimatic characteristics and export the data ready for analysis in species distribution models. We omit any row with NAs in it, as some observations fall outside of areas where we have climatic information and thus won't be able to use these observations in SDMs:
 
 
 ``` r
@@ -231,10 +303,14 @@ knitr::kable(head(SDMData_df))
 |7  |Fagus sylvatica L.         |  2882316|Fagaceae |      4689|Fagus sylvatica   |         9.592076|        51.47528| 2020|     5|  21|2020-05-21T11:07:39  |DE          |             |Hessen                 |46711391      |StillImage;StillImage;StillImage |50c9509d-22c7-4a22-a47d-8c48425ef4a7 |  9.592076| 51.47528|  5| 281.8596| 11.29835| 28.98178| 635.9584| 299.1519| 260.1676| 38.98431| 289.1873| 284.8993| 289.1873| 274.9467| 0.8459014| 0.2779124| 0.0020682| 3.920097| 10.731587| 10.196636| 10.731587| 10.449787|POINT (9.592076 51.47528) |
 |8  |Quercus robur L.           |  2878688|Fagaceae |      4689|Quercus robur     |        12.791288|        53.45432| 2019|     5|  29|2019-05-29T14:44:56Z |DE          |             |Mecklenburg-Vorpommern |26128754      |StillImage                       |50c9509d-22c7-4a22-a47d-8c48425ef4a7 | 12.791288| 53.45432|  6| 282.0240| 10.56826| 22.84456| 674.8423| 299.6821| 253.4205| 46.26158| 289.7753| 285.3079| 289.7753| 274.4990| 0.7309243| 0.2611389| 0.0026328| 4.086557|  9.681484|  8.469324|  9.681484|  8.544147|POINT (12.79129 53.45432) |
 
+Now to save this data as a .csv:
+
 
 ``` r
 write.csv(SDMData_df, file = "NFDI4Bio_SDMData.csv")
 ```
+
+Finally, here is a sneak-peak on how we can use this information to identify different environmental preferences across the taxonomic familie sof interest:
 
 
 ``` r
@@ -243,7 +319,11 @@ ggplot(SDMData_df, aes(x = family, y = BIO1)) +
   theme_bw()
 ```
 
-<img src="SeasonalSchool-climatedata_files/figure-html/unnamed-chunk-11-1.png" width="1440" />
+<img src="SeasonalSchool-climatedata_files/figure-html/unnamed-chunk-12-1.png" width="1440" />
+
+{{% alert success %}}
+You have done it! You are now fully equipped to interface with GBIF, critically inspect the data obtained therefrom, and match it with state-of-the-art climate data.
+{{% /alert %}}
 
 # Session Info
 
