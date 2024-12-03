@@ -47,7 +47,7 @@ To obtain billions of biodiversity data records at global coverage, one may obta
 ## The Global Biodiversity Information Facility (GBIF)
 
 Within these slides, I present the organisation of GBIF, the data it makes available, how to discover relevant data, query download thereof, what to be aware of with regards to data quality, richness and availability, as well as how GBIF handles accreditation of the data it mediates. Simply click the screenshot of the presentation below:
-<a href="http://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/content/courses/gbif/GBIFWorkshop_LivingNorway_presentation.html" target="_blank"><img src="/courses/gbif/featured.png" width="900"/></a>
+<a href="http://htmlpreview.github.io/?https://github.com/ErikKusch/Homepage/blob/master/content/courses/gbif/GBIF-NFDI4Bio_UPLOAD.html" target="_blank"><img src="/courses/gbif/featured.png" width="900"/></a>
 
 
 ## The `rbif` Package

@@ -518,7 +518,7 @@ ggplot(data = plot_df, aes(x = as.factor(year), y = cumulative)) +
   theme_bw() +
   scale_fill_manual(
     name = "Records",
-    values = c("black" = "black", "Pinaceae" = "forestgreen", "Fagaceae" = "darkorange"), labels = c("Cumulative Total", "New per Year (Fagaceae)", "New per Year (Pinaceae)")
+    values = c("black" = "black", "Pinaceae" = "forestgreen", "Fagaceae" = "darkorange"), labels = c("New per Year (Fagaceae)", "New per Year (Pinaceae)", "Cumulative Total")
   ) +
   facet_wrap(~family) +
   theme(
