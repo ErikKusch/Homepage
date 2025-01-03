@@ -7,7 +7,7 @@ widget: featurette
 headless: true
 
 # Order that this section appears on the page.
-weight: 3
+weight: 13
 
 title: Skills
 subtitle: Things I know my way around.

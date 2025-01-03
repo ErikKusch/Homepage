@@ -1,7 +1,7 @@
 ---
 superuser: true
 title: Erik Kusch
-bio: In my research, I focus on statistical approaches to understanding complex processes and patterns in biology using a variety of data banks.
+bio: In my research, I focus on statistical approaches to understanding complex processes and patterns in our environment using a variety of data banks. I do so by creating bespoke, reproducible, and efficient data hanbdling pipelines.
 #btn:
 # - label: "Download my CV"
 # url: "/static/files/cv.pdf"
@@ -31,15 +31,15 @@ organizations:
   url: https://cicero.oslo.no/en
 - name: University of Oslo
   url: https://www.uio.no/english/
-- name: University of Oxford
-  url: https://www.ox.ac.uk/
-- name: Okinawa Institute of Science and Technology
-  url: https://www.oist.jp/
-role: Senior Engineer & Statistical Consultant
+# - name: University of Oxford
+#   url: https://www.ox.ac.uk/
+# - name: Okinawa Institute of Science and Technology
+#   url: https://www.oist.jp/
+role: Advisor & Data Steward & Statistical Consultant
 social:
 - icon: envelope
   icon_pack: fas
-  link: mailto:erikkus@nhm.uio.no
+  link: mailto:erik.kusch@cicero.oslo.no
 - icon: github
   icon_pack: fab
   link: https://github.com/ErikKusch
@@ -63,7 +63,7 @@ social:
   link: https://www.instagram.com/erik_kusch/
 ---
 
-## Hi. I'm **Erik Kusch**, an advisor at [CICERO Center for International Climate Research](https://cicero.oslo.no/en) where I work on interdisciplinary research focusing on [Climate and Nature Risk](https://cicero.oslo.no/en/research-groups/climate-impacts). In addition, I also work as a senior engineer at the [Natural History Museum of the University of Oslo](https://www.nhm.uio.no/english/) where I manage research infrastructure for the [BioDT project](https://biodt.eu/).
+## Hi. I'm **Erik Kusch**, an advisor at [CICERO Center for International Climate Research](https://cicero.oslo.no/en) where I work on interdisciplinary research focusing on [Climate and Nature Risk](https://cicero.oslo.no/en/research-groups/climate-impacts).
 
 Using big data and generating novel statistical methodology, I aim to understand how global and local processes and patterns in biological systems come about and are reinforced thus generating knowledge about the resilience of the Earth's ecosystems. 
 

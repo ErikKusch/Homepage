@@ -21,7 +21,7 @@ image:
   focal_point: Smart
 summary: My work at Oslo University is part of this bigger project.
 tags:
-- Active
+- Archived
 - Open Science
 - Data Science
 - BioDT
