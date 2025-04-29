@@ -16,7 +16,7 @@ location: Vienna, Austria
 math: true
 projects: [KrigR]
 publishDate: "2025-04-29T00:00:00Z"
-summary: An overview of downscaling methodology for climate data.
+summary: An overview of preliminary results analysing how mountaineering practices and climate/weather conditions have changed over time in the Nepalese Himalayas.
 tags: 
 - Climate Data
 - Kriging
