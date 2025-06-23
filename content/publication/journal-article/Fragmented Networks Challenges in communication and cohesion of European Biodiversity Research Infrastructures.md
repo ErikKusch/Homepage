@@ -7,12 +7,12 @@ authors:
 - Carrie Andrew
 - Yi-Ming Gan
 - ErikKusch
-date: "2024-09-08T00:00:00Z"
-doi: "https://doi.org/10.3897/BDJ.13.e148079"
-featured: true
+date: "2025-06-20T00:00:00Z"
+# doi: "https://doi.org/10.3897/BDJ.13.e148079"
+featured: false
 projects:
 - BioDT
-publication: "2025-06-20T00:00:00Z"
+publication: "*Biodiversity Data Journal*"
 # publication_short: ""
 publication_types: # 1 = conference paper, 2 = journal article, 3 = preprint, 4 = conference paper, 5 = book, 6 = Book section, 7 = Thesis, 8 = patent
 - "2"
