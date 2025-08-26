@@ -28,5 +28,5 @@ url_pdf: https://bdj.pensoft.net/article/148079/
 # url_slides: ""
 # url_source: '#'
 # url_video: '#'
-summary: Overview and recommendations for European Biodiversity Research Infrastructure Network.
+summary: Overview and recommendations for European Biodiversity Research Infrastructure Network. 
 ---

@@ -7,15 +7,15 @@ authors:
 - Dag Endresen
 - Desalegn Chala Gelete
 - ErikKusch
-date: "2024-07-24T00:00:00Z"
+date: "2025-08-25T00:00:00Z"
 # doi: "https://doi.org/10.1101/2024.07.23.604592 "
-featured: true
+featured: false
 projects:
 - BioDT
-publication: "*TBD*"
+publication: "*Ecological Informatics*"
 # publication_short: ""
 publication_types: # 1 = conference paper, 2 = journal article, 3 = preprint, 4 = conference paper, 5 = book, 6 = Book section, 7 = Thesis, 8 = patent
-- "3"
+- "2"
 # publishDate: ""
 tags:
 - Digital Twin
@@ -23,7 +23,7 @@ tags:
 - Design Framework
 # url_code: https://github.com/ErikKusch/Ecological-Network-Extinction-Simulations
 # url_dataset: ''
-url_pdf: https://doi.org/10.1101/2024.07.23.604592
+url_pdf: https://doi.org/10.1016/j.ecoinf.2025.103407
 # url_poster: /media/poster/2020_ISEC/Poster - Global Dryland Vegetation Memory.pdf
 # url_project: ""
 # url_slides: ""
