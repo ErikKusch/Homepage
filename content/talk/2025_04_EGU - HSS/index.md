@@ -5,7 +5,7 @@ authors:
 - ErikKusch
 date: "2025-04-30T11:35:00Z"
 date_end: "2025-04-30T11:45:00Z"
-event: EGU General Assemply 2025
+event: EGU General Assembly 2025
 event_url: ""
 featured: false
 image:
