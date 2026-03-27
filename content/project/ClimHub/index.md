@@ -44,7 +44,7 @@ links:
 #   name: Follow
 #   url: https://twitter.com/EraKrigR
 # slides: example
-summary: An `R` package designed for intuitive downloading, aggregating, and statistical downscaling of ERA5(-Land) data.
+summary: An `R` package designed to streamline the full lifecycle of climate data workflows by enabling efficient data discovery, access, processing, and dissemination within a unified, reproducible, and scalable framework.
 tags:
 - Climate Data
 - Statistical Downscaling
