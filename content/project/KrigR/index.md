@@ -50,7 +50,7 @@ tags:
 - Statistical Downscaling
 - KrigR
 - PhD
-- Active
+- Archived
 title: KrigR - Downloading and Downscaling of ERA5(-Land) data using R
 url_code: ""
 url_pdf: ""
@@ -59,7 +59,7 @@ url_video: ""
 ---
 
 {{% alert danger %}}
-I am continuing to develop `KrigR`, add to its functionality, and broaden its scope. For any suggestions of development goals, novel functionality as well as any issues you might face with `KrigR`, please register an issue on <a href="https://github.com/ErikKusch/KrigR/issues" target="_blank">GitHub</a>. where I track these issues. Please refrain from inquiries via direct E-mail.
+`KrigR` is now being maintained to keep existing functionality alive, but I have pivoted my focus to the development of its successor: [`ClimHub`](/project/climhub/).
 {{% /alert %}}
 
 

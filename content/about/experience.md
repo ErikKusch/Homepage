@@ -27,12 +27,25 @@ date_format: Jan 2006
 #   Begin multi-line descriptions with YAML's `|2-` multi-line prefix.
 experience:
   
+  - title: Senior Researcher & Data Steward
+    company: CICERO Centre for International Climate Research
+    company_url: https://cicero.oslo.no/en
+    location: Gaustadalléen 21, 0349 Oslo
+    date_start: '2026-04-01'
+    date_end: 
+    description: |2-
+        Responsibilities include:
+        * Project Leadership
+        * Data Pipelining
+        * Data Coordination & Investigation
+        * Statistical Consultancy
+
   - title: Advisor & Data Steward
     company: CICERO Centre for International Climate Research
     company_url: https://cicero.oslo.no/en
     location: Gaustadalléen 21, 0349 Oslo
     date_start: '2024-10-15'
-    date_end: 
+    date_end: '2026-03-31'
     description: |2-
         Responsibilities include:
         * Data Pipelining
