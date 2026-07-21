@@ -4,7 +4,7 @@ abstract: Forecasting ecosystems under climate change requires multi-species app
 authors:
 - ErikKusch
 - Alejandro Ordonez
-date: "2026-087-0T00:00:00Z"
+date: "2026-07-08T00:00:00Z"
 doi: ""
 featured: false
 projects:
