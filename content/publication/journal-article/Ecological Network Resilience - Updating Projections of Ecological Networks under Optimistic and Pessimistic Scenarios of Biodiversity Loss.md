@@ -9,7 +9,7 @@ doi: ""
 featured: false
 projects:
 - phd-packages
-publication: "2026-07-08T00:00:00Z"
+publication: "Ecological Complexity"
 # publication_short: ""
 publication_types: # 1 = conference paper, 2 = journal article, 3 = preprint, 4 = conference paper, 5 = book, 6 = Book section, 7 = Thesis, 8 = patent
 - "2"
