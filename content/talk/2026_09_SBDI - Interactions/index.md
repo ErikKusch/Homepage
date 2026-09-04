@@ -16,7 +16,7 @@ location: Stockholm, Sweden
 math: true
 projects: [phd-packages]
 publishDate: "2026-09-04T00:00:00Z"
-summary: An overview of preliminary results analysing how mountaineering practices and climate/weather conditions have changed over time in the Nepalese Himalayas.
+summary: An overview of how considerations ecological interactions enhance biodiversity projections motivating an exploration of how ecological networks can be statistically inferred and biodiversity research infrastructures levered to share them.
 tags: 
 - Cooccurrence
 - Biological Networks
