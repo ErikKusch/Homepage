@@ -42,11 +42,15 @@ hero_media = "Toad.png"
 
 +++
 
-## Hi. I'm **Erik Kusch**, an advisor at [CICERO Center for International Climate Research](https://cicero.oslo.no/en) where I work on interdisciplinary research focusing on [Climate and Nature Risk](https://cicero.oslo.no/en/research-groups/climate-impacts). In addition, I also work as a senior engineer at the [Natural History Museum of the University of Oslo](https://www.nhm.uio.no/english/) where I manage research infrastructure for the [BioDT project](https://biodt.eu/).
+## Hi. I'm **Erik Kusch**, an advisor for [The Norwegian Trekking Organisation (DNT)](https://www.dnt.no/en/) where I work on daradriven insights to enable outdoor experiences for over 400,000 members of the DNT across Norway and internationally.
 
-Using big data and generating novel statistical methodology, I aim to understand how global and local processes and patterns in biological systems come about and are reinforced thus generating knowledge about the resilience of the Earth's ecosystems. 
+In my research prior to joining the DNT, which I continue to pursue, using big data and generating novel statistical methodology, I aim to understand how global and local processes and patterns in biological systems come about and are reinforced thus generating knowledge about the resilience of the Earth's ecosystems. 
 
 My PhD project at [Aarhus University](https://international.au.dk/) focused on ecological interactions and the networks they form at macroecological scales.
+
+In my free time, I escape to the mountains and engage in landscape and wildlife photography.
+
+{{< icon name="download" pack="fas" >}} Download my {{< staticref "https://raw.githubusercontent.com/ErikKusch/Homepage/master/static/media/CV_ErikKusch.pdf" "newtab" >}}CV{{< /staticref >}} or {{< icon name="envelope" pack="fas" >}} {{< staticref "/about#contact" "newtab" >}}contact me{{< /staticref >}} if you want to know more.
 
 <style>
 .butn {

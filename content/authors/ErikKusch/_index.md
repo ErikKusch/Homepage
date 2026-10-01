@@ -27,7 +27,7 @@ interests:
 - Resilience
 - Macroecology
 organizations:
-- name: CICERO Center for International Climate Research
+- name: The Norwegian Trekking Association
   url: https://cicero.oslo.no/en
 - name: University of Oslo
   url: https://www.uio.no/english/
@@ -39,7 +39,7 @@ role: Advisor & Data Steward & Statistical Consultant
 social:
 - icon: envelope
   icon_pack: fas
-  link: mailto:erik.kusch@cicero.oslo.no
+  link: mailto:erik.kusch@dnt.no
 - icon: github
   icon_pack: fab
   link: https://github.com/ErikKusch
@@ -63,9 +63,9 @@ social:
   link: https://www.instagram.com/erik_kusch/
 ---
 
-## Hi. I'm **Erik Kusch**, a senior researcher at [CICERO Center for International Climate Research](https://cicero.oslo.no/en) where I work on interdisciplinary research focusing on [Climate and Nature Risk](https://cicero.oslo.no/en/research-groups/climate-impacts).
+## Hi. I'm **Erik Kusch**, an advisor for [The Norwegian Trekking Organisation (DNT)](https://www.dnt.no/en/) where I work on daradriven insights to enable outdoor experiences for over 400,000 members of the DNT across Norway and internationally.
 
-Using big data and generating novel statistical methodology, I aim to understand how global and local processes and patterns in biological systems come about and are reinforced thus generating knowledge about the resilience of the Earth's ecosystems. 
+In my research prior to joining the DNT, which I continue to pursue, using big data and generating novel statistical methodology, I aim to understand how global and local processes and patterns in biological systems come about and are reinforced thus generating knowledge about the resilience of the Earth's ecosystems. 
 
 My PhD project at [Aarhus University](https://international.au.dk/) focused on ecological interactions and the networks they form at macroecological scales.
 

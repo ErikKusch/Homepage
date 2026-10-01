@@ -105,3 +105,7 @@ ignoreFiles = ["\\.ipynb$", ".ipynb_checkpoints$", "\\.Rmd$", "\\.Rmarkdown$", "
   [[related.indices]]
     name = "authors"
     weight = 20.0
+
+[security]
+  allowContent = ['^text/html$', '^text/markdown$', '^text/org$']
+  enableInlineShortcodes = false

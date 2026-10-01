@@ -27,12 +27,25 @@ date_format: Jan 2006
 #   Begin multi-line descriptions with YAML's `|2-` multi-line prefix.
 experience:
   
+  - title: Advisor on Datadriven Insights
+    company: The Norwegian Trekking Association
+    company_url: https://www.dnt.no/en/
+    location: Youngstorget 1, 0181 Oslo
+    date_start: '2026-10-01'
+    date_end: 
+    description: |2-
+        Responsibilities include:
+        * Report Automisation
+        * Statistical Analyses
+        * Data Engineering and Analysis
+        * Statistical Consultancy
+
   - title: Senior Researcher & Data Steward
     company: CICERO Centre for International Climate Research
     company_url: https://cicero.oslo.no/en
     location: Gaustadalléen 21, 0349 Oslo
     date_start: '2026-04-01'
-    date_end: 
+    date_end: '2026-09-30'
     description: |2-
         Responsibilities include:
         * Project Leadership
