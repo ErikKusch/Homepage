@@ -88,7 +88,7 @@ show_related = {docs = true, page = false, post = true, project = true, publicat
 ############################
 
 # Enter contact details (optional). To hide a field, clear it to "".
-email = "erik.kusch@cicero.oslo.no"
+email = "erik.kusch@dnt.no"
 phone = ""
 
 # Address
@@ -205,15 +205,15 @@ plugins_js  = []
   citation_style = "apa"
 
 # Configuration of project pages.
-[projects]
+#[projects]
   # Views for associated content.
   #   1: List
   #   2: Compact
   #   3: Card
   #   4: Citation (publications only)
-  post_view = 2
-  publication_view = 2
-  talk_view = 2
+#  post_view = 2
+#  publication_view = 2
+#  talk_view = 2
 
 ############################
 ## Comments
