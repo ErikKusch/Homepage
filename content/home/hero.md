@@ -42,7 +42,7 @@ hero_media = "Toad.png"
 
 +++
 
-## Hi. I'm **Erik Kusch**, an advisor for [The Norwegian Trekking Organisation (DNT)](https://www.dnt.no/en/) where I work on daradriven insights to enable outdoor experiences for over 400,000 members of the DNT across Norway and internationally.
+## Hi. I'm **Erik Kusch**, an advisor for [The Norwegian Trekking Organisation (DNT)](https://www.dnt.no/en/) where I work on daradriven insights to enable outdoor experiences for over 300,000 members of the DNT across Norway and internationally.
 
 In my research prior to joining the DNT, which I continue to pursue, using big data and generating novel statistical methodology, I aim to understand how global and local processes and patterns in biological systems come about and are reinforced thus generating knowledge about the resilience of the Earth's ecosystems. 
 

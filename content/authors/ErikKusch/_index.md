@@ -28,14 +28,14 @@ interests:
 - Macroecology
 organizations:
 - name: The Norwegian Trekking Association
-  url: https://cicero.oslo.no/en
+  url: https://www.dnt.no/en
 - name: University of Oslo
   url: https://www.uio.no/english/
 # - name: University of Oxford
 #   url: https://www.ox.ac.uk/
 # - name: Okinawa Institute of Science and Technology
 #   url: https://www.oist.jp/
-role: Advisor & Data Steward & Statistical Consultant
+role: Senior Advisor & Data Steward & Statistical Consultant
 social:
 - icon: envelope
   icon_pack: fas
